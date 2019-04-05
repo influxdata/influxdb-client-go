@@ -2,9 +2,12 @@ package influxdb_test
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net/url"
+	"path"
 	"testing"
 	"time"
 

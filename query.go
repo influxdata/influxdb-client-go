@@ -11,6 +11,7 @@ import (
 // QueryCSV returns the result of a flux query.
 // TODO: annotations optionally
 func (c *Client) QueryCSV(flux string) (io.Reader, error) {
+	makeQueryURL(c.url)
 	return nil, ErrUnimplemented
 }
 

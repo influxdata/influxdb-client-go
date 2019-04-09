@@ -24,7 +24,6 @@ type Client struct {
 	httpClient           *http.Client
 	contentEncoding      string
 	gzipCompressionLevel int
-	transport            *http.Transport
 	url                  *url.URL
 	password             string
 	username             string
@@ -57,7 +56,7 @@ func NewClient(httpClient *http.Client, options ...Option) (*Client, error) {
 		}
 	}
 	if c.token == "" {
-		return nil, errors.New("A token is required, use WithToken(\"the_token\")")
+		return nil, errors.New("a token is required, use WithToken(\"the_token\")")
 	}
 	return c, nil
 }

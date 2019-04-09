@@ -8,19 +8,6 @@ import (
 // ErrUnimplemented is an error for when pieces of the client's functionality is unimplemented.
 var ErrUnimplemented = errors.New("unimplemented")
 
-type apiError struct {
-	StatusCode  int
-	Title       string
-	Description string
-}
-
-func (e apiError) Error() string {
-	if e.Description != "" {
-		return fmt.Sprintf("%s: %s", e.Title, e.Description)
-	}
-	return e.Title
-}
-
 type genericRespError struct {
 	Code      string
 	Message   string

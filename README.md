@@ -12,7 +12,7 @@ influx, err := client.NewClient(http.DefaultClient, WithAddress("http:/127.0.0.1
 if err!=nil{
     panic(err)
 }
-var myMetrics []LMetric
+var myMetrics []Metric
 
 myMetrics = append(myMetrics, client.NewMetric(
     map[string]interface{}{"memory":1000,"cpu":0.93},

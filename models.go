@@ -7,11 +7,13 @@ import (
 	lp "github.com/influxdata/line-protocol"
 )
 
-type LMetric = lp.Metric
+// Metric is just a github.com/influxdata/line-protocol.Metric.
+// We alias here to keep abstractions from leaking.
+type Metric = lp.Metric
 
-// Metric is an github.com/influxdata/line-protocol.Metric,
+// RowMetric is a Metric,
 // that has methods to make it easy to add tags and fields
-type Metric struct {
+type RowMetric struct {
 	Name   string
 	Tags   []*lp.Tag
 	Fields []*lp.Field
@@ -19,27 +21,27 @@ type Metric struct {
 }
 
 // TagList returns a slice containing Tags of a Metric.
-func (m *Metric) TagList() []*lp.Tag {
+func (m *RowMetric) TagList() []*lp.Tag {
 	return m.Tags
 }
 
 // FieldList returns a slice containing the Fields of a Metric.
-func (m *Metric) FieldList() []*lp.Field {
+func (m *RowMetric) FieldList() []*lp.Field {
 	return m.Fields
 }
 
 // Time is the timestamp of a metric.
-func (m *Metric) Time() time.Time {
+func (m *RowMetric) Time() time.Time {
 	return m.TS
 }
 
 // SortTags orders the tags of a a metric alphnumerically by key.
-func (m *Metric) SortTags() {
+func (m *RowMetric) SortTags() {
 	sort.Slice(m.Tags, func(i, j int) bool { return m.Tags[i].Key < m.Tags[j].Key })
 }
 
 // AddTag adds an lp.Tag to a metric.
-func (m *Metric) AddTag(k, v string) {
+func (m *RowMetric) AddTag(k, v string) {
 	for i, tag := range m.Tags {
 		if k == tag.Key {
 			m.Tags[i].Value = v
@@ -50,14 +52,14 @@ func (m *Metric) AddTag(k, v string) {
 }
 
 // AddField adds an lp.Field to a metric.
-func (m *Metric) AddField(k string, v interface{}) {
+func (m *RowMetric) AddField(k string, v interface{}) {
 	for i, field := range m.Fields {
 		if k == field.Key {
 			m.Fields[i].Value = v
 			return
 		}
 	}
-	m.SortTags()
+	m.Fields = append(m.Fields, &lp.Field{Key: k, Value: convertField(v)})
 }
 
 func convertField(v interface{}) interface{} {
@@ -97,18 +99,18 @@ func convertField(v interface{}) interface{} {
 	}
 }
 
-// NewMetric creates a *Metric from tags, fields and a timestamp.
-func NewMetric(
+// NewRowMetric creates a *RowMetric from tags, fields and a timestamp.
+func NewRowMetric(
 	fields map[string]interface{},
 	name string,
 	tags map[string]string,
-	tm time.Time,
-) *Metric {
-	m := &Metric{
+	ts time.Time,
+) *RowMetric {
+	m := &RowMetric{
 		Name:   name,
 		Tags:   nil,
 		Fields: nil,
-		TS:     tm,
+		TS:     ts,
 	}
 
 	if len(tags) > 0 {
@@ -126,8 +128,7 @@ func NewMetric(
 		if v == nil {
 			continue
 		}
-		m.AddField(k, v)
+		m.Fields = append(m.Fields, &lp.Field{Key: k, Value: v})
 	}
-
 	return m
 }

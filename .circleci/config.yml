@@ -22,7 +22,7 @@ jobs:
       - checkout
       - run: 
           name: Set Up Environmental variables
-          command: echo 'export GO111MODULE=on"' >> $BASH_ENV
+          command: echo 'export GO111MODULE=on' >> $BASH_ENV
       - run:
           name: check tidy
           command: |

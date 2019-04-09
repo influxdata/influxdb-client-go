@@ -29,7 +29,7 @@ jobs:
             go mod tidy
             git status
             if ! git --no-pager diff --exit-code -- go.mod go.sum; then
-              >&2 echo "modules are not tidy, please run 'go mod tidy'"
+              echo 'modules are not tidy, please run "go mod tidy"'
               exit 1
             fi
       # specify any bash command here prefixed with `run: `

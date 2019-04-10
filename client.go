@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -11,6 +12,8 @@ import (
 	"net/url"
 	"path"
 	"strconv"
+	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/internal/gzip"
@@ -37,6 +40,7 @@ type Client struct {
 }
 
 // NewClient creates a new Client.  If httpClient is nil, it will use an http client with sane defaults.
+// The client is concurrency safe, so feel free to use it and abuse it to your heart's content.
 func NewClient(httpClient *http.Client, options ...Option) (*Client, error) {
 	c := &Client{
 		httpClient:      httpClient,
@@ -92,23 +96,39 @@ func (c *Client) Ping(ctx context.Context) (time.Duration, string, error) {
 	return dur, version, nil
 }
 
-func (c *Client) Write(ctx context.Context, bucket, org string, m ...lp.Metric) (err error) {
-	r, w := io.Pipe()
-	e := lp.NewEncoder(w)
-	req, err := c.makeWriteRequest(bucket, org, r)
-	if err != nil {
-		return err
-	}
-	tries := uint(0)
+// Write writes metrics to a bucket, and org.  It retries intelligently.
+// If the write is too big, it retries again, after breaing the payloads into two requests.
+func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (err error) {
+	tries := uint64(0)
+	return c.write(ctx, bucket, org, &tries, m...)
+}
+
+func (c *Client) write(ctx context.Context, bucket, org string, triesPtr *uint64, m ...Metric) error {
+	//r, w := io.Pipe()
+	buf := &bytes.Buffer{}
+	e := lp.NewEncoder(buf)
 doRequest:
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
 	default:
 	}
+	for i := range m {
+		if _, err := e.Encode(m[i]); err != nil {
+			return err
+		}
+	}
+	req, err := c.makeWriteRequest(bucket, org, buf)
+	if err != nil {
+		return err
+	}
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
+	}
+	throwAway := make([]byte, 128)
+	for err == nil {
+		_, err = resp.Body.Read(throwAway)
 	}
 	switch resp.StatusCode {
 	case http.StatusOK, http.StatusNoContent:
@@ -130,38 +150,61 @@ doRequest:
 			Code:    resp.Status,
 			Message: "no token was sent and they are required",
 		}
-	case http.StatusRequestEntityTooLarge:
-		resp.Body.Close()
-		return &genericRespError{
-			Code:    resp.Status,
-			Message: "write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written",
-		}
 	case http.StatusTooManyRequests:
+		resp.Body.Close()
 		err = &genericRespError{
 			Code:    resp.Status,
 			Message: "token is temporarily over quota, failed more than max retries",
 		}
+		if err2 := c.backoff(triesPtr, resp, err); err2 != nil {
+			return err2
+		}
+		goto doRequest
 	case http.StatusServiceUnavailable:
+		resp.Body.Close()
 		err = &genericRespError{
 			Code:    resp.Status,
-			Message: "server is temporarily unavailable to accept writes, failed more than max retries",
+			Message: "service is temporarily unavaliable",
 		}
-		retryAfter := resp.Header.Get("Retry-After")
-		retry, _ := strconv.Atoi(retryAfter) // we ignore the error here because an error already means retry is 0.
-		retryTime := time.Duration(retry) * time.Second
-		if retry == 0 { // if we didn't get a Retry-After or it is zero, instead switch to exponential backoff
-			retryTime = time.Duration(rand.Int63n(((1 << tries) - 1) * 10 * int64(time.Microsecond)))
+		if err2 := c.backoff(triesPtr, resp, err); err2 != nil {
+			return err2
 		}
-		if retryTime > defaultMaxWait {
-			retryTime = defaultMaxWait
-		}
-		time.Sleep(time.Duration(retry) * time.Second)
+		goto doRequest
+	// split up entities that are just too big
+	case http.StatusRequestEntityTooLarge:
 		resp.Body.Close()
-		if c.maxRetries == -1 || int(tries) < c.maxRetries {
-			tries++
-			goto doRequest
+		if len(m) < 2 {
+			return &genericRespError{
+				Code:    resp.Status,
+				Message: "your have a Metric of data that is too large",
+			}
 		}
-		return err
+		// yes, I know we are only waiting on one thing here so a mutex would be fine,
+		// but the waitgroup is easier to read.
+		wg := sync.WaitGroup{}
+		wg.Add(1)
+		if err2 := c.backoff(triesPtr, resp, err); err2 != nil {
+			return err2
+		}
+		var coalesceErr1 error
+		go func() {
+			// we have to give each split its own retries, otherwise its possible parts of some very large datasets won't even get tries.
+			triesSplit := atomic.LoadUint64(triesPtr)
+			coalesceErr1 = c.write(ctx, bucket, org, &triesSplit, m[:(len(m)<<2)]...)
+			wg.Done()
+		}()
+		triesSplit := atomic.LoadUint64(triesPtr)
+		coalesceErr2 := c.write(ctx, bucket, org, &triesSplit, m[(len(m)<<2):]...)
+		wg.Wait()
+		var cerr coalescingError
+		if coalesceErr1 != nil {
+			cerr = append(cerr, coalesceErr1)
+		}
+		if coalesceErr2 != nil {
+			err = append(cerr, coalesceErr2)
+		}
+		return cerr
+
 	default:
 		resp.Body.Close()
 		return &genericRespError{
@@ -177,11 +220,39 @@ doRequest:
 		}
 	}()
 	e.FailOnFieldErr(c.errOnFieldErr)
+
 	for i := range m {
 		if _, err = e.Encode(m[i]); err != nil {
 			return err
 		}
 	}
+
+	return nil
+}
+
+// backoff is a helper method for backoff, triesPtr must not be nil.
+func (c *Client) backoff(triesPtr *uint64, resp *http.Response, err error) error {
+	tries := atomic.LoadUint64(triesPtr)
+	if c.maxRetries >= 0 || int(tries) >= c.maxRetries {
+		return maxRetriesExceededError{
+			err:   err,
+			tries: c.maxRetries,
+		}
+	}
+	retry := 0
+	if resp != nil {
+		retryAfter := resp.Header.Get("Retry-After")
+		retry, _ = strconv.Atoi(retryAfter) // we ignore the error here because an error already means retry is 0.
+	}
+	sleepFor := time.Duration(retry) * time.Second
+	if retry == 0 { // if we didn't get a Retry-After or it is zero, instead switch to exponential backoff
+		sleepFor = time.Duration(rand.Int63n(((1 << tries) - 1) * 10 * int64(time.Microsecond)))
+	}
+	if sleepFor > defaultMaxWait {
+		sleepFor = defaultMaxWait
+	}
+	time.Sleep(sleepFor)
+	atomic.AddUint64(triesPtr, 1)
 	return nil
 }
 
@@ -231,4 +302,10 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	}
 	loc.RawQuery = params.Encode()
 	return loc.String(), nil
+}
+
+// Close closes any idle connections on the Client.
+func (c *Client) Close() error {
+	c.httpClient.CloseIdleConnections()
+	return nil // we do this, so it qualifies as a closer.
 }

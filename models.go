@@ -14,10 +14,10 @@ type Metric = lp.Metric
 // RowMetric is a Metric,
 // that has methods to make it easy to add tags and fields
 type RowMetric struct {
-	Name   string
-	Tags   []*lp.Tag
-	Fields []*lp.Field
-	TS     time.Time
+	NameStr string
+	Tags    []*lp.Tag
+	Fields  []*lp.Field
+	TS      time.Time
 }
 
 // TagList returns a slice containing Tags of a Metric.
@@ -35,9 +35,14 @@ func (m *RowMetric) Time() time.Time {
 	return m.TS
 }
 
-// SortTags orders the tags of a a metric alphnumerically by key.
+// SortTags orders the tags of a metric alphnumerically by key.
 func (m *RowMetric) SortTags() {
 	sort.Slice(m.Tags, func(i, j int) bool { return m.Tags[i].Key < m.Tags[j].Key })
+}
+
+// SortFields orders the fields of a metric alphnumerically by key.
+func (m *RowMetric) SortFields() {
+	sort.Slice(m.Fields, func(i, j int) bool { return m.Fields[i].Key < m.Fields[j].Key })
 }
 
 // AddTag adds an lp.Tag to a metric.
@@ -60,6 +65,11 @@ func (m *RowMetric) AddField(k string, v interface{}) {
 		}
 	}
 	m.Fields = append(m.Fields, &lp.Field{Key: k, Value: convertField(v)})
+}
+
+// Name returns the name of the metric.
+func (m *RowMetric) Name() string {
+	return m.NameStr
 }
 
 func convertField(v interface{}) interface{} {
@@ -107,10 +117,10 @@ func NewRowMetric(
 	ts time.Time,
 ) *RowMetric {
 	m := &RowMetric{
-		Name:   name,
-		Tags:   nil,
-		Fields: nil,
-		TS:     ts,
+		NameStr: name,
+		Tags:    nil,
+		Fields:  nil,
+		TS:      ts,
 	}
 
 	if len(tags) > 0 {
@@ -119,7 +129,6 @@ func NewRowMetric(
 			m.Tags = append(m.Tags,
 				&lp.Tag{Key: k, Value: v})
 		}
-		sort.Slice(m.Tags, func(i, j int) bool { return m.Tags[i].Key < m.Tags[j].Key })
 	}
 
 	m.Fields = make([]*lp.Field, 0, len(fields))
@@ -130,5 +139,7 @@ func NewRowMetric(
 		}
 		m.Fields = append(m.Fields, &lp.Field{Key: k, Value: v})
 	}
+	m.SortFields()
+	m.SortTags()
 	return m
 }

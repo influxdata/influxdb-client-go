@@ -34,10 +34,10 @@ func TestRowMetric_TagList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &RowMetric{
-				Name:   tt.fields.Name,
-				Tags:   tt.fields.Tags,
-				Fields: tt.fields.Fields,
-				TS:     tt.fields.TS,
+				NameStr: tt.fields.Name,
+				Tags:    tt.fields.Tags,
+				Fields:  tt.fields.Fields,
+				TS:      tt.fields.TS,
 			}
 			if got := m.TagList(); !cmp.Equal(got, tt.want) {
 				t.Errorf("Diff: %s", cmp.Diff(got, tt.want))
@@ -72,10 +72,10 @@ func TestRowMetric_FieldList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &RowMetric{
-				Name:   tt.fields.Name,
-				Tags:   tt.fields.Tags,
-				Fields: tt.fields.Fields,
-				TS:     tt.fields.TS,
+				NameStr: tt.fields.Name,
+				Tags:    tt.fields.Tags,
+				Fields:  tt.fields.Fields,
+				TS:      tt.fields.TS,
 			}
 			if got := m.FieldList(); !cmp.Equal(got, tt.want) {
 				t.Errorf("Diff: %s", cmp.Diff(got, tt.want))
@@ -110,10 +110,10 @@ func TestRowMetric_Time(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &RowMetric{
-				Name:   tt.fields.Name,
-				Tags:   tt.fields.Tags,
-				Fields: tt.fields.Fields,
-				TS:     tt.fields.TS,
+				NameStr: tt.fields.Name,
+				Tags:    tt.fields.Tags,
+				Fields:  tt.fields.Fields,
+				TS:      tt.fields.TS,
 			}
 			if got := m.Time(); !cmp.Equal(got, tt.want) {
 				t.Errorf("Diff: %s", cmp.Diff(got, tt.want))
@@ -124,10 +124,10 @@ func TestRowMetric_Time(t *testing.T) {
 
 func TestRowMetric_SortTags(t *testing.T) {
 	type fields struct {
-		Name   string
-		Tags   []*lp.Tag
-		Fields []*lp.Field
-		TS     time.Time
+		NameStr string
+		Tags    []*lp.Tag
+		Fields  []*lp.Field
+		TS      time.Time
 	}
 	tests := []struct {
 		name   string
@@ -137,26 +137,26 @@ func TestRowMetric_SortTags(t *testing.T) {
 		{
 			name: "test SortTags",
 			fields: fields{
-				Name:   "testmetric",
-				Fields: []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
-				Tags:   []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag3", Value: "3"}, {Key: "tag2", Value: "2"}},
-				TS:     time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
+				NameStr: "testmetric",
+				Fields:  []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
+				Tags:    []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag3", Value: "3"}, {Key: "tag2", Value: "2"}},
+				TS:      time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
 			},
 			want: &RowMetric{
-				Name:   "testmetric",
-				Fields: []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
-				Tags:   []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}, {Key: "tag3", Value: "3"}},
-				TS:     time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
+				NameStr: "testmetric",
+				Fields:  []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
+				Tags:    []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}, {Key: "tag3", Value: "3"}},
+				TS:      time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &RowMetric{
-				Name:   tt.fields.Name,
-				Tags:   tt.fields.Tags,
-				Fields: tt.fields.Fields,
-				TS:     tt.fields.TS,
+				NameStr: tt.fields.NameStr,
+				Tags:    tt.fields.Tags,
+				Fields:  tt.fields.Fields,
+				TS:      tt.fields.TS,
 			}
 			m.SortTags()
 			if !cmp.Equal(m, tt.want) {
@@ -168,10 +168,10 @@ func TestRowMetric_SortTags(t *testing.T) {
 
 func TestRowMetric_AddTag(t *testing.T) {
 	type fields struct {
-		Name   string
-		Tags   []*lp.Tag
-		Fields []*lp.Field
-		TS     time.Time
+		NameStr string
+		Tags    []*lp.Tag
+		Fields  []*lp.Field
+		TS      time.Time
 	}
 	type args struct {
 		k string
@@ -186,27 +186,27 @@ func TestRowMetric_AddTag(t *testing.T) {
 		{
 			name: "test AddTag",
 			fields: fields{
-				Name:   "testmetric",
-				Fields: []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
-				Tags:   []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}},
-				TS:     time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
+				NameStr: "testmetric",
+				Fields:  []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
+				Tags:    []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}},
+				TS:      time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
 			},
 			args: args{k: "newTag", v: "tag3"},
 			want: &RowMetric{
-				Name:   "testmetric",
-				Fields: []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
-				Tags:   []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}, {Key: "newTag", Value: "tag3"}},
-				TS:     time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
+				NameStr: "testmetric",
+				Fields:  []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
+				Tags:    []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}, {Key: "newTag", Value: "tag3"}},
+				TS:      time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &RowMetric{
-				Name:   tt.fields.Name,
-				Tags:   tt.fields.Tags,
-				Fields: tt.fields.Fields,
-				TS:     tt.fields.TS,
+				NameStr: tt.fields.NameStr,
+				Tags:    tt.fields.Tags,
+				Fields:  tt.fields.Fields,
+				TS:      tt.fields.TS,
 			}
 			m.AddTag(tt.args.k, tt.args.v)
 			if !cmp.Equal(m, tt.want) {
@@ -246,7 +246,7 @@ func TestRowMetric_AddField(t *testing.T) {
 				v: 3,
 			},
 			want: &RowMetric{
-				Name: "testmetric",
+				NameStr: "testmetric",
 				Fields: []*lp.Field{
 					{Key: "field1", Value: int64(1)},
 					{Key: "field2", Value: int64(2)},
@@ -263,10 +263,10 @@ func TestRowMetric_AddField(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &RowMetric{
-				Name:   tt.fields.Name,
-				Tags:   tt.fields.Tags,
-				Fields: tt.fields.Fields,
-				TS:     tt.fields.TS,
+				NameStr: tt.fields.Name,
+				Tags:    tt.fields.Tags,
+				Fields:  tt.fields.Fields,
+				TS:      tt.fields.TS,
 			}
 			m.AddField(tt.args.k, tt.args.v)
 			if !cmp.Equal(m, tt.want) {
@@ -297,10 +297,10 @@ func TestNewRowMetric(t *testing.T) {
 				ts:     time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
 			},
 			want: &RowMetric{
-				Name:   "testmetric",
-				Fields: []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
-				Tags:   []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}},
-				TS:     time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
+				NameStr: "testmetric",
+				Fields:  []*lp.Field{{Key: "field1", Value: int64(1)}, {Key: "field2", Value: int64(2)}},
+				Tags:    []*lp.Tag{{Key: "tag1", Value: "1"}, {Key: "tag2", Value: "2"}},
+				TS:      time.Date(2001, 1, 1, 1, 0, 0, 10, time.UTC),
 			},
 		},
 	}

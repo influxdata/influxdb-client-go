@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reflect"
 	"testing"
 	"time"
 
-	lp "github.com/influxdata/line-protocol"
+	cmp "github.com/google/go-cmp/cmp"
 )
 
 func TestNewClient(t *testing.T) {
@@ -17,13 +16,81 @@ func TestNewClient(t *testing.T) {
 		httpClient *http.Client
 		options    []Option
 	}
+
 	tests := []struct {
 		name    string
 		args    args
 		want    *Client
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "basic",
+			args: args{
+				httpClient: http.DefaultClient,
+				options: []Option{
+					WithToken("foo"),
+				},
+			},
+			want: &Client{
+				httpClient:      http.DefaultClient,
+				token:           "foo",
+				contentEncoding: "gzip",
+				url: func() *url.URL {
+					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
+					if err != nil {
+						t.Fatal(err)
+					}
+					return u
+				}(),
+				userAgent: ua(),
+			},
+		},
+		{
+			name: "no compression",
+			args: args{
+				httpClient: http.DefaultClient,
+				options: []Option{
+					WithToken("foo"),
+					WithNoCompression(),
+				},
+			},
+			want: &Client{
+				httpClient:      http.DefaultClient,
+				token:           "foo",
+				contentEncoding: "",
+				url: func() *url.URL {
+					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
+					if err != nil {
+						t.Fatal(err)
+					}
+					return u
+				}(),
+				userAgent: ua(),
+			},
+		},
+		{
+			name: "custom ua",
+			args: args{
+				httpClient: http.DefaultClient,
+				options: []Option{
+					WithToken("foo"),
+					WithUserAgent("fake-user-agent"),
+				},
+			},
+			want: &Client{
+				httpClient:      http.DefaultClient,
+				token:           "foo",
+				contentEncoding: "gzip",
+				url: func() *url.URL {
+					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
+					if err != nil {
+						t.Fatal(err)
+					}
+					return u
+				}(),
+				userAgent: "fake-user-agent",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -32,8 +99,8 @@ func TestNewClient(t *testing.T) {
 				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewClient() = %v, want %v", got, tt.want)
+			if !cmp.Equal(got, tt.want, cmp.AllowUnexported(Client{})) {
+				t.Errorf("Diff: %s", cmp.Diff(got, tt.want, cmp.AllowUnexported(Client{})))
 			}
 		})
 	}
@@ -103,58 +170,6 @@ func TestClient_Ping(t *testing.T) {
 				t.Errorf("Client.Ping() got1 = %v, want %v", got1, tt.want1)
 			}
 			cancel()
-		})
-	}
-}
-
-func TestClient_Write(t *testing.T) {
-	type fields struct {
-		httpClient           *http.Client
-		contentEncoding      string
-		gzipCompressionLevel int
-		url                  *url.URL
-		password             string
-		username             string
-		token                string
-		org                  string
-		maxRetries           int
-		errOnFieldErr        bool
-		userAgent            string
-		authorization        string
-	}
-	type args struct {
-		ctx    context.Context
-		bucket string
-		org    string
-		m      []lp.Metric
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &Client{
-				httpClient:           tt.fields.httpClient,
-				contentEncoding:      tt.fields.contentEncoding,
-				gzipCompressionLevel: tt.fields.gzipCompressionLevel,
-				url:                  tt.fields.url,
-				password:             tt.fields.password,
-				username:             tt.fields.username,
-				token:                tt.fields.token,
-				org:                  tt.fields.org,
-				maxRetries:           tt.fields.maxRetries,
-				errOnFieldErr:        tt.fields.errOnFieldErr,
-				userAgent:            tt.fields.userAgent,
-				authorization:        tt.fields.authorization,
-			}
-			if err := c.Write(tt.args.ctx, tt.args.bucket, tt.args.org, tt.args.m...); (err != nil) != tt.wantErr {
-				t.Errorf("Client.Write() error = %v, wantErr %v", err, tt.wantErr)
-			}
 		})
 	}
 }

@@ -24,27 +24,27 @@ const defaultMaxWait = 10 * time.Second
 
 // Client is a client for writing to influx.
 type Client struct {
-	httpClient           *http.Client
-	contentEncoding      string
-	gzipCompressionLevel int
-	url                  *url.URL
-	password             string
-	username             string
-	token                string
-	maxRetries           int
-	errOnFieldErr        bool
-	userAgent            string
-	authorization        string
-	maxLineBytes         int
+	httpClient       *http.Client
+	contentEncoding  string
+	compressionLevel int
+	url              *url.URL
+	password         string
+	username         string
+	token            string
+	maxRetries       int
+	errOnFieldErr    bool
+	userAgent        string
+	authorization    string
+	maxLineBytes     int
 }
 
 // NewClient creates a new Client.  If httpClient is nil, it will use an http client with sane defaults.
 // The client is concurrency safe, so feel free to use it and abuse it to your heart's content.
 func NewClient(httpClient *http.Client, options ...Option) (*Client, error) {
 	c := &Client{
-		httpClient:           httpClient,
-		contentEncoding:      "gzip",
-		gzipCompressionLevel: 4,
+		httpClient:       httpClient,
+		contentEncoding:  "gzip",
+		compressionLevel: 4,
 	}
 	if c.httpClient == nil {
 		c.httpClient = defaultHTTPClient()
@@ -259,7 +259,7 @@ func (c *Client) backoff(triesPtr *uint64, resp *http.Response, err error) error
 func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Request, error) {
 	var err error
 	if c.contentEncoding == "gzip" {
-		body, err = gzip.CompressWithGzip(body, c.gzipCompressionLevel)
+		body, err = gzip.CompressWithGzip(body, c.compressionLevel)
 		if err != nil {
 			return nil, err
 		}

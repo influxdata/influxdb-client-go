@@ -32,9 +32,10 @@ func TestNewClient(t *testing.T) {
 				},
 			},
 			want: &Client{
-				httpClient:      http.DefaultClient,
-				token:           "foo",
-				contentEncoding: "gzip",
+				httpClient:       http.DefaultClient,
+				token:            "foo",
+				contentEncoding:  "gzip",
+				compressionLevel: 4,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {
@@ -55,9 +56,10 @@ func TestNewClient(t *testing.T) {
 				},
 			},
 			want: &Client{
-				httpClient:      http.DefaultClient,
-				token:           "foo",
-				contentEncoding: "",
+				httpClient:       http.DefaultClient,
+				token:            "foo",
+				contentEncoding:  "",
+				compressionLevel: 4,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {
@@ -78,9 +80,35 @@ func TestNewClient(t *testing.T) {
 				},
 			},
 			want: &Client{
-				httpClient:      http.DefaultClient,
-				token:           "foo",
-				contentEncoding: "gzip",
+				httpClient:       http.DefaultClient,
+				token:            "foo",
+				contentEncoding:  "gzip",
+				compressionLevel: 4,
+				url: func() *url.URL {
+					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
+					if err != nil {
+						t.Fatal(err)
+					}
+					return u
+				}(),
+				userAgent: "fake-user-agent",
+			},
+		},
+		{
+			name: "compression level",
+			args: args{
+				httpClient: http.DefaultClient,
+				options: []Option{
+					WithToken("foo"),
+					WithUserAgent("fake-user-agent"),
+					WithGZIP(6),
+				},
+			},
+			want: &Client{
+				httpClient:       http.DefaultClient,
+				token:            "foo",
+				contentEncoding:  "gzip",
+				compressionLevel: 6,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {

@@ -88,7 +88,7 @@ func WithNoCompression() Option {
 func WithGZIP(n int) Option {
 	return func(c *Client) error {
 		c.contentEncoding = "gzip"
-		c.gzipCompressionLevel = n
+		c.compressionLevel = n
 		return nil
 	}
 }

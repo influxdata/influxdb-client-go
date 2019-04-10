@@ -31,7 +31,6 @@ type Client struct {
 	password             string
 	username             string
 	token                string
-	org                  string
 	maxRetries           int
 	errOnFieldErr        bool
 	userAgent            string
@@ -43,8 +42,9 @@ type Client struct {
 // The client is concurrency safe, so feel free to use it and abuse it to your heart's content.
 func NewClient(httpClient *http.Client, options ...Option) (*Client, error) {
 	c := &Client{
-		httpClient:      httpClient,
-		contentEncoding: "gzip",
+		httpClient:           httpClient,
+		contentEncoding:      "gzip",
+		gzipCompressionLevel: 4,
 	}
 	if c.httpClient == nil {
 		c.httpClient = defaultHTTPClient()
@@ -259,7 +259,7 @@ func (c *Client) backoff(triesPtr *uint64, resp *http.Response, err error) error
 func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Request, error) {
 	var err error
 	if c.contentEncoding == "gzip" {
-		body, err = gzip.CompressWithGzip(body)
+		body, err = gzip.CompressWithGzip(body, c.gzipCompressionLevel)
 		if err != nil {
 			return nil, err
 		}

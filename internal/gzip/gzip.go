@@ -10,13 +10,15 @@ import (
 // the gzipped data.
 // An error is returned if passing data to the gzip.Writer fails
 // this is shamelessly stolen from https://github.com/influxdata/telegraf
-func CompressWithGzip(data io.Reader) (io.Reader, error) {
+func CompressWithGzip(data io.Reader, level int) (io.Reader, error) {
 	pipeReader, pipeWriter := io.Pipe()
-	gzipWriter := gzip.NewWriter(pipeWriter)
+	gzipWriter, err := gzip.NewWriterLevel(pipeWriter, level)
+	if err != nil {
+		return nil, err
+	}
 
-	var err error
 	go func() {
-		_, err = io.Copy(gzipWriter, data)
+		_, err := io.Copy(gzipWriter, data)
 		gzipWriter.Close()
 		// subsequent reads from the read half of the pipe will
 		// return no bytes and the error err, or EOF if err is nil.

@@ -87,7 +87,8 @@ func WithNoCompression() Option {
 // The default (should this option not be used ) is level 4.
 func WithGZIP(n int) Option {
 	return func(c *Client) error {
-		c.contentEncoding = ""
+		c.contentEncoding = "gzip"
+		c.gzipCompressionLevel = n
 		return nil
 	}
 }

@@ -8,20 +8,31 @@ Keep an eye on this repo if you are interested in the client.
 
 ## Example:
 ```
-influx, err := client.NewClient(http.DefaultClient, WithAddress("http:/127.0.0.1:9999"), WithToken("mytoken"))
-if err!=nil{
-    panic(err)
-}
-var myMetrics []Metric
+	influx, err := client.NewClient(myHTTPClient, client.WithAddress(myInfluxAddress), client.WithToken("mytoken"))
+	if err != nil {
+		fmt.Print("foo") // error handling here, normally we wouldn't use fmt, but it works for the example
+	}
 
-myMetrics = append(myMetrics, client.NewMetric(
-    map[string]interface{}{"memory":1000,"cpu":0.93},
-    "system-metrics",
-    map[string]string{"hostname":"hal9000"},
-    time.Now())
+	// we use client.NewRowMetric for the example because its easy, but if you need extra performance
+	// it is fine to manually build the []client.Metric{}
+	myMetrics := []client.Metric{
+		client.NewRowMetric(
+			map[string]interface{}{"memory": 1000, "cpu": 0.93},
+			"system-metrics",
+			map[string]string{"hostname": "hal9000"},
+			time.Date(2018, 3, 4, 5, 6, 7, 8, time.UTC)),
+		client.NewRowMetric(
+			map[string]interface{}{"memory": 1000, "cpu": 0.93},
+			"system-metrics",
+			map[string]string{"hostname": "hal9000"},
+			time.Date(2018, 3, 4, 5, 6, 7, 9, time.UTC)),
+	}
 
-influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...)
-
+	// The actual write...
+	if err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
+		fmt.Println(err) // as above use your own error handling here.
+	}
+	influx.Close()
 ```
 
 ## Releases

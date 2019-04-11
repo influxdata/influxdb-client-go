@@ -38,9 +38,9 @@ type Client struct {
 	maxLineBytes     int
 }
 
-// NewClient creates a new Client.  If httpClient is nil, it will use an http client with sane defaults.
+// New creates a new Client.  If httpClient is nil, it will use an http client with sane defaults.
 // The client is concurrency safe, so feel free to use it and abuse it to your heart's content.
-func NewClient(httpClient *http.Client, options ...Option) (*Client, error) {
+func New(httpClient *http.Client, options ...Option) (*Client, error) {
 	c := &Client{
 		httpClient:       httpClient,
 		contentEncoding:  "gzip",

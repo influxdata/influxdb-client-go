@@ -11,7 +11,7 @@ import (
 	cmp "github.com/google/go-cmp/cmp"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNew(t *testing.T) {
 	type args struct {
 		httpClient *http.Client
 		options    []Option
@@ -122,7 +122,7 @@ func TestNewClient(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewClient(tt.args.httpClient, tt.args.options...)
+			got, err := New(tt.args.httpClient, tt.args.options...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -183,7 +183,7 @@ func TestClient_Ping(t *testing.T) {
 				ctx = context.Background()
 			}
 
-			c, err := NewClient(server.Client(), WithToken(tt.token), WithAddress(server.URL))
+			c, err := New(server.Client(), WithToken(tt.token), WithAddress(server.URL))
 			if err != nil {
 				t.Error(err)
 			}

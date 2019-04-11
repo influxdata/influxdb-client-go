@@ -1,4 +1,4 @@
-package client_test
+package influxdb_test
 
 import (
 	"compress/gzip"
@@ -12,13 +12,8 @@ import (
 	"os"
 	"time"
 
-	client "github.com/influxdata/influxdb-client-go"
+	influxdb "github.com/influxdata/influxdb-client-go"
 )
-
-// func TestMain(m *testing.M) {
-// 	// call flag.Parse() here if TestMain uses flags
-// 	os.Exit(m.Run())
-// }
 
 func basicHandler(w http.ResponseWriter, r *http.Request) {
 	reader := r.Body
@@ -106,20 +101,20 @@ func ExampleClient_Write_basic() {
 	myHTTPClient, myHTTPInfluxAddress, teardown := setupMockServer()
 	defer teardown() // we shut down our server at the end of the test, obviously you won't be doing this.
 
-	influx, err := client.New(myHTTPClient, client.WithAddress(myHTTPInfluxAddress), client.WithToken("mytoken"))
+	influx, err := influxdb.New(myHTTPClient, influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithToken("mytoken"))
 	if err != nil {
 		panic("foo") // error handling here, normally we wouldn't use fmt, but it works for the example
 	}
 
 	// we use client.NewRowMetric for the example because its easy, but if you need extra performance
 	// it is fine to manually build the []client.Metric{}.
-	myMetrics := []client.Metric{
-		client.NewRowMetric(
+	myMetrics := []influxdb.Metric{
+		influxdb.NewRowMetric(
 			map[string]interface{}{"memory": 1000, "cpu": 0.93},
 			"system-metrics",
 			map[string]string{"hostname": "hal9000"},
 			time.Date(2018, 3, 4, 5, 6, 7, 8, time.UTC)),
-		client.NewRowMetric(
+		influxdb.NewRowMetric(
 			map[string]interface{}{"memory": 1000, "cpu": 0.93},
 			"system-metrics",
 			map[string]string{"hostname": "hal9000"},
@@ -165,20 +160,20 @@ func ExampleClient_Write_tlsMutualAuthentication() {
 		InsecureSkipVerify: true,
 	}
 
-	influx, err := client.New(client.HTTPClientWithTLSConfig(tlsConfig), client.WithAddress(myHTTPInfluxAddress), client.WithToken("mytoken"))
+	influx, err := influxdb.New(influxdb.HTTPClientWithTLSConfig(tlsConfig), influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithToken("mytoken"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// we use client.NewRowMetric for the example because its easy, but if you need extra performance
 	// it is fine to manually build the []client.Metric{}
-	myMetrics := []client.Metric{
-		client.NewRowMetric(
+	myMetrics := []influxdb.Metric{
+		influxdb.NewRowMetric(
 			map[string]interface{}{"memory": 1000, "cpu": 0.93},
 			"system-metrics",
 			map[string]string{"hostname": "hal9000"},
 			time.Date(2018, 3, 4, 5, 6, 7, 8, time.UTC)),
-		client.NewRowMetric(
+		influxdb.NewRowMetric(
 			map[string]interface{}{"memory": 1000, "cpu": 0.93},
 			"system-metrics",
 			map[string]string{"hostname": "hal9000"},

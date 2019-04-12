@@ -30,7 +30,7 @@ type Client struct {
 	url              *url.URL
 	password         string
 	username         string
-	token            string
+	l                sync.Mutex
 	maxRetries       int
 	errOnFieldErr    bool
 	userAgent        string
@@ -45,22 +45,20 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 		httpClient:       httpClient,
 		contentEncoding:  "gzip",
 		compressionLevel: 4,
+		errOnFieldErr:    true,
 	}
 	if c.httpClient == nil {
 		c.httpClient = defaultHTTPClient()
 	}
 	c.url, _ = url.Parse(`http://127.0.0.1:9999/api/v2`)
 	c.userAgent = ua()
-	if c.token != "" {
-		c.authorization = "Token " + c.token
-	}
 	for i := range options {
 		if err := options[i](c); err != nil {
 			return nil, err
 		}
 	}
-	if c.token == "" {
-		return nil, errors.New("a token is required, use WithToken(\"the_token\")")
+	if c.authorization == "" && !(c.username != "" || c.password != "") {
+		return nil, errors.New("a token or a username and password is required, use WithToken(\"the_token\"), or use WithUserAndPass(\"the_username\",\"the_password\")")
 	}
 	return c, nil
 }
@@ -99,6 +97,9 @@ func (c *Client) Ping(ctx context.Context) (time.Duration, string, error) {
 // Write writes metrics to a bucket, and org.  It retries intelligently.
 // If the write is too big, it retries again, after breaing the payloads into two requests.
 func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (err error) {
+	if c.authorization == "" {
+		return errors.New("a token is requred for a write")
+	}
 	tries := uint64(0)
 	return c.write(ctx, bucket, org, &tries, m...)
 }
@@ -295,7 +296,7 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 
 	switch loc.Scheme {
 	case "http", "https":
-		loc.Path = path.Join(loc.Path, "/api/v2/write")
+		loc.Path = path.Join(loc.Path, "/write")
 	case "unix":
 	default:
 		return "", fmt.Errorf("unsupported scheme: %q", loc.Scheme)

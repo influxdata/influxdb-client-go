@@ -97,10 +97,12 @@ func WithGZIP(n int) Option {
 // The default (should this option not be used) is `http://127.0.0.1:9999`.
 func WithAddress(addr string) Option {
 	return func(c *Client) (err error) {
-		c.url, err = c.url.Parse(addr)
+		u, err := url.Parse(addr)
 		if err != nil {
 			return err
 		}
+		u.Path = c.url.Path
+		c.url = u
 		return nil
 	}
 }
@@ -134,7 +136,15 @@ func WithMaxLineBytes(n int) Option {
 // WithToken returns an option for setting a token.
 func WithToken(token string) Option {
 	return func(c *Client) error {
-		c.token = token
+		c.authorization = "Token " + token
+		return nil
+	}
+}
+
+// WithNoFailOnFieldError returns an option that changes the client so that Client.Write will not fail when there is an encoding field error.
+func WithNoFailOnFieldError() Option {
+	return func(c *Client) error {
+		c.errOnFieldErr = false
 		return nil
 	}
 }

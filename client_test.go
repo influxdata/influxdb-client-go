@@ -33,7 +33,7 @@ func TestNew(t *testing.T) {
 			},
 			want: &Client{
 				httpClient:       http.DefaultClient,
-				token:            "foo",
+				authorization:    "Token foo",
 				contentEncoding:  "gzip",
 				compressionLevel: 4,
 				url: func() *url.URL {
@@ -57,7 +57,7 @@ func TestNew(t *testing.T) {
 			},
 			want: &Client{
 				httpClient:       http.DefaultClient,
-				token:            "foo",
+				authorization:    "Token foo",
 				contentEncoding:  "",
 				compressionLevel: 4,
 				url: func() *url.URL {
@@ -81,7 +81,7 @@ func TestNew(t *testing.T) {
 			},
 			want: &Client{
 				httpClient:       http.DefaultClient,
-				token:            "foo",
+				authorization:    "Token foo",
 				contentEncoding:  "gzip",
 				compressionLevel: 4,
 				url: func() *url.URL {
@@ -106,7 +106,7 @@ func TestNew(t *testing.T) {
 			},
 			want: &Client{
 				httpClient:       http.DefaultClient,
-				token:            "foo",
+				authorization:    "Token foo",
 				contentEncoding:  "gzip",
 				compressionLevel: 6,
 				url: func() *url.URL {

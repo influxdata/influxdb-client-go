@@ -27,7 +27,7 @@ func (c *Client) QueryCSV(flux string, org string) (io.ReadCloser, error) {
 	cleanup := func() {
 		resp.Body.Close()
 	}
-	defer cleanup()
+	defer func() { cleanup() }()
 	if err != nil {
 		return nil, err
 	}

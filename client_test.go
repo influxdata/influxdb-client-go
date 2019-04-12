@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"sync"
 	"testing"
 	"time"
 
@@ -36,6 +37,7 @@ func TestNew(t *testing.T) {
 				authorization:    "Token foo",
 				contentEncoding:  "gzip",
 				compressionLevel: 4,
+				errOnFieldErr:    true,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {
@@ -60,6 +62,7 @@ func TestNew(t *testing.T) {
 				authorization:    "Token foo",
 				contentEncoding:  "",
 				compressionLevel: 4,
+				errOnFieldErr:    true,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {
@@ -84,6 +87,7 @@ func TestNew(t *testing.T) {
 				authorization:    "Token foo",
 				contentEncoding:  "gzip",
 				compressionLevel: 4,
+				errOnFieldErr:    true,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {
@@ -109,6 +113,7 @@ func TestNew(t *testing.T) {
 				authorization:    "Token foo",
 				contentEncoding:  "gzip",
 				compressionLevel: 6,
+				errOnFieldErr:    true,
 				url: func() *url.URL {
 					u, err := url.Parse("http://127.0.0.1:9999/api/v2")
 					if err != nil {
@@ -127,8 +132,8 @@ func TestNew(t *testing.T) {
 				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !cmp.Equal(got, tt.want, cmp.AllowUnexported(Client{})) {
-				t.Errorf("Diff: %s", cmp.Diff(got, tt.want, cmp.AllowUnexported(Client{})))
+			if !cmp.Equal(got, tt.want, cmp.AllowUnexported(Client{}), cmp.AllowUnexported(sync.Mutex{})) {
+				t.Errorf("Diff: %s", cmp.Diff(got, tt.want, cmp.AllowUnexported(Client{}), cmp.AllowUnexported(sync.Mutex{})))
 			}
 		})
 	}

@@ -272,7 +272,6 @@ func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Req
 		}
 	}
 	u, err := makeWriteURL(c.url, bucket, org)
-	fmt.Println(u)
 	if err != nil {
 		return nil, err
 	}

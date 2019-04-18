@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -63,12 +62,10 @@ func (c *Client) makeQueryURL(org string) (string, error) {
 		return "", err
 	}
 	qu.Path = path.Join(qu.Path, "query")
-	fmt.Println(qu.Path)
 
 	params := qu.Query()
 	params.Set("org", org)
 	qu.RawQuery = params.Encode()
-	fmt.Println(qu.String())
 	return qu.String(), nil
 }
 

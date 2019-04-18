@@ -24,7 +24,7 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org string) (*QueryC
 	if err != nil {
 		return nil, err
 	}
-	req.WithContext(ctx)
+	req = req.WithContext(ctx)
 	req.Header.Set("User-Agent", c.userAgent)
 	req.Header.Set("Authorization", c.authorization)
 	req.Header.Set("Content-Type", "application/vnd.flux")

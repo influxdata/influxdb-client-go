@@ -133,6 +133,12 @@ doRequest:
 	}
 	switch resp.StatusCode {
 	case http.StatusOK, http.StatusNoContent:
+	case http.StatusNotFound:
+		return &genericRespError{
+			Code:    resp.Status,
+			Message: "not found",
+		}
+
 	case http.StatusBadRequest:
 		resp.Body.Close()
 		return &genericRespError{
@@ -265,11 +271,12 @@ func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Req
 			return nil, err
 		}
 	}
-	url, err := makeWriteURL(c.url, org, bucket)
+	u, err := makeWriteURL(c.url, bucket, org)
+	fmt.Println(u)
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest("POST", url, body)
+	req, err := http.NewRequest("POST", u, body)
 	if err != nil {
 		return nil, err
 	}
@@ -290,19 +297,23 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	if loc == nil {
 		return "", errors.New("nil url")
 	}
+	u, err := url.Parse(loc.String())
+	if err != nil {
+		return "", err
+	}
 	params := url.Values{}
 	params.Set("bucket", bucket)
 	params.Set("org", org)
 
 	switch loc.Scheme {
 	case "http", "https":
-		loc.Path = path.Join(loc.Path, "/write")
+		u.Path = path.Join(u.Path, "/write")
 	case "unix":
 	default:
-		return "", fmt.Errorf("unsupported scheme: %q", loc.Scheme)
+		return "", fmt.Errorf("unsupported scheme: %q", u.Scheme)
 	}
-	loc.RawQuery = params.Encode()
-	return loc.String(), nil
+	u.RawQuery = params.Encode()
+	return u.String(), nil
 }
 
 // Close closes any idle connections on the Client.

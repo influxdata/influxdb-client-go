@@ -11,6 +11,14 @@ import (
 // We alias here to keep abstractions from leaking.
 type Metric = lp.Metric
 
+// Tag is just a github.com/influxdata/line-protocol.Tag.
+// We alias here to keep abstractions from leaking.
+type Tag = lp.Tag
+
+// Field is just a github.com/influxdata/line-protocol.Field.
+// We alias here to keep abstractions from leaking.
+type Field = lp.Field
+
 // RowMetric is a Metric,
 // that has methods to make it easy to add tags and fields
 type RowMetric struct {

@@ -143,7 +143,7 @@ func TestClient_Ping(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(100 * time.Millisecond)
 		w.Header().Add("X-Influxdb-Version", "2.0-mock")
-		if r.Method != "GET" {
+		if r.Method != http.MethodGet {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}

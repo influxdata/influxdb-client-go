@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func netTransport() *http.Transport {
+func newTransport() *http.Transport {
 	return &http.Transport{
 		Dial: (&net.Dialer{
 			Timeout: 5 * time.Second,
@@ -19,7 +19,7 @@ func netTransport() *http.Transport {
 func defaultHTTPClient() *http.Client {
 	return &http.Client{
 		Timeout:   time.Second * 20,
-		Transport: netTransport(),
+		Transport: newTransport(),
 	}
 }
 

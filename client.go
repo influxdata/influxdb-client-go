@@ -66,7 +66,7 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 // Ping checks the status of cluster.
 func (c *Client) Ping(ctx context.Context) (time.Duration, string, error) {
 	ts := time.Now()
-	req, err := http.NewRequest("GET", c.url.String()+"/ready", nil)
+	req, err := http.NewRequest(http.MethodGet, c.url.String()+"/ready", nil)
 	if err != nil {
 		return 0, "", err
 	}
@@ -95,7 +95,7 @@ func (c *Client) Ping(ctx context.Context) (time.Duration, string, error) {
 }
 
 // Write writes metrics to a bucket, and org.  It retries intelligently.
-// If the write is too big, it retries again, after breaing the payloads into two requests.
+// If the write is too big, it retries again, after breaking the payloads into two requests.
 func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (err error) {
 	if c.authorization == "" {
 		return errors.New("a token is requred for a write")
@@ -105,7 +105,6 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (er
 }
 
 func (c *Client) write(ctx context.Context, bucket, org string, triesPtr *uint64, m ...Metric) error {
-	//r, w := io.Pipe()
 	buf := &bytes.Buffer{}
 	e := lp.NewEncoder(buf)
 doRequest:
@@ -275,7 +274,7 @@ func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Req
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest("POST", u, body)
+	req, err := http.NewRequest(http.MethodPost, u, body)
 	if err != nil {
 		return nil, err
 	}

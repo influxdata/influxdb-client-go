@@ -48,8 +48,16 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 	}
 	c.url, _ = url.Parse(`http://127.0.0.1:9999/api/v2`)
 	c.userAgent = userAgent()
-	for _, option := range options {
-		if err := option(c); err != nil {
+	for i := range options {
+		// check for incompatible options
+		if options[i].name == "WithGZIP" {
+			for j := range options {
+				if options[j].name == "WithNoCompression" {
+					return nil, errors.New("the WithGzip is incompatible with the WithNoCompression option")
+				}
+			}
+		}
+		if err := options[i].f(c); err != nil {
 			return nil, err
 		}
 	}

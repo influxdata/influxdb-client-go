@@ -45,7 +45,7 @@ func (c *Client) Setup(ctx context.Context, bucket, org string, retentionPeriodH
 	}
 	if setupResult.Code != "conflict" && resp.StatusCode == http.StatusCreated && setupResult.Auth.Token != "" {
 		c.l.Lock()
-		WithToken(setupResult.Auth.Token)(c)
+		WithToken(setupResult.Auth.Token).f(c)
 		c.l.Unlock()
 	}
 	return setupResult, nil

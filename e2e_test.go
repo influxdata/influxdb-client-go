@@ -2,12 +2,9 @@ package influxdb_test
 
 import (
 	"context"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"net/url"
-	"path"
 	"testing"
 	"time"
 
@@ -168,27 +165,4 @@ func TestE2E(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Println("output:\n\n", string(b), "\n", int(b[0]))
-}
-
-func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
-	if loc == nil {
-		return "", errors.New("nil url")
-	}
-	u, err := url.Parse(loc.String())
-	if err != nil {
-		return "", err
-	}
-	params := url.Values{}
-	params.Set("bucket", bucket)
-	params.Set("org", org)
-
-	switch loc.Scheme {
-	case "http", "https":
-		u.Path = path.Join(u.Path, "/write")
-	case "unix":
-	default:
-		return "", fmt.Errorf("unsupported scheme: %q", u.Scheme)
-	}
-	u.RawQuery = params.Encode()
-	return u.String(), nil
 }

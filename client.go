@@ -30,7 +30,7 @@ type Client struct {
 	maxRetries       int
 	errOnFieldErr    bool
 	userAgent        string
-	authorization    string
+	authorization    string // the Authorization header
 	maxLineBytes     int
 }
 
@@ -47,9 +47,9 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 		c.httpClient = defaultHTTPClient()
 	}
 	c.url, _ = url.Parse(`http://127.0.0.1:9999/api/v2`)
-	c.userAgent = ua()
-	for i := range options {
-		if err := options[i](c); err != nil {
+	c.userAgent = userAgent()
+	for _, option := range options {
+		if err := option(c); err != nil {
 			return nil, err
 		}
 	}
@@ -60,34 +60,30 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 }
 
 // Ping checks the status of cluster.
-func (c *Client) Ping(ctx context.Context) (time.Duration, string, error) {
-	ts := time.Now()
+func (c *Client) Ping(ctx context.Context) error {
 	req, err := http.NewRequest(http.MethodGet, c.url.String()+"/ready", nil)
 	if err != nil {
-		return 0, "", err
+		return err
 	}
 
 	req = req.WithContext(ctx)
 	resp, err := c.httpClient.Do(req)
-	dur := time.Since(ts)
 	if err != nil {
-		return dur, "", err
+		return err
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
-	dur = time.Since(ts)
 	if err != nil {
-		return dur, "", err
+		return err
 	}
 
 	// we shouldn't see this
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
 		var err = errors.New(string(body))
-		return 0, "", err
+		return err
 	}
 
-	version := resp.Header.Get("X-Influxdb-Version")
-	return dur, version, nil
+	return nil
 }
 
 // backoff is a helper method for backoff, triesPtr must not be nil.

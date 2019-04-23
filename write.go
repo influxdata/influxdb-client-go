@@ -18,9 +18,6 @@ import (
 // Write writes metrics to a bucket, and org.  It retries intelligently.
 // If the write is too big, it retries again, after breaking the payloads into two requests.
 func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (err error) {
-	if c.authorization == "" {
-		return errors.New("a token is requred for a write")
-	}
 	tries := uint64(0)
 	return c.write(ctx, bucket, org, &tries, m...)
 }
@@ -65,10 +62,23 @@ doRequest:
 	}
 
 	switch resp.StatusCode {
-	case http.StatusOK,
-		http.StatusNoContent:
-
-	case http.StatusTooManyRequests, http.StatusServiceUnavailable:
+	case http.StatusOK, http.StatusNoContent:
+	case http.StatusTooManyRequests:
+		err = &genericRespError{
+			Code:    resp.Status,
+			Message: "too many requests too fast",
+		}
+		cleanup()
+		if err2 := c.backoff(triesPtr, resp, err); err2 != nil {
+			return err2
+		}
+		cleanup = func() {}
+		goto doRequest
+	case http.StatusServiceUnavailable:
+		err = &genericRespError{
+			Code:    resp.Status,
+			Message: "service temporarily unavaliable",
+		}
 		cleanup()
 		if err2 := c.backoff(triesPtr, resp, err); err2 != nil {
 			return err2

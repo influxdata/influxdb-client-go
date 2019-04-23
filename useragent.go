@@ -5,6 +5,6 @@ import (
 	"runtime"
 )
 
-func ua() string {
-	return fmt.Sprintf("InfluxDBClient/v0.0.1  (%s; %s; %s)", "golang", runtime.GOOS, runtime.GOARCH)
+func userAgent() string {
+	return fmt.Sprintf("InfluxDBClient/0.0.1  (%s; %s; %s)", "golang", runtime.GOOS, runtime.GOARCH)
 }

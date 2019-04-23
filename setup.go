@@ -12,7 +12,7 @@ import (
 // It requires a client be set up with a username and password.
 // If successful will add a token to the client.
 // RetentionPeriodHrs of zero will result in infinite retention.
-func (c *Client) Setup(ctx context.Context, bucket, org string, RetentionPeriodHrs int) (*SetupResult, error) {
+func (c *Client) Setup(ctx context.Context, bucket, org string, retentionPeriodHrs int) (*SetupResult, error) {
 	if c.username == "" || c.password == "" {
 		return nil, errors.New("a username and password is requred for a setup")
 	}
@@ -22,7 +22,7 @@ func (c *Client) Setup(ctx context.Context, bucket, org string, RetentionPeriodH
 		Password:           c.password,
 		Org:                org,
 		Bucket:             bucket,
-		RetentionPeriodHrs: RetentionPeriodHrs,
+		RetentionPeriodHrs: retentionPeriodHrs,
 	})
 	if err != nil {
 		return nil, err
@@ -41,9 +41,6 @@ func (c *Client) Setup(ctx context.Context, bucket, org string, RetentionPeriodH
 
 	setupResult := &SetupResult{}
 	if err := json.NewDecoder(resp.Body).Decode(setupResult); err != nil {
-		return nil, err
-	}
-	if err != nil {
 		return nil, err
 	}
 	if setupResult.Code != "conflict" && resp.StatusCode == http.StatusCreated && setupResult.Auth.Token != "" {

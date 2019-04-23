@@ -44,6 +44,7 @@ func (m *RowMetric) Time() time.Time {
 }
 
 // SortTags orders the tags of a metric alphnumerically by key.
+// This is just here as a helper, to make it easy to keep tags sorted if you are creating a RowMetric manually.
 func (m *RowMetric) SortTags() {
 	sort.Slice(m.Tags, func(i, j int) bool { return m.Tags[i].Key < m.Tags[j].Key })
 }
@@ -82,13 +83,7 @@ func (m *RowMetric) Name() string {
 
 func convertField(v interface{}) interface{} {
 	switch v := v.(type) {
-	case float64:
-		return v
-	case int64:
-		return v
-	case string:
-		return v
-	case bool:
+	case bool, int64, string, float64:
 		return v
 	case int:
 		return int64(v)
@@ -113,7 +108,7 @@ func convertField(v interface{}) interface{} {
 	case float32:
 		return float64(v)
 	default:
-		return nil
+		panic("unsupported type")
 	}
 }
 

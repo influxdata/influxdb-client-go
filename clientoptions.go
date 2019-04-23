@@ -7,11 +7,11 @@ import (
 	"time"
 )
 
-// Option is an option for the client config.
+// Option is an option for the client config.  If you pass multiple incompatible Options the later one should override.
 type Option func(*Client) error
 
 // HTTPConfig is an https://github.com/influxdata/influxdb1-client compatible client for setting config
-// options.  This is here to make transition to go1 easy.
+// options.  This is here to make transition to the influxdb2 client easy from the old influxdb 1 client library.
 // It is recommended that you set the options using the With___ functions instead.
 type HTTPConfig struct {
 	// Addr should be of the form "http://host:port"
@@ -42,7 +42,7 @@ type HTTPConfig struct {
 	Proxy func(req *http.Request) (*url.URL, error)
 }
 
-// WithV1Config is an option for setting config in a way that makes it easy to convert from the old config.
+// WithV1Config is an option for setting config in a way that makes it easy to convert from the old influxdb1 client config.
 func WithV1Config(conf *HTTPConfig) Option {
 	return func(c *Client) error {
 		if conf.Addr != "" {

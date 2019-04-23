@@ -45,7 +45,7 @@ func TestNew(t *testing.T) {
 					}
 					return u
 				}(),
-				userAgent: ua(),
+				userAgent: userAgent(),
 			},
 		},
 		{
@@ -70,7 +70,7 @@ func TestNew(t *testing.T) {
 					}
 					return u
 				}(),
-				userAgent: ua(),
+				userAgent: userAgent(),
 			},
 		},
 		{
@@ -166,7 +166,6 @@ func TestClient_Ping(t *testing.T) {
 			name:  "ping",
 			token: "faketoken",
 			org:   "myorg",
-			want1: "2.0-mock",
 			args:  0,
 		},
 		{
@@ -192,15 +191,14 @@ func TestClient_Ping(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			got, got1, err := c.Ping(ctx)
+			ts := time.Now()
+			err = c.Ping(ctx)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Client.Ping() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if got > tt.want && tt.want != 0 {
-				t.Errorf("Client.Ping() got = %v, want < %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Client.Ping() got1 = %v, want %v", got1, tt.want1)
+			tsgot := ts.Sub(time.Now())
+			if tsgot > tt.want && tt.want != 0 {
+				t.Errorf("Client.Ping() got = %v, want < %v", tsgot, tt.want)
 			}
 			cancel()
 		})

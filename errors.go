@@ -3,7 +3,6 @@ package influxdb
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 // ErrUnimplemented is an error for when pieces of the client's functionality is unimplemented.
@@ -20,29 +19,6 @@ func (err maxRetriesExceededError) Error() string {
 
 func (err maxRetriesExceededError) Unwrap() error {
 	return err.err
-}
-
-type coalescingError []error
-
-func (err coalescingError) Error() string {
-	buf := strings.Builder{}
-	for _, e := range []error(err) {
-		if e == nil {
-			continue
-		}
-		buf.WriteString(e.Error())
-	}
-	return buf.String()
-}
-
-func (err coalescingError) Unwrap() error {
-	if len(err) > 1 {
-		return coalescingError(err[1:])
-	}
-	if len(err) == 1 {
-		return err[0]
-	}
-	return nil
 }
 
 type genericRespError struct {

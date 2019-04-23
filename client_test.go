@@ -159,7 +159,6 @@ func TestClient_Ping(t *testing.T) {
 		want    time.Duration
 		token   string
 		org     string
-		want1   string
 		wantErr bool
 	}{
 		{
@@ -196,7 +195,7 @@ func TestClient_Ping(t *testing.T) {
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Client.Ping() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			tsgot := ts.Sub(time.Now())
+			tsgot := time.Since(ts)
 			if tsgot > tt.want && tt.want != 0 {
 				t.Errorf("Client.Ping() got = %v, want < %v", tsgot, tt.want)
 			}

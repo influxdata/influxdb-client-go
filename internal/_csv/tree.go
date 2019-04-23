@@ -1,7 +1,6 @@
 // Copyright 2014 The b Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
 package csv // import "modernc.org/b"
 
 import (
@@ -62,7 +61,6 @@ type (
 		d [2*kd + 1]de
 		n *d
 		p *d
-		dTree
 	}
 
 	de struct { // d element
@@ -96,7 +94,6 @@ type (
 		last  *d
 		r     interface{}
 		ver   int64
-		treeInst
 	}
 
 	xe struct { // x element

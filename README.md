@@ -2,7 +2,7 @@
 A home for InfluxDB’s 2.x's golang client. 
 
 ## Pre-Alpha Warning!
-This is not even close to ready for prod use.
+This is not even close to ready for production use.
 Keep an eye on this repo if you are interested in the client.
 
 
@@ -10,10 +10,10 @@ Keep an eye on this repo if you are interested in the client.
 ```
 	influx, err := influxdb.New(myHTTPClient, influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithToken("mytoken"))
 	if err != nil {
-		panic(err) // error handling here, normally we wouldn't use fmt, but it works for the example
+		panic(err) // error handling here; normally we wouldn't use fmt but it works for the example
 	}
 
-	// we use client.NewRowMetric for the example because its easy, but if you need extra performance
+	// we use client.NewRowMetric for the example because it's easy, but if you need extra performance
 	// it is fine to manually build the []client.Metric{}.
 	myMetrics := []influxdb.Metric{
 		influxdb.NewRowMetric(

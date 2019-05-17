@@ -9,24 +9,44 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+
+	"github.com/influxdata/influxdb-client-go/internal/ast"
 )
 
+type queryPost struct {
+	Query  string      `json:"query"`
+	Extern interface{} `json:"extern,omitempty"`
+}
+
 // QueryCSV returns the result of a flux query.
-// TODO: annotations optionally
-func (c *Client) QueryCSV(ctx context.Context, flux string, org string) (*QueryCSVResult, error) {
+// TODO: annotations
+func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern ...interface{}) (*QueryCSVResult, error) {
 	qURL, err := c.makeQueryURL(org)
 	if err != nil {
 		return nil, err
 	}
-
-	req, err := http.NewRequest("POST", qURL, bytes.NewBufferString(flux))
+	qp := queryPost{Query: flux}
+	if len(extern) > 0 {
+		qp.Extern, err = ast.FluxExtern(extern)
+		if err != nil {
+			return nil, err
+		}
+	}
+	data, err := json.Marshal(qp)
 	if err != nil {
 		return nil, err
 	}
+
+	req, err := http.NewRequest("POST", qURL, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+
 	req = req.WithContext(ctx)
 	req.Header.Set("User-Agent", c.userAgent)
 	req.Header.Set("Authorization", c.authorization)
-	req.Header.Set("Content-Type", "application/vnd.flux")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
 	resp, err := c.httpClient.Do(req)
 	// this is so we can unset the defer later if we don't error.
 	cleanup := func() {

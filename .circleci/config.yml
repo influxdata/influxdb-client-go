@@ -7,7 +7,7 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.12.3
-      - image: quay.io/influxdb/influxdb:2.0.0-nightly-alpine
+      - image: quay.io/influxdb/influxdb:nightly-alpine
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/

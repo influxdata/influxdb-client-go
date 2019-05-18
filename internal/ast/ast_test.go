@@ -16,7 +16,7 @@ import (
 func TestAst(t *testing.T) {
 	buf := &bytes.Buffer{}
 	enc := json.NewEncoder(buf)
-	res, err := fluxJSONVars(
+	res, err := FluxExtern(
 		map[string]interface{}{
 			"hello":            "x",
 			"hellofriend":      3,

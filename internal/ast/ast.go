@@ -15,6 +15,8 @@ import (
 	"unicode/utf8"
 )
 
+// FluxExtern is a function that generates an extern given a struct or map[string]<whatever>.
+// It reflects over the object to generate variables.
 func FluxExtern(m ...interface{}) (*Extern, error) {
 	if len(m) == 0 { // early exit
 		return nil, nil

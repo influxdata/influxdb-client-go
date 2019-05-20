@@ -90,13 +90,8 @@ doRequest:
 		if err != nil {
 			return err
 		}
-		if gwerr == nil {
-			return &genericRespError{
-				Code:    resp.Status,
-				Message: " unexpected error",
-			}
-		}
 
+		return gwerr
 	}
 	// we don't defer and close till here, because of the retries.
 	defer func() {

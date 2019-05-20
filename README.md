@@ -1,5 +1,6 @@
 # influxdb-client-go
-A home for InfluxDB’s 2.x's golang client. 
+
+A home for InfluxDB’s 2.x's golang client. This client is not compatible with InfluxDB 1.x--if you are looking for the 1.x golang client you can find it [here](https://github.com/influxdata/influxdb1-client).
 
 ## Pre-Alpha Warning!
 This is not even close to ready for production use.

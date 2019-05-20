@@ -103,7 +103,7 @@ doRequest:
 		}
 	}()
 	e.FailOnFieldErr(c.errOnFieldErr)
-	return nil
+	return err
 }
 
 func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {

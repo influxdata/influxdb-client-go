@@ -90,13 +90,8 @@ doRequest:
 		if err != nil {
 			return err
 		}
-		if gwerr == nil {
-			return &genericRespError{
-				Code:    resp.Status,
-				Message: " unexpected error",
-			}
-		}
 
+		return gwerr
 	}
 	// we don't defer and close till here, because of the retries.
 	defer func() {
@@ -108,7 +103,7 @@ doRequest:
 		}
 	}()
 	e.FailOnFieldErr(c.errOnFieldErr)
-	return nil
+	return err
 }
 
 func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {

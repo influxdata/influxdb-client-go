@@ -21,7 +21,7 @@ func FluxExtern(m ...interface{}) (*Extern, error) {
 	if len(m) == 0 { // early exit
 		return nil, nil
 	}
-	res := &Extern{Type: "File", Body: make([]variableAssignment, 0, len(m))}
+	res := &Extern{Body: make([]variableAssignment, 0, len(m))}
 	for i := range m {
 		v := reflect.ValueOf(m[i])
 		ty := v.Type()
@@ -111,9 +111,21 @@ func FluxExtern(m ...interface{}) (*Extern, error) {
 	return res, nil
 }
 
+// Extern is what we use to marshal something that will get unmarshaled in flux as an ast.File.
 type Extern struct {
-	Type string               `json:"type"`
 	Body []variableAssignment `json:"body"`
+}
+
+// MarshalJSON marshals an Extern so that flux can read it.
+func (e Extern) MarshalJSON() ([]byte, error) {
+	raw := struct {
+		Type string               `json:"type"`
+		Body []variableAssignment `json:"body"`
+	}{
+		Type: "File",
+		Body: e.Body,
+	}
+	return json.Marshal(raw)
 }
 
 type typeError struct {

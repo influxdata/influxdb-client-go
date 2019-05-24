@@ -3,6 +3,8 @@ package ast
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"log"
 	"regexp"
 	"sort"
 	"strings"
@@ -12,6 +14,43 @@ import (
 	"github.com/influxdata/flux"
 	fluxast "github.com/influxdata/flux/ast"
 )
+
+func ExampleFluxExtern_map() {
+	buf := &strings.Builder{}
+	enc := json.NewEncoder(buf)
+	ext, err := FluxExtern(map[string]string{
+		"bucket": "my-bucket",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := enc.Encode(ext); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(buf.String())
+	// Output:
+	// {"type":"File","body":[{"type":"VariableAssignment","id":{"type":"Identifier","name":"bucket"},"init":{"type":"StringLiteral","value":"my-bucket"}}]}
+}
+
+func ExampleFluxExtern_struct() {
+	buf := &strings.Builder{}
+	enc := json.NewEncoder(buf)
+	ext, err := FluxExtern(struct {
+		Bucket        string `flux:"bucket"`
+		OtherVariable string `flux:"otherVariable,omitempty"`
+	}{
+		Bucket: "my-bucket",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := enc.Encode(ext); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(buf.String())
+	// Output:
+	// {"type":"File","body":[{"type":"VariableAssignment","id":{"type":"Identifier","name":"bucket"},"init":{"type":"StringLiteral","value":"my-bucket"}}]}
+}
 
 func TestAst(t *testing.T) {
 	buf := &bytes.Buffer{}

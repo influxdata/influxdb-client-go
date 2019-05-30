@@ -7,6 +7,9 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.12.5
+        environment:
+          ENV: CI
+          GO111MODULE: "on"
       - image: quay.io/influxdb/influxdb:nightly-alpine
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -20,9 +23,6 @@ jobs:
     working_directory: /go/src/github.com/influxdata/influxdb-client-go
     steps:
       - checkout
-      - run: 
-          name: Set Up Environmental variables
-          command: echo 'export GO111MODULE=on' >> $BASH_ENV
       - run:
           name: check tidy
           command: |

@@ -10,7 +10,7 @@ jobs:
         environment:
           ENV: CI
           GO111MODULE: "on"
-      - image: quay.io/influxdb/influxdb:nightly-alpine
+      - image: quay.io/influxdb/influxdb:2.0.0-alpha
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/

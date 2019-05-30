@@ -8,6 +8,8 @@ import(
 	"strconv"
 )
 
+// This is borrowed from https://github.com/deepmap/oapi-codegen/blob/cf4fce0f88dc56a9fafc65cc6ff6d4a7c0ef0f9d/pkg/runtime/styleparam.go
+// so we can eliminate the dependency
 func styleParam(style string, explode bool, paramName string, value interface{}) (string, error) {
 	t := reflect.TypeOf(value)
 	v := reflect.ValueOf(value)

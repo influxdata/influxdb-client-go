@@ -16,6 +16,9 @@ import (
 	"github.com/influxdata/influxdb-client-go/internal/gzip"
 )
 
+// TODO(docmerlin): change the generator so we don't have to hand edit the generated code
+//go:generate go run scripts/buildclient.go
+
 const defaultMaxWait = 10 * time.Second
 
 // Client is a client for writing to influx.

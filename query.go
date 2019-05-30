@@ -27,7 +27,7 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern .
 	}
 	qp := queryPost{Query: flux}
 	if len(extern) > 0 {
-		qp.Extern, err = ast.FluxExtern(extern)
+		qp.Extern, err = ast.FluxExtern(extern...)
 		if err != nil {
 			return nil, err
 		}

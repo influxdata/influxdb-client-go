@@ -20,42 +20,6 @@ func init() {
 	flag.Parse()
 }
 
-// headerMap := map[[2]string][]*influxdb.Field{}
-// standardHeaders := []string{"", "result", "table", "_start", "_stop", "_time", "_value", "_measurement"}
-
-// fields := []*influxdb.Field{}
-
-// for i := range rm {
-// 	for j := range rm[i].Fields {
-// 		key := rm[i].Fields[j].Key
-// 		val := rm[i].Fields[j].Value
-// 		k := [2]string{rm[i].Name(), key}
-// 		l := 0
-// 		q := headerMap[k]
-// 		for ; l < len(q) && (q[l].Value != val || q[l].Key != rm[i].Fields[j].Key); l++ { //l := range headerMap[k][i] {
-// 		}
-// 		if l == len(q) {
-// 			fields = append(q, rm[i].Fields[j])
-// 		}
-// 	}
-// }
-// _ = standardHeaders
-// _ = fields
-// for i := range rm {
-// 	for j := range rm[i].Tags {
-// 		if _, ok := headerMap[rm[i].Tags[j].Key]; !ok {
-// 			headerMap[rm[i].Tags[j].Key] = struct{}{}
-// 			headers = append(standardHeaders, rm[i].Tags[j].Key)
-// 		}
-// 	}
-// }
-
-// w := csv.NewWriter(writer)
-// if err := w.Write(headers); err != nil {
-// }
-// return nil
-//}
-
 func TestE2E(t *testing.T) {
 	if !e2e {
 		t.Skipf("skipping end to end testing, spin up a copy of influxdb 2.x.x on 127.0.0.1 and run tests with --e2e to test")
@@ -155,9 +119,8 @@ func TestE2E(t *testing.T) {
 
 	fmt.Println(sRes.Auth.Token)
 	time.Sleep(5 * time.Second)
-	r, err := influx.QueryCSV(context.Background(), `from(bucket:"e2e-test-bucket")|>range(start:-1000h)|>group()`, `e2e-test-org`)
+	r, err := influx.QueryCSV(context.Background(), `from(bucket:bucket)|>range(start:-1000h)|>group()`, `e2e-test-org`, struct{ Bucket string `flux:"bucket"`}{Bucket: "e2e-test-bucket"})
 	if err != nil {
-		t.Fatal(err)
 		t.Fatal(err)
 	}
 	b, err := ioutil.ReadAll(r)

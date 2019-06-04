@@ -72,7 +72,10 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 
 // Ping checks the status of cluster.
 func (c *Client) Ping(ctx context.Context) error {
-	req, err := http.NewRequest(http.MethodGet, c.url.String()+"/ready", nil)
+	// deep copy c.url, because we have an entirely different path
+	pingURL, _ := url.Parse(c.url.String()) // we don't check the error here, because it just came from an already parsed url.URL object.
+	pingURL.Path = "/ready"
+	req, err := http.NewRequest(http.MethodGet, pingURL.String(), nil)
 	if err != nil {
 		return err
 	}

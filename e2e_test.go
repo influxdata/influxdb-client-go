@@ -124,9 +124,13 @@ func TestE2E(t *testing.T) {
 
 	fmt.Println(sRes.Auth.Token)
 	time.Sleep(5 * time.Second)
-	r, err := influx.QueryCSV(context.Background(), `from(bucket:bucket)|>range(start:-1000h)|>group()`, `e2e-test-org`, struct {
-		Bucket string `flux:"bucket"`
-	}{Bucket: "e2e-test-bucket"})
+	r, err := influx.QueryCSV(
+		context.Background(),
+		`from(bucket:bucket)|>range(start:-1000h)|>group()`,
+		`e2e-test-org`,
+		struct {
+			Bucket string `flux:"bucket"`
+		}{Bucket: "e2e-test-bucket"})
 	if err != nil {
 		t.Fatal(err)
 	}

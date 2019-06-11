@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go"
+	influxdb "github.com/influxdata/influxdb-client-go"
 )
 
 var e2e bool
@@ -22,7 +22,7 @@ func init() {
 
 func TestE2E(t *testing.T) {
 	if !e2e {
-		t.Skipf("skipping end to end testing, spin up a copy of influxdb 2.x.x on 127.0.0.1 and run tests with --e2e to test")
+		t.Skipf("skipping end to end testing, spin up a copy of influxdb 2.x.x on 127.0.0.1 and run tests with --e2e")
 	}
 	influx, err := influxdb.New(nil, influxdb.WithAddress("http://127.0.0.1:9999"), influxdb.WithUserAndPass("e2e-test-user", "e2e-test-password"))
 	if err != nil {
@@ -122,7 +122,6 @@ func TestE2E(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(sRes.Auth.Token)
 	time.Sleep(5 * time.Second)
 	r, err := influx.QueryCSV(
 		context.Background(),
@@ -138,5 +137,5 @@ func TestE2E(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println("output:\n\n", string(b), "\n", int(b[0]))
+	fmt.Println(string(b))
 }

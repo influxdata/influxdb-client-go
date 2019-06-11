@@ -353,7 +353,7 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 	case kind == reflect.Struct:
 		return errors.New("struct argument must be a pointer")
 	default:
-		return fmt.Errorf("Cannot marshal into a type of %s", typeOf)
+		return fmt.Errorf("cannot marshal into a type of %s", typeOf)
 	}
 	return nil
 }
@@ -385,20 +385,4 @@ func convert(s, t string) (interface{}, error) {
 	default:
 		return nil, fmt.Errorf("%s has unknown data type %s", s, t)
 	}
-}
-
-type referencing struct {
-	A interface{}
-}
-
-var a interface{}
-
-func indirect(val, terminal reflect.Value) reflect.Value {
-	typ := val.Elem().Type()
-	for typ.Kind() == reflect.Ptr {
-		val.Elem().Set(reflect.New(typ.Elem()))
-		val = val.Elem()
-		typ = typ.Elem()
-	}
-	return val.Elem()
 }

@@ -43,10 +43,6 @@ func (c *Client) Setup(ctx context.Context, bucket, org string, retentionPeriodH
 	if err := json.NewDecoder(resp.Body).Decode(setupResult); err != nil {
 		return nil, err
 	}
-	if setupResult.Code != "conflict" && resp.StatusCode == http.StatusCreated && setupResult.Auth.Token != "" {
-		c.l.Lock()
-		c.l.Unlock()
-	}
 	return setupResult, nil
 }
 

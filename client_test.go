@@ -142,7 +142,6 @@ func TestClient_Ping(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	//server.Start()
 	defer server.Close()
 
 	tests := []struct {

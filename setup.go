@@ -52,11 +52,11 @@ func (c *Client) Setup(ctx context.Context, bucket, org string, retentionPeriodH
 
 // SetupRequest is a request to setup a new influx instance.
 type SetupRequest struct {
-	Username           string
-	Password           string
-	Org                string
-	Bucket             string
-	RetentionPeriodHrs int
+	Username           string `json:"username"`
+	Password           string `json:"password"`
+	Org                string `json:"org"`
+	Bucket             string `json:"bucket"`
+	RetentionPeriodHrs int    `json:"retentionPeriodHrs"`
 }
 
 // SetupResult is the result of setting up a new influx instance.

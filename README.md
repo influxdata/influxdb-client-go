@@ -1,19 +1,16 @@
 # influxdb-client-go
-A home for InfluxDB’s 2.x's golang client. 
 
-## Pre-Alpha Warning!
-This is not even close to ready for prod use.
-Keep an eye on this repo if you are interested in the client.
+A home for InfluxDB’s 2.x's golang client. This client is not compatible with InfluxDB 1.x--if you are looking for the 1.x golang client you can find it [here](https://github.com/influxdata/influxdb1-client).
 
 
 ## Example:
 ```
 	influx, err := influxdb.New("myToken", influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithHTTPClient(myHTTPClient))
 	if err != nil {
-		panic(err) // error handling here, normally we wouldn't use fmt, but it works for the example
+		panic(err) // error handling here; normally we wouldn't use fmt but it works for the example
 	}
 
-	// we use client.NewRowMetric for the example because its easy, but if you need extra performance
+	// we use client.NewRowMetric for the example because it's easy, but if you need extra performance
 	// it is fine to manually build the []client.Metric{}.
 	myMetrics := []influxdb.Metric{
 		influxdb.NewRowMetric(
@@ -37,3 +34,6 @@ Keep an eye on this repo if you are interested in the client.
 
 ## Releases
 We will be using git-flow style releases, the current stable release will be listed in the master readme.
+
+## Requirements
+`influxdb-client-go` requires go version 1.12 or newer to build.

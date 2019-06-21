@@ -14,8 +14,7 @@ import (
 
 func TestNew(t *testing.T) {
 	type args struct {
-		httpClient *http.Client
-		options    []Option
+		options []Option
 	}
 
 	tests := []struct {
@@ -119,7 +118,7 @@ func TestNew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			opt := append(tt.args.options, WithHTTPClient(http.DefaultClient))
-			got, err := New("foo", opt...)
+			got, err := New("http://127.0.0.1:9999/api/v2", "foo", opt...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -177,7 +176,7 @@ func TestClient_Ping(t *testing.T) {
 				ctx = context.Background()
 			}
 
-			c, err := New(tt.token, WithAddress(server.URL), WithHTTPClient(server.Client()))
+			c, err := New(server.URL, tt.token, WithHTTPClient(server.Client()))
 			if err != nil {
 				t.Error(err)
 			}

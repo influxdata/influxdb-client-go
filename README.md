@@ -5,7 +5,7 @@ A home for InfluxDB’s 2.x's golang client. This client is not compatible with 
 
 ## Example:
 ```
-	influx, err := influxdb.New("myToken", influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithHTTPClient(myHTTPClient))
+	influx, err := influxdb.New(myHTTPInfluxAddress, myToken, influxdb.WithHTTPClient(myHTTPClient))
 	if err != nil {
 		panic(err) // error handling here; normally we wouldn't use fmt but it works for the example
 	}

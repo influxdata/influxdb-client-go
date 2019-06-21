@@ -56,11 +56,6 @@ func WithV1Config(conf *HTTPConfig) Option {
 	return Option{
 		name: "WithV1Config",
 		f: func(c *Client) error {
-			if conf.Addr != "" {
-				if err := WithAddress(conf.Addr).f(c); err != nil {
-					return err
-				}
-			}
 			if conf.Username != "" || conf.Password != "" {
 				if err := WithUserAndPass(conf.Username, conf.Password).f(c); err != nil {
 					return err
@@ -111,23 +106,6 @@ func WithGZIP(n int) Option {
 		f: func(c *Client) error {
 			c.contentEncoding = "gzip"
 			c.compressionLevel = n
-			return nil
-		},
-	}
-}
-
-// WithAddress returns an option for setting the Address for the server that the client will connect to.
-// The default (should this option not be used) is `http://127.0.0.1:9999`.
-func WithAddress(addr string) Option {
-	return Option{
-		name: "WithAddress",
-		f: func(c *Client) (err error) {
-			u, err := url.Parse(addr)
-			if err != nil {
-				return err
-			}
-			u.Path = c.url.Path
-			c.url = u
 			return nil
 		},
 	}

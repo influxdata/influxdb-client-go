@@ -167,7 +167,7 @@ func ExampleClient_Write_basic() {
 	// alternatively you can leave the *http.Client nil, and it will intelligently create one with sane defaults.
 	myHTTPClient, myHTTPInfluxAddress, teardown := setupMockServer()
 	defer teardown() // we shut down our server at the end of the test, obviously you won't be doing this.
-	influx, err := influxdb.New("mytoken", influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithHTTPClient(myHTTPClient))
+	influx, err := influxdb.New(myHTTPInfluxAddress, "mytoken", influxdb.WithHTTPClient(myHTTPClient))
 	if err != nil {
 		panic(err) // error handling here, normally we wouldn't use fmt, but it works for the example
 	}
@@ -237,7 +237,7 @@ func ExampleClient_Write_tlsMutualAuthentication() {
 	}
 	tlsConfig.BuildNameToCertificate()
 
-	influx, err := influxdb.New("mytoken", influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithHTTPClient(influxdb.HTTPClientWithTLSConfig(tlsConfig)))
+	influx, err := influxdb.New(myHTTPInfluxAddress, "mytoken", influxdb.WithHTTPClient(influxdb.HTTPClientWithTLSConfig(tlsConfig)))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -273,7 +273,7 @@ func ExampleClient_Setup() {
 	myHTTPClient, myHTTPInfluxAddress, teardown := setupMockServer()
 	defer teardown() // we shut down our server at the end of the test, obviously you won't be doing this.
 
-	influx, err := influxdb.New("", influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithUserAndPass("my-username", "my-password"), influxdb.WithHTTPClient(myHTTPClient))
+	influx, err := influxdb.New(myHTTPInfluxAddress, "", influxdb.WithUserAndPass("my-username", "my-password"), influxdb.WithHTTPClient(myHTTPClient))
 	if err != nil {
 		panic(err) // error handling here, normally we wouldn't use fmt, but it works for the example
 	}

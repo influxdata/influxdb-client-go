@@ -46,6 +46,9 @@ type HTTPConfig struct {
 	// Proxy configures the Proxy function on the HTTP client.
 	// this currently isn't supported
 	Proxy func(req *http.Request) (*url.URL, error)
+
+	// If HTTPClient is nil, the New Client function will use an http client with sane defaults.
+	HTTPClient *http.Client
 }
 
 // WithV1Config is an option for setting config in a way that makes it easy to convert from the old influxdb1 client config.
@@ -78,6 +81,11 @@ func WithV1Config(conf *HTTPConfig) Option {
 			}
 			if conf.InsecureSkipVerify || conf.TLSConfig != nil || conf.Proxy != nil {
 				panic("Unimplemented")
+			}
+			if conf.HTTPClient != nil {
+				if err := WithHTTPClient(conf.HTTPClient).f(c); err != nil {
+					return err
+				}
 			}
 			return nil
 		},
@@ -160,23 +168,12 @@ func WithMaxLineBytes(n int) Option {
 	}
 }
 
-// WithToken returns an option for setting a token.
-func WithToken(token string) Option {
+// WithHTTPClient returns an option for setting a custom HTTP Client
+func WithHTTPClient(h *http.Client) Option {
 	return Option{
-		name: "WithToken",
+		name: "WithHTTPCLient",
 		f: func(c *Client) error {
-			c.authorization = "Token " + token
-			return nil
-		},
-	}
-}
-
-// WithIgnoreFieldError returns an option that changes the client so that Client.Write will not fail when there is an encoding field error.
-func WithIgnoreFieldError() Option {
-	return Option{
-		name: "WithToken",
-		f: func(c *Client) error {
-			c.errOnFieldErr = false
+			c.httpClient = h
 			return nil
 		},
 	}

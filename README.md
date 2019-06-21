@@ -8,7 +8,7 @@ Keep an eye on this repo if you are interested in the client.
 
 ## Example:
 ```
-	influx, err := influxdb.New(myHTTPClient, influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithToken("mytoken"))
+	influx, err := influxdb.New("myToken", influxdb.WithAddress(myHTTPInfluxAddress), influxdb.WithHTTPClient(myHTTPClient))
 	if err != nil {
 		panic(err) // error handling here, normally we wouldn't use fmt, but it works for the example
 	}

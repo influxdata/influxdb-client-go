@@ -34,18 +34,16 @@ type Client struct {
 	maxLineBytes     int
 }
 
-// New creates a new Client.  If httpClient is nil, it will use an http client with sane defaults.
+// New creates a new Client.
 // The client is concurrency safe, so feel free to use it and abuse it to your heart's content.
-func New(httpClient *http.Client, options ...Option) (*Client, error) {
+func New(token string, options ...Option) (*Client, error) {
 	c := &Client{
-		httpClient:       httpClient,
 		contentEncoding:  "gzip",
 		compressionLevel: 4,
 		errOnFieldErr:    true,
+		authorization:    "Token " + token,
 	}
-	if c.httpClient == nil {
-		c.httpClient = defaultHTTPClient()
-	}
+
 	c.url, _ = url.Parse(`http://127.0.0.1:9999/api/v2`)
 	c.userAgent = userAgent()
 	for i := range options {
@@ -61,8 +59,12 @@ func New(httpClient *http.Client, options ...Option) (*Client, error) {
 			return nil, err
 		}
 	}
+
+	if c.httpClient == nil {
+		c.httpClient = defaultHTTPClient()
+	}
 	if c.authorization == "" && !(c.username != "" || c.password != "") {
-		return nil, errors.New("a token or a username and password is required, use WithToken(\"the_token\"), or use WithUserAndPass(\"the_username\",\"the_password\")")
+		return nil, errors.New("a token or a username and password is required, pass a token to New(), or use WithUserAndPass(\"the_username\",\"the_password\")")
 	}
 	return c, nil
 }

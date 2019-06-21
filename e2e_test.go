@@ -60,7 +60,7 @@ func TestE2E(t *testing.T) {
 	if !e2e {
 		t.Skipf("skipping end to end testing, spin up a copy of influxdb 2.x.x on 127.0.0.1 and run tests with --e2e to test")
 	}
-	influx, err := influxdb.New(nil, influxdb.WithAddress("http://127.0.0.1:9999"), influxdb.WithUserAndPass("e2e-test-user", "e2e-test-password"))
+	influx, err := influxdb.New("", influxdb.WithAddress("http://127.0.0.1:9999"), influxdb.WithUserAndPass("e2e-test-user", "e2e-test-password"))
 	if err != nil {
 		t.Fatal(err)
 	}

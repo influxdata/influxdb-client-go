@@ -14,8 +14,7 @@ import (
 
 func TestNew(t *testing.T) {
 	type args struct {
-		httpClient *http.Client
-		options    []Option
+		options []Option
 	}
 
 	tests := []struct {
@@ -27,10 +26,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "basic",
 			args: args{
-				httpClient: http.DefaultClient,
-				options: []Option{
-					WithToken("foo"),
-				},
+				options: []Option{},
 			},
 			want: &Client{
 				httpClient:       http.DefaultClient,
@@ -51,9 +47,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "no compression",
 			args: args{
-				httpClient: http.DefaultClient,
 				options: []Option{
-					WithToken("foo"),
 					WithNoCompression(),
 				},
 			},
@@ -76,9 +70,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "custom ua",
 			args: args{
-				httpClient: http.DefaultClient,
 				options: []Option{
-					WithToken("foo"),
 					WithUserAgent("fake-user-agent"),
 				},
 			},
@@ -101,9 +93,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "compression level",
 			args: args{
-				httpClient: http.DefaultClient,
 				options: []Option{
-					WithToken("foo"),
 					WithUserAgent("fake-user-agent"),
 					WithGZIP(6),
 				},
@@ -127,7 +117,8 @@ func TestNew(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := New(tt.args.httpClient, tt.args.options...)
+			opt := append(tt.args.options, WithHTTPClient(http.DefaultClient))
+			got, err := New("http://127.0.0.1:9999/api/v2", "foo", opt...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -185,7 +176,7 @@ func TestClient_Ping(t *testing.T) {
 				ctx = context.Background()
 			}
 
-			c, err := New(server.Client(), WithToken(tt.token), WithAddress(server.URL))
+			c, err := New(server.URL, tt.token, WithHTTPClient(server.Client()))
 			if err != nil {
 				t.Error(err)
 			}

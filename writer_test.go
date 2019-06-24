@@ -48,29 +48,19 @@ func TestAutoFlush(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		res := atomic.AddUint64(&q, 1)
 		if res > 3 {
-			t.Errorf("size based flush happened too often")
+			t.Errorf("size based flush happened too often, expected 3 but got %d", res)
 		}
-		// reader, err := gzip.NewReader(r.Body)
-		// if err != nil {
-		// 	t.Error(err)
-		// }
-
-		// a, err := ioutil.ReadAll(reader)
-		// if err != nil {
-		// 	t.Error(err)
-		// }
-		// fmt.Println(string(a))
 	}))
 	cl, err := influxdb.New(server.Client(), influxdb.WithToken("foo"), influxdb.WithAddress(server.URL))
 	if err != nil {
 		t.Error(e2e)
 	}
-	w := cl.NewBufferingWriter("my-bucket", "my-org", 0, 10, func(err error) {
+	w := cl.NewBufferingWriter("my-bucket", "my-org", 0, 100*1024, func(err error) {
 		t.Error(err)
 	})
 	w.Start()
 	ts := time.Time{}
-	for i := 0; i < 400000; i++ {
+	for i := 0; i < 3000; i++ {
 		ts = ts.Add(1)
 		_, err = w.Write([]byte("TestWriterE2E"),
 			ts,

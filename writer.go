@@ -56,16 +56,7 @@ func (w *LPWriter) WriteMetrics(m ...Metric) (int, error) {
 			return j, err
 		}
 	}
-	buf := w.buf
-	// asyncronously flush if the size of the buffer is too big.
-	if w.flushSize > 0 && buf.Len() > w.flushSize {
-		w.buf.Buffer = bufferPool.Get().(*bytes.Buffer)
-		w.wg.Add(1)
-		go func() {
-			w.flush(context.TODO(), buf.Buffer)
-			w.wg.Done()
-		}()
-	}
+	w.asyncFlush()
 	w.lock.Unlock()
 	return 0, nil
 }
@@ -91,18 +82,20 @@ func (w *LPWriter) Write(name []byte, ts time.Time, tagKeys, tagVals, fieldKeys 
 	if err != nil {
 		return i, err
 	}
+	w.asyncFlush()
+	w.lock.Unlock()
+	return i, err
+}
+func (w *LPWriter) asyncFlush() {
 	if w.flushSize > 0 && w.buf.Len() > w.flushSize {
 		w.wg.Add(1)
+		buf := w.buf.Buffer
+		w.buf.Buffer = bufferPool.Get().(*bytes.Buffer)
 		go func() {
-			buf := w.buf.Buffer
-			//w.buf =
-			w.buf.Buffer = bufferPool.Get().(*bytes.Buffer)
 			w.flush(context.TODO(), buf)
 			w.wg.Done()
 		}()
 	}
-	w.lock.Unlock()
-	return i, err
 }
 
 // Start starts an LPWriter, so that the writer can flush it out to influxdb.
@@ -183,7 +176,7 @@ doRequest:
 	cleanup = func() {
 		r := io.LimitReader(resp.Body, 1<<24) // we limit it because it is usually better to just reuse the body, but sometimes it isn't worth it.
 		// throw away the rest of the body so the connection can be reused even if there is still stuff on the wire.
-		ioutil.ReadAll(r) // we don't care about the error here, it is just to empty the tcp buffer
+		_, _ = ioutil.ReadAll(r) // we don't care about the error here, it is just to empty the tcp buffer
 		resp.Body.Close()
 	}
 

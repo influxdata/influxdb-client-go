@@ -52,6 +52,7 @@ func New(connection string, token string, options ...Option) (*Client, error) {
 		connection = `http://127.0.0.1:9999`
 	}
 	u, err := url.Parse(connection)
+	u.Path = `/api/v2`
 	if err != nil {
 		return nil, fmt.Errorf("Error: could not parse url: %v", err)
 	}

@@ -14,7 +14,7 @@ import (
 
 func TestWriterStartupAndShutdown(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
-	cl, err := influxdb.New(server.Client(), influxdb.WithToken("foo"), influxdb.WithAddress(server.URL))
+	cl, err := influxdb.New(server.URL, "foo", influxdb.WithHTTPClient(server.Client()))
 	if err != nil {
 		server.Close()
 		t.Fatal(err)
@@ -51,7 +51,7 @@ func TestAutoFlush(t *testing.T) {
 			t.Errorf("size based flush happened too often, expected 3 but got %d", res)
 		}
 	}))
-	cl, err := influxdb.New(server.Client(), influxdb.WithToken("foo"), influxdb.WithAddress(server.URL))
+	cl, err := influxdb.New(server.URL, "foo", influxdb.WithHTTPClient(server.Client()))
 	if err != nil {
 		t.Error(e2e)
 	}

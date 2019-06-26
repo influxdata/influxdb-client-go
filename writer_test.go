@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -26,16 +27,16 @@ func TestWriterStartupAndShutdown(t *testing.T) {
 	w.Start()
 	for i := 0; i < 20; i++ {
 		wg.Add(1)
-		time.Sleep(1)
 		go func() {
+			runtime.Gosched()
 			w.Start()
 			wg.Done()
 		}()
 	}
 	for i := 0; i < 20; i++ {
 		wg.Add(1)
-		time.Sleep(1)
 		go func() {
+			runtime.Gosched()
 			w.Stop()
 			wg.Done()
 		}()

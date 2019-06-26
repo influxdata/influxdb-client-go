@@ -93,6 +93,10 @@ func (w *LPWriter) asyncFlush() {
 		w.buf.Buffer = bufferPool.Get().(*bytes.Buffer)
 		go func() {
 			w.flush(context.TODO(), buf)
+			if buf.Len() <= maxPooledBuffer {
+				buf.Reset()
+				bufferPool.Put(buf)
+			}
 			w.wg.Done()
 		}()
 	}
@@ -144,19 +148,17 @@ func (w *LPWriter) Flush(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	if buf.Len() <= maxPooledBuffer {
+		buf.Reset()
+		bufferPool.Put(buf)
+	}
 	w.wg.Done()
 	return err
 }
 
 func (w *LPWriter) flush(ctx context.Context, buf *bytes.Buffer) error {
 
-	cleanup := func() {
-		buf.Reset()
-		// save the buffer if it is less some size
-		// this number was chosen ar
-		// we don't save huge buffers, because
-		// it can waste memory if you have 1 huge buffer that isn't getting gced but other smaller buffers hanging around
-	}
+	cleanup := func() {}
 	defer func() { cleanup() }()
 	// early exit so we don't send empty buffers
 doRequest:

@@ -116,8 +116,8 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 		return "", err
 	}
 	params := url.Values{}
-	params.Set("bucket", bucket)
 	params.Set("org", org)
+	params.Set("bucket", bucket)
 	params.Set("precision", "ns")
 
 	switch loc.Scheme {

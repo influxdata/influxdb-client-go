@@ -17,7 +17,7 @@ import (
 
 // Write writes metrics to a bucket, and org.  It retries intelligently.
 // If the write is too big, it retries again, after breaking the payloads into two requests.
-func (c *Client) Write(ctx context.Context, bucket, org string, m...Metric) (err error) {
+func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (err error) {
 	tries := uint64(0)
 	return c.write(ctx, bucket, org, &tries, m...)
 }
@@ -50,7 +50,6 @@ doRequest:
 	if err != nil {
 		return err
 	}
-	fmt.Println(req)
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return err

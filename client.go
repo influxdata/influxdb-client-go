@@ -138,7 +138,7 @@ func (c *Client) backoff(triesPtr *uint64, resp *http.Response, err error) error
 	return nil
 }
 
-func (c *Client) makeWriteRequest(bucket, org, precision string, body io.Reader) (*http.Request, error) {
+func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Request, error) {
 	var err error
 	if c.contentEncoding == "gzip" {
 		body, err = gzip.CompressWithGzip(body, c.compressionLevel)
@@ -146,7 +146,7 @@ func (c *Client) makeWriteRequest(bucket, org, precision string, body io.Reader)
 			return nil, err
 		}
 	}
-	u, err := makeWriteURL(c.url, bucket, org, precision)
+	u, err := makeWriteURL(c.url, bucket, org)
 	if err != nil {
 		return nil, err
 	}

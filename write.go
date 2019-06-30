@@ -17,9 +17,9 @@ import (
 
 // Write writes metrics to a bucket, and org.  It retries intelligently.
 // If the write is too big, it retries again, after breaking the payloads into two requests.
-func (c *Client) Write(ctx context.Context, bucket, org, precision string, m...Metric) (err error) {
+func (c *Client) Write(ctx context.Context, bucket, org string, m...Metric) (err error) {
 	tries := uint64(0)
-	return c.write(ctx, bucket, org, precision, &tries, m...)
+	return c.write(ctx, bucket, org, &tries, m...)
 }
 
 func parseWriteError(r io.Reader) (*genericRespError, error) {
@@ -30,7 +30,7 @@ func parseWriteError(r io.Reader) (*genericRespError, error) {
 	return werr, nil
 }
 
-func (c *Client) write(ctx context.Context, bucket, org, precision string, triesPtr *uint64, m ...Metric) error {
+func (c *Client) write(ctx context.Context, bucket, org string, triesPtr *uint64, m ...Metric) error {
 	buf := &bytes.Buffer{}
 	e := lp.NewEncoder(buf)
 	cleanup := func() {}
@@ -46,10 +46,11 @@ doRequest:
 			return err
 		}
 	}
-	req, err := c.makeWriteRequest(bucket, org, precision, buf)
+	req, err := c.makeWriteRequest(bucket, org, buf)
 	if err != nil {
 		return err
 	}
+	fmt.Println(req)
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
@@ -106,7 +107,7 @@ doRequest:
 	return err
 }
 
-func makeWriteURL(loc *url.URL, bucket, org, precision string) (string, error) {
+func makeWriteURL(loc *url.URL, bucket, org) (string, error) {
 	if loc == nil {
 		return "", errors.New("nil url")
 	}
@@ -117,7 +118,7 @@ func makeWriteURL(loc *url.URL, bucket, org, precision string) (string, error) {
 	params := url.Values{}
 	params.Set("bucket", bucket)
 	params.Set("org", org)
-	params.Set("precision", precision)
+	params.Set("precision", "ns")
 
 	switch loc.Scheme {
 	case "http", "https":

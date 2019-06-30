@@ -107,7 +107,7 @@ doRequest:
 	return err
 }
 
-func makeWriteURL(loc *url.URL, bucket, org) (string, error) {
+func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	if loc == nil {
 		return "", errors.New("nil url")
 	}

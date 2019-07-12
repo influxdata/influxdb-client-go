@@ -63,7 +63,11 @@ func (w *LPWriter) WriteMetrics(m ...Metric) (int, error) {
 
 // NewBufferingWriter creates a new BufferingWriter.
 func (c *Client) NewBufferingWriter(bucket string, org string, flushInterval time.Duration, flushSize int, onError func(error)) *LPWriter {
-	w := &LPWriter{c: c, buf: switchableBuffer{&bytes.Buffer{}}, flushSize: flushSize, flushInterval: flushInterval, stop: make(chan struct{})}
+	// if onError is nil set to a noop
+	if onError == nil {
+		onError = func(_ error) {}
+	}
+	w := &LPWriter{c: c, buf: switchableBuffer{&bytes.Buffer{}}, flushSize: flushSize, flushInterval: flushInterval, stop: make(chan struct{}), onError: onError}
 	w.enc = lp.NewEncoder(&w.buf)
 	w.enc.FailOnFieldErr(w.errOnFieldErr)
 	return w

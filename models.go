@@ -7,6 +7,14 @@ import (
 	lp "github.com/influxdata/line-protocol"
 )
 
+// Organisation is the name of the organisation under which
+// metrics will be published
+type Organisation string
+
+// Bucket is the name of the bucket to which metrics will be
+// published
+type Bucket string
+
 // Metric is just a github.com/influxdata/line-protocol.Metric.
 // We alias here to keep abstractions from leaking.
 type Metric = lp.Metric

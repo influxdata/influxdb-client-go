@@ -6,21 +6,15 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 	"net/url"
-	"strconv"
 	"sync"
-	"sync/atomic"
-	"time"
 
 	"github.com/influxdata/influxdb-client-go/internal/gzip"
 )
 
 // TODO(docmerlin): change the generator so we don't have to hand edit the generated code
 //go:generate go run scripts/buildclient.go
-
-const defaultMaxWait = 10 * time.Second
 
 // Client is a client for writing to influx.
 type Client struct {
@@ -31,7 +25,6 @@ type Client struct {
 	password         string
 	username         string
 	l                sync.Mutex
-	maxRetries       int
 	errOnFieldErr    bool
 	userAgent        string
 	authorization    string // the Authorization header
@@ -109,32 +102,6 @@ func (c *Client) Ping(ctx context.Context) error {
 		return err
 	}
 
-	return nil
-}
-
-// backoff is a helper method for backoff, triesPtr must not be nil.
-func (c *Client) backoff(triesPtr *uint64, resp *http.Response, err error) error {
-	tries := atomic.LoadUint64(triesPtr)
-	if c.maxRetries >= 0 || int(tries) >= c.maxRetries {
-		return maxRetriesExceededError{
-			err:   err,
-			tries: c.maxRetries,
-		}
-	}
-	retry := 0
-	if resp != nil {
-		retryAfter := resp.Header.Get("Retry-After")
-		retry, _ = strconv.Atoi(retryAfter) // we ignore the error here because an error already means retry is 0.
-	}
-	sleepFor := time.Duration(retry) * time.Second
-	if retry == 0 { // if we didn't get a Retry-After or it is zero, instead switch to exponential backoff
-		sleepFor = time.Duration(rand.Int63n(((1 << tries) - 1) * 10 * int64(time.Microsecond)))
-	}
-	if sleepFor > defaultMaxWait {
-		sleepFor = defaultMaxWait
-	}
-	time.Sleep(sleepFor)
-	atomic.AddUint64(triesPtr, 1)
 	return nil
 }
 

@@ -43,7 +43,7 @@ func TestE2E(t *testing.T) {
 		t.Fatalf("expected user to be %s, but was %s", "e2e-test-user", sRes.User.Name)
 	}
 	now := time.Now()
-	err = influx.Write(context.Background(), "e2e-test-bucket", "e2e-test-org",
+	_, err = influx.Write(context.Background(), influxdb.Organisation("e2e-test-org"), influxdb.Bucket("e2e-test-bucket"),
 		&influxdb.RowMetric{
 			NameStr: "test",
 			Tags: []*influxdb.Tag{

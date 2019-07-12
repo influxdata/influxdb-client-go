@@ -136,6 +136,7 @@ var bufferPool = sync.Pool{New: func() interface{} { return &bytes.Buffer{} }}
 // Flush writes out the internal buffer to the database.
 func (w *LPWriter) Flush(ctx context.Context) error {
 	w.wg.Add(1)
+	defer w.wg.Done()
 	w.lock.Lock()
 	if w.buf.Len() == 0 {
 		w.lock.Unlock()
@@ -152,7 +153,6 @@ func (w *LPWriter) Flush(ctx context.Context) error {
 		buf.Reset()
 		bufferPool.Put(buf)
 	}
-	w.wg.Done()
 	return err
 }
 

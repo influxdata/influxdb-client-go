@@ -2,9 +2,9 @@ package main
 
 import (
 	"io"
-	 "io/ioutil"
+	"io/ioutil"
 	"log"
-	 "net/http"
+	"net/http"
 	"os"
 	"os/exec"
 )
@@ -35,7 +35,7 @@ func main() {
 		log.Fatalf("failed to flush swagger to temp file %v", err)
 	}
 
-	cmd := exec.Command("oapi-codegen", "-generate=client", "-package=genclient", f.Name() )
+	cmd := exec.Command("oapi-codegen", "-generate=client", "-package=genclient", f.Name())
 	r, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Fatalf("oapi-codegen execution failed %v", err)
@@ -48,11 +48,11 @@ func main() {
 	_, err = fout.WriteString(`// Code generated for client DO NOT EDIT.
 // TODO(docmerlin): modify generator so we don't need to edit the generated code.
 // The generated code is modified to remove external dependencies and the GetSwagger function is removed.`)
-	if err!=nil{
+	if err != nil {
 		log.Fatalf("unable to write generated comment %v", err)
 	}
 	go func() {
-		out, err:=ioutil.ReadAll(r)
+		out, err := ioutil.ReadAll(r)
 		if err != nil {
 			log.Fatalf("failed to read client code from generator %v", err)
 		}

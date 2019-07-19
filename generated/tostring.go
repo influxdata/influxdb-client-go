@@ -1,11 +1,12 @@
 package genclient
-import(
-	"sort"
+
+import (
 	"fmt"
-	"strings"
 	"reflect"
-	"time"
+	"sort"
 	"strconv"
+	"strings"
+	"time"
 )
 
 // This is borrowed from https://github.com/deepmap/oapi-codegen/blob/cf4fce0f88dc56a9fafc65cc6ff6d4a7c0ef0f9d/pkg/runtime/styleparam.go
@@ -39,7 +40,6 @@ func styleParam(style string, explode bool, paramName string, value interface{})
 	}
 }
 
-
 func styleSlice(style string, explode bool, paramName string, values []interface{}) (string, error) {
 	var prefix string
 	var separator string
@@ -55,7 +55,7 @@ func styleSlice(style string, explode bool, paramName string, values []interface
 			separator = ","
 		}
 	case "matrix":
-		prefix = ";"+paramName+"="
+		prefix = ";" + paramName + "="
 		if explode {
 			separator = prefix
 		} else {
@@ -69,7 +69,7 @@ func styleSlice(style string, explode bool, paramName string, values []interface
 			separator = ","
 		}
 	case "spaceDelimited":
-		prefix = paramName+"="
+		prefix = paramName + "="
 		if explode {
 			separator = "&" + prefix
 		} else {

@@ -135,9 +135,11 @@ type QueryCSVResult struct {
 }
 
 // Next iterates to the next row in the data set.  Typically this is called like so:
-// for q.Next(){
-// 	... // do thing here
-// }
+//
+// 	for q.Next(){
+// 		... // do thing here
+// 	}
+//
 // It will call Close() on the result when it encounters EOF.
 func (q *QueryCSVResult) Next() bool {
 	inNameRow := false

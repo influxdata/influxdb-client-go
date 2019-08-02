@@ -12,7 +12,7 @@ import (
 // It requires a client be set up with a username and password.
 // If successful will add a token to the client.
 // RetentionPeriodHrs of zero will result in infinite retention.
-func (c *Client) Setup(ctx context.Context, bucket, org string, retentionPeriodHrs int) (*SetupResult, error) {
+func (c *Client) Setup(ctx context.Context, org Organisation, bucket Bucket, retentionPeriodHrs int) (*SetupResult, error) {
 	if c.username == "" || c.password == "" {
 		return nil, errors.New("a username and password is requred for a setup")
 	}
@@ -54,11 +54,11 @@ func (c *Client) Setup(ctx context.Context, bucket, org string, retentionPeriodH
 
 // SetupRequest is a request to setup a new influx instance.
 type SetupRequest struct {
-	Username           string `json:"username"`
-	Password           string `json:"password"`
-	Org                string `json:"org"`
-	Bucket             string `json:"bucket"`
-	RetentionPeriodHrs int    `json:"retentionPeriodHrs"`
+	Username           string       `json:"username"`
+	Password           string       `json:"password"`
+	Org                Organisation `json:"org"`
+	Bucket             Bucket       `json:"bucket"`
+	RetentionPeriodHrs int          `json:"retentionPeriodHrs"`
 }
 
 // SetupResult is the result of setting up a new influx instance.

@@ -29,7 +29,7 @@ func TestE2E(t *testing.T) {
 		t.Fatal(err)
 	}
 	// set up the bucket and org and get the token
-	sRes, err := influx.Setup(context.Background(), "e2e-test-bucket", "e2e-test-org", 0)
+	sRes, err := influx.Setup(context.Background(), influxdb.Organisation("e2e-test-org"), influxdb.Bucket("e2e-test-bucket"), 0)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -43,7 +43,7 @@ func TestE2E(t *testing.T) {
 		t.Fatalf("expected user to be %s, but was %s", "e2e-test-user", sRes.User.Name)
 	}
 	now := time.Now()
-	err = influx.Write(context.Background(), "e2e-test-bucket", "e2e-test-org",
+	_, err = influx.Write(context.Background(), "e2e-test-bucket", "e2e-test-org",
 		&influxdb.RowMetric{
 			NameStr: "test",
 			Tags: []*influxdb.Tag{
@@ -123,6 +123,7 @@ func TestE2E(t *testing.T) {
 	}
 
 	time.Sleep(5 * time.Second)
+
 	r, err := influx.QueryCSV(
 		context.Background(),
 		`from(bucket:bucket)|>range(start:-1000h)|>group()`,
@@ -133,9 +134,11 @@ func TestE2E(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	fmt.Println(string(b))
 }

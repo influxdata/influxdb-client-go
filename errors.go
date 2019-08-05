@@ -8,19 +8,6 @@ import (
 // ErrUnimplemented is an error for when pieces of the client's functionality is unimplemented.
 var ErrUnimplemented = errors.New("unimplemented")
 
-type maxRetriesExceededError struct {
-	tries int
-	err   error
-}
-
-func (err maxRetriesExceededError) Error() string {
-	return fmt.Sprintf("max retries of %d reached, and we recieved an error of %v", err.tries, err.err)
-}
-
-func (err maxRetriesExceededError) Unwrap() error {
-	return err.err
-}
-
 type genericRespError struct {
 	Code      string
 	Message   string

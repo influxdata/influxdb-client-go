@@ -11,10 +11,10 @@ import (
 func Test_New(t *testing.T) {
 	var (
 		client  = &influxdb.Client{}
-		org     = influxdb.Organisation("influx")
-		bkt     = influxdb.Bucket("default")
+		bkt     = "default"
+		org     = "influx"
 		options = Options{WithBufferSize(12), WithFlushInterval(5 * time.Minute)}
-		wr      = New(client, org, bkt, options...)
+		wr      = New(client, bkt, org, options...)
 	)
 
 	require.Equal(t, 5*time.Minute, wr.flushInterval)
@@ -26,9 +26,9 @@ func Test_New(t *testing.T) {
 func Test_BucketWriter(t *testing.T) {
 	var (
 		spy    = &bucketWriter{}
-		org    = influxdb.Organisation("influx")
-		bucket = influxdb.Bucket("default")
-		wr     = NewBucketWriter(spy, org, bucket)
+		bucket = "default"
+		org    = "influx"
+		wr     = NewBucketWriter(spy, bucket, org)
 
 		expected = []bucketWriteCall{
 			{org, bucket, createTestRowMetrics(t, 4)},

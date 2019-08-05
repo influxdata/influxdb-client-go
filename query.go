@@ -48,7 +48,7 @@ type dialect struct {
 
 // QueryCSV returns the result of a flux query.
 // TODO: annotations
-func (c *Client) QueryCSV(ctx context.Context, flux string, org Organisation, extern ...interface{}) (*QueryCSVResult, error) {
+func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern ...interface{}) (*QueryCSVResult, error) {
 	qURL, err := c.makeQueryURL(org)
 	if err != nil {
 		return nil, err
@@ -108,7 +108,7 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org Organisation, ex
 	return &QueryCSVResult{ReadCloser: resp.Body, csvReader: csv.NewReader(resp.Body)}, nil
 }
 
-func (c *Client) makeQueryURL(org Organisation) (string, error) {
+func (c *Client) makeQueryURL(org string) (string, error) {
 	qu, err := url.Parse(c.url.String())
 	if err != nil {
 		return "", err
@@ -116,7 +116,7 @@ func (c *Client) makeQueryURL(org Organisation) (string, error) {
 	qu.Path = path.Join(qu.Path, "query")
 
 	params := qu.Query()
-	params.Set("org", string(org))
+	params.Set("org", org)
 	qu.RawQuery = params.Encode()
 	return qu.String(), nil
 }

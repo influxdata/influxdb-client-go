@@ -17,7 +17,7 @@ import (
 
 // Write writes metrics to a bucket, and org.  It retries intelligently.
 // If the write is too big, it retries again, after breaking the payloads into two requests.
-func (c *Client) Write(ctx context.Context, org Organisation, bucket Bucket, m ...Metric) (n int, err error) {
+func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n int, err error) {
 	var (
 		buf = &bytes.Buffer{}
 		e   = lp.NewEncoder(buf)
@@ -37,7 +37,7 @@ func (c *Client) Write(ctx context.Context, org Organisation, bucket Bucket, m .
 		}
 	}
 
-	req, err := c.makeWriteRequest(string(bucket), string(org), buf)
+	req, err := c.makeWriteRequest(bucket, org, buf)
 	if err != nil {
 		return 0, err
 	}

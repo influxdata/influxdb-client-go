@@ -15,13 +15,13 @@ type bucketWriter struct {
 }
 
 type bucketWriteCall struct {
-	org  influxdb.Organisation
-	bkt  influxdb.Bucket
+	bkt  string
+	org  string
 	data []influxdb.Metric
 }
 
-func (b *bucketWriter) Write(_ context.Context, org influxdb.Organisation, bkt influxdb.Bucket, m ...influxdb.Metric) (int, error) {
-	b.calls = append(b.calls, bucketWriteCall{org, bkt, m})
+func (b *bucketWriter) Write(_ context.Context, bucket, org string, m ...influxdb.Metric) (int, error) {
+	b.calls = append(b.calls, bucketWriteCall{bucket, org, m})
 	return len(m), nil
 }
 

@@ -9,16 +9,16 @@ import (
 // BucketMetricWriter is a type which Metrics can be written to a particular bucket
 // in a particular organisation
 type BucketMetricWriter interface {
-	Write(context.Context, influxdb.Organisation, influxdb.Bucket, ...influxdb.Metric) (int, error)
+	Write(context.Context, string, string, ...influxdb.Metric) (int, error)
 }
 
 // New constructs a point writer with an underlying buffer from the provided BucketMetricWriter
 // The writer will flushed metrics to the underlying BucketMetricWriter when the buffer is full
 // or the configured flush interval ellapses without a flush occuring
-func New(writer BucketMetricWriter, org influxdb.Organisation, bkt influxdb.Bucket, opts ...Option) *PointWriter {
+func New(writer BucketMetricWriter, bkt, org string, opts ...Option) *PointWriter {
 	var (
 		config   = Options(opts).Config()
-		bucket   = NewBucketWriter(writer, org, bkt)
+		bucket   = NewBucketWriter(writer, bkt, org)
 		buffered = NewBufferedWriterSize(bucket, config.size)
 	)
 
@@ -32,14 +32,14 @@ type BucketWriter struct {
 
 	ctxt context.Context
 
-	org    influxdb.Organisation
-	bucket influxdb.Bucket
+	bucket string
+	org    string
 }
 
 // NewBucketWriter allocates, configures and returned a new BucketWriter for writing
 // metrics to a specific organisations bucket
-func NewBucketWriter(w BucketMetricWriter, org influxdb.Organisation, bkt influxdb.Bucket) *BucketWriter {
-	return &BucketWriter{w, context.Background(), org, bkt}
+func NewBucketWriter(w BucketMetricWriter, bucket, org string) *BucketWriter {
+	return &BucketWriter{w, context.Background(), bucket, org}
 }
 
 // Write writes the provided metrics to the underlying metrics writer

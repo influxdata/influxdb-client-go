@@ -15,9 +15,13 @@
 //  )
 //
 //  func main() {
-//      cli, _ := influxdb.New("http://localhost:9999", "some-token")
+//      var (
+//          cli, _ = influxdb.New("http://localhost:9999", "some-token")
+//          bucket = "default"
+//          org    = "influx"
+//      )
 //
-//      wr := writer.New(cli, influxdb.Organisation("influx"), influxdb.Bucket("default"), writer.WithBufferSize(10))
+//      wr := writer.New(cli, bucket, org, writer.WithBufferSize(10))
 //
 //      wr.Write(influxdb.NewRowMetric(
 //          map[string]interface{}{

@@ -49,7 +49,7 @@ func setupHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		log.Fatal(err)
 	}
-	if err := resTemplate.Execute(w, map[string]string{"username": req.Username, "org": req.Org, "retentionSeconds": strconv.Itoa(req.RetentionPeriodHrs * 60 * 60)}); err != nil {
+	if err := resTemplate.Execute(w, map[string]string{"username": req.Username, "org": string(req.Org), "retentionSeconds": strconv.Itoa(req.RetentionPeriodHrs * 60 * 60)}); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -188,7 +188,7 @@ func ExampleClient_Write_basic() {
 	}
 
 	// The actual write..., this method can be called concurrently.
-	if err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
+	if _, err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
 		log.Fatal(err) // as above use your own error handling here.
 	}
 	influx.Close() // closes the client.  After this the client is useless.
@@ -258,7 +258,7 @@ func ExampleClient_Write_tlsMutualAuthentication() {
 	}
 
 	// The actual write...
-	if err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
+	if _, err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
 		log.Fatal(err)
 	}
 	influx.Close() // close the client after this the client is useless.
@@ -292,7 +292,7 @@ func ExampleClient_Setup() {
 	}
 
 	// We can now do a write even though we didn't put a token in
-	if err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
+	if _, err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
 		log.Fatal(err)
 	}
 	influx.Close() // close the client after this the client is useless.

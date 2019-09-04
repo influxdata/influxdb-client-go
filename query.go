@@ -80,14 +80,14 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern .
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept-Encoding", "gzip")
 	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	// this is so we can unset the defer later if we don't error.
 	cleanup := func() {
 		resp.Body.Close()
 	}
 	defer func() { cleanup() }()
-	if err != nil {
-		return nil, err
-	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		r := io.LimitReader(resp.Body, 1<<14) // only support errors that are 16kB long, more than that and something is probably wrong.

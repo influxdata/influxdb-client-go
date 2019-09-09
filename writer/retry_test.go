@@ -19,6 +19,8 @@ var (
 		}
 	}
 	three int32 = 3
+	four  int32 = 4
+	five  int32 = 5
 )
 
 func Test_RetryWriter_Write(t *testing.T) {
@@ -146,6 +148,32 @@ func Test_RetryWriter_Write(t *testing.T) {
 				1 * time.Millisecond,
 				2 * time.Millisecond,
 				3 * time.Millisecond,
+			},
+		},
+		{
+			name: `three "too many requests" errors (max attempts 3) with backoff and retry-after`,
+			options: []RetryOption{
+				WithMaxAttempts(3),
+				WithBackoff(LinearBackoff(time.Millisecond)),
+			},
+			metrics: createTestRowMetrics(t, 3),
+			errors: []error{
+				errTooMany(&three),
+				errTooMany(&four),
+				errTooMany(&five),
+			},
+			count: 0,
+			err:   errTooMany(&five),
+			writes: [][]influxdb.Metric{
+				// three writes all error
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+			},
+			sleeps: []time.Duration{
+				3 * time.Second,
+				4 * time.Second,
+				5 * time.Second,
 			},
 		},
 	} {

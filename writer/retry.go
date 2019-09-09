@@ -63,6 +63,7 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 				// given retry-after is configured attempt to sleep
 				// for retry-after seconds
 				r.sleep(time.Duration(*ierr.RetryAfter) * time.Second)
+				continue
 			}
 
 			// given a backoff duration > 0

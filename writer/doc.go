@@ -85,7 +85,7 @@
 // 	// i.e. a first attempt is followed by a 1 second delay before the second attempt
 // 	// a second attempt is followed by a 2 second delay before the third attempt
 // 	var (
-// 		retryOpts = writer.RetryOption{writer.MaxAttempts(3), writer.WithBackoff(writer.LinearBackoff(time.Second))}
+// 		retryOpts = []writer.RetryOption{writer.WithMaxAttempts(3), writer.WithBackoff(writer.LinearBackoff(time.Second))}
 // 		wr        = writer.New(cli, bucket, org, writer.WithRetries(retryOpts...))
 // 	)
 // }

@@ -14,6 +14,7 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/influxdata/influxdb-client-go/internal/gzip"
 	lp "github.com/influxdata/line-protocol"
 )
 
@@ -76,17 +77,51 @@ func parseInt32(v string) (int32, error) {
 	return int32(retry), nil
 }
 
+func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Request, error) {
+	var err error
+	if c.contentEncoding == "gzip" {
+		body, err = gzip.CompressWithGzip(body, c.compressionLevel)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	u, err := makeWriteURL(c.url, bucket, org)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, u, body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "text/plain; charset=utf-8")
+
+	if c.contentEncoding == "gzip" {
+		req.Header.Set("Content-Encoding", "gzip")
+	}
+
+	req.Header.Set("User-Agent", c.userAgent)
+	req.Header.Set("Authorization", c.authorization)
+
+	return req, nil
+}
+
 func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	if loc == nil {
 		return "", errors.New("nil url")
 	}
+
 	u, err := url.Parse(loc.String())
 	if err != nil {
 		return "", err
 	}
+
 	params := url.Values{}
 	params.Set("bucket", bucket)
 	params.Set("org", org)
+	u.RawQuery = params.Encode()
 
 	switch loc.Scheme {
 	case "http", "https":
@@ -95,13 +130,13 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	default:
 		return "", fmt.Errorf("unsupported scheme: %q", u.Scheme)
 	}
-	u.RawQuery = params.Encode()
+
 	return u.String(), nil
 }
 
 func parseWriteError(r *http.Response) (err *Error, perr error) {
 	// successful status code range
-	if r.StatusCode >= 200 || r.StatusCode < 300 {
+	if r.StatusCode >= 200 && r.StatusCode < 300 {
 		return nil, nil
 	}
 
@@ -118,7 +153,7 @@ func parseWriteError(r *http.Response) (err *Error, perr error) {
 		err.Message = "exceeded rate limit"
 	case http.StatusServiceUnavailable:
 		err.Code = EUnavailable
-		err.Message = "service temporarily unavaliable"
+		err.Message = "service temporarily unavailable"
 	default:
 		// json encoded error
 		typ, _, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))

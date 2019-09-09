@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"strconv"
 
 	lp "github.com/influxdata/line-protocol"
 )
@@ -54,28 +55,25 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 		resp.Body.Close()
 	}()
 
-	switch resp.StatusCode {
-	case http.StatusOK, http.StatusNoContent:
-	case http.StatusTooManyRequests:
-		return 0, Error{
-			Code:    ETooManyRequests,
-			Message: "exceeded rate limit",
-		}
-	case http.StatusServiceUnavailable:
-		return 0, Error{
-			Code:    EUnavailable,
-			Message: "service temporarily unavaliable",
-		}
-	default:
-		werr, err := parseWriteError(resp)
-		if err != nil {
-			return 0, err
-		}
+	eerr, err := parseWriteError(resp)
+	if err != nil {
+		return 0, err
+	}
 
-		return 0, werr
+	if eerr != nil {
+		return 0, eerr
 	}
 
 	return len(m), nil
+}
+
+func parseInt32(v string) (int32, error) {
+	retry, err := strconv.ParseInt(v, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+
+	return int32(retry), nil
 }
 
 func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
@@ -101,18 +99,44 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	return u.String(), nil
 }
 
-func parseWriteError(r *http.Response) (err Error, eerr error) {
-	typ, _, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
-	if typ == "application/json" {
-		eerr = json.NewDecoder(r.Body).Decode(&err)
-		return
+func parseWriteError(r *http.Response) (err *Error, perr error) {
+	// successful status code range
+	if r.StatusCode >= 200 || r.StatusCode < 300 {
+		return nil, nil
 	}
 
-	var body []byte
-	body, eerr = ioutil.ReadAll(r.Body)
-	if eerr != nil {
-		return
+	err = &Error{}
+	if v := r.Header.Get("Retry-After"); v != "" {
+		if retry, perr := parseInt32(v); perr == nil {
+			err.RetryAfter = &retry
+		}
 	}
 
-	return Error{Code: r.Status, Message: string(body)}, nil
+	switch r.StatusCode {
+	case http.StatusTooManyRequests:
+		err.Code = ETooManyRequests
+		err.Message = "exceeded rate limit"
+	case http.StatusServiceUnavailable:
+		err.Code = EUnavailable
+		err.Message = "service temporarily unavaliable"
+	default:
+		// json encoded error
+		typ, _, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
+		if typ == "application/json" {
+			perr = json.NewDecoder(r.Body).Decode(err)
+			return
+		}
+
+		// plain error body type
+		var body []byte
+		body, perr = ioutil.ReadAll(r.Body)
+		if perr != nil {
+			return
+		}
+
+		err.Code = r.Status
+		err.Message = string(body)
+	}
+
+	return
 }

@@ -27,16 +27,17 @@ var ErrUnimplemented = errors.New("unimplemented")
 // It contains a number of contextual fields which describe the nature
 // and cause of the error
 type Error struct {
-	Code      string
-	Message   string
-	Err       string
-	Op        string
-	Line      *int32
-	MaxLength *int32
+	Code       string
+	Message    string
+	Err        string
+	Op         string
+	Line       *int32
+	MaxLength  *int32
+	RetryAfter *int32
 }
 
 // Error returns the string representation of the Error struct
-func (e Error) Error() string {
+func (e *Error) Error() string {
 	errString := fmt.Sprintf("%s (%s): %s", e.Code, e.Op, e.Message)
 	if e.Line != nil {
 		return fmt.Sprintf("%s - line[%d]", errString, e.Line)

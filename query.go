@@ -91,9 +91,9 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern .
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		r := io.LimitReader(resp.Body, 1<<14) // only support errors that are 16kB long, more than that and something is probably wrong.
-		gerr := Error{Code: resp.Status}
+		gerr := &Error{Code: resp.Status}
 		if resp.ContentLength != 0 {
-			if err := json.NewDecoder(r).Decode(gerr); err != nil {
+			if err := json.NewDecoder(r).Decode(&gerr); err != nil {
 				gerr.Code = resp.Status
 				message, err := ioutil.ReadAll(r)
 				if err != nil {

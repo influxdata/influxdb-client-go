@@ -1,6 +1,10 @@
 package writer
 
-import "github.com/influxdata/influxdb-client-go"
+import (
+	"time"
+
+	"github.com/influxdata/influxdb-client-go"
+)
 
 const defaultMaxAttempts = 5
 
@@ -10,13 +14,19 @@ const defaultMaxAttempts = 5
 type RetryWriter struct {
 	MetricsWriter
 
+	sleep func(time.Duration)
+
 	maxAttempts int
 }
 
 // NewRetryWriter returns a configured *RetryWriter which decorates
 // the supplied MetricsWriter
 func NewRetryWriter(w MetricsWriter, opts ...RetryOption) *RetryWriter {
-	r := &RetryWriter{MetricsWriter: w, maxAttempts: defaultMaxAttempts}
+	r := &RetryWriter{
+		MetricsWriter: w,
+		sleep:         time.Sleep,
+		maxAttempts:   defaultMaxAttempts,
+	}
 
 	for _, opt := range opts {
 		opt(r)
@@ -34,7 +44,7 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 			break
 		}
 
-		eerr, ok := err.(influxdb.Error)
+		eerr, ok := err.(*influxdb.Error)
 		if !ok {
 			break
 		}

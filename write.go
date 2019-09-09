@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime"
 	"net/http"
 	"net/url"
 	"path"
@@ -56,25 +57,25 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 	switch resp.StatusCode {
 	case http.StatusOK, http.StatusNoContent:
 	case http.StatusTooManyRequests:
-		err = &genericRespError{
-			Code:    resp.Status,
-			Message: "too many requests too fast",
+		return 0, Error{
+			Code:    ETooManyRequests,
+			Message: "exceeded rate limit",
 		}
 	case http.StatusServiceUnavailable:
-		err = &genericRespError{
-			Code:    resp.Status,
+		return 0, Error{
+			Code:    EUnavailable,
 			Message: "service temporarily unavaliable",
 		}
 	default:
-		gwerr, err := parseWriteError(resp.Body)
+		werr, err := parseWriteError(resp)
 		if err != nil {
 			return 0, err
 		}
 
-		return 0, gwerr
+		return 0, werr
 	}
 
-	return len(m), err
+	return len(m), nil
 }
 
 func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
@@ -100,10 +101,18 @@ func makeWriteURL(loc *url.URL, bucket, org string) (string, error) {
 	return u.String(), nil
 }
 
-func parseWriteError(r io.Reader) (*genericRespError, error) {
-	werr := &genericRespError{}
-	if err := json.NewDecoder(r).Decode(&werr); err != nil {
-		return nil, err
+func parseWriteError(r *http.Response) (err Error, eerr error) {
+	typ, _, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if typ == "application/json" {
+		eerr = json.NewDecoder(r.Body).Decode(&err)
+		return
 	}
-	return werr, nil
+
+	var body []byte
+	body, eerr = ioutil.ReadAll(r.Body)
+	if eerr != nil {
+		return
+	}
+
+	return Error{Code: r.Status, Message: string(body)}, nil
 }

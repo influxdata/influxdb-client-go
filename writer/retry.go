@@ -27,8 +27,27 @@ func NewRetryWriter(w MetricsWriter, opts ...RetryOption) *RetryWriter {
 
 // Write delegates to underlying MetricsWriter and then
 // automatically retries when errors occur
-func (r *RetryWriter) Write(m ...influxdb.Metric) (int, error) {
-	return len(m), influxdb.ErrUnimplemented
+func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
+	for i := 0; i < r.maxAttempts; i++ {
+		n, err = r.MetricsWriter.Write(m...)
+		if err == nil {
+			break
+		}
+
+		eerr, ok := err.(influxdb.Error)
+		if !ok {
+			break
+		}
+
+		switch eerr.Code {
+		case influxdb.EUnavailable, influxdb.ETooManyRequests:
+			// retriable errors
+		default:
+			break
+		}
+	}
+
+	return
 }
 
 // RetryOption is a functional option for the RetryWriters type

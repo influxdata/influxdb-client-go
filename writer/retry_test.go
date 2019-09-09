@@ -1,46 +1,65 @@
 package writer
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/influxdata/influxdb-client-go"
 	"github.com/stretchr/testify/assert"
 )
 
+var errSimple = errors.New("something went wrong")
+
 func Test_RetryWriter_Write(t *testing.T) {
 	for _, test := range []retryWriteCase{
 		{
-			name:    `two "too many requests" errors (max attempts 3)`,
+			name:    `one non-influxb.Error type error (mac attempts 3)`,
 			options: []RetryOption{WithMaxAttempts(3)},
-			metrics: createTestRowMetrics(t, 10),
+			metrics: createTestRowMetrics(t, 3),
 			errors: []error{
-				influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
-				influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
+				errSimple,
 			},
-			count: 10,
+			count: 0,
+			err:   errSimple,
 			writes: [][]influxdb.Metric{
-				createTestRowMetrics(t, 10),
-				createTestRowMetrics(t, 10),
+				// one write attempt, immediate failure
+				createTestRowMetrics(t, 3),
 			},
 		},
 		{
-			name:    `two "unavailable" errors (max attempts 3)`,
+			name:    `two "too many requests" errors (max attempts 3)`,
 			options: []RetryOption{WithMaxAttempts(3)},
-			metrics: createTestRowMetrics(t, 10),
+			metrics: createTestRowMetrics(t, 3),
+			errors: []error{
+				influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
+				influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
+			},
+			count: 3,
+			writes: [][]influxdb.Metric{
+				// three writes, third succeeds
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+			},
+		},
+		{
+			name:    `one "unavailable" errors (max attempts 3)`,
+			options: []RetryOption{WithMaxAttempts(3)},
+			metrics: createTestRowMetrics(t, 3),
 			errors: []error{
 				influxdb.Error{Code: influxdb.EUnavailable, Message: "too many requests"},
-				influxdb.Error{Code: influxdb.EUnavailable, Message: "too many requests"},
 			},
-			count: 10,
+			count: 3,
 			writes: [][]influxdb.Metric{
-				createTestRowMetrics(t, 10),
-				createTestRowMetrics(t, 10),
+				// two writes, second succeeds
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
 			},
 		},
 		{
 			name:    `three "too many requests" errors (max attempts 3)`,
 			options: []RetryOption{WithMaxAttempts(3)},
-			metrics: createTestRowMetrics(t, 10),
+			metrics: createTestRowMetrics(t, 3),
 			errors: []error{
 				influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
 				influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
@@ -49,9 +68,10 @@ func Test_RetryWriter_Write(t *testing.T) {
 			count: 0,
 			err:   influxdb.Error{Code: influxdb.ETooManyRequests, Message: "too many requests"},
 			writes: [][]influxdb.Metric{
-				createTestRowMetrics(t, 10),
-				createTestRowMetrics(t, 10),
-				createTestRowMetrics(t, 10),
+				// three writes all error
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
 			},
 		},
 	} {
@@ -75,7 +95,7 @@ type retryWriteCase struct {
 
 func (test *retryWriteCase) Run(t *testing.T) {
 	var (
-		writer     = newTestWriter()
+		writer     = newTestWriter(test.errors...)
 		retry      = NewRetryWriter(writer, test.options...)
 		count, err = retry.Write(test.metrics...)
 	)

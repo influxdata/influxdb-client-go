@@ -36,8 +36,8 @@ type metricsWriter struct {
 	errs   []error
 }
 
-func newTestWriter() *metricsWriter {
-	return &metricsWriter{n: -1}
+func newTestWriter(errs ...error) *metricsWriter {
+	return &metricsWriter{n: -1, errs: errs}
 }
 
 func (w *metricsWriter) Write(m ...influxdb.Metric) (n int, err error) {
@@ -48,10 +48,12 @@ func (w *metricsWriter) Write(m ...influxdb.Metric) (n int, err error) {
 
 	n = len(m)
 	if w.n > -1 {
+		// override length response
 		n = w.n
 	}
 
 	if w.called < len(w.errs) {
+		n = 0
 		err = w.errs[w.called]
 	}
 

@@ -44,14 +44,19 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 			break
 		}
 
-		eerr, ok := err.(*influxdb.Error)
+		ierr, ok := err.(*influxdb.Error)
 		if !ok {
 			break
 		}
 
-		switch eerr.Code {
+		switch ierr.Code {
+		// retriable errors
 		case influxdb.EUnavailable, influxdb.ETooManyRequests:
-			// retriable errors
+			if ierr.RetryAfter != nil {
+				// given retry-after is configured attempt to sleep
+				// for retry-after seconds
+				r.sleep(time.Duration(*ierr.RetryAfter) * time.Second)
+			}
 		default:
 			break
 		}

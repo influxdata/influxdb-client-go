@@ -48,12 +48,12 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 	for i := 0; i < r.maxAttempts; i++ {
 		n, err = r.MetricsWriter.Write(m...)
 		if err == nil {
-			break
+			return
 		}
 
 		ierr, ok := err.(*influxdb.Error)
 		if !ok {
-			break
+			return
 		}
 
 		switch ierr.Code {
@@ -71,7 +71,7 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 				r.sleep(duration)
 			}
 		default:
-			break
+			return
 		}
 	}
 

@@ -18,8 +18,6 @@ var (
 			RetryAfter: retryAfter,
 		}
 	}
-	one   int32 = 1
-	two   int32 = 2
 	three int32 = 3
 )
 
@@ -66,6 +64,20 @@ func Test_RetryWriter_Write(t *testing.T) {
 			writes: [][]influxdb.Metric{
 				// two writes, second succeeds
 				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+			},
+		},
+		{
+			name:    `one "internal error" error (max attempts 3)`,
+			options: []RetryOption{WithMaxAttempts(3)},
+			metrics: createTestRowMetrics(t, 3),
+			errors: []error{
+				&influxdb.Error{Code: influxdb.EInternal, Message: "something went wrong"},
+			},
+			count: 0,
+			err:   &influxdb.Error{Code: influxdb.EInternal, Message: "something went wrong"},
+			writes: [][]influxdb.Metric{
+				// one attempted write
 				createTestRowMetrics(t, 3),
 			},
 		},

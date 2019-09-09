@@ -92,8 +92,8 @@ func Test_RetryWriter_Write(t *testing.T) {
 			options: []RetryOption{WithMaxAttempts(3)},
 			metrics: createTestRowMetrics(t, 3),
 			errors: []error{
-				errTooMany(&one),
-				errTooMany(&two),
+				errTooMany(&three),
+				errTooMany(&three),
 				errTooMany(&three),
 			},
 			count: 0,
@@ -105,9 +105,35 @@ func Test_RetryWriter_Write(t *testing.T) {
 				createTestRowMetrics(t, 3),
 			},
 			sleeps: []time.Duration{
-				time.Second,
-				2 * time.Second,
 				3 * time.Second,
+				3 * time.Second,
+				3 * time.Second,
+			},
+		},
+		{
+			name: `three "too many requests" errors (max attempts 3) with backoff`,
+			options: []RetryOption{
+				WithMaxAttempts(3),
+				WithBackoff(LinearBackoff(time.Millisecond)),
+			},
+			metrics: createTestRowMetrics(t, 3),
+			errors: []error{
+				errTooMany(nil),
+				errTooMany(nil),
+				errTooMany(nil),
+			},
+			count: 0,
+			err:   errTooMany(nil),
+			writes: [][]influxdb.Metric{
+				// three writes all error
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+			},
+			sleeps: []time.Duration{
+				1 * time.Millisecond,
+				2 * time.Millisecond,
+				3 * time.Millisecond,
 			},
 		},
 	} {

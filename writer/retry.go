@@ -8,13 +8,19 @@ import (
 
 const defaultMaxAttempts = 5
 
+// BackoffFunc is a function which when called with an
+// attempt number returns a duration which should be
+// waited for until a subsequent attempt is made
+type BackoffFunc func(attempt int) time.Duration
+
 // RetryWriter is a metrics writers which decorates other
 // metrics writer implementations and automatically retries
 // attempts to write metrics under certain error conditions
 type RetryWriter struct {
 	MetricsWriter
 
-	sleep func(time.Duration)
+	sleep   func(time.Duration)
+	backoff BackoffFunc
 
 	maxAttempts int
 }
@@ -25,6 +31,7 @@ func NewRetryWriter(w MetricsWriter, opts ...RetryOption) *RetryWriter {
 	r := &RetryWriter{
 		MetricsWriter: w,
 		sleep:         time.Sleep,
+		backoff:       func(int) time.Duration { return 0 },
 		maxAttempts:   defaultMaxAttempts,
 	}
 
@@ -57,12 +64,28 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 				// for retry-after seconds
 				r.sleep(time.Duration(*ierr.RetryAfter) * time.Second)
 			}
+
+			// given a backoff duration > 0
+			if duration := r.backoff(i + 1); duration > 0 {
+				// call sleep with backoff duration
+				r.sleep(duration)
+			}
 		default:
 			break
 		}
 	}
 
 	return
+}
+
+// LinearBackoff returns a BackoffFunc which when called
+// returns attempt * scale.
+// e.g.
+// LinearBackoff(time.Second)(5) returns 5 seconds
+func LinearBackoff(scale time.Duration) BackoffFunc {
+	return func(attempt int) time.Duration {
+		return time.Duration(attempt) * scale
+	}
 }
 
 // RetryOption is a functional option for the RetryWriters type
@@ -73,5 +96,12 @@ type RetryOption func(*RetryWriter)
 func WithMaxAttempts(maxAttempts int) RetryOption {
 	return func(r *RetryWriter) {
 		r.maxAttempts = maxAttempts
+	}
+}
+
+// WithBackoff sets of the BackoffFunc on the RetryWriter
+func WithBackoff(fn BackoffFunc) RetryOption {
+	return func(r *RetryWriter) {
+		r.backoff = fn
 	}
 }

@@ -4,13 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"sync"
-
-	"github.com/influxdata/influxdb-client-go/internal/gzip"
 )
 
 // TODO(docmerlin): change the generator so we don't have to hand edit the generated code
@@ -44,11 +41,13 @@ func New(connection string, token string, options ...Option) (*Client, error) {
 	if connection == "" {
 		connection = `http://127.0.0.1:9999`
 	}
+
 	u, err := url.Parse(connection)
-	u.Path = `/api/v2`
 	if err != nil {
 		return nil, fmt.Errorf("Error: could not parse url: %v", err)
 	}
+	u.Path = `/api/v2`
+
 	c.url = u
 
 	c.userAgent = userAgent()
@@ -103,35 +102,6 @@ func (c *Client) Ping(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Request, error) {
-	var err error
-	if c.contentEncoding == "gzip" {
-		body, err = gzip.CompressWithGzip(body, c.compressionLevel)
-		if err != nil {
-			return nil, err
-		}
-	}
-	u, err := makeWriteURL(c.url, bucket, org)
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest(http.MethodPost, u, body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Content-Type", "text/plain; charset=utf-8")
-
-	if c.contentEncoding == "gzip" {
-		req.Header.Set("Content-Encoding", "gzip")
-	}
-
-	req.Header.Set("User-Agent", c.userAgent)
-	req.Header.Set("Authorization", c.authorization)
-
-	return req, nil
 }
 
 // Close closes any idle connections on the Client.

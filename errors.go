@@ -5,22 +5,47 @@ import (
 	"fmt"
 )
 
+// Error code constants copied from influxdb
+const (
+	EInternal            = "internal error"
+	ENotFound            = "not found"
+	EConflict            = "conflict"             // action cannot be performed
+	EInvalid             = "invalid"              // validation failed
+	EUnprocessableEntity = "unprocessable entity" // data type is correct, but out of range
+	EEmptyValue          = "empty value"
+	EUnavailable         = "unavailable"
+	EForbidden           = "forbidden"
+	ETooManyRequests     = "too many requests"
+	EUnauthorized        = "unauthorized"
+	EMethodNotAllowed    = "method not allowed"
+)
+
 // ErrUnimplemented is an error for when pieces of the client's functionality is unimplemented.
 var ErrUnimplemented = errors.New("unimplemented")
 
-type genericRespError struct {
-	Code      string
-	Message   string
-	Line      *int32
-	MaxLength *int32
+// Error is an error returned by a client operation
+// It contains a number of contextual fields which describe the nature
+// and cause of the error
+type Error struct {
+	Code       string
+	Message    string
+	Err        string
+	Op         string
+	Line       *int32
+	MaxLength  *int32
+	RetryAfter *int32
 }
 
-func (g genericRespError) Error() string {
-	errString := g.Code + ": " + g.Message
-	if g.Line != nil {
-		return fmt.Sprintf("%s - line[%d]", errString, g.Line)
-	} else if g.MaxLength != nil {
-		return fmt.Sprintf("%s - maxlen[%d]", errString, g.MaxLength)
+// Error returns the string representation of the Error struct
+func (e *Error) Error() string {
+	errString := fmt.Sprintf("%s (%s): %s", e.Code, e.Op, e.Message)
+	if e.Line != nil {
+		return fmt.Sprintf("%s - line[%d]", errString, e.Line)
 	}
+
+	if e.MaxLength != nil {
+		return fmt.Sprintf("%s - maxlen[%d]", errString, e.MaxLength)
+	}
+
 	return errString
 }

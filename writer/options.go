@@ -6,6 +6,8 @@ import "time"
 type Config struct {
 	size          int
 	flushInterval time.Duration
+	retry         bool
+	retryOptions  []RetryOption
 }
 
 // Option is a functional option for Configuring point writers
@@ -47,5 +49,15 @@ func WithBufferSize(size int) Option {
 func WithFlushInterval(interval time.Duration) Option {
 	return func(c *Config) {
 		c.flushInterval = interval
+	}
+}
+
+// WithRetries configures automatic retry behavior on specific
+// transient error conditions when attempting to Write metrics
+// to a client
+func WithRetries(options ...RetryOption) Option {
+	return func(c *Config) {
+		c.retry = true
+		c.retryOptions = options
 	}
 }

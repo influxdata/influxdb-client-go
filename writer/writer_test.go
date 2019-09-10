@@ -13,7 +13,7 @@ func Test_New(t *testing.T) {
 		client  = &influxdb.Client{}
 		bkt     = "default"
 		org     = "influx"
-		options = Options{WithBufferSize(12), WithFlushInterval(5 * time.Minute)}
+		options = Options{WithBufferSize(12), WithFlushInterval(5 * time.Minute), WithRetries()}
 		wr      = New(client, bkt, org, options...)
 	)
 

@@ -61,4 +61,32 @@
 //
 // Finally, it wraps the buffered writer in a *PointsWriter which takes care of ensuring Flush is called
 // automatically when it hasn't been called for a configured duration. This final type is safe for concurrent use.
+//
+// Automatic Retries
+//
+// The writer package offers automatic retry capabilities during known transient failures
+// This is when the API being consumed reports "unavailable" or "too many requests" error conditions
+//
+// import (
+// 	"time"
+//
+// 	"github.com/influxdata/influxdb-client-go"
+// 	"github.com/influxdata/influxdb-client-go/writer"
+// )
+//
+// func main() {
+// 	var (
+// 		cli, _ = influxdb.New("http://localhost:9999", "some-token")
+// 		bucket = "default"
+// 		org    = "influx"
+// 	)
+//
+// 	// construct a writer with 3 maximum attempts per call to Write and linear backoff derived from number of attempts
+// 	// i.e. a first attempt is followed by a 1 second delay before the second attempt
+// 	// a second attempt is followed by a 2 second delay before the third attempt
+// 	var (
+// 		retryOpts = []writer.RetryOption{writer.WithMaxAttempts(3), writer.WithBackoff(writer.LinearBackoff(time.Second))}
+// 		wr        = writer.New(cli, bucket, org, writer.WithRetries(retryOpts...))
+// 	)
+// }
 package writer

@@ -31,21 +31,33 @@ type metricsWriter struct {
 	// metrics written
 	when   []time.Time
 	writes [][]influxdb.Metric
+	// error response
+	called int
+	errs   []error
 }
 
-func newTestWriter() *metricsWriter {
-	return &metricsWriter{n: -1}
+func newTestWriter(errs ...error) *metricsWriter {
+	return &metricsWriter{n: -1, errs: errs}
 }
 
-func (w *metricsWriter) Write(m ...influxdb.Metric) (int, error) {
+func (w *metricsWriter) Write(m ...influxdb.Metric) (n int, err error) {
+	defer func() { w.called++ }()
+
 	w.when = append(w.when, time.Now())
 	w.writes = append(w.writes, m)
 
+	n = len(m)
 	if w.n > -1 {
-		return w.n, nil
+		// override length response
+		n = w.n
 	}
 
-	return len(m), nil
+	if w.called < len(w.errs) {
+		n = 0
+		err = w.errs[w.called]
+	}
+
+	return
 }
 
 // permuteCounts returns a set of pseudo-random batch size counts

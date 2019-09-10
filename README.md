@@ -26,7 +26,7 @@ A home for InfluxDB’s 2.x's golang client. This client is not compatible with 
 	}
 
 	// The actual write..., this method can be called concurrently.
-	if err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
+	if _, err := influx.Write(context.Background(), "my-awesome-bucket", "my-very-awesome-org", myMetrics...); err != nil {
 		log.Fatal(err) // as above use your own error handling here.
 	}
 	influx.Close() // closes the client.  After this the client is useless.

@@ -121,6 +121,8 @@ func (p *PointWriter) Write(m ...influxdb.Metric) (int, error) {
 // Close signals to stop flushing metrics and causes subsequent
 // calls to Write to return a closed pipe error
 // Close returns once scheduledge flushing has stopped
+// Close does a final flush on return and returns any
+// error from the final flush if it occurs
 func (p *PointWriter) Close() error {
 	p.mu.Lock()
 
@@ -136,5 +138,5 @@ func (p *PointWriter) Close() error {
 	// wait until schedule exits
 	<-p.stopped
 
-	return nil
+	return p.w.Flush()
 }

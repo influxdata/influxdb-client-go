@@ -74,3 +74,23 @@ func Test_PointWriter_Write(t *testing.T) {
 		assert.Truef(t, delta <= 105*time.Millisecond, deltaMsgFmt, delta)
 	}
 }
+
+func Test_PointWriter_Close(t *testing.T) {
+	var (
+		underlyingWriter = newTestWriter()
+		// long flush interval to ensure flush called by close not interval
+		writer = NewPointWriter(NewBufferedWriter(underlyingWriter), 10*time.Second)
+		// 1 batch of 99 (smaller than buffer size 100)
+		expected = createNTestRowMetrics(t, 1, 99)
+	)
+
+	n, err := writer.Write(createTestRowMetrics(t, 99)...)
+	require.NoError(t, err)
+	require.Equal(t, 99, n)
+
+	// close writer ensuring no more flushes occur
+	require.NoError(t, writer.Close())
+
+	// check batches written to underlying writer are 100 batches of 100 metrics
+	require.Equal(t, expected, underlyingWriter.writes)
+}

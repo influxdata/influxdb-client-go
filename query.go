@@ -2,6 +2,7 @@ package influxdb
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"encoding/csv"
 	"encoding/json"
@@ -88,6 +89,14 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern .
 		resp.Body.Close()
 	}
 	defer func() { cleanup() }()
+
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		resp.Body, err = gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		r := io.LimitReader(resp.Body, 1<<14) // only support errors that are 16kB long, more than that and something is probably wrong.

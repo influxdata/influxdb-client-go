@@ -9,7 +9,7 @@ import (
 // BucketMetricWriter is a type which Metrics can be written to a particular bucket
 // in a particular organisation
 type BucketMetricWriter interface {
-	Write(context.Context, string, string, ...influxdb.Metric) (int, error)
+	Write(ctx context.Context, bucket string, org string, m ...influxdb.Metric) (int, error)
 }
 
 // New constructs a point writer with an underlying buffer from the provided BucketMetricWriter
@@ -51,5 +51,5 @@ func NewBucketWriter(w BucketMetricWriter, bucket, org string) *BucketWriter {
 // Write writes the provided metrics to the underlying metrics writer
 // using the org and bucket configured on the bucket writer
 func (b *BucketWriter) Write(m ...influxdb.Metric) (int, error) {
-	return b.w.Write(b.ctxt, b.org, b.bucket, m...)
+	return b.w.Write(b.ctxt, b.bucket, b.org, m...)
 }

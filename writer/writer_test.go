@@ -31,10 +31,10 @@ func Test_BucketWriter(t *testing.T) {
 		wr     = NewBucketWriter(spy, bucket, org)
 
 		expected = []bucketWriteCall{
-			{org, bucket, createTestRowMetrics(t, 4)},
-			{org, bucket, createTestRowMetrics(t, 8)},
-			{org, bucket, createTestRowMetrics(t, 12)},
-			{org, bucket, createTestRowMetrics(t, 16)},
+			{bucket, org, createTestRowMetrics(t, 4)},
+			{bucket, org, createTestRowMetrics(t, 8)},
+			{bucket, org, createTestRowMetrics(t, 12)},
+			{bucket, org, createTestRowMetrics(t, 16)},
 		}
 	)
 

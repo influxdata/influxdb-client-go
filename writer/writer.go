@@ -22,6 +22,9 @@ func New(writer BucketMetricWriter, bkt, org string, opts ...Option) *PointWrite
 		buffered = NewBufferedWriterSize(bucket, config.size)
 	)
 
+	// set bucket write context to provided context
+	bucket.ctxt = config.ctxt
+
 	if config.retry {
 		// configure automatic retries for transient errors
 		retry := NewRetryWriter(bucket, config.retryOptions...)

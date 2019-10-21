@@ -126,7 +126,7 @@ func TestE2E(t *testing.T) {
 
 	r, err := influx.QueryCSV(
 		context.Background(),
-		`from(bucket:bucket)|>range(start:-1000h)|>group()`,
+		`from(bucket:bucket)|>range(start:-10000h)|>group(columns:["_field"])`,
 		`e2e-test-org`,
 		struct {
 			Bucket string `flux:"bucket"`

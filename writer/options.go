@@ -1,9 +1,13 @@
 package writer
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // Config is a structure used to configure a point writer
 type Config struct {
+	ctxt          context.Context
 	size          int
 	flushInterval time.Duration
 	retry         bool
@@ -20,6 +24,7 @@ type Options []Option
 // applies the callee options and returns the config
 func (o Options) Config() Config {
 	config := Config{
+		ctxt:          context.Background(),
 		size:          defaultBufferSize,
 		flushInterval: defaultFlushInterval,
 	}
@@ -33,6 +38,13 @@ func (o Options) Config() Config {
 func (o Options) Apply(c *Config) {
 	for _, opt := range o {
 		opt(c)
+	}
+}
+
+// WithContext sets the context.Context used for each flush
+func WithContext(ctxt context.Context) Option {
+	return func(c *Config) {
+		c.ctxt = ctxt
 	}
 }
 

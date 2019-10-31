@@ -1,7 +1,9 @@
 package influxdb
 
 import (
+	"compress/gzip"
 	"context"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,21 +18,58 @@ var five = int32(5)
 func Test_Client_Write(t *testing.T) {
 	for _, test := range []struct {
 		name string
+		// inputs
+		metrics []Metric
 		// api response
 		body       []byte
 		statusCode int
 		headers    http.Header
 		// expectations
-		count int
-		err   error
+		writtenPoints []byte
+		count         int
+		err           error
 	}{
 		{
 			name:       "successful write",
+			metrics:    createTestRowMetrics(t, 10),
 			statusCode: http.StatusOK,
 			count:      10,
 		},
 		{
+			name: "successful write of explicit points",
+			metrics: []Metric{
+				NewRowMetric(
+					map[string]interface{}{
+						"some_int":  1,
+						"some_uint": uint64(1),
+					},
+					"some_measurement",
+					map[string]string{
+						"some_tag": "some_value",
+					},
+					time.Date(2019, time.January, 1, 0, 0, 0, 0, time.UTC),
+				),
+				NewRowMetric(
+					map[string]interface{}{
+						"some_int":  2,
+						"some_uint": uint64(2),
+					},
+					"some_measurement",
+					map[string]string{
+						"some_tag": "some_value",
+					},
+					time.Date(2019, time.January, 1, 0, 0, 0, 0, time.UTC),
+				),
+			},
+			writtenPoints: []byte(`some_measurement,some_tag=some_value some_int=1i,some_uint=1u 1546300800000000000
+some_measurement,some_tag=some_value some_int=2i,some_uint=2u 1546300800000000000
+`),
+			statusCode: http.StatusOK,
+			count:      2,
+		},
+		{
 			name:       "rate limited",
+			metrics:    createTestRowMetrics(t, 10),
 			statusCode: http.StatusTooManyRequests,
 			headers: http.Header{
 				"Retry-After": []string{"5"},
@@ -43,6 +82,7 @@ func Test_Client_Write(t *testing.T) {
 		},
 		{
 			name:       "unavailable",
+			metrics:    createTestRowMetrics(t, 10),
 			statusCode: http.StatusServiceUnavailable,
 			headers:    http.Header{},
 			err: &Error{
@@ -52,6 +92,7 @@ func Test_Client_Write(t *testing.T) {
 		},
 		{
 			name:       "json encoded error",
+			metrics:    createTestRowMetrics(t, 10),
 			statusCode: http.StatusInternalServerError,
 			body:       []byte(`{"code": "internal error", "op": "doing something", "message": "foo"}`),
 			headers: http.Header{
@@ -65,6 +106,7 @@ func Test_Client_Write(t *testing.T) {
 		},
 		{
 			name:       "plain text encoded error",
+			metrics:    createTestRowMetrics(t, 10),
 			statusCode: http.StatusBadRequest,
 			body:       []byte(`payload is bad`),
 			err: &Error{
@@ -75,8 +117,7 @@ func Test_Client_Write(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			var (
-				metrics = createTestRowMetrics(t, 10)
-				server  = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					// path
 					assert.Equal(t, "/api/v2/write", r.URL.Path)
 					// headers
@@ -90,6 +131,14 @@ func Test_Client_Write(t *testing.T) {
 					for k, v := range test.headers {
 						w.Header()[k] = v
 					}
+
+					if test.writtenPoints != nil {
+						// check points written as expected
+						reader, _ := gzip.NewReader(r.Body)
+						data, _ := ioutil.ReadAll(reader)
+						assert.Equal(t, test.writtenPoints, data)
+					}
+
 					w.WriteHeader(test.statusCode)
 					w.Write(test.body)
 				}))
@@ -103,7 +152,7 @@ func Test_Client_Write(t *testing.T) {
 				server.Close()
 			}()
 
-			count, err := client.Write(context.TODO(), "bucket", "org", metrics...)
+			count, err := client.Write(context.TODO(), "bucket", "org", test.metrics...)
 			assert.Equal(t, test.err, err)
 			assert.Equal(t, test.count, count)
 		})

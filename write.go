@@ -26,6 +26,7 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 		e   = lp.NewEncoder(buf)
 	)
 
+	e.SetFieldTypeSupport(lp.UintSupport)
 	e.FailOnFieldErr(c.errOnFieldErr)
 
 	select {

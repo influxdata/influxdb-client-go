@@ -3,7 +3,7 @@ package writer
 import (
 	"time"
 
-	"github.com/influxdata/influxdb-client-go"
+	influxdb "github.com/influxdata/influxdb-client-go"
 )
 
 const defaultMaxAttempts = 5
@@ -43,7 +43,8 @@ func NewRetryWriter(w MetricsWriter, opts ...RetryOption) *RetryWriter {
 }
 
 // Write delegates to underlying MetricsWriter and then
-// automatically retries when errors occur
+// automatically retries when certain errors occur.
+// note: this does not pass/fail atomically, and may return a short write.
 func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 	for i := 0; i < r.maxAttempts; i++ {
 		n, err = r.MetricsWriter.Write(m...)
@@ -71,11 +72,23 @@ func (r *RetryWriter) Write(m ...influxdb.Metric) (n int, err error) {
 				// call sleep with backoff duration
 				r.sleep(duration)
 			}
+		case influxdb.ETooLarge:
+			// given retry-after is configured attempt to sleep
+			// for retry-after seconds
+			if ierr.RetryAfter != nil {
+				r.sleep(time.Duration(*ierr.RetryAfter) * time.Second)
+			}
+			n0, err := r.Write(m[:(len(m) / 2)]...)
+			if err != nil {
+				return n0, err
+			}
+			n1, err := r.Write(m[(len(m) / 2):]...)
+			return n0 + n1, err
+
 		default:
 			return
 		}
 	}
-
 	return
 }
 

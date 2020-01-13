@@ -18,6 +18,7 @@ const (
 	ETooManyRequests     = "too many requests"
 	EUnauthorized        = "unauthorized"
 	EMethodNotAllowed    = "method not allowed"
+	ETooLarge            = "request too large"
 )
 
 // ErrUnimplemented is an error for when pieces of the client's functionality is unimplemented.
@@ -27,6 +28,7 @@ var ErrUnimplemented = errors.New("unimplemented")
 // It contains a number of contextual fields which describe the nature
 // and cause of the error
 type Error struct {
+	StatusCode int
 	Code       string
 	Message    string
 	Err        string

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go"
+	influxdb "github.com/influxdata/influxdb-client-go"
 )
 
 type bucketWriter struct {
@@ -53,8 +53,13 @@ func (w *metricsWriter) Write(m ...influxdb.Metric) (n int, err error) {
 	}
 
 	if w.called < len(w.errs) {
-		n = 0
 		err = w.errs[w.called]
+		// the next bit is so we can do errors that happen out of order or after a success in the test\
+		if err == error(nil) {
+			err = nil
+		} else {
+			n = 0
+		}
 	}
 
 	return

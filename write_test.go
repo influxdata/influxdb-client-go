@@ -75,6 +75,7 @@ some_measurement,some_tag=some_value some_int=2i,some_uint=2u 154630080000000000
 				"Retry-After": []string{"5"},
 			},
 			err: &Error{
+				StatusCode: 429,
 				Code:       ETooManyRequests,
 				Message:    "exceeded rate limit",
 				RetryAfter: &five,
@@ -86,8 +87,9 @@ some_measurement,some_tag=some_value some_int=2i,some_uint=2u 154630080000000000
 			statusCode: http.StatusServiceUnavailable,
 			headers:    http.Header{},
 			err: &Error{
-				Code:    EUnavailable,
-				Message: "service temporarily unavailable",
+				StatusCode: 503,
+				Code:       EUnavailable,
+				Message:    "service temporarily unavailable",
 			},
 		},
 		{
@@ -99,9 +101,10 @@ some_measurement,some_tag=some_value some_int=2i,some_uint=2u 154630080000000000
 				"Content-Type": []string{"application/json; charset=utf-8"},
 			},
 			err: &Error{
-				Code:    EInternal,
-				Op:      "doing something",
-				Message: "foo",
+				StatusCode: 500,
+				Code:       EInternal,
+				Op:         "doing something",
+				Message:    "foo",
 			},
 		},
 		{
@@ -110,8 +113,20 @@ some_measurement,some_tag=some_value some_int=2i,some_uint=2u 154630080000000000
 			statusCode: http.StatusBadRequest,
 			body:       []byte(`payload is bad`),
 			err: &Error{
-				Code:    "400 Bad Request",
-				Message: "payload is bad",
+				StatusCode: 400,
+				Code:       "400 Bad Request",
+				Message:    "payload is bad",
+			},
+		},
+		{
+			name:       "size limited",
+			metrics:    createTestRowMetrics(t, 10),
+			statusCode: http.StatusRequestEntityTooLarge,
+			headers:    http.Header{},
+			err: &Error{
+				StatusCode: 413,
+				Code:       ETooLarge,
+				Message:    "tried to write too large a batch",
 			},
 		},
 	} {

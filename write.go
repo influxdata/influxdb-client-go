@@ -18,8 +18,7 @@ import (
 	lp "github.com/influxdata/line-protocol"
 )
 
-// Write writes metrics to a bucket, and org.  It retries intelligently.
-// If the write is too big, it retries again, after breaking the payloads into two requests.
+// Write writes metrics to a bucket, and org. The result n is the number of points written.
 func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n int, err error) {
 	var (
 		buf = &bytes.Buffer{}
@@ -60,7 +59,7 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 	defer func() {
 		// discard body so connection can be reused
 		_, _ = io.Copy(ioutil.Discard, resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 	}()
 
 	eerr, err := parseWriteError(resp)
@@ -162,8 +161,11 @@ func parseWriteError(r *http.Response) (err *Error, perr error) {
 			err.RetryAfter = &retry
 		}
 	}
-
+	err.StatusCode = r.StatusCode
 	switch r.StatusCode {
+	case http.StatusRequestEntityTooLarge:
+		err.Code = ETooLarge
+		err.Message = "tried to write too large a batch"
 	case http.StatusTooManyRequests:
 		err.Code = ETooManyRequests
 		err.Message = "exceeded rate limit"

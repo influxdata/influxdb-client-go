@@ -2,10 +2,11 @@ package writer
 
 import (
 	"errors"
+	"net/http"
 	"testing"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go"
+	influxdb "github.com/influxdata/influxdb-client-go"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,10 +14,16 @@ var (
 	errSimple  = errors.New("something went wrong")
 	errTooMany = func(retryAfter *int32) error {
 		return &influxdb.Error{
+			StatusCode: http.StatusTooManyRequests,
 			Code:       influxdb.ETooManyRequests,
 			Message:    "too many requests",
 			RetryAfter: retryAfter,
 		}
+	}
+	errTooBig = &influxdb.Error{
+		StatusCode: http.StatusRequestEntityTooLarge,
+		Code:       influxdb.ETooLarge,
+		Message:    "too many requests",
 	}
 	three int32 = 3
 	four  int32 = 4
@@ -174,6 +181,35 @@ func Test_RetryWriter_Write(t *testing.T) {
 				3 * time.Second,
 				4 * time.Second,
 				5 * time.Second,
+			},
+		},
+		{
+			name: `two times, it is too large`,
+			options: []RetryOption{
+				WithMaxAttempts(3),
+				WithBackoff(LinearBackoff(time.Millisecond)),
+			},
+			metrics: createTestRowMetrics(t, 4),
+			errors: []error{
+				errTooBig,
+				errTooBig,
+				nil,
+				nil,
+				errTooBig,
+				nil,
+				nil,
+			},
+			count: 4,
+			err:   nil,
+			writes: [][]influxdb.Metric{
+				createTestRowMetrics(t, 4),      // too big
+				createTestRowMetrics(t, 4)[0:2], //too big
+				createTestRowMetrics(t, 4)[0:1], // good
+				createTestRowMetrics(t, 4)[1:2], // good
+
+				createTestRowMetrics(t, 4)[2:4], // too big
+				createTestRowMetrics(t, 4)[2:3], // good
+				createTestRowMetrics(t, 4)[3:4], // good
 			},
 		},
 	} {

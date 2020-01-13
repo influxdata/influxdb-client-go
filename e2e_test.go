@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	influxdb "github.com/influxdata/influxdb-client-go"
+	"github.com/influxdata/influxdb-client-go"
 )
 
 var e2e bool
@@ -17,7 +17,6 @@ var fuzz bool
 func init() {
 	flag.BoolVar(&e2e, "e2e", false, "run the end tests (requires a working influxdb instance on 127.0.0.1)")
 	flag.BoolVar(&fuzz, "fuzz", false, "(Not Implemented) run the end tests (requires a working influxdb instance on 127.0.0.1)")
-	flag.Parse()
 }
 
 func TestE2E(t *testing.T) {

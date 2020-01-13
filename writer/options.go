@@ -27,6 +27,8 @@ func (o Options) Config() Config {
 		ctxt:          context.Background(),
 		size:          defaultBufferSize,
 		flushInterval: defaultFlushInterval,
+		retry:         true,
+		retryOptions:  []RetryOption{},
 	}
 
 	o.Apply(&config)

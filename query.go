@@ -114,7 +114,9 @@ func (c *Client) QueryCSV(ctx context.Context, flux string, org string, extern .
 		return nil, gerr
 	}
 	cleanup = func() {} // we don't want to close the body if we got a status code in the 2xx range.
-	return &QueryCSVResult{ReadCloser: resp.Body, csvReader: csv.NewReader(resp.Body)}, nil
+	csvReader := csv.NewReader(resp.Body)
+	csvReader.FieldsPerRecord = -1
+	return &QueryCSVResult{ReadCloser: resp.Body, csvReader: csvReader}, nil
 }
 
 func (c *Client) makeQueryURL(org string) (string, error) {
@@ -150,10 +152,13 @@ type QueryCSVResult struct {
 // 	}
 //
 // It will call Close() on the result when it encounters EOF.
+// Note: error columns are represented as columns not as QueryCSVResult.Err.
+// QueryCSVResult.Err is for  errors that do not show up as error columns, error columns in flux are treated as ordinary columns.
 func (q *QueryCSVResult) Next() bool {
 	inNameRow := false
 readRow:
 	q.Row, q.Err = q.csvReader.Read()
+
 	if q.Err == io.EOF {
 		q.Err = q.Close()
 		return false
@@ -161,17 +166,23 @@ readRow:
 	if q.Err != nil {
 		return false
 	}
-	if len(q.Row) == 0 {
+
+	if len(q.Row) <= 1 {
 		goto readRow
-	}
-	if len(q.Row) == 1 {
-		goto readRow
-		//this shouldn't ever happen, we should error here
 	}
 	switch q.Row[0] {
+	case "":
+		if inNameRow {
+			q.ColNames = q.Row[1:]
+			q.colNamesMap = make(map[string]int, len(q.Row[1:]))
+			for i := range q.ColNames {
+				q.colNamesMap[q.ColNames[i]] = i
+			}
+			inNameRow = false
+			goto readRow
+		}
 	case "#datatype":
 		// parse datatypes here
-
 		q.dataTypes = q.Row[1:]
 		goto readRow
 	case "#group":
@@ -188,17 +199,6 @@ readRow:
 		q.defaultVals = q.Row[1:]
 		inNameRow = true
 		goto readRow
-	case "":
-		if inNameRow {
-			q.ColNames = q.Row[1:]
-			q.colNamesMap = make(map[string]int, len(q.Row[1:]))
-			for i := range q.ColNames {
-				q.colNamesMap[q.ColNames[i]] = i
-			}
-			inNameRow = false
-			goto readRow
-		}
-
 	}
 	return true
 }
@@ -221,7 +221,11 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 		elem := typeOf.Elem()
 		// easy case
 		if elem.Kind() == reflect.String {
-			for i, val := range q.Row[1:] {
+			for i, x := range q.Row[1:] {
+				val := stringTernary(x, q.defaultVals[i])
+				if val == "" {
+					continue
+				}
 				xVal.SetMapIndex(
 					reflect.ValueOf(q.ColNames[i]),
 					reflect.ValueOf(
@@ -229,8 +233,12 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 			}
 			return nil
 		}
-		for i, val := range q.Row[1:] {
-			cell, err := convert(stringTernary(val, q.defaultVals[i]), q.dataTypes[i])
+		for i, x := range q.Row[1:] {
+			val := stringTernary(x, q.defaultVals[i])
+			if val == "" {
+				continue
+			}
+			cell, err := convert(val, q.dataTypes[i])
 			if err != nil {
 				return err
 			}
@@ -349,7 +357,7 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 			case reflect.Interface:
 				if s == "" {
 					fVal.Set(reflect.Zero(fType))
-					continue
+					break
 				}
 				x, err := convert(s, q.dataTypes[q.colNamesMap[name]])
 				if err != nil {

@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	cmp "github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp"
 )
 
 func mustParseTime(s string) time.Time {
-	t, err := time.Parse(time.RFC3339Nano, s)
+	t, err := time.Parse(time.RFC3339, s)
 	if err != nil {
 		panic(err)
 	}
@@ -72,35 +72,31 @@ func TestQueryCSVResult_Unmarshal(t *testing.T) {
 		arg:     make(map[string]string),
 		wantErr: false,
 		expected: map[string]string{
-			"_field":         "",
-			"_measurement":   "tes0",
-			"_start":         "2019-04-25T05:21:04.1818586Z",
-			"_stop":          "2019-06-05T21:21:04.1818586Z",
-			"_time":          "2019-06-05T21:20:34.142165Z",
-			"_value":         "5",
-			"ktest1":         "k-test1",
-			"ktest2":         "",
-			"ktest2,k-test3": "",
-			"ktest3":         "k-test3",
-			"result":         "_result",
-			"table":          "0"},
+			"_field":       "ftest1",
+			"_measurement": "tes0",
+			"_start":       "2019-04-25T05:21:04.1818586Z",
+			"_stop":        "2019-06-05T21:21:04.1818586Z",
+			"_time":        "2019-06-05T21:20:34.142165Z",
+			"_value":       "5",
+			"ktest1":       "k-test1",
+			"ktest3":       "k-test3",
+			"result":       "_result",
+			"table":        "0"},
 	}, {
 		name:    "map[string]string",
 		arg:     make(map[string]interface{}),
 		wantErr: false,
 		expected: map[string]interface{}{
-			"_field":         "",
-			"_measurement":   "tes0",
-			"_start":         mustParseTime("2019-04-25T05:21:04.1818586Z"),
-			"_stop":          mustParseTime("2019-06-05T21:21:04.1818586Z"),
-			"_time":          mustParseTime("2019-06-05T21:20:34.142165Z"),
-			"_value":         int64(5),
-			"ktest1":         "k-test1",
-			"ktest2":         "",
-			"ktest2,k-test3": "",
-			"ktest3":         "k-test3",
-			"result":         "_result",
-			"table":          int64(0)},
+			"_field":       "ftest1",
+			"_measurement": "tes0",
+			"_start":       mustParseTime("2019-04-25T05:21:04.1818586Z"),
+			"_stop":        mustParseTime("2019-06-05T21:21:04.1818586Z"),
+			"_time":        mustParseTime("2019-06-05T21:20:34.142165Z"),
+			"_value":       int64(5),
+			"ktest1":       "k-test1",
+			"ktest3":       "k-test3",
+			"result":       "_result",
+			"table":        int64(0)},
 	},
 	}
 	for _, tt := range tests {
@@ -132,4 +128,129 @@ func TestQueryCSVResult_Unmarshal(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestQueryMultipleYields(t *testing.T) {
+	buf := bytes.NewBufferString(`
+#group,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE
+#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,double,double
+#default,mean,,,,,,,,,,,
+,result,table,_field,_measurement,_start,_stop,_time,_value,cpu,host,other,otherother
+,,0,usage_guest,cpu,2019-12-03T18:19:43.873403959Z,2019-12-03T19:19:43.873403959Z,2019-12-03T18:47:15Z,0,cpu-total,ip-192-168-1-101.ec2.internal,10.2,0
+,,0,usage_guest,cpu,2019-12-03T18:19:43.873403959Z,2019-12-03T19:19:43.873403959Z,2019-12-03T18:47:30Z,0,cpu-total,ip-192-168-1-101.ec2.internal,0,20.5
+,,0,usage_guest,cpu,2019-12-03T18:19:43.873403959Z,2019-12-03T19:19:43.873403959Z,2019-12-03T18:47:45Z,0,cpu-total,ip-192-168-1-101.ec2.internal,,0
+
+#group,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,double,dateTime:RFC3339
+#default,median,,,,,,,,,
+,result,table,_start,_stop,_field,_measurement,cpu,host,_value,_time
+,,0,2019-12-03T18:19:43.873403959Z,2019-12-03T19:19:43.873403959Z,usage_guest,cpu,cpu-total,ip-192-168-1-101.ec2.internal,,2019-12-03T18:19:45Z
+,,0,2019-12-03T18:19:43.873403959Z,2019-12-03T19:19:43.873403959Z,usage_guest,cpu,cpu-total,ip-192-168-1-101.ec2.internal,,2019-12-03T18:20:00Z
+,,0,2019-12-03T18:19:43.873403959Z,2019-12-03T19:19:43.873403959Z,usage_guest,cpu,cpu-total,ip-192-168-1-101.ec2.internal,,2019-12-03T18:20:15Z
+
+`)
+
+	expected := []map[string]interface{}{
+		map[string]interface{}{
+			"_field":       "usage_guest",
+			"_measurement": "cpu",
+			"_start":       mustParseTime("2019-12-03T18:19:43.873403959Z"),
+			"_stop":        mustParseTime("2019-12-03T19:19:43.873403959Z"),
+			"_time":        mustParseTime("2019-12-03T18:47:15Z"),
+			"_value":       float64(0),
+			"cpu":          "cpu-total",
+			"host":         "ip-192-168-1-101.ec2.internal",
+			"other":        10.2,
+			"otherother":   float64(0),
+			"result":       "mean",
+			"table":        int64(0),
+		},
+		map[string]interface{}{
+			"_field":       "usage_guest",
+			"_measurement": "cpu",
+			"_start":       mustParseTime("2019-12-03T18:19:43.873403959Z"),
+			"_stop":        mustParseTime("2019-12-03T19:19:43.873403959Z"),
+			"_time":        mustParseTime("2019-12-03T18:47:30Z"),
+			"_value":       float64(0),
+			"cpu":          "cpu-total",
+			"host":         "ip-192-168-1-101.ec2.internal",
+			"other":        0.0,
+			"otherother":   float64(20.5),
+			"result":       "mean",
+			"table":        int64(0),
+		},
+		map[string]interface{}{
+			"_field":       "usage_guest",
+			"_measurement": "cpu",
+			"_start":       mustParseTime("2019-12-03T18:19:43.873403959Z"),
+			"_stop":        mustParseTime("2019-12-03T19:19:43.873403959Z"),
+			"_time":        mustParseTime("2019-12-03T18:47:45Z"),
+			"_value":       float64(0),
+			"cpu":          "cpu-total",
+			"host":         "ip-192-168-1-101.ec2.internal",
+			"otherother":   float64(0),
+			"result":       "mean",
+			"table":        int64(0),
+		},
+		map[string]interface{}{
+			"_field":       "usage_guest",
+			"_measurement": "cpu",
+			"_start":       mustParseTime("2019-12-03T18:19:43.873403959Z"),
+			"_stop":        mustParseTime("2019-12-03T19:19:43.873403959Z"),
+			"_time":        mustParseTime("2019-12-03T18:19:45Z"),
+			"cpu":          "cpu-total",
+			"host":         "ip-192-168-1-101.ec2.internal",
+			"result":       "median",
+			"table":        int64(0),
+		},
+		map[string]interface{}{
+			"_field":       "usage_guest",
+			"_measurement": "cpu",
+			"_start":       mustParseTime("2019-12-03T18:19:43.873403959Z"),
+			"_stop":        mustParseTime("2019-12-03T19:19:43.873403959Z"),
+			"_time":        mustParseTime("2019-12-03T18:20:00Z"),
+			"cpu":          "cpu-total",
+			"host":         "ip-192-168-1-101.ec2.internal",
+			"result":       "median",
+			"table":        int64(0),
+		},
+		map[string]interface{}{
+			"_field":       "usage_guest",
+			"_measurement": "cpu",
+			"_start":       mustParseTime("2019-12-03T18:19:43.873403959Z"),
+			"_stop":        mustParseTime("2019-12-03T19:19:43.873403959Z"),
+			"_time":        mustParseTime("2019-12-03T18:20:15Z"),
+			"cpu":          "cpu-total",
+			"host":         "ip-192-168-1-101.ec2.internal",
+			"result":       "median",
+			"table":        int64(0),
+		},
+	}
+
+	q := &QueryCSVResult{
+		ReadCloser: ioutil.NopCloser(buf),
+	}
+	q.csvReader = csv.NewReader(q.ReadCloser)
+	q.csvReader.FieldsPerRecord = -1
+	line := 0
+	for q.Next() {
+		m := make(map[string]interface{})
+		err := q.Unmarshal(m)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !cmp.Equal(m, expected[line]) {
+			t.Fatal(cmp.Diff(m, expected[line]))
+		}
+		line++
+
+	}
+	if line != 6 {
+		t.Fatalf("expected 6 results but only got %d\n", line)
+	}
+	if q.Err != nil {
+		t.Fatal(q.Err)
+	}
+
 }

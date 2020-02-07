@@ -41,7 +41,13 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 		}
 	}
 
-	req, err := c.makeWriteRequest(bucket, org, buf)
+	var req *http.Request
+
+	if c.contentEncoding == "gzip" {
+		req, err = NewWriteGzipRequest(c.url, c.userAgent, c.authorization, bucket, org, c.compressionLevel, buf)
+	} else {
+		req, err = NewWriteRequest(c.url, c.userAgent, c.authorization, bucket, org, buf)
+	}
 	if err != nil {
 		return 0, err
 	}
@@ -78,16 +84,13 @@ func parseInt32(v string) (int32, error) {
 	return int32(retry), nil
 }
 
-func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Request, error) {
-	var err error
-	if c.contentEncoding == "gzip" {
-		body, err = gzip.CompressWithGzip(body, c.compressionLevel)
-		if err != nil {
-			return nil, err
-		}
+func NewWriteGzipRequest(url *url.URL, userAgent, token, bucket, org string, compressionLevel int, body io.Reader) (*http.Request, error) {
+	body, err := gzip.CompressWithGzip(body, compressionLevel)
+	if err != nil {
+		return nil, err
 	}
 
-	u, err := makeWriteURL(c.url, bucket, org)
+	u, err := makeWriteURL(url, bucket, org)
 	if err != nil {
 		return nil, err
 	}
@@ -98,14 +101,26 @@ func (c *Client) makeWriteRequest(bucket, org string, body io.Reader) (*http.Req
 	}
 
 	req.Header.Set("Content-Type", "text/plain; charset=utf-8")
+	req.Header.Set("Content-Encoding", "gzip")
+	req.Header.Set("User-Agent", userAgent)
+	req.Header.Set("Authorization", token)
+	return req, nil
+}
 
-	if c.contentEncoding == "gzip" {
-		req.Header.Set("Content-Encoding", "gzip")
+func NewWriteRequest(url *url.URL, userAgent, token, bucket, org string, body io.Reader) (*http.Request, error) {
+	u, err := makeWriteURL(url, bucket, org)
+	if err != nil {
+		return nil, err
 	}
 
-	req.Header.Set("User-Agent", c.userAgent)
-	req.Header.Set("Authorization", c.authorization)
+	req, err := http.NewRequest(http.MethodPost, u, body)
+	if err != nil {
+		return nil, err
+	}
 
+	req.Header.Set("Content-Type", "text/plain; charset=utf-8")
+	req.Header.Set("User-Agent", userAgent)
+	req.Header.Set("Authorization", token)
 	return req, nil
 }
 

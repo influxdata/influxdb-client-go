@@ -40,6 +40,20 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 		}
 	}
 
+	_, err = c.WriteBuffer(ctx, bucket, org, buf)
+	if err == nil {
+		n = len(m)
+	}
+	return n, err
+}
+
+func (c *Client) WriteBuffer(ctx context.Context, bucket, org string, buf *bytes.Buffer) (n int64, err error) {
+	select {
+	case <-ctx.Done():
+		return 0, ctx.Err()
+	default:
+	}
+
 	var req *http.Request
 
 	if c.contentEncoding == "gzip" {
@@ -71,7 +85,7 @@ func (c *Client) Write(ctx context.Context, bucket, org string, m ...Metric) (n 
 		return 0, eerr
 	}
 
-	return len(m), nil
+	return req.ContentLength, nil
 }
 
 func parseInt32(v string) (int32, error) {

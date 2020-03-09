@@ -8,4 +8,3 @@ require (
 	honnef.co/go/tools v0.0.1-2019.2.2 // indirect
 )
 
-go 1.13

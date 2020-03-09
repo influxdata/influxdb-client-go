@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path"
 	"sync"
 )
 
@@ -46,7 +47,7 @@ func New(connection string, token string, options ...Option) (*Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error: could not parse url: %v", err)
 	}
-	u.Path = `/api/v2`
+	u.Path = path.Join(u.Path, `/api/v2`)
 
 	c.url = u
 

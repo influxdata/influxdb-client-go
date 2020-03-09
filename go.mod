@@ -7,4 +7,3 @@ require (
 	github.com/stretchr/testify v1.3.0 // test dependency
 	honnef.co/go/tools v0.0.1-2019.2.2 // indirect
 )
-

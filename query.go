@@ -139,10 +139,21 @@ type QueryCSVResult struct {
 	Row         []string
 	ColNames    []string
 	colNamesMap map[string]int
-	dataTypes   []string
-	group       []bool
-	defaultVals []string
+	DataTypes   []string
+	Group       []bool
+	DefaultVals []string
 	Err         error
+}
+
+// QueryCSVResultFromBytes creates a CSV result iterator based on a byte buffer
+// This is useful for testing
+func QueryCSVResultFromBytes(buf *bytes.Buffer) *QueryCSVResult {
+	q := &QueryCSVResult{
+		ReadCloser: ioutil.NopCloser(buf),
+	}
+	q.csvReader = csv.NewReader(q.ReadCloser)
+	q.csvReader.FieldsPerRecord = -1
+	return q
 }
 
 // Next iterates to the next row in the data set.  Typically this is called like so:
@@ -182,21 +193,21 @@ readRow:
 			goto readRow
 		}
 	case "#datatype":
-		// parse datatypes here
-		q.dataTypes = q.Row[1:]
+		// parse DataTypes here
+		q.DataTypes = q.Row[1:]
 		goto readRow
 	case "#group":
-		q.group = q.group[:0]
+		q.Group = q.Group[:0]
 		for _, x := range q.Row[1:] {
 			if x == "true" {
-				q.group = append(q.group, true)
+				q.Group = append(q.Group, true)
 			} else {
-				q.group = append(q.group, false)
+				q.Group = append(q.Group, false)
 			}
 		}
 		goto readRow
 	case "#default":
-		q.defaultVals = q.Row[1:]
+		q.DefaultVals = q.Row[1:]
 		inNameRow = true
 		goto readRow
 	}
@@ -222,23 +233,23 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 		// easy case
 		if elem.Kind() == reflect.String {
 			for i, x := range q.Row[1:] {
-				val := stringTernary(x, q.defaultVals[i])
+				val := stringTernary(x, q.DefaultVals[i])
 				if val == "" {
 					continue
 				}
 				xVal.SetMapIndex(
 					reflect.ValueOf(q.ColNames[i]),
 					reflect.ValueOf(
-						stringTernary(val, q.defaultVals[i])))
+						stringTernary(val, q.DefaultVals[i])))
 			}
 			return nil
 		}
 		for i, x := range q.Row[1:] {
-			val := stringTernary(x, q.defaultVals[i])
+			val := stringTernary(x, q.DefaultVals[i])
 			if val == "" {
 				continue
 			}
-			cell, err := convert(val, q.dataTypes[i])
+			cell, err := convert(val, q.DataTypes[i])
 			if err != nil {
 				return err
 			}
@@ -296,7 +307,7 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 			case reflect.String:
 				fVal.SetString(s)
 			case reflect.Bool:
-				if q.dataTypes[q.colNamesMap[name]] != boolDatatype {
+				if q.DataTypes[q.colNamesMap[name]] != boolDatatype {
 					return errors.New("cannot marshal column into a bool type")
 				}
 				val := false
@@ -359,7 +370,7 @@ func (q *QueryCSVResult) Unmarshal(x interface{}) error {
 					fVal.Set(reflect.Zero(fType))
 					break
 				}
-				x, err := convert(s, q.dataTypes[q.colNamesMap[name]])
+				x, err := convert(s, q.DataTypes[q.colNamesMap[name]])
 				if err != nil {
 					return errors.New("badly encoded column")
 				}

@@ -113,9 +113,9 @@ func TestQueryCSVResult_Unmarshal(t *testing.T) {
 				csvReader:   csv.NewReader(ioutil.NopCloser(buf)),
 				Row:         tt.fields.Row,
 				ColNames:    tt.fields.ColNames,
-				dataTypes:   tt.fields.dataTypes,
-				group:       tt.fields.group,
-				defaultVals: tt.fields.defaultVals,
+				DataTypes:   tt.fields.dataTypes,
+				Group:       tt.fields.group,
+				DefaultVals: tt.fields.defaultVals,
 				Err:         tt.fields.Err,
 			}
 			q.Next()
@@ -227,11 +227,7 @@ func TestQueryMultipleYields(t *testing.T) {
 		},
 	}
 
-	q := &QueryCSVResult{
-		ReadCloser: ioutil.NopCloser(buf),
-	}
-	q.csvReader = csv.NewReader(q.ReadCloser)
-	q.csvReader.FieldsPerRecord = -1
+	q := QueryCSVResultFromBytes(buf)
 	line := 0
 	for q.Next() {
 		m := make(map[string]interface{})

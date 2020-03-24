@@ -1,7 +1,5 @@
 module github.com/influxdata/influxdb-client-go
 
-go 1.14
-
 require (
 	github.com/google/go-cmp v0.2.0 // test dependency
 	github.com/influxdata/flux v0.0.0-20190620184636-886e3c28388d // test dependency

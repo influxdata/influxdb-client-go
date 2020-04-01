@@ -96,12 +96,12 @@ client := influxdb2.NewClient("http://localhost:9999", "my-token")
 To set different configuration values, e.g. to set gzip compression and trust all server certificates, get default options 
 and change what needed: 
 ```go
-    client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token", 
-        influxdb2.DefaultOptions().
-            SetUseGZip(true).
-            SetTlsConfig(&tls.Config{
-                InsecureSkipVerify: true,
-            }))
+client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token", 
+    influxdb2.DefaultOptions().
+        SetUseGZip(true).
+        SetTlsConfig(&tls.Config{
+            InsecureSkipVerify: true,
+        }))
 ```
 ### Writes
 

@@ -28,25 +28,25 @@ This repository contains the reference Go client for InfluxDB 2.
 Add import `github.com/influxdata/influxdb-client-go` to your source code and sync dependencies or directly edit go.mod.
 
 ## Usage
-Basic example with blocking write and flux query.
+Basic example with blocking write and flux query:
 ```go
 package main
 
 import (
-	"context"
-	"fmt"
-	"time"
+    "context"
+    "fmt"
+    "time"
 
-	"github.com/influxdata/influxdb-client-go"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
     // create new client with default option for server url authenticate by token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // user blocking write client for writes to desired bucket
-	writeApi := client.WriteApiBlocking("my-org", "my-bucket")
-	// create point using full params constructor 
-	p := influxdb2.NewPoint("stat",
+    writeApi := client.WriteApiBlocking("my-org", "my-bucket")
+    // create point using full params constructor 
+    p := influxdb2.NewPoint("stat",
         map[string]string{"unit": "temperature"},
         map[string]interface{}{"avg": 24.5, "max": 45},
         time.Now())
@@ -58,31 +58,31 @@ func main() {
         AddField("avg", 23.2).
         AddField("max", 45).
         SetTime(time.Now())
-	writeApi.WritePoint(context.Background(), p)
+    writeApi.WritePoint(context.Background(), p)
     
     // Or write directly line protocol
-	line := fmt.Sprintf("stat,unit=temperature avg=%f,max=%f", 23.5, 45.0)
-	writeApi.WriteRecord(context.Background(), line)
+    line := fmt.Sprintf("stat,unit=temperature avg=%f,max=%f", 23.5, 45.0)
+    writeApi.WriteRecord(context.Background(), line)
 
     // get query client
-	queryApi := client.QueryApi("my-org")
+    queryApi := client.QueryApi("my-org")
     // get parser flux query result
-	result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
-	if err == nil {
+    result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+    if err == nil {
         // Use Next() to iterate over query result lines
-		for result.Next() {
+        for result.Next() {
             // Observe when there is new grouping key producing new table
-			if result.TableChanged() {
-				fmt.Printf("table: %s\n", result.TableMetadata().String())
-			}
+            if result.TableChanged() {
+                fmt.Printf("table: %s\n", result.TableMetadata().String())
+            }
             // read result
-			fmt.Printf("row: %s\n", result.Record().String())
-		}
-		if result.Err() != nil {
-			fmt.Printf("Query error: %s\n", result.Err().Error())
-		}
-	}
-	
+            fmt.Printf("row: %s\n", result.Record().String())
+        }
+        if result.Err() != nil {
+            fmt.Printf("Query error: %s\n", result.Err().Error())
+        }
+    }
+    
 }
 ```
 ### Options
@@ -97,11 +97,11 @@ To set different configuration values, e.g. to set gzip compression and trust al
 and change what needed: 
 ```go
     client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token", 
-		influxdb2.DefaultOptions().
-			SetUseGZip(true).
-			SetTlsConfig(&tls.Config{
-				InsecureSkipVerify: true,
-			}))
+        influxdb2.DefaultOptions().
+            SetUseGZip(true).
+            SetTlsConfig(&tls.Config{
+                InsecureSkipVerify: true,
+            }))
 ```
 ### Writes
 
@@ -114,98 +114,96 @@ Writes are automatically retried on server back pressure.
 
 This client also offers synchronous blocking method to ensure that write buffer is flushed and all pending writes are finished, 
 see [Flush()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L24) method.
-Always use [Close()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L26) method of the client to stop background processes.
+Always use [Close()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L26) method of the client to stop all background processes.
  
 This write client recommended for frequent periodic writes.
 
-Example:
 ```go
 package main
 
 import (
-	"fmt"
-	"github.com/influxdata/influxdb-client-go"
-	"math/rand"
-	"time"
+    "fmt"
+    "github.com/influxdata/influxdb-client-go"
+    "math/rand"
+    "time"
 )
 
 func main() {
-	// Create client and set batch size to 20 
-	client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token",
-		influxdb2.DefaultOptions().SetBatchSize(20))
-	// Get non-blocking write client
-	writeApi := client.WriteApi("my-org","my-bucket")
-	// write some points
-	for i := 0; i <100; i++ {
+    // Create client and set batch size to 20 
+    client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token",
+        influxdb2.DefaultOptions().SetBatchSize(20))
+    // Get non-blocking write client
+    writeApi := client.WriteApi("my-org","my-bucket")
+    // write some points
+    for i := 0; i <100; i++ {
         // create point
-		p := influxdb2.NewPoint(
-			"system",
-			map[string]string{
-				"id":       fmt.Sprintf("rack_%v", i%10),
-				"vendor":   "AWS",
-				"hostname": fmt.Sprintf("host_%v", i%100),
-			},
-			map[string]interface{}{
-				"temperature": rand.Float64() * 80.0,
-				"disk_free":   rand.Float64() * 1000.0,
-				"disk_total":  (i/10 + 1) * 1000000,
-				"mem_total":   (i/100 + 1) * 10000000,
-				"mem_free":    rand.Uint64(),
-			},
-			time.Now())
+        p := influxdb2.NewPoint(
+            "system",
+            map[string]string{
+                "id":       fmt.Sprintf("rack_%v", i%10),
+                "vendor":   "AWS",
+                "hostname": fmt.Sprintf("host_%v", i%100),
+            },
+            map[string]interface{}{
+                "temperature": rand.Float64() * 80.0,
+                "disk_free":   rand.Float64() * 1000.0,
+                "disk_total":  (i/10 + 1) * 1000000,
+                "mem_total":   (i/100 + 1) * 10000000,
+                "mem_free":    rand.Uint64(),
+            },
+            time.Now())
         // write asynchronously
-		writeApi.WritePoint(p)
-	}
-	// Force all unwritten data to be sent
-	writeApi.Flush()
-	// Ensures background processes finishes
-	client.Close()
+        writeApi.WritePoint(p)
+    }
+    // Force all unwritten data to be sent
+    writeApi.Flush()
+    // Ensures background processes finishes
+    client.Close()
 }
 ```
 ### Blocking write client 
 Blocking write client writes given point(s) synchronously. No implicit batching. Batch is created from given set of points
 
-Example:
 ```go
 package main
 
 import (
-	"context"
-	"fmt"
-	"github.com/influxdata/influxdb-client-go"
-	"math/rand"
-	"time"
+    "context"
+    "fmt"
+    "github.com/influxdata/influxdb-client-go"
+    "math/rand"
+    "time"
 )
 
 func main() {
-	// Create client
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
-	// Get non-blocking write client
-	writeApi := client.WriteApiBlocking("my-org","my-bucket")
-	// write some points
-	for i := 0; i <100; i++ {
-		// create data point
-		p := influxdb2.NewPoint(
-			"system",
-			map[string]string{
-				"id":       fmt.Sprintf("rack_%v", i%10),
-				"vendor":   "AWS",
-				"hostname": fmt.Sprintf("host_%v", i%100),
-			},
-			map[string]interface{}{
-				"temperature": rand.Float64() * 80.0,
-				"disk_free":   rand.Float64() * 1000.0,
-				"disk_total":  (i/10 + 1) * 1000000,
-				"mem_total":   (i/100 + 1) * 10000000,
-				"mem_free":    rand.Uint64(),
-			},
-			time.Now())
-		// write synchronously
-		err := writeApi.WritePoint(context.Background(), p)
-		if err != nil {
-			panic(err)
-		}
-	}
+    // Create client
+    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    // Get non-blocking write client
+    writeApi := client.WriteApiBlocking("my-org","my-bucket")
+    // write some points
+    for i := 0; i <100; i++ {
+        // create data point
+        p := influxdb2.NewPoint(
+            "system",
+            map[string]string{
+                "id":       fmt.Sprintf("rack_%v", i%10),
+                "vendor":   "AWS",
+                "hostname": fmt.Sprintf("host_%v", i%100),
+            },
+            map[string]interface{}{
+                "temperature": rand.Float64() * 80.0,
+                "disk_free":   rand.Float64() * 1000.0,
+                "disk_total":  (i/10 + 1) * 1000000,
+                "mem_total":   (i/100 + 1) * 10000000,
+                "mem_free":    rand.Uint64(),
+            },
+            time.Now())
+        // write synchronously
+        err := writeApi.WritePoint(context.Background(), p)
+        if err != nil {
+            panic(err)
+        }
+    }
 }
 ```
 
@@ -221,65 +219,65 @@ for easy reading the result.
 package main
 
 import (
-	"context"
-	"fmt"
-	"github.com/influxdata/influxdb-client-go"
+    "context"
+    "fmt"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
-	// Create client
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
-	// Get query client
-	queryApi := client.QueryApi("my-org")
-	// get QueryTableResult
-	result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
-	if err == nil {
-		// Iterate over query response
-		for result.Next() {
-			// Notice when group key has changed
-			if result.TableChanged() {
-				fmt.Printf("table: %s\n", result.TableMetadata().String())
-			}
-			// Access data
-			fmt.Printf("value: %v\n", result.Record().Value())
-		}
-		// check for an error
-		if result.Err() != nil {
-			fmt.Printf("query parsing error: %s\n", result.Err().Error())
-		}
-	} else {
-		panic(err)
-	}
+    // Create client
+    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    // Get query client
+    queryApi := client.QueryApi("my-org")
+    // get QueryTableResult
+    result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+    if err == nil {
+        // Iterate over query response
+        for result.Next() {
+            // Notice when group key has changed
+            if result.TableChanged() {
+                fmt.Printf("table: %s\n", result.TableMetadata().String())
+            }
+            // Access data
+            fmt.Printf("value: %v\n", result.Record().Value())
+        }
+        // check for an error
+        if result.Err() != nil {
+            fmt.Printf("query parsing error: %s\n", result.Err().Error())
+        }
+    } else {
+        panic(err)
+    }
 }
 ```
 
 ### Raw
 [QueryRaw()](https://github.com/influxdata/influxdb-client-go/blob/master/query.go#L44) returns raw, unparsed, query result string and process it on your own. Returned csv format  
-can controlled by third parameter, query dialect.   
+can controlled by the third parameter, query dialect.   
 
 ```go
 package main
 
 import (
-	"context"
-	"fmt"
-	"github.com/influxdata/influxdb-client-go"
+    "context"
+    "fmt"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
-	// Create client
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
-	// Get query client
-	queryApi := client.QueryApi("my-org")
-	// Query and get complete result as a string
-	// Use default dialect
-	result, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, influxdb2.DefaultDialect())
-	if err == nil {
-		fmt.Println("QueryResult:")
-		fmt.Println(result)
-	} else {
-		panic(err)
-	}
+    // Create client
+    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    // Get query client
+    queryApi := client.QueryApi("my-org")
+    // Query and get complete result as a string
+    // Use default dialect
+    result, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, influxdb2.DefaultDialect())
+    if err == nil {
+        fmt.Println("QueryResult:")
+        fmt.Println(result)
+    } else {
+        panic(err)
+    }
 }    
 ```
 
@@ -290,9 +288,3 @@ If you would like to contribute code you can do through GitHub by forking the re
 ## License
 
 The InfluxDB 2 Go Client is released under the [MIT License](https://opensource.org/licenses/MIT).
-
-
-
-
-
-

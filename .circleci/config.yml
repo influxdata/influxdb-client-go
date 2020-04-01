@@ -1,0 +1,47 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version
+      - image: circleci/golang:1.13.0
+        environment:
+          ENV: CI
+          GO111MODULE: "on"
+      - image: quay.io/influxdb/influxdb:2.0.0-beta
+
+    steps:
+      - checkout
+#      - run:
+#          name: check tidy
+#          command: |
+#            go mod tidy
+#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
+#              echo modules are not tidy, please run 'go mod tidy'
+#              exit 1
+#            fi
+#      - run:
+#          name: check go fmt
+#          command: |
+#            go fmt
+#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
+#              echo modules are not tidy, please run 'go fmt ./...'
+#              exit 1
+#            fi
+      - run: go get -v -t -d ./...
+      - run: go vet ./...
+      - run: go get honnef.co/go/tools/cmd/staticcheck  && staticcheck ./...
+      - run:
+          name: "Create a temp directory for artifacts"
+          command: |
+            mkdir -p /tmp/artifacts
+      - run:
+          command: |
+            go test -v -e2e -race -coverprofile=coverage.txt -covermode=atomic ./...
+            bash <(curl -s https://codecov.io/bash)
+            go tool cover -html=coverage.txt -o coverage.html
+            mv coverage.html /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts

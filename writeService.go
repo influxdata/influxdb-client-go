@@ -115,7 +115,13 @@ func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
 		if w.client.Options().UseGZip() {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
-	}, nil)
+	}, func(r *http.Response) error {
+		// discard body so connection can be reused
+		//_, _ = io.Copy(ioutil.Discard, r.Body)
+		//_ = r.Body.Close()
+		return nil
+	})
+
 	if perror != nil {
 		if perror.StatusCode == http.StatusTooManyRequests || perror.StatusCode == http.StatusServiceUnavailable {
 			logger.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
@@ -133,8 +139,6 @@ func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
 			logger.Errorf("Write error: %s\n", perror.Error())
 		}
 		return perror
-	} else {
-		w.lastWriteAttempt = time.Now()
 	}
 	return nil
 }

@@ -179,6 +179,11 @@ func (c *client) handleHttpError(r *http.Response) *Error {
 	if r.StatusCode >= 200 && r.StatusCode < 300 {
 		return nil
 	}
+	defer func() {
+		// discard body so connection can be reused
+		_, _ = io.Copy(ioutil.Discard, r.Body)
+		r.Body.Close()
+	}()
 
 	perror := NewError(nil)
 	perror.StatusCode = r.StatusCode

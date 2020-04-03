@@ -7,6 +7,15 @@
 
 This repository contains the reference Go client for InfluxDB 2.
 
+- [Features](#features)
+- [Documentation](#documentation)
+- [How To Use](#how-to-use)
+    - [Basic Example](#basic-example)
+    - [Writes in Detail](#writes)
+    - [Queries in Detail](#queries)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 - InfluxDB 2 client
@@ -17,19 +26,25 @@ This repository contains the reference Go client for InfluxDB 2.
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
         - [Data Point](https://github.com/influxdata/influxdb-client-go/blob/master/point.go)
-        - both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/writeApiBlocking.go) manners
+        - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/writeApiBlocking.go) ways
         - [How to writes](#writes)  
     - InfluxDB 2 API
         - setup
         - ready
      
-## Installation
+## Documentation
+
+Go API docs is available at: [https://pkg.go.dev/github.com/influxdata/influxdb-client-go](https://pkg.go.dev/github.com/influxdata/influxdb-client-go)
+
+## How To Use
+
+### Installation
 **Go 1.3** or later is required.
 
-Add import `github.com/influxdata/influxdb-client-go` to your source code and sync dependencies or directly edit go.mod.
+Add import `github.com/influxdata/influxdb-client-go` to your source code and sync dependencies or directly edit the `go.mod` file.
 
-## Usage
-Basic example with blocking write and flux query:
+### Basic Example
+The following example demonstrates how to write data to InfluxDB 2 and read them back using the Flux language:
 ```go
 package main
 
@@ -88,15 +103,15 @@ func main() {
 }
 ```
 ### Options
-
-Client uses set of options to configure behavior. These are available in the [Options](https://github.com/influxdata/influxdb-client-go/blob/master/options.go) object
-Creating client using:
+The InfluxDBClient uses set of options to configure behavior. These are available in the [Options](https://github.com/influxdata/influxdb-client-go/blob/master/options.go) object
+Creating a client instance using
 ```go
 client := influxdb2.NewClient("http://localhost:9999", "my-token")
 ```
+will use the default options.
 
 To set different configuration values, e.g. to set gzip compression and trust all server certificates, get default options 
-and change what needed: 
+and change what is needed: 
 ```go
 client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token", 
     influxdb2.DefaultOptions().
@@ -111,14 +126,14 @@ Client offers two ways of writing, non-blocking and blocking.
 
 ### Non-blocking write client 
 Non-blocking write client uses implicit batching. Data are asynchronously
-written to the underlying buffer and are automatically sent to server when size of the write buffer reaches the batch size, default 1000, or flush interval, default 1s, times out.
+written to the underlying buffer and they are automatically sent to a server when the size of the write buffer reaches the batch size, default 1000, or the flush interval, default 1s, times out.
 Writes are automatically retried on server back pressure.
 
-This client also offers synchronous blocking method to ensure that write buffer is flushed and all pending writes are finished, 
+This write client also offers synchronous blocking method to ensure that write buffer is flushed and all pending writes are finished, 
 see [Flush()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L24) method.
-Always use [Close()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L26) method of the client to stop all background processes.
+Always use [Close()](https://github.com/influxdata/influxdb-client-go/blob/master/client.go#L40) method of the client to stop all background processes.
  
-This write client recommended for frequent periodic writes.
+Asynchronous write client is recommended for frequent periodic writes.
 
 ```go
 package main
@@ -164,7 +179,7 @@ func main() {
 }
 ```
 ### Blocking write client 
-Blocking write client writes given point(s) synchronously. No implicit batching. Batch is created from given set of points
+Blocking write client writes given point(s) synchronously. It doesn't have implicit batching. Batch is created from given set of points.
 
 ```go
 package main
@@ -212,8 +227,7 @@ func main() {
 ```
 
 ### Queries
-Query client offer two ways of retrieving query results, parsed representation in [QueryTableResult](https://github.com/influxdata/influxdb-client-go/blob/master/query.go#L162) and a raw result string. 
-which parses response stream into FluxTableMetaData, FluxColumn and FluxRecord objects.
+Query client offers two ways of retrieving query results, parsed representation in [QueryTableResult](https://github.com/influxdata/influxdb-client-go/blob/master/query.go#L162) and a raw result string. 
 
 ### QueryTableResult 
 QueryTableResult offers comfortable way how to deal with flux query CSV response. It parses CSV stream into FluxTableMetaData, FluxColumn and FluxRecord objects
@@ -259,7 +273,7 @@ func main() {
 
 ### Raw
 [QueryRaw()](https://github.com/influxdata/influxdb-client-go/blob/master/query.go#L44) returns raw, unparsed, query result string and process it on your own. Returned csv format  
-can controlled by the third parameter, query dialect.   
+can be controlled by the third parameter, query dialect.   
 
 ```go
 package main

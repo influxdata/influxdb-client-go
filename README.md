@@ -83,7 +83,8 @@ func main() {
             fmt.Printf("Query error: %s\n", result.Err().Error())
         }
     }
-    
+    // Ensures background processes finishes
+    client.Close()
 }
 ```
 ### Options
@@ -179,7 +180,7 @@ import (
 func main() {
     // Create client
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
-    // Get non-blocking write client
+    // Get blocking write client
     writeApi := client.WriteApiBlocking("my-org","my-bucket")
     // write some points
     for i := 0; i <100; i++ {
@@ -205,6 +206,8 @@ func main() {
             panic(err)
         }
     }
+    // Ensures background processes finishes
+    client.Close()
 }
 ```
 
@@ -249,6 +252,8 @@ func main() {
     } else {
         panic(err)
     }
+    // Ensures background processes finishes
+    client.Close()
 }
 ```
 
@@ -279,6 +284,8 @@ func main() {
     } else {
         panic(err)
     }
+    // Ensures background processes finishes
+    client.Close()
 }    
 ```
 

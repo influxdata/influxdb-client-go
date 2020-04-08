@@ -6,6 +6,7 @@ package influxdb2
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/internal/http"
 	"strings"
 )
 
@@ -27,8 +28,8 @@ type writeApiBlockingImpl struct {
 }
 
 // creates writeApiBlockingImpl for org and bucket with underlying client
-func newWriteApiBlockingImpl(org string, bucket string, client InfluxDBClient) *writeApiBlockingImpl {
-	return &writeApiBlockingImpl{service: newWriteService(org, bucket, client)}
+func newWriteApiBlockingImpl(org string, bucket string, service http.Service, client InfluxDBClient) *writeApiBlockingImpl {
+	return &writeApiBlockingImpl{service: newWriteService(org, bucket, service, client)}
 }
 
 func (w *writeApiBlockingImpl) write(ctx context.Context, line string) error {

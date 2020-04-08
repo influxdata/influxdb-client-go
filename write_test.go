@@ -8,7 +8,7 @@ import (
 	"compress/gzip"
 	"context"
 	"fmt"
-	"github.com/influxdata/influxdb-client-go/domain"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"io"
@@ -21,25 +21,18 @@ import (
 	"time"
 )
 
-type testClient struct {
+type testHttpService struct {
+	serverUrl      string
 	lines          []string
 	options        *Options
 	t              *testing.T
 	wasGzip        bool
-	requestHandler func(c *testClient, url string, body io.Reader) error
-	replyError     *Error
+	requestHandler func(c *testHttpService, url string, body io.Reader) error
+	replyError     *ihttp.Error
 	lock           sync.Mutex
 }
 
-func (t *testClient) WriteApiBlocking(string, string) WriteApiBlocking {
-	return nil
-}
-
-func (t *testClient) WriteApi(string, string) WriteApi {
-	return nil
-}
-
-func (t *testClient) Close() {
+func (t *testHttpService) Close() {
 	t.lock.Lock()
 	if len(t.lines) > 0 {
 		t.lines = t.lines[:0]
@@ -50,20 +43,22 @@ func (t *testClient) Close() {
 	t.lock.Unlock()
 }
 
-func (t *testClient) QueryApi(string) QueryApi {
-	return nil
-}
-
-func (t *testClient) ReplyError() *Error {
+func (t *testHttpService) ReplyError() *ihttp.Error {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	return t.replyError
 }
 
-func (t *testClient) postRequest(_ context.Context, url string, body io.Reader, requestCallback RequestCallback, _ ResponseCallback) *Error {
+func (t *testHttpService) SetAuthorization(authorization string) {
+
+}
+func (t *testHttpService) GetRequest(_ context.Context, _ string, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
+	return nil
+}
+func (t *testHttpService) PostRequest(_ context.Context, url string, body io.Reader, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		return NewError(err)
+		return ihttp.NewError(err)
 	}
 	if requestCallback != nil {
 		requestCallback(req)
@@ -72,7 +67,7 @@ func (t *testClient) postRequest(_ context.Context, url string, body io.Reader, 
 		body, _ = gzip.NewReader(body)
 		t.wasGzip = true
 	}
-	assert.Equal(t.t, url, fmt.Sprintf("%s/api/v2/write?bucket=my-bucket&org=my-org&precision=ns", t.ServerUrl()))
+	assert.Equal(t.t, url, fmt.Sprintf("%s/api/v2/write?bucket=my-bucket&org=my-org&precision=ns", t.serverUrl))
 
 	if t.ReplyError() != nil {
 		return t.ReplyError()
@@ -84,13 +79,13 @@ func (t *testClient) postRequest(_ context.Context, url string, body io.Reader, 
 	}
 
 	if err != nil {
-		return NewError(err)
+		return ihttp.NewError(err)
 	} else {
 		return nil
 	}
 }
 
-func (t *testClient) decodeLines(body io.Reader) error {
+func (t *testHttpService) decodeLines(body io.Reader) error {
 	bytes, err := ioutil.ReadAll(body)
 	if err != nil {
 		return err
@@ -103,25 +98,10 @@ func (t *testClient) decodeLines(body io.Reader) error {
 	return nil
 }
 
-func (t *testClient) Lines() []string {
+func (t *testHttpService) Lines() []string {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	return t.lines
-}
-
-func (t *testClient) Options() *Options {
-	return t.options
-}
-
-func (t *testClient) ServerUrl() string {
-	return "http://locahost:8900"
-}
-
-func (t *testClient) Setup(context.Context, string, string, string, string, int) (*domain.OnboardingResponse, error) {
-	return nil, nil
-}
-func (t *testClient) Ready(context.Context) (bool, error) {
-	return true, nil
 }
 
 func genPoints(num int) []*Point {
@@ -168,98 +148,106 @@ func genRecords(num int) []string {
 }
 
 func TestWriteApiImpl_Write(t *testing.T) {
-	client := &testClient{
-		options: DefaultOptions(),
-		t:       t,
+	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+	service := &testHttpService{
+		t:         t,
+		options:   client.Options(),
+		serverUrl: client.ServerUrl(),
 	}
 	client.options.SetBatchSize(5)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", client)
+	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(10)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
 	writeApi.Close()
-	require.Len(t, client.Lines(), 10)
+	require.Len(t, service.Lines(), 10)
 	for i, p := range points {
 		line := p.ToLineProtocol(client.options.Precision())
 		//cut off last \n char
 		line = line[:len(line)-1]
-		assert.Equal(t, client.Lines()[i], line)
+		assert.Equal(t, service.Lines()[i], line)
 	}
 }
 
 func TestGzipWithFlushing(t *testing.T) {
-	client := &testClient{
-		options: DefaultOptions(),
-		t:       t,
+	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+	service := &testHttpService{
+		t:         t,
+		options:   client.Options(),
+		serverUrl: client.ServerUrl(),
 	}
 	client.options.SetBatchSize(5).SetUseGZip(true)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", client)
+	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(5)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
 	time.Sleep(time.Millisecond * 10)
-	require.Len(t, client.Lines(), 5)
-	assert.True(t, client.wasGzip)
+	require.Len(t, service.Lines(), 5)
+	assert.True(t, service.wasGzip)
 
-	client.Close()
+	service.Close()
 	client.options.SetUseGZip(false)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
 	time.Sleep(time.Millisecond * 10)
-	require.Len(t, client.Lines(), 5)
-	assert.False(t, client.wasGzip)
+	require.Len(t, service.Lines(), 5)
+	assert.False(t, service.wasGzip)
 
 	writeApi.Close()
 }
 func TestFlushInterval(t *testing.T) {
-	client := &testClient{
-		options: DefaultOptions(),
-		t:       t,
+	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+	service := &testHttpService{
+		t:         t,
+		options:   client.Options(),
+		serverUrl: client.ServerUrl(),
 	}
 	client.options.SetBatchSize(10).SetFlushInterval(500)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", client)
+	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(5)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
-	require.Len(t, client.Lines(), 0)
+	require.Len(t, service.Lines(), 0)
 	time.Sleep(time.Millisecond * 600)
-	require.Len(t, client.Lines(), 5)
+	require.Len(t, service.Lines(), 5)
 	writeApi.Close()
 
-	client.Close()
+	service.Close()
 	client.options.SetFlushInterval(2000)
-	writeApi = newWriteApiImpl("my-org", "my-bucket", client)
+	writeApi = newWriteApiImpl("my-org", "my-bucket", service, client)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
-	require.Len(t, client.Lines(), 0)
+	require.Len(t, service.Lines(), 0)
 	time.Sleep(time.Millisecond * 2100)
-	require.Len(t, client.Lines(), 5)
+	require.Len(t, service.Lines(), 5)
 
 	writeApi.Close()
 }
 
 func TestRetry(t *testing.T) {
-	client := &testClient{
-		options: DefaultOptions(),
-		t:       t,
+	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+	service := &testHttpService{
+		t:         t,
+		options:   client.Options(),
+		serverUrl: client.ServerUrl(),
 	}
 	client.options.SetLogLevel(3).
 		SetBatchSize(5).
 		SetRetryInterval(10000)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", client)
+	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(15)
 	for i := 0; i < 5; i++ {
 		writeApi.WritePoint(points[i])
 	}
 	writeApi.waitForFlushing()
-	require.Len(t, client.Lines(), 5)
-	client.Close()
-	client.replyError = &Error{
+	require.Len(t, service.Lines(), 5)
+	service.Close()
+	service.replyError = &ihttp.Error{
 		StatusCode: 429,
 		RetryAfter: 5,
 	}
@@ -267,36 +255,38 @@ func TestRetry(t *testing.T) {
 		writeApi.WritePoint(points[i])
 	}
 	writeApi.waitForFlushing()
-	require.Len(t, client.Lines(), 0)
-	client.Close()
+	require.Len(t, service.Lines(), 0)
+	service.Close()
 	for i := 5; i < 10; i++ {
 		writeApi.WritePoint(points[i])
 	}
 	writeApi.waitForFlushing()
-	require.Len(t, client.Lines(), 0)
+	require.Len(t, service.Lines(), 0)
 	time.Sleep(5*time.Second + 50*time.Millisecond)
 	for i := 10; i < 15; i++ {
 		writeApi.WritePoint(points[i])
 	}
 	writeApi.waitForFlushing()
-	require.Len(t, client.Lines(), 15)
-	assert.True(t, strings.HasPrefix(client.Lines()[7], "test,hostname=host_7"))
-	assert.True(t, strings.HasPrefix(client.Lines()[14], "test,hostname=host_14"))
+	require.Len(t, service.Lines(), 15)
+	assert.True(t, strings.HasPrefix(service.Lines()[7], "test,hostname=host_7"))
+	assert.True(t, strings.HasPrefix(service.Lines()[14], "test,hostname=host_14"))
 	writeApi.Close()
 }
 
 func TestWriteError(t *testing.T) {
-	client := &testClient{
-		options: DefaultOptions(),
-		t:       t,
+	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+	service := &testHttpService{
+		t:         t,
+		options:   client.Options(),
+		serverUrl: client.ServerUrl(),
 	}
 	client.options.SetLogLevel(3).SetBatchSize(5)
-	client.replyError = &Error{
+	service.replyError = &ihttp.Error{
 		StatusCode: 400,
 		Code:       "write",
 		Message:    "error",
 	}
-	writeApi := newWriteApiImpl("my-org", "my-bucket", client)
+	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	errCh := writeApi.Errors()
 	var recErr error
 	var wg sync.WaitGroup
@@ -312,6 +302,6 @@ func TestWriteError(t *testing.T) {
 	writeApi.waitForFlushing()
 	wg.Wait()
 	require.NotNil(t, recErr)
-
+	writeApi.Close()
 	client.Close()
 }

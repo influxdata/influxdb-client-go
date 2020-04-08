@@ -34,7 +34,7 @@ func (c *client) Setup(ctx context.Context, username, password, org, bucket stri
 	if c.options.LogLevel() > 2 {
 		log.Printf("D! Request:\n%s\n", string(inputData))
 	}
-	error := c.postRequest(ctx, c.serverUrl+"/api/v2/setup", bytes.NewReader(inputData), func(req *http.Request) {
+	error := c.httpService.PostRequest(ctx, c.serverUrl+"/api/v2/setup", bytes.NewReader(inputData), func(req *http.Request) {
 		req.Header.Add("Content-Type", "application/json; charset=utf-8")
 	},
 		func(resp *http.Response) error {
@@ -45,7 +45,7 @@ func (c *client) Setup(ctx context.Context, username, password, org, bucket stri
 			}
 			setupResult = setupResponse
 			if setupResponse.Auth != nil && *setupResponse.Auth.Token != "" {
-				c.authorization = "Token " + *setupResponse.Auth.Token
+				c.httpService.SetAuthorization("Token " + *setupResponse.Auth.Token)
 			}
 			return nil
 		},

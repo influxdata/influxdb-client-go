@@ -12,6 +12,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 	"log"
 	"net/http"
+	"net/url"
+	"path"
 )
 
 func (c *client) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
@@ -34,7 +36,13 @@ func (c *client) Setup(ctx context.Context, username, password, org, bucket stri
 	if c.options.LogLevel() > 2 {
 		log.Printf("D! Request:\n%s\n", string(inputData))
 	}
-	error := c.httpService.PostRequest(ctx, c.serverUrl+"/api/v2/setup", bytes.NewReader(inputData), func(req *http.Request) {
+	u, err := url.Parse(c.httpService.ServerApiUrl())
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "setup")
+
+	error := c.httpService.PostRequest(ctx, u.String(), bytes.NewReader(inputData), func(req *http.Request) {
 		req.Header.Add("Content-Type", "application/json; charset=utf-8")
 	},
 		func(resp *http.Response) error {

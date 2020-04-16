@@ -162,11 +162,11 @@ func (w *writeService) encodePoints(points ...*Point) (string, error) {
 
 func (w *writeService) writeUrl() (string, error) {
 	if w.url == "" {
-		u, err := url.Parse(w.client.ServerUrl())
+		u, err := url.Parse(w.httpService.ServerApiUrl())
 		if err != nil {
 			return "", err
 		}
-		u.Path = path.Join(u.Path, "/api/v2/write")
+		u.Path = path.Join(u.Path, "write")
 
 		params := u.Query()
 		params.Set("org", w.org)

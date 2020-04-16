@@ -69,7 +69,7 @@ func (q *queryApiImpl) QueryRaw(ctx context.Context, query string, dialect *doma
 	if err != nil {
 		return "", err
 	}
-	queryType := "flux"
+	queryType := domain.QueryTypeFlux
 	qr := domain.Query{Query: query, Type: &queryType, Dialect: dialect}
 	qrJson, err := json.Marshal(qr)
 	if err != nil {
@@ -102,7 +102,7 @@ func (q *queryApiImpl) QueryRaw(ctx context.Context, query string, dialect *doma
 
 // DefaultDialect return flux query Dialect with full annotations (datatype, group, default), header and comma char as a delimiter
 func DefaultDialect() *domain.Dialect {
-	annotations := []string{"datatype", "group", "default"}
+	annotations := []domain.DialectAnnotations{domain.DialectAnnotationsDatatype, domain.DialectAnnotationsGroup, domain.DialectAnnotationsDefault}
 	delimiter := ","
 	header := true
 	return &domain.Dialect{
@@ -118,7 +118,7 @@ func (q *queryApiImpl) Query(ctx context.Context, query string) (*QueryTableResu
 	if err != nil {
 		return nil, err
 	}
-	queryType := "flux"
+	queryType := domain.QueryTypeFlux
 	qr := domain.Query{Query: query, Type: &queryType, Dialect: DefaultDialect()}
 	qrJson, err := json.Marshal(qr)
 	if err != nil {
@@ -148,11 +148,11 @@ func (q *queryApiImpl) Query(ctx context.Context, query string) (*QueryTableResu
 
 func (q *queryApiImpl) queryUrl() (string, error) {
 	if q.url == "" {
-		u, err := url.Parse(q.client.ServerUrl())
+		u, err := url.Parse(q.httpService.ServerApiUrl())
 		if err != nil {
 			return "", err
 		}
-		u.Path = path.Join(u.Path, "/api/v2/query")
+		u.Path = path.Join(u.Path, "query")
 
 		params := u.Query()
 		params.Set("org", q.org)

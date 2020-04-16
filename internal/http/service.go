@@ -9,6 +9,7 @@ import (
 	"mime"
 	"net"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -16,13 +17,21 @@ import (
 type Service interface {
 	PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
 	GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
 	SetAuthorization(authorization string)
+	Authorization() string
+	HttpClient() *http.Client
+	ServerApiUrl() string
 }
 
 type serviceImpl struct {
-	serverUrl     string
+	serverApiUrl  string
 	authorization string
 	client        *http.Client
+}
+
+func (s *serviceImpl) ServerApiUrl() string {
+	return s.serverApiUrl
 }
 
 // Http operation callbacks
@@ -30,8 +39,16 @@ type RequestCallback func(req *http.Request)
 type ResponseCallback func(resp *http.Response) error
 
 func NewService(serverUrl, authorization string, tlsConfig *tls.Config) Service {
+	apiUrl, err := url.Parse(serverUrl)
+	if err == nil {
+		//apiUrl.Path = path.Join(apiUrl.Path, "/api/v2/")
+		apiUrl, err = apiUrl.Parse("/api/v2/")
+		if err == nil {
+			serverUrl = apiUrl.String()
+		}
+	}
 	return &serviceImpl{
-		serverUrl:     serverUrl,
+		serverApiUrl:  serverUrl,
 		authorization: authorization,
 		client: &http.Client{
 			Timeout: time.Second * 20,
@@ -50,15 +67,27 @@ func (s *serviceImpl) SetAuthorization(authorization string) {
 	s.authorization = authorization
 }
 
-func (s *serviceImpl) PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	return s.httpRequest(ctx, http.MethodPost, url, body, requestCallback, responseCallback)
+func (s *serviceImpl) Authorization() string {
+	return s.authorization
 }
 
-func (s *serviceImpl) httpRequest(ctx context.Context, method, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+func (s *serviceImpl) HttpClient() *http.Client {
+	return s.client
+}
+
+func (s *serviceImpl) PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+	return s.doHttpRequestWithUrl(ctx, http.MethodPost, url, body, requestCallback, responseCallback)
+}
+
+func (s *serviceImpl) doHttpRequestWithUrl(ctx context.Context, method, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
 	req, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return NewError(err)
 	}
+	return s.DoHttpRequest(req, requestCallback, responseCallback)
+}
+
+func (s *serviceImpl) DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
 	req.Header.Set("Authorization", s.authorization)
 	req.Header.Set("User-Agent", UserAgent)
 	if requestCallback != nil {
@@ -82,7 +111,7 @@ func (s *serviceImpl) httpRequest(ctx context.Context, method, url string, body 
 }
 
 func (s *serviceImpl) GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	return s.httpRequest(ctx, http.MethodGet, url, nil, requestCallback, responseCallback)
+	return s.doHttpRequestWithUrl(ctx, http.MethodGet, url, nil, requestCallback, responseCallback)
 }
 
 func (s *serviceImpl) handleHttpError(r *http.Response) *Error {

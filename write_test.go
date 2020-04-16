@@ -23,6 +23,7 @@ import (
 
 type testHttpService struct {
 	serverUrl      string
+	authorization  string
 	lines          []string
 	options        *Options
 	t              *testing.T
@@ -30,6 +31,18 @@ type testHttpService struct {
 	requestHandler func(c *testHttpService, url string, body io.Reader) error
 	replyError     *ihttp.Error
 	lock           sync.Mutex
+}
+
+func (t *testHttpService) ServerApiUrl() string {
+	return t.serverUrl
+}
+
+func (t *testHttpService) Authorization() string {
+	return t.authorization
+}
+
+func (t *testHttpService) HttpClient() *http.Client {
+	return nil
 }
 
 func (t *testHttpService) Close() {
@@ -55,6 +68,10 @@ func (t *testHttpService) SetAuthorization(authorization string) {
 func (t *testHttpService) GetRequest(_ context.Context, _ string, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
 	return nil
 }
+func (t *testHttpService) DoHttpRequest(req *http.Request, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
+	return nil
+}
+
 func (t *testHttpService) PostRequest(_ context.Context, url string, body io.Reader, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {

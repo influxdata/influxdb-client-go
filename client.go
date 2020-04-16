@@ -8,6 +8,7 @@ package influxdb2
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/api"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -30,6 +31,8 @@ type InfluxDBClient interface {
 	WriteApiBlocking(org, bucket string) WriteApiBlocking
 	// QueryApi returns Query client
 	QueryApi(org string) QueryApi
+	// AuthorizationsApi returns Authorizations client
+	AuthorizationsApi() api.AuthorizationsApi
 	// Close ensures all ongoing asynchronous write clients finish
 	Close()
 	// Options returns the options associated with client
@@ -120,4 +123,8 @@ func (c *client) Close() {
 
 func (c *client) QueryApi(org string) QueryApi {
 	return newQueryApi(org, c.httpService, c)
+}
+
+func (c *client) AuthorizationsApi() api.AuthorizationsApi {
+	return api.NewAuthorizationApi(c.httpService)
 }

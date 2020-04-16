@@ -8,6 +8,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/influxdata/influxdb-client-go/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"strconv"
@@ -62,6 +63,14 @@ func TestWrite(t *testing.T) {
 	}
 	client := NewClientWithOptions("http://localhost:9999", authToken, DefaultOptions().SetLogLevel(3))
 	writeApi := client.WriteApi("my-org", "my-bucket")
+	errCh := writeApi.Errors()
+	errorsCount := 0
+	go func() {
+		for err := range errCh {
+			errorsCount++
+			fmt.Println("Write error: ", err.Error())
+		}
+	}()
 	for i, f := 0, 3.3; i < 10; i++ {
 		writeApi.WriteRecord(fmt.Sprintf("test,a=%d,b=local f=%.2f,i=%di", i%2, f, i))
 		//writeApi.Flush()
@@ -78,6 +87,7 @@ func TestWrite(t *testing.T) {
 	}
 
 	client.Close()
+	assert.Equal(t, 0, errorsCount)
 
 }
 
@@ -119,4 +129,40 @@ func TestQuery(t *testing.T) {
 			t.Error(result.Err())
 		}
 	}
+}
+
+func TestAuthorizationsApi(t *testing.T) {
+	client := NewClient("http://localhost:9999", "FPPmaTW6dH7P0SXH81N6R9s0HiqJli-0YcPHm9vZpum-O7J-HeRubSSerMtlo3sez4Sekm04BjBCBu7-nPF_7Q==")
+	authApi := client.AuthorizationsApi()
+	listRes, err := authApi.ListAuthorizations(context.Background(), nil)
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	require.NotNil(t, listRes.Authorizations)
+	assert.Len(t, *listRes.Authorizations, 1)
+
+	orgName := "my-org"
+	orgId := "186d9f15433160b4"
+	permission := &domain.Permission{
+		Action: domain.PermissionActionWrite,
+		Resource: domain.Resource{
+			Org:  &orgName,
+			Type: domain.ResourceTypeBuckets,
+		},
+	}
+	permissions := []domain.Permission{*permission}
+	auth := &domain.Authorization{
+		Org:         &orgName,
+		OrgID:       &orgId,
+		Permissions: &permissions,
+	}
+	auth, err = authApi.CreateAuthorization(context.Background(), auth)
+	require.Nil(t, err)
+	require.NotNil(t, auth)
+
+	listRes, err = authApi.ListAuthorizations(context.Background(), nil)
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	require.NotNil(t, listRes.Authorizations)
+	assert.Len(t, *listRes.Authorizations, 2)
+
 }

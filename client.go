@@ -31,8 +31,10 @@ type InfluxDBClient interface {
 	WriteApiBlocking(org, bucket string) WriteApiBlocking
 	// QueryApi returns Query client
 	QueryApi(org string) QueryApi
-	// AuthorizationsApi returns Authorizations client
+	// AuthorizationsApi returns Authorizations API client
 	AuthorizationsApi() api.AuthorizationsApi
+	// OrganizationsApi returns Organizations API client
+	OrganizationsApi() api.OrganizationsApi
 	// Close ensures all ongoing asynchronous write clients finish
 	Close()
 	// Options returns the options associated with client
@@ -127,4 +129,8 @@ func (c *client) QueryApi(org string) QueryApi {
 
 func (c *client) AuthorizationsApi() api.AuthorizationsApi {
 	return api.NewAuthorizationApi(c.httpService)
+}
+
+func (c *client) OrganizationsApi() api.OrganizationsApi {
+	return api.NewOrganizationsApi(c.httpService)
 }

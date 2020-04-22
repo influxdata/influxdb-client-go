@@ -11,7 +11,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"path"
 	"strings"
 	"sync"
 	"time"
@@ -166,8 +165,10 @@ func (w *writeService) writeUrl() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		u.Path = path.Join(u.Path, "write")
-
+		u, err = u.Parse("write")
+		if err != nil {
+			return "", err
+		}
 		params := u.Query()
 		params.Set("org", w.org)
 		params.Set("bucket", w.bucket)

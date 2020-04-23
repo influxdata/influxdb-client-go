@@ -35,6 +35,8 @@ type InfluxDBClient interface {
 	AuthorizationsApi() api.AuthorizationsApi
 	// OrganizationsApi returns Organizations API client
 	OrganizationsApi() api.OrganizationsApi
+	// UsersApi returns Users API client
+	UsersApi() api.UsersApi
 	// Close ensures all ongoing asynchronous write clients finish
 	Close()
 	// Options returns the options associated with client
@@ -133,4 +135,8 @@ func (c *client) AuthorizationsApi() api.AuthorizationsApi {
 
 func (c *client) OrganizationsApi() api.OrganizationsApi {
 	return api.NewOrganizationsApi(c.httpService)
+}
+
+func (c *client) UsersApi() api.UsersApi {
+	return api.NewUsersApi(c.httpService)
 }

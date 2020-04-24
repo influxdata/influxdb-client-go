@@ -140,8 +140,9 @@ func (o *Options) HttpRequestTimeout() uint {
 }
 
 // SetHttpRequestTimeout sets HTTP request timeout in sec
-func (o *Options) SetHttpRequestTimeout(httpRequestTimeout uint) {
+func (o *Options) SetHttpRequestTimeout(httpRequestTimeout uint) *Options {
 	o.httpRequestTimeout = httpRequestTimeout
+	return o
 }
 
 // DefaultOptions returns Options object with default values

@@ -11,7 +11,7 @@ import (
 
 // Options holds configuration properties for communicating with InfluxDB server
 type Options struct {
-	// Maximum number of points sent to server in single request. Default 1000
+	// Maximum number of points sent to server in single request. Default 5000
 	batchSize uint
 	// Interval, in ms, in which is buffer flushed if it has not been already written (by reaching batch size) . Default 1000ms
 	flushInterval uint
@@ -30,6 +30,8 @@ type Options struct {
 	useGZip bool
 	// TLS configuration for secure connection. Default nil
 	tlsConfig *tls.Config
+	// HTTP request timeout in sec. Default 20
+	httpRequestTimeout uint
 }
 
 // BatchSize returns size of batch
@@ -132,7 +134,17 @@ func (o *Options) SetTlsConfig(tlsConfig *tls.Config) *Options {
 	return o
 }
 
+// HttpRequestTimeout returns HTTP request timeout
+func (o *Options) HttpRequestTimeout() uint {
+	return o.httpRequestTimeout
+}
+
+// SetHttpRequestTimeout sets HTTP request timeout in sec
+func (o *Options) SetHttpRequestTimeout(httpRequestTimeout uint) {
+	o.httpRequestTimeout = httpRequestTimeout
+}
+
 // DefaultOptions returns Options object with default values
 func DefaultOptions() *Options {
-	return &Options{batchSize: 1000, maxRetries: 3, retryInterval: 1000, flushInterval: 1000, precision: time.Nanosecond, useGZip: false, retryBufferLimit: 10000}
+	return &Options{batchSize: 5000, maxRetries: 3, retryInterval: 1000, flushInterval: 1000, precision: time.Nanosecond, useGZip: false, retryBufferLimit: 10000, httpRequestTimeout: 20}
 }

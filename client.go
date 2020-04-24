@@ -79,7 +79,7 @@ func NewClientWithOptions(serverUrl string, authToken string, options *Options) 
 		serverUrl:   serverUrl,
 		options:     options,
 		writeApis:   make([]WriteApi, 0, 5),
-		httpService: ihttp.NewService(serverUrl, "Token "+authToken, options.tlsConfig),
+		httpService: ihttp.NewService(serverUrl, "Token "+authToken, options.tlsConfig, options.httpRequestTimeout),
 	}
 	return client
 }

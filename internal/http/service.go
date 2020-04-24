@@ -42,7 +42,7 @@ func (s *serviceImpl) ServerApiUrl() string {
 type RequestCallback func(req *http.Request)
 type ResponseCallback func(resp *http.Response) error
 
-func NewService(serverUrl, authorization string, tlsConfig *tls.Config) Service {
+func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequestTimeout uint) Service {
 	apiUrl, err := url.Parse(serverUrl)
 	if err == nil {
 		apiUrl, err = apiUrl.Parse("/api/v2/")
@@ -54,7 +54,7 @@ func NewService(serverUrl, authorization string, tlsConfig *tls.Config) Service 
 		serverApiUrl:  serverUrl,
 		authorization: authorization,
 		client: &http.Client{
-			Timeout: time.Second * 20,
+			Timeout: time.Second * time.Duration(httpRequestTimeout),
 			Transport: &http.Transport{
 				DialContext: (&net.Dialer{
 					Timeout: 5 * time.Second,

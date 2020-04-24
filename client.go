@@ -35,6 +35,8 @@ type InfluxDBClient interface {
 	AuthorizationsApi() api.AuthorizationsApi
 	// OrganizationsApi returns Organizations API client
 	OrganizationsApi() api.OrganizationsApi
+	// UsersApi returns Users API client
+	UsersApi() api.UsersApi
 	// Close ensures all ongoing asynchronous write clients finish
 	Close()
 	// Options returns the options associated with client
@@ -56,6 +58,9 @@ type client struct {
 	writeApis   []WriteApi
 	lock        sync.Mutex
 	httpService ihttp.Service
+	authApi     api.AuthorizationsApi
+	orgApi      api.OrganizationsApi
+	usersApi    api.UsersApi
 }
 
 // NewClient creates InfluxDBClient for connecting to given serverUrl with provided authentication token, with default options
@@ -128,9 +133,28 @@ func (c *client) QueryApi(org string) QueryApi {
 }
 
 func (c *client) AuthorizationsApi() api.AuthorizationsApi {
-	return api.NewAuthorizationApi(c.httpService)
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.authApi == nil {
+		c.authApi = api.NewAuthorizationApi(c.httpService)
+	}
+	return c.authApi
 }
 
 func (c *client) OrganizationsApi() api.OrganizationsApi {
-	return api.NewOrganizationsApi(c.httpService)
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.orgApi == nil {
+		c.orgApi = api.NewOrganizationsApi(c.httpService)
+	}
+	return c.orgApi
+}
+
+func (c *client) UsersApi() api.UsersApi {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.usersApi == nil {
+		c.usersApi = api.NewUsersApi(c.httpService)
+	}
+	return c.usersApi
 }

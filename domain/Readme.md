@@ -2,10 +2,16 @@
 
 `swagger.yml` is copied from InfluxDB and customized. Must be periodically sync with latest changes
  and types and client must be re-generated
+
+
+
 ## Install oapi generator
 `git clone git@github.com:bonitoo-io/oapi-codegen.git`
 `cd oapi-codegen`
-`go build ./cmd/oapi-codegen/oapi-codegen.go` 
+`go build ./cmd/oapi-codegen/oapi-codegen.go`
+## Download and sync latest swagger
+`wget https://raw.githubusercontent.com/influxdata/influxdb/master/http/swagger.yml`
+ 
 ## Generate
 `cd domain`
  

@@ -17,6 +17,7 @@ import (
 )
 
 var e2e bool
+var authToken string
 
 func init() {
 	flag.BoolVar(&e2e, "e2e", false, "run the end tests (requires a working influxdb instance on 127.0.0.1)")
@@ -37,8 +38,6 @@ func TestReady(t *testing.T) {
 		t.Fail()
 	}
 }
-
-var authToken string
 
 func TestSetup(t *testing.T) {
 	if !e2e {
@@ -216,7 +215,7 @@ func TestOrganizations(t *testing.T) {
 	orgName := "my-org-2"
 	orgDescription := "my-org 2 description"
 
-	orgList, err := orgsApi.FindOrganizations(context.Background())
+	orgList, err := orgsApi.GetOrganizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 1)
@@ -237,7 +236,7 @@ func TestOrganizations(t *testing.T) {
 	require.NotNil(t, org)
 	assert.Equal(t, orgDescription, *org.Description)
 
-	orgList, err = orgsApi.FindOrganizations(context.Background())
+	orgList, err = orgsApi.GetOrganizations(context.Background())
 
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
@@ -263,6 +262,60 @@ func TestOrganizations(t *testing.T) {
 	require.NotNil(t, members)
 	require.Len(t, *members, 1)
 
+	org2, err := orgsApi.FindOrganizationById(context.Background(), *org.Id)
+	require.Nil(t, err)
+	require.NotNil(t, org2)
+	assert.Equal(t, org.Name, org2.Name)
+
+	orgs, err := orgsApi.FindOrganizationsByUserId(context.Background(), *user.Id)
+	require.Nil(t, err)
+	require.NotNil(t, orgs)
+	require.Len(t, *orgs, 1)
+	assert.Equal(t, org.Name, (*orgs)[0].Name)
+
+	orgName2 := "my-org-3"
+
+	org2, err = orgsApi.CreateOrganizationWithName(context.Background(), orgName2)
+	require.Nil(t, err)
+	require.NotNil(t, org2)
+	assert.Equal(t, orgName2, org2.Name)
+
+	orgList, err = orgsApi.GetOrganizations(context.Background())
+	require.Nil(t, err)
+	require.NotNil(t, orgList)
+	assert.Len(t, *orgList, 3)
+
+	owners, err := orgsApi.GetOwners(context.Background(), org2)
+	require.Nil(t, err)
+	require.NotNil(t, owners)
+	assert.Len(t, *owners, 1)
+
+	owner, err := orgsApi.AddOwner(context.Background(), org2, user)
+	require.Nil(t, err)
+	require.NotNil(t, owner)
+
+	owners, err = orgsApi.GetOwners(context.Background(), org2)
+	require.Nil(t, err)
+	require.NotNil(t, owners)
+	assert.Len(t, *owners, 2)
+
+	u, err := usersApi.FindUserByName(context.Background(), "my-user")
+	require.Nil(t, err)
+	require.NotNil(t, u)
+
+	err = orgsApi.RemoveOwner(context.Background(), org2, u)
+	require.Nil(t, err)
+
+	owners, err = orgsApi.GetOwners(context.Background(), org2)
+	require.Nil(t, err)
+	require.NotNil(t, owners)
+	assert.Len(t, *owners, 1)
+
+	orgs, err = orgsApi.FindOrganizationsByUserId(context.Background(), *user.Id)
+	require.Nil(t, err)
+	require.NotNil(t, orgs)
+	require.Len(t, *orgs, 2)
+
 	err = orgsApi.RemoveMember(context.Background(), org, user)
 	require.Nil(t, err)
 
@@ -274,7 +327,10 @@ func TestOrganizations(t *testing.T) {
 	err = orgsApi.DeleteOrganization(context.Background(), org)
 	require.Nil(t, err)
 
-	orgList, err = orgsApi.FindOrganizations(context.Background())
+	err = orgsApi.DeleteOrganization(context.Background(), org2)
+	require.Nil(t, err)
+
+	orgList, err = orgsApi.GetOrganizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 1)
@@ -295,7 +351,7 @@ func TestUsers(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, me)
 
-	users, err := usersApi.FindUsers(context.Background())
+	users, err := usersApi.GetUsers(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, users)
 	assert.Len(t, *users, 1)
@@ -304,7 +360,7 @@ func TestUsers(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, user)
 
-	users, err = usersApi.FindUsers(context.Background())
+	users, err = usersApi.GetUsers(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, users)
 	assert.Len(t, *users, 2)
@@ -322,7 +378,7 @@ func TestUsers(t *testing.T) {
 	err = usersApi.DeleteUser(context.Background(), user)
 	require.Nil(t, err)
 
-	users, err = usersApi.FindUsers(context.Background())
+	users, err = usersApi.GetUsers(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, users)
 	assert.Len(t, *users, 1)

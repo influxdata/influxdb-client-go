@@ -4,6 +4,16 @@
 
 package influxdb2
 
+import (
+	"fmt"
+	"github.com/influxdata/influxdb-client-go/internal/http"
+	"runtime"
+)
+
 const (
 	Version = "1.0.0"
 )
+
+func init() {
+	http.UserAgent = fmt.Sprintf("influxdb-client-go/%s  (%s; %s)", Version, runtime.GOOS, runtime.GOARCH)
+}

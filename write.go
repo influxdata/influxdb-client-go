@@ -6,6 +6,7 @@ package influxdb2
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/internal/http"
 	"strings"
 	"time"
 )
@@ -47,9 +48,9 @@ type writeBuffInfoReq struct {
 	writeBuffLen int
 }
 
-func newWriteApiImpl(org string, bucket string, client InfluxDBClient) *writeApiImpl {
+func newWriteApiImpl(org string, bucket string, service http.Service, client InfluxDBClient) *writeApiImpl {
 	w := &writeApiImpl{
-		service:      newWriteService(org, bucket, client),
+		service:      newWriteService(org, bucket, service, client),
 		writeBuffer:  make([]string, 0, client.Options().BatchSize()+1),
 		writeCh:      make(chan *batch),
 		doneCh:       make(chan int),

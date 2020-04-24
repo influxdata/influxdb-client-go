@@ -10,6 +10,908 @@ import (
 	"time"
 )
 
+// Defines values for AuthorizationUpdateRequestStatus.
+const (
+	AuthorizationUpdateRequestStatusActive AuthorizationUpdateRequestStatus = "active"
+
+	AuthorizationUpdateRequestStatusInactive AuthorizationUpdateRequestStatus = "inactive"
+)
+
+// Defines values for AxisBase.
+const (
+	AxisBase10 AxisBase = "10"
+
+	AxisBase2 AxisBase = "2"
+
+	AxisBaseEmpty AxisBase = ""
+)
+
+// Defines values for AxisScale.
+const (
+	AxisScaleLinear AxisScale = "linear"
+
+	AxisScaleLog AxisScale = "log"
+)
+
+// Defines values for BucketType.
+const (
+	BucketTypeSystem BucketType = "system"
+
+	BucketTypeUser BucketType = "user"
+)
+
+// Defines values for BuilderAggregateFunctionType.
+const (
+	BuilderAggregateFunctionTypeFilter BuilderAggregateFunctionType = "filter"
+
+	BuilderAggregateFunctionTypeGroup BuilderAggregateFunctionType = "group"
+)
+
+// Defines values for CheckBaseLastRunStatus.
+const (
+	CheckBaseLastRunStatusCanceled CheckBaseLastRunStatus = "canceled"
+
+	CheckBaseLastRunStatusFailed CheckBaseLastRunStatus = "failed"
+
+	CheckBaseLastRunStatusSuccess CheckBaseLastRunStatus = "success"
+)
+
+// Defines values for CheckPatchStatus.
+const (
+	CheckPatchStatusActive CheckPatchStatus = "active"
+
+	CheckPatchStatusInactive CheckPatchStatus = "inactive"
+)
+
+// Defines values for CheckStatusLevel.
+const (
+	CheckStatusLevelCRIT CheckStatusLevel = "CRIT"
+
+	CheckStatusLevelINFO CheckStatusLevel = "INFO"
+
+	CheckStatusLevelOK CheckStatusLevel = "OK"
+
+	CheckStatusLevelUNKNOWN CheckStatusLevel = "UNKNOWN"
+
+	CheckStatusLevelWARN CheckStatusLevel = "WARN"
+)
+
+// Defines values for CheckViewPropertiesShape.
+const (
+	CheckViewPropertiesShapeChronografV2 CheckViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for CheckViewPropertiesType.
+const (
+	CheckViewPropertiesTypeCheck CheckViewPropertiesType = "check"
+)
+
+// Defines values for ConstantVariablePropertiesType.
+const (
+	ConstantVariablePropertiesTypeConstant ConstantVariablePropertiesType = "constant"
+)
+
+// Defines values for CustomCheckType.
+const (
+	CustomCheckTypeCustom CustomCheckType = "custom"
+)
+
+// Defines values for DashboardColorType.
+const (
+	DashboardColorTypeBackground DashboardColorType = "background"
+
+	DashboardColorTypeMax DashboardColorType = "max"
+
+	DashboardColorTypeMin DashboardColorType = "min"
+
+	DashboardColorTypeScale DashboardColorType = "scale"
+
+	DashboardColorTypeText DashboardColorType = "text"
+
+	DashboardColorTypeThreshold DashboardColorType = "threshold"
+)
+
+// Defines values for DeadmanCheckType.
+const (
+	DeadmanCheckTypeDeadman DeadmanCheckType = "deadman"
+)
+
+// Defines values for DialectAnnotations.
+const (
+	DialectAnnotationsDatatype DialectAnnotations = "datatype"
+
+	DialectAnnotationsDefault DialectAnnotations = "default"
+
+	DialectAnnotationsGroup DialectAnnotations = "group"
+)
+
+// Defines values for DialectDateTimeFormat.
+const (
+	DialectDateTimeFormatRFC3339 DialectDateTimeFormat = "RFC3339"
+
+	DialectDateTimeFormatRFC3339Nano DialectDateTimeFormat = "RFC3339Nano"
+)
+
+// Defines values for ErrorCode.
+const (
+	ErrorCodeConflict ErrorCode = "conflict"
+
+	ErrorCodeEmptyValue ErrorCode = "empty value"
+
+	ErrorCodeForbidden ErrorCode = "forbidden"
+
+	ErrorCodeInternalError ErrorCode = "internal error"
+
+	ErrorCodeInvalid ErrorCode = "invalid"
+
+	ErrorCodeMethodNotAllowed ErrorCode = "method not allowed"
+
+	ErrorCodeNotFound ErrorCode = "not found"
+
+	ErrorCodeTooManyRequests ErrorCode = "too many requests"
+
+	ErrorCodeUnauthorized ErrorCode = "unauthorized"
+
+	ErrorCodeUnavailable ErrorCode = "unavailable"
+
+	ErrorCodeUnprocessableEntity ErrorCode = "unprocessable entity"
+)
+
+// Defines values for FieldType.
+const (
+	FieldTypeField FieldType = "field"
+
+	FieldTypeFunc FieldType = "func"
+
+	FieldTypeInteger FieldType = "integer"
+
+	FieldTypeNumber FieldType = "number"
+
+	FieldTypeRegex FieldType = "regex"
+
+	FieldTypeWildcard FieldType = "wildcard"
+)
+
+// Defines values for GaugeViewPropertiesShape.
+const (
+	GaugeViewPropertiesShapeChronografV2 GaugeViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for GaugeViewPropertiesType.
+const (
+	GaugeViewPropertiesTypeGauge GaugeViewPropertiesType = "gauge"
+)
+
+// Defines values for GreaterThresholdType.
+const (
+	GreaterThresholdTypeGreater GreaterThresholdType = "greater"
+)
+
+// Defines values for HTTPNotificationEndpointAuthMethod.
+const (
+	HTTPNotificationEndpointAuthMethodBasic HTTPNotificationEndpointAuthMethod = "basic"
+
+	HTTPNotificationEndpointAuthMethodBearer HTTPNotificationEndpointAuthMethod = "bearer"
+
+	HTTPNotificationEndpointAuthMethodNone HTTPNotificationEndpointAuthMethod = "none"
+)
+
+// Defines values for HTTPNotificationEndpointMethod.
+const (
+	HTTPNotificationEndpointMethodGET HTTPNotificationEndpointMethod = "GET"
+
+	HTTPNotificationEndpointMethodPOST HTTPNotificationEndpointMethod = "POST"
+
+	HTTPNotificationEndpointMethodPUT HTTPNotificationEndpointMethod = "PUT"
+)
+
+// Defines values for HTTPNotificationRuleBaseType.
+const (
+	HTTPNotificationRuleBaseTypeHttp HTTPNotificationRuleBaseType = "http"
+)
+
+// Defines values for HealthCheckStatus.
+const (
+	HealthCheckStatusFail HealthCheckStatus = "fail"
+
+	HealthCheckStatusPass HealthCheckStatus = "pass"
+)
+
+// Defines values for HeatmapViewPropertiesShape.
+const (
+	HeatmapViewPropertiesShapeChronografV2 HeatmapViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for HeatmapViewPropertiesType.
+const (
+	HeatmapViewPropertiesTypeHeatmap HeatmapViewPropertiesType = "heatmap"
+)
+
+// Defines values for HistogramViewPropertiesPosition.
+const (
+	HistogramViewPropertiesPositionOverlaid HistogramViewPropertiesPosition = "overlaid"
+
+	HistogramViewPropertiesPositionStacked HistogramViewPropertiesPosition = "stacked"
+)
+
+// Defines values for HistogramViewPropertiesShape.
+const (
+	HistogramViewPropertiesShapeChronografV2 HistogramViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for HistogramViewPropertiesType.
+const (
+	HistogramViewPropertiesTypeHistogram HistogramViewPropertiesType = "histogram"
+)
+
+// Defines values for InfluxQLQueryType.
+const (
+	InfluxQLQueryTypeInfluxql InfluxQLQueryType = "influxql"
+)
+
+// Defines values for LegendOrientation.
+const (
+	LegendOrientationBottom LegendOrientation = "bottom"
+
+	LegendOrientationLeft LegendOrientation = "left"
+
+	LegendOrientationRight LegendOrientation = "right"
+
+	LegendOrientationTop LegendOrientation = "top"
+)
+
+// Defines values for LegendType.
+const (
+	LegendTypeStatic LegendType = "static"
+)
+
+// Defines values for LesserThresholdType.
+const (
+	LesserThresholdTypeLesser LesserThresholdType = "lesser"
+)
+
+// Defines values for LinePlusSingleStatPropertiesPosition.
+const (
+	LinePlusSingleStatPropertiesPositionOverlaid LinePlusSingleStatPropertiesPosition = "overlaid"
+
+	LinePlusSingleStatPropertiesPositionStacked LinePlusSingleStatPropertiesPosition = "stacked"
+)
+
+// Defines values for LinePlusSingleStatPropertiesShape.
+const (
+	LinePlusSingleStatPropertiesShapeChronografV2 LinePlusSingleStatPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for LinePlusSingleStatPropertiesType.
+const (
+	LinePlusSingleStatPropertiesTypeLinePlusSingleStat LinePlusSingleStatPropertiesType = "line-plus-single-stat"
+)
+
+// Defines values for LineProtocolErrorCode.
+const (
+	LineProtocolErrorCodeConflict LineProtocolErrorCode = "conflict"
+
+	LineProtocolErrorCodeEmptyValue LineProtocolErrorCode = "empty value"
+
+	LineProtocolErrorCodeInternalError LineProtocolErrorCode = "internal error"
+
+	LineProtocolErrorCodeInvalid LineProtocolErrorCode = "invalid"
+
+	LineProtocolErrorCodeNotFound LineProtocolErrorCode = "not found"
+
+	LineProtocolErrorCodeUnavailable LineProtocolErrorCode = "unavailable"
+)
+
+// Defines values for LineProtocolLengthErrorCode.
+const (
+	LineProtocolLengthErrorCodeInvalid LineProtocolLengthErrorCode = "invalid"
+)
+
+// Defines values for MapVariablePropertiesType.
+const (
+	MapVariablePropertiesTypeMap MapVariablePropertiesType = "map"
+)
+
+// Defines values for MarkdownViewPropertiesShape.
+const (
+	MarkdownViewPropertiesShapeChronografV2 MarkdownViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for MarkdownViewPropertiesType.
+const (
+	MarkdownViewPropertiesTypeMarkdown MarkdownViewPropertiesType = "markdown"
+)
+
+// Defines values for NotificationEndpointBaseStatus.
+const (
+	NotificationEndpointBaseStatusActive NotificationEndpointBaseStatus = "active"
+
+	NotificationEndpointBaseStatusInactive NotificationEndpointBaseStatus = "inactive"
+)
+
+// Defines values for NotificationEndpointType.
+const (
+	NotificationEndpointTypeHttp NotificationEndpointType = "http"
+
+	NotificationEndpointTypePagerduty NotificationEndpointType = "pagerduty"
+
+	NotificationEndpointTypeSlack NotificationEndpointType = "slack"
+)
+
+// Defines values for NotificationEndpointUpdateStatus.
+const (
+	NotificationEndpointUpdateStatusActive NotificationEndpointUpdateStatus = "active"
+
+	NotificationEndpointUpdateStatusInactive NotificationEndpointUpdateStatus = "inactive"
+)
+
+// Defines values for NotificationRuleBaseLastRunStatus.
+const (
+	NotificationRuleBaseLastRunStatusCanceled NotificationRuleBaseLastRunStatus = "canceled"
+
+	NotificationRuleBaseLastRunStatusFailed NotificationRuleBaseLastRunStatus = "failed"
+
+	NotificationRuleBaseLastRunStatusSuccess NotificationRuleBaseLastRunStatus = "success"
+)
+
+// Defines values for NotificationRuleUpdateStatus.
+const (
+	NotificationRuleUpdateStatusActive NotificationRuleUpdateStatus = "active"
+
+	NotificationRuleUpdateStatusInactive NotificationRuleUpdateStatus = "inactive"
+)
+
+// Defines values for OrganizationStatus.
+const (
+	OrganizationStatusActive OrganizationStatus = "active"
+
+	OrganizationStatusInactive OrganizationStatus = "inactive"
+)
+
+// Defines values for PagerDutyNotificationRuleBaseType.
+const (
+	PagerDutyNotificationRuleBaseTypePagerduty PagerDutyNotificationRuleBaseType = "pagerduty"
+)
+
+// Defines values for PermissionAction.
+const (
+	PermissionActionRead PermissionAction = "read"
+
+	PermissionActionWrite PermissionAction = "write"
+)
+
+// Defines values for PkgKind.
+const (
+	PkgKindBucket PkgKind = "Bucket"
+
+	PkgKindCheckDeadman PkgKind = "CheckDeadman"
+
+	PkgKindCheckThreshold PkgKind = "CheckThreshold"
+
+	PkgKindDashboard PkgKind = "Dashboard"
+
+	PkgKindLabel PkgKind = "Label"
+
+	PkgKindNotificationEndpointHTTP PkgKind = "NotificationEndpointHTTP"
+
+	PkgKindNotificationEndpointPagerDuty PkgKind = "NotificationEndpointPagerDuty"
+
+	PkgKindNotificationEndpointSlack PkgKind = "NotificationEndpointSlack"
+
+	PkgKindNotificationRule PkgKind = "NotificationRule"
+
+	PkgKindTask PkgKind = "Task"
+
+	PkgKindTelegraf PkgKind = "Telegraf"
+
+	PkgKindVariable PkgKind = "Variable"
+)
+
+// Defines values for PkgCreateKind.
+const (
+	PkgCreateKindBucket PkgCreateKind = "bucket"
+
+	PkgCreateKindCheck PkgCreateKind = "check"
+
+	PkgCreateKindDashboard PkgCreateKind = "dashboard"
+
+	PkgCreateKindLabel PkgCreateKind = "label"
+
+	PkgCreateKindNotificationEndpoint PkgCreateKind = "notification_endpoint"
+
+	PkgCreateKindNotificationRule PkgCreateKind = "notification_rule"
+
+	PkgCreateKindTask PkgCreateKind = "task"
+
+	PkgCreateKindTelegraf PkgCreateKind = "telegraf"
+
+	PkgCreateKindVariable PkgCreateKind = "variable"
+)
+
+// Defines values for QueryType.
+const (
+	QueryTypeFlux QueryType = "flux"
+)
+
+// Defines values for QueryEditMode.
+const (
+	QueryEditModeAdvanced QueryEditMode = "advanced"
+
+	QueryEditModeBuilder QueryEditMode = "builder"
+)
+
+// Defines values for QueryVariablePropertiesType.
+const (
+	QueryVariablePropertiesTypeQuery QueryVariablePropertiesType = "query"
+)
+
+// Defines values for RangeThresholdType.
+const (
+	RangeThresholdTypeRange RangeThresholdType = "range"
+)
+
+// Defines values for ReadyStatus.
+const (
+	ReadyStatusReady ReadyStatus = "ready"
+)
+
+// Defines values for ResourceType.
+const (
+	ResourceTypeAuthorizations ResourceType = "authorizations"
+
+	ResourceTypeBuckets ResourceType = "buckets"
+
+	ResourceTypeChecks ResourceType = "checks"
+
+	ResourceTypeDashboards ResourceType = "dashboards"
+
+	ResourceTypeDocuments ResourceType = "documents"
+
+	ResourceTypeLabels ResourceType = "labels"
+
+	ResourceTypeNotificationEndpoints ResourceType = "notificationEndpoints"
+
+	ResourceTypeNotificationRules ResourceType = "notificationRules"
+
+	ResourceTypeOrgs ResourceType = "orgs"
+
+	ResourceTypeScrapers ResourceType = "scrapers"
+
+	ResourceTypeSecrets ResourceType = "secrets"
+
+	ResourceTypeSources ResourceType = "sources"
+
+	ResourceTypeTasks ResourceType = "tasks"
+
+	ResourceTypeTelegrafs ResourceType = "telegrafs"
+
+	ResourceTypeUsers ResourceType = "users"
+
+	ResourceTypeVariables ResourceType = "variables"
+
+	ResourceTypeViews ResourceType = "views"
+)
+
+// Defines values for ResourceMemberRole.
+const (
+	ResourceMemberRoleMember ResourceMemberRole = "member"
+)
+
+// Defines values for ResourceOwnerRole.
+const (
+	ResourceOwnerRoleOwner ResourceOwnerRole = "owner"
+)
+
+// Defines values for RetentionRuleType.
+const (
+	RetentionRuleTypeExpire RetentionRuleType = "expire"
+)
+
+// Defines values for RuleStatusLevel.
+const (
+	RuleStatusLevelANY RuleStatusLevel = "ANY"
+
+	RuleStatusLevelCRIT RuleStatusLevel = "CRIT"
+
+	RuleStatusLevelINFO RuleStatusLevel = "INFO"
+
+	RuleStatusLevelOK RuleStatusLevel = "OK"
+
+	RuleStatusLevelUNKNOWN RuleStatusLevel = "UNKNOWN"
+
+	RuleStatusLevelWARN RuleStatusLevel = "WARN"
+)
+
+// Defines values for RunStatus.
+const (
+	RunStatusCanceled RunStatus = "canceled"
+
+	RunStatusFailed RunStatus = "failed"
+
+	RunStatusScheduled RunStatus = "scheduled"
+
+	RunStatusStarted RunStatus = "started"
+
+	RunStatusSuccess RunStatus = "success"
+)
+
+// Defines values for SMTPNotificationRuleBaseType.
+const (
+	SMTPNotificationRuleBaseTypeSmtp SMTPNotificationRuleBaseType = "smtp"
+)
+
+// Defines values for ScatterViewPropertiesShape.
+const (
+	ScatterViewPropertiesShapeChronografV2 ScatterViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for ScatterViewPropertiesType.
+const (
+	ScatterViewPropertiesTypeScatter ScatterViewPropertiesType = "scatter"
+)
+
+// Defines values for ScraperTargetRequestType.
+const (
+	ScraperTargetRequestTypePrometheus ScraperTargetRequestType = "prometheus"
+)
+
+// Defines values for SingleStatViewPropertiesShape.
+const (
+	SingleStatViewPropertiesShapeChronografV2 SingleStatViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for SingleStatViewPropertiesType.
+const (
+	SingleStatViewPropertiesTypeSingleStat SingleStatViewPropertiesType = "single-stat"
+)
+
+// Defines values for SlackNotificationRuleBaseType.
+const (
+	SlackNotificationRuleBaseTypeSlack SlackNotificationRuleBaseType = "slack"
+)
+
+// Defines values for SourceLanguages.
+const (
+	SourceLanguagesFlux SourceLanguages = "flux"
+
+	SourceLanguagesInfluxql SourceLanguages = "influxql"
+)
+
+// Defines values for SourceType.
+const (
+	SourceTypeSelf SourceType = "self"
+
+	SourceTypeV1 SourceType = "v1"
+
+	SourceTypeV2 SourceType = "v2"
+)
+
+// Defines values for TableViewPropertiesShape.
+const (
+	TableViewPropertiesShapeChronografV2 TableViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for TableViewPropertiesTableOptionsWrapping.
+const (
+	TableViewPropertiesTableOptionsWrappingSingleLine TableViewPropertiesTableOptionsWrapping = "single-line"
+
+	TableViewPropertiesTableOptionsWrappingTruncate TableViewPropertiesTableOptionsWrapping = "truncate"
+
+	TableViewPropertiesTableOptionsWrappingWrap TableViewPropertiesTableOptionsWrapping = "wrap"
+)
+
+// Defines values for TableViewPropertiesType.
+const (
+	TableViewPropertiesTypeTable TableViewPropertiesType = "table"
+)
+
+// Defines values for TagRuleOperator.
+const (
+	TagRuleOperatorEqual TagRuleOperator = "equal"
+
+	TagRuleOperatorEqualregex TagRuleOperator = "equalregex"
+
+	TagRuleOperatorNotequal TagRuleOperator = "notequal"
+
+	TagRuleOperatorNotequalregex TagRuleOperator = "notequalregex"
+)
+
+// Defines values for TaskLastRunStatus.
+const (
+	TaskLastRunStatusCanceled TaskLastRunStatus = "canceled"
+
+	TaskLastRunStatusFailed TaskLastRunStatus = "failed"
+
+	TaskLastRunStatusSuccess TaskLastRunStatus = "success"
+)
+
+// Defines values for TaskStatusType.
+const (
+	TaskStatusTypeActive TaskStatusType = "active"
+
+	TaskStatusTypeInactive TaskStatusType = "inactive"
+)
+
+// Defines values for TelegrafPluginInputCpuName.
+const (
+	TelegrafPluginInputCpuNameCpu TelegrafPluginInputCpuName = "cpu"
+)
+
+// Defines values for TelegrafPluginInputCpuType.
+const (
+	TelegrafPluginInputCpuTypeInput TelegrafPluginInputCpuType = "input"
+)
+
+// Defines values for TelegrafPluginInputDiskName.
+const (
+	TelegrafPluginInputDiskNameDisk TelegrafPluginInputDiskName = "disk"
+)
+
+// Defines values for TelegrafPluginInputDiskType.
+const (
+	TelegrafPluginInputDiskTypeInput TelegrafPluginInputDiskType = "input"
+)
+
+// Defines values for TelegrafPluginInputDiskioName.
+const (
+	TelegrafPluginInputDiskioNameDiskio TelegrafPluginInputDiskioName = "diskio"
+)
+
+// Defines values for TelegrafPluginInputDiskioType.
+const (
+	TelegrafPluginInputDiskioTypeInput TelegrafPluginInputDiskioType = "input"
+)
+
+// Defines values for TelegrafPluginInputDockerName.
+const (
+	TelegrafPluginInputDockerNameDocker TelegrafPluginInputDockerName = "docker"
+)
+
+// Defines values for TelegrafPluginInputDockerType.
+const (
+	TelegrafPluginInputDockerTypeInput TelegrafPluginInputDockerType = "input"
+)
+
+// Defines values for TelegrafPluginInputFileName.
+const (
+	TelegrafPluginInputFileNameFile TelegrafPluginInputFileName = "file"
+)
+
+// Defines values for TelegrafPluginInputFileType.
+const (
+	TelegrafPluginInputFileTypeInput TelegrafPluginInputFileType = "input"
+)
+
+// Defines values for TelegrafPluginInputKernelName.
+const (
+	TelegrafPluginInputKernelNameKernel TelegrafPluginInputKernelName = "kernel"
+)
+
+// Defines values for TelegrafPluginInputKernelType.
+const (
+	TelegrafPluginInputKernelTypeInput TelegrafPluginInputKernelType = "input"
+)
+
+// Defines values for TelegrafPluginInputKubernetesName.
+const (
+	TelegrafPluginInputKubernetesNameKubernetes TelegrafPluginInputKubernetesName = "kubernetes"
+)
+
+// Defines values for TelegrafPluginInputKubernetesType.
+const (
+	TelegrafPluginInputKubernetesTypeInput TelegrafPluginInputKubernetesType = "input"
+)
+
+// Defines values for TelegrafPluginInputLogParserName.
+const (
+	TelegrafPluginInputLogParserNameLogparser TelegrafPluginInputLogParserName = "logparser"
+)
+
+// Defines values for TelegrafPluginInputLogParserType.
+const (
+	TelegrafPluginInputLogParserTypeInput TelegrafPluginInputLogParserType = "input"
+)
+
+// Defines values for TelegrafPluginInputMemName.
+const (
+	TelegrafPluginInputMemNameMem TelegrafPluginInputMemName = "mem"
+)
+
+// Defines values for TelegrafPluginInputMemType.
+const (
+	TelegrafPluginInputMemTypeInput TelegrafPluginInputMemType = "input"
+)
+
+// Defines values for TelegrafPluginInputNetName.
+const (
+	TelegrafPluginInputNetNameNet TelegrafPluginInputNetName = "net"
+)
+
+// Defines values for TelegrafPluginInputNetType.
+const (
+	TelegrafPluginInputNetTypeInput TelegrafPluginInputNetType = "input"
+)
+
+// Defines values for TelegrafPluginInputNetResponseName.
+const (
+	TelegrafPluginInputNetResponseNameNetResponse TelegrafPluginInputNetResponseName = "net_response"
+)
+
+// Defines values for TelegrafPluginInputNetResponseType.
+const (
+	TelegrafPluginInputNetResponseTypeInput TelegrafPluginInputNetResponseType = "input"
+)
+
+// Defines values for TelegrafPluginInputNginxName.
+const (
+	TelegrafPluginInputNginxNameNginx TelegrafPluginInputNginxName = "nginx"
+)
+
+// Defines values for TelegrafPluginInputNginxType.
+const (
+	TelegrafPluginInputNginxTypeInput TelegrafPluginInputNginxType = "input"
+)
+
+// Defines values for TelegrafPluginInputProcessesName.
+const (
+	TelegrafPluginInputProcessesNameProcesses TelegrafPluginInputProcessesName = "processes"
+)
+
+// Defines values for TelegrafPluginInputProcessesType.
+const (
+	TelegrafPluginInputProcessesTypeInput TelegrafPluginInputProcessesType = "input"
+)
+
+// Defines values for TelegrafPluginInputProcstatName.
+const (
+	TelegrafPluginInputProcstatNameProcstat TelegrafPluginInputProcstatName = "procstat"
+)
+
+// Defines values for TelegrafPluginInputProcstatType.
+const (
+	TelegrafPluginInputProcstatTypeInput TelegrafPluginInputProcstatType = "input"
+)
+
+// Defines values for TelegrafPluginInputPrometheusName.
+const (
+	TelegrafPluginInputPrometheusNamePrometheus TelegrafPluginInputPrometheusName = "prometheus"
+)
+
+// Defines values for TelegrafPluginInputPrometheusType.
+const (
+	TelegrafPluginInputPrometheusTypeInput TelegrafPluginInputPrometheusType = "input"
+)
+
+// Defines values for TelegrafPluginInputRedisName.
+const (
+	TelegrafPluginInputRedisNameRedis TelegrafPluginInputRedisName = "redis"
+)
+
+// Defines values for TelegrafPluginInputRedisType.
+const (
+	TelegrafPluginInputRedisTypeInput TelegrafPluginInputRedisType = "input"
+)
+
+// Defines values for TelegrafPluginInputSwapName.
+const (
+	TelegrafPluginInputSwapNameSwap TelegrafPluginInputSwapName = "swap"
+)
+
+// Defines values for TelegrafPluginInputSwapType.
+const (
+	TelegrafPluginInputSwapTypeInput TelegrafPluginInputSwapType = "input"
+)
+
+// Defines values for TelegrafPluginInputSyslogName.
+const (
+	TelegrafPluginInputSyslogNameSyslog TelegrafPluginInputSyslogName = "syslog"
+)
+
+// Defines values for TelegrafPluginInputSyslogType.
+const (
+	TelegrafPluginInputSyslogTypeInput TelegrafPluginInputSyslogType = "input"
+)
+
+// Defines values for TelegrafPluginInputSystemName.
+const (
+	TelegrafPluginInputSystemNameSystem TelegrafPluginInputSystemName = "system"
+)
+
+// Defines values for TelegrafPluginInputSystemType.
+const (
+	TelegrafPluginInputSystemTypeInput TelegrafPluginInputSystemType = "input"
+)
+
+// Defines values for TelegrafPluginInputTailName.
+const (
+	TelegrafPluginInputTailNameTail TelegrafPluginInputTailName = "tail"
+)
+
+// Defines values for TelegrafPluginInputTailType.
+const (
+	TelegrafPluginInputTailTypeInput TelegrafPluginInputTailType = "input"
+)
+
+// Defines values for TelegrafPluginOutputFileName.
+const (
+	TelegrafPluginOutputFileNameFile TelegrafPluginOutputFileName = "file"
+)
+
+// Defines values for TelegrafPluginOutputFileType.
+const (
+	TelegrafPluginOutputFileTypeOutput TelegrafPluginOutputFileType = "output"
+)
+
+// Defines values for TelegrafPluginOutputFileConfigFilesType.
+const (
+	TelegrafPluginOutputFileConfigFilesTypePath TelegrafPluginOutputFileConfigFilesType = "path"
+
+	TelegrafPluginOutputFileConfigFilesTypeStdout TelegrafPluginOutputFileConfigFilesType = "stdout"
+)
+
+// Defines values for TelegrafPluginOutputInfluxDBV2Name.
+const (
+	TelegrafPluginOutputInfluxDBV2NameInfluxdbV2 TelegrafPluginOutputInfluxDBV2Name = "influxdb_v2"
+)
+
+// Defines values for TelegrafPluginOutputInfluxDBV2Type.
+const (
+	TelegrafPluginOutputInfluxDBV2TypeOutput TelegrafPluginOutputInfluxDBV2Type = "output"
+)
+
+// Defines values for ThresholdCheckType.
+const (
+	ThresholdCheckTypeThreshold ThresholdCheckType = "threshold"
+)
+
+// Defines values for UserStatus.
+const (
+	UserStatusActive UserStatus = "active"
+
+	UserStatusInactive UserStatus = "inactive"
+)
+
+// Defines values for WritePrecision.
+const (
+	WritePrecisionMs WritePrecision = "ms"
+
+	WritePrecisionNs WritePrecision = "ns"
+
+	WritePrecisionS WritePrecision = "s"
+
+	WritePrecisionUs WritePrecision = "us"
+)
+
+// Defines values for XYGeom.
+const (
+	XYGeomBar XYGeom = "bar"
+
+	XYGeomLine XYGeom = "line"
+
+	XYGeomMonotoneX XYGeom = "monotoneX"
+
+	XYGeomStacked XYGeom = "stacked"
+
+	XYGeomStep XYGeom = "step"
+)
+
+// Defines values for XYViewPropertiesPosition.
+const (
+	XYViewPropertiesPositionOverlaid XYViewPropertiesPosition = "overlaid"
+
+	XYViewPropertiesPositionStacked XYViewPropertiesPosition = "stacked"
+)
+
+// Defines values for XYViewPropertiesShape.
+const (
+	XYViewPropertiesShapeChronografV2 XYViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for XYViewPropertiesType.
+const (
+	XYViewPropertiesTypeXy XYViewPropertiesType = "xy"
+)
+
 // ASTResponse defines model for ASTResponse.
 type ASTResponse struct {
 
@@ -86,8 +988,11 @@ type AuthorizationUpdateRequest struct {
 	Description *string `json:"description,omitempty"`
 
 	// If inactive the token is inactive and requests using the token will be rejected.
-	Status *string `json:"status,omitempty"`
+	Status *AuthorizationUpdateRequestStatus `json:"status,omitempty"`
 }
+
+// AuthorizationUpdateRequestStatus defines model for AuthorizationUpdateRequest.Status.
+type AuthorizationUpdateRequestStatus string
 
 // Authorizations defines model for Authorizations.
 type Authorizations struct {
@@ -109,7 +1014,7 @@ type Axes struct {
 type Axis struct {
 
 	// Base represents the radix for formatting axis values.
-	Base *string `json:"base,omitempty"`
+	Base *AxisBase `json:"base,omitempty"`
 
 	// The extents of an axis in the form [lower, upper]. Clients determine whether bounds are to be inclusive or exclusive of their limits
 	Bounds *[]string `json:"bounds,omitempty"`
@@ -126,6 +1031,9 @@ type Axis struct {
 	// Suffix represents a label suffix for formatting axis values.
 	Suffix *string `json:"suffix,omitempty"`
 }
+
+// AxisBase defines model for Axis.Base.
+type AxisBase string
 
 // AxisScale defines model for AxisScale.
 type AxisScale string
@@ -203,9 +1111,12 @@ type Bucket struct {
 	// Rules to expire or retain data.  No rules means data never expires.
 	RetentionRules RetentionRules `json:"retentionRules"`
 	Rp             *string        `json:"rp,omitempty"`
-	Type           *string        `json:"type,omitempty"`
+	Type           *BucketType    `json:"type,omitempty"`
 	UpdatedAt      *time.Time     `json:"updatedAt,omitempty"`
 }
+
+// BucketType defines model for Bucket.Type.
+type BucketType string
 
 // Buckets defines model for Buckets.
 type Buckets struct {
@@ -309,11 +1220,11 @@ type CheckBase struct {
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 
 	// An optional description of the check.
-	Description   *string `json:"description,omitempty"`
-	Id            *string `json:"id,omitempty"`
-	Labels        *Labels `json:"labels,omitempty"`
-	LastRunError  *string `json:"lastRunError,omitempty"`
-	LastRunStatus *string `json:"lastRunStatus,omitempty"`
+	Description   *string                 `json:"description,omitempty"`
+	Id            *string                 `json:"id,omitempty"`
+	Labels        *Labels                 `json:"labels,omitempty"`
+	LastRunError  *string                 `json:"lastRunError,omitempty"`
+	LastRunStatus *CheckBaseLastRunStatus `json:"lastRunStatus,omitempty"`
 
 	// Timestamp of latest scheduled, completed run, RFC3339.
 	LatestCompleted *time.Time `json:"latestCompleted,omitempty"`
@@ -346,15 +1257,21 @@ type CheckBase struct {
 	UpdatedAt *time.Time      `json:"updatedAt,omitempty"`
 }
 
+// CheckBaseLastRunStatus defines model for CheckBase.LastRunStatus.
+type CheckBaseLastRunStatus string
+
 // CheckDiscriminator defines model for CheckDiscriminator.
 type CheckDiscriminator interface{}
 
 // CheckPatch defines model for CheckPatch.
 type CheckPatch struct {
-	Description *string `json:"description,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Status      *string `json:"status,omitempty"`
+	Description *string           `json:"description,omitempty"`
+	Name        *string           `json:"name,omitempty"`
+	Status      *CheckPatchStatus `json:"status,omitempty"`
 }
+
+// CheckPatchStatus defines model for CheckPatch.Status.
+type CheckPatchStatus string
 
 // CheckStatusLevel defines model for CheckStatusLevel.
 type CheckStatusLevel string
@@ -365,11 +1282,17 @@ type CheckViewProperties struct {
 	CheckID string `json:"checkID"`
 
 	// Colors define color encoding of data into a visualization
-	Colors  []string         `json:"colors"`
-	Queries []DashboardQuery `json:"queries"`
-	Shape   string           `json:"shape"`
-	Type    string           `json:"type"`
+	Colors  []string                 `json:"colors"`
+	Queries []DashboardQuery         `json:"queries"`
+	Shape   CheckViewPropertiesShape `json:"shape"`
+	Type    CheckViewPropertiesType  `json:"type"`
 }
+
+// CheckViewPropertiesShape defines model for CheckViewProperties.Shape.
+type CheckViewPropertiesShape string
+
+// CheckViewPropertiesType defines model for CheckViewProperties.Type.
+type CheckViewPropertiesType string
 
 // Checks defines model for Checks.
 type Checks struct {
@@ -389,9 +1312,12 @@ type ConditionalExpression struct {
 
 // ConstantVariableProperties defines model for ConstantVariableProperties.
 type ConstantVariableProperties struct {
-	Type   *string   `json:"type,omitempty"`
-	Values *[]string `json:"values,omitempty"`
+	Type   *ConstantVariablePropertiesType `json:"type,omitempty"`
+	Values *[]string                       `json:"values,omitempty"`
 }
+
+// ConstantVariablePropertiesType defines model for ConstantVariableProperties.Type.
+type ConstantVariablePropertiesType string
 
 // CreateCell defines model for CreateCell.
 type CreateCell struct {
@@ -423,8 +1349,11 @@ type CustomCheck struct {
 	// Embedded struct due to allOf(#/components/schemas/CheckBase)
 	CheckBase
 	// Embedded fields due to inline allOf schema
-	Type string `json:"type"`
+	Type CustomCheckType `json:"type"`
 }
+
+// CustomCheckType defines model for CustomCheck.Type.
+type CustomCheckType string
 
 // Dashboard defines model for Dashboard.
 type Dashboard struct {
@@ -476,11 +1405,14 @@ type DashboardColor struct {
 	Name string `json:"name"`
 
 	// Type is how the color is used.
-	Type string `json:"type"`
+	Type DashboardColorType `json:"type"`
 
 	// The data value mapped to this color.
 	Value float32 `json:"value"`
 }
+
+// DashboardColorType defines model for DashboardColor.Type.
+type DashboardColorType string
 
 // DashboardQuery defines model for DashboardQuery.
 type DashboardQuery struct {
@@ -574,9 +1506,12 @@ type DeadmanCheck struct {
 	} `json:"tags,omitempty"`
 
 	// String duration before deadman triggers.
-	TimeSince *string `json:"timeSince,omitempty"`
-	Type      string  `json:"type"`
+	TimeSince *string          `json:"timeSince,omitempty"`
+	Type      DeadmanCheckType `json:"type"`
 }
+
+// DeadmanCheckType defines model for DeadmanCheck.Type.
+type DeadmanCheckType string
 
 // DecimalPlaces defines model for DecimalPlaces.
 type DecimalPlaces struct {
@@ -605,13 +1540,13 @@ type DeletePredicateRequest struct {
 type Dialect struct {
 
 	// Https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns
-	Annotations *[]string `json:"annotations,omitempty"`
+	Annotations *[]DialectAnnotations `json:"annotations,omitempty"`
 
 	// Character prefixed to comment strings
 	CommentPrefix *string `json:"commentPrefix,omitempty"`
 
 	// Format of timestamps
-	DateTimeFormat *string `json:"dateTimeFormat,omitempty"`
+	DateTimeFormat *DialectDateTimeFormat `json:"dateTimeFormat,omitempty"`
 
 	// Separator between cells; the default is ,
 	Delimiter *string `json:"delimiter,omitempty"`
@@ -619,6 +1554,12 @@ type Dialect struct {
 	// If true, the results will contain a header row
 	Header *bool `json:"header,omitempty"`
 }
+
+// DialectAnnotations defines model for Dialect.Annotations.
+type DialectAnnotations string
+
+// DialectDateTimeFormat defines model for Dialect.DateTimeFormat.
+type DialectDateTimeFormat string
 
 // Document defines model for Document.
 type Document struct {
@@ -705,11 +1646,14 @@ type DurationLiteral struct {
 type Error struct {
 
 	// Code is the machine-readable error code.
-	Code string `json:"code"`
+	Code ErrorCode `json:"code"`
 
 	// Message is a human-readable message.
 	Message string `json:"message"`
 }
+
+// ErrorCode defines model for Error.Code.
+type ErrorCode string
 
 // Expression defines model for Expression.
 type Expression interface{}
@@ -732,11 +1676,14 @@ type Field struct {
 	Args *[]Field `json:"args,omitempty"`
 
 	// `type` describes the field type. `func` is a function. `field` is a field reference.
-	Type *string `json:"type,omitempty"`
+	Type *FieldType `json:"type,omitempty"`
 
 	// value is the value of the field.  Meaning of the value is implied by the `type` key
 	Value *string `json:"value,omitempty"`
 }
+
+// FieldType defines model for Field.Type.
+type FieldType string
 
 // File defines model for File.
 type File struct {
@@ -807,50 +1754,65 @@ type GaugeViewProperties struct {
 	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
 
 	// Legend define encoding of data into a view's legend
-	Legend  Legend           `json:"legend"`
-	Note    string           `json:"note"`
-	Prefix  string           `json:"prefix"`
-	Queries []DashboardQuery `json:"queries"`
-	Shape   string           `json:"shape"`
+	Legend  Legend                   `json:"legend"`
+	Note    string                   `json:"note"`
+	Prefix  string                   `json:"prefix"`
+	Queries []DashboardQuery         `json:"queries"`
+	Shape   GaugeViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool   `json:"showNoteWhenEmpty"`
-	Suffix            string `json:"suffix"`
-	TickPrefix        string `json:"tickPrefix"`
-	TickSuffix        string `json:"tickSuffix"`
-	Type              string `json:"type"`
+	ShowNoteWhenEmpty bool                    `json:"showNoteWhenEmpty"`
+	Suffix            string                  `json:"suffix"`
+	TickPrefix        string                  `json:"tickPrefix"`
+	TickSuffix        string                  `json:"tickSuffix"`
+	Type              GaugeViewPropertiesType `json:"type"`
 }
+
+// GaugeViewPropertiesShape defines model for GaugeViewProperties.Shape.
+type GaugeViewPropertiesShape string
+
+// GaugeViewPropertiesType defines model for GaugeViewProperties.Type.
+type GaugeViewPropertiesType string
 
 // GreaterThreshold defines model for GreaterThreshold.
 type GreaterThreshold struct {
 	// Embedded struct due to allOf(#/components/schemas/ThresholdBase)
 	ThresholdBase
 	// Embedded fields due to inline allOf schema
-	Type  string  `json:"type"`
-	Value float32 `json:"value"`
+	Type  GreaterThresholdType `json:"type"`
+	Value float32              `json:"value"`
 }
+
+// GreaterThresholdType defines model for GreaterThreshold.Type.
+type GreaterThresholdType string
 
 // HTTPNotificationEndpoint defines model for HTTPNotificationEndpoint.
 type HTTPNotificationEndpoint struct {
 	// Embedded struct due to allOf(#/components/schemas/NotificationEndpointBase)
 	NotificationEndpointBase
 	// Embedded fields due to inline allOf schema
-	AuthMethod      string  `json:"authMethod"`
-	ContentTemplate *string `json:"contentTemplate,omitempty"`
+	AuthMethod      HTTPNotificationEndpointAuthMethod `json:"authMethod"`
+	ContentTemplate *string                            `json:"contentTemplate,omitempty"`
 
 	// Customized headers.
 	Headers  *HTTPNotificationEndpoint_Headers `json:"headers,omitempty"`
-	Method   string                            `json:"method"`
+	Method   HTTPNotificationEndpointMethod    `json:"method"`
 	Password *string                           `json:"password,omitempty"`
 	Token    *string                           `json:"token,omitempty"`
 	Url      string                            `json:"url"`
 	Username *string                           `json:"username,omitempty"`
 }
 
+// HTTPNotificationEndpointAuthMethod defines model for HTTPNotificationEndpoint.AuthMethod.
+type HTTPNotificationEndpointAuthMethod string
+
 // HTTPNotificationEndpoint_Headers defines model for HTTPNotificationEndpoint.Headers.
 type HTTPNotificationEndpoint_Headers struct {
 	AdditionalProperties map[string]string `json:"-"`
 }
+
+// HTTPNotificationEndpointMethod defines model for HTTPNotificationEndpoint.Method.
+type HTTPNotificationEndpointMethod string
 
 // HTTPNotificationRule defines model for HTTPNotificationRule.
 type HTTPNotificationRule struct {
@@ -862,63 +1824,84 @@ type HTTPNotificationRule struct {
 
 // HTTPNotificationRuleBase defines model for HTTPNotificationRuleBase.
 type HTTPNotificationRuleBase struct {
-	Type string  `json:"type"`
-	Url  *string `json:"url,omitempty"`
+	Type HTTPNotificationRuleBaseType `json:"type"`
+	Url  *string                      `json:"url,omitempty"`
 }
+
+// HTTPNotificationRuleBaseType defines model for HTTPNotificationRuleBase.Type.
+type HTTPNotificationRuleBaseType string
 
 // HealthCheck defines model for HealthCheck.
 type HealthCheck struct {
-	Checks  *[]HealthCheck `json:"checks,omitempty"`
-	Message *string        `json:"message,omitempty"`
-	Name    string         `json:"name"`
-	Status  string         `json:"status"`
+	Checks  *[]HealthCheck    `json:"checks,omitempty"`
+	Message *string           `json:"message,omitempty"`
+	Name    string            `json:"name"`
+	Status  HealthCheckStatus `json:"status"`
 }
+
+// HealthCheckStatus defines model for HealthCheck.Status.
+type HealthCheckStatus string
 
 // HeatmapViewProperties defines model for HeatmapViewProperties.
 type HeatmapViewProperties struct {
 	BinSize float32 `json:"binSize"`
 
 	// Colors define color encoding of data into a visualization
-	Colors  []string         `json:"colors"`
-	Note    string           `json:"note"`
-	Queries []DashboardQuery `json:"queries"`
-	Shape   string           `json:"shape"`
+	Colors  []string                   `json:"colors"`
+	Note    string                     `json:"note"`
+	Queries []DashboardQuery           `json:"queries"`
+	Shape   HeatmapViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool      `json:"showNoteWhenEmpty"`
-	TimeFormat        *string   `json:"timeFormat,omitempty"`
-	Type              string    `json:"type"`
-	XAxisLabel        string    `json:"xAxisLabel"`
-	XColumn           string    `json:"xColumn"`
-	XDomain           []float32 `json:"xDomain"`
-	XPrefix           string    `json:"xPrefix"`
-	XSuffix           string    `json:"xSuffix"`
-	YAxisLabel        string    `json:"yAxisLabel"`
-	YColumn           string    `json:"yColumn"`
-	YDomain           []float32 `json:"yDomain"`
-	YPrefix           string    `json:"yPrefix"`
-	YSuffix           string    `json:"ySuffix"`
+	ShowNoteWhenEmpty bool                      `json:"showNoteWhenEmpty"`
+	TimeFormat        *string                   `json:"timeFormat,omitempty"`
+	Type              HeatmapViewPropertiesType `json:"type"`
+	XAxisLabel        string                    `json:"xAxisLabel"`
+	XColumn           string                    `json:"xColumn"`
+	XDomain           []float32                 `json:"xDomain"`
+	XPrefix           string                    `json:"xPrefix"`
+	XSuffix           string                    `json:"xSuffix"`
+	YAxisLabel        string                    `json:"yAxisLabel"`
+	YColumn           string                    `json:"yColumn"`
+	YDomain           []float32                 `json:"yDomain"`
+	YPrefix           string                    `json:"yPrefix"`
+	YSuffix           string                    `json:"ySuffix"`
 }
+
+// HeatmapViewPropertiesShape defines model for HeatmapViewProperties.Shape.
+type HeatmapViewPropertiesShape string
+
+// HeatmapViewPropertiesType defines model for HeatmapViewProperties.Type.
+type HeatmapViewPropertiesType string
 
 // HistogramViewProperties defines model for HistogramViewProperties.
 type HistogramViewProperties struct {
 	BinCount int `json:"binCount"`
 
 	// Colors define color encoding of data into a visualization
-	Colors      []DashboardColor `json:"colors"`
-	FillColumns []string         `json:"fillColumns"`
-	Note        string           `json:"note"`
-	Position    string           `json:"position"`
-	Queries     []DashboardQuery `json:"queries"`
-	Shape       string           `json:"shape"`
+	Colors      []DashboardColor                `json:"colors"`
+	FillColumns []string                        `json:"fillColumns"`
+	Note        string                          `json:"note"`
+	Position    HistogramViewPropertiesPosition `json:"position"`
+	Queries     []DashboardQuery                `json:"queries"`
+	Shape       HistogramViewPropertiesShape    `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool      `json:"showNoteWhenEmpty"`
-	Type              string    `json:"type"`
-	XAxisLabel        string    `json:"xAxisLabel"`
-	XColumn           string    `json:"xColumn"`
-	XDomain           []float32 `json:"xDomain"`
+	ShowNoteWhenEmpty bool                        `json:"showNoteWhenEmpty"`
+	Type              HistogramViewPropertiesType `json:"type"`
+	XAxisLabel        string                      `json:"xAxisLabel"`
+	XColumn           string                      `json:"xColumn"`
+	XDomain           []float32                   `json:"xDomain"`
 }
+
+// HistogramViewPropertiesPosition defines model for HistogramViewProperties.Position.
+type HistogramViewPropertiesPosition string
+
+// HistogramViewPropertiesShape defines model for HistogramViewProperties.Shape.
+type HistogramViewPropertiesShape string
+
+// HistogramViewPropertiesType defines model for HistogramViewProperties.Type.
+type HistogramViewPropertiesType string
 
 // Identifier defines model for Identifier.
 type Identifier struct {
@@ -960,8 +1943,11 @@ type InfluxQLQuery struct {
 	Query string `json:"query"`
 
 	// The type of query. Must be "influxql".
-	Type *string `json:"type,omitempty"`
+	Type *InfluxQLQueryType `json:"type,omitempty"`
 }
+
+// InfluxQLQueryType defines model for InfluxQLQuery.Type.
+type InfluxQLQueryType string
 
 // IntegerLiteral defines model for IntegerLiteral.
 type IntegerLiteral struct {
@@ -1046,20 +2032,29 @@ type LanguageRequest struct {
 type Legend struct {
 
 	// orientation is the location of the legend with respect to the view graph
-	Orientation *string `json:"orientation,omitempty"`
+	Orientation *LegendOrientation `json:"orientation,omitempty"`
 
 	// The style of the legend.
-	Type *string `json:"type,omitempty"`
+	Type *LegendType `json:"type,omitempty"`
 }
+
+// LegendOrientation defines model for Legend.Orientation.
+type LegendOrientation string
+
+// LegendType defines model for Legend.Type.
+type LegendType string
 
 // LesserThreshold defines model for LesserThreshold.
 type LesserThreshold struct {
 	// Embedded struct due to allOf(#/components/schemas/ThresholdBase)
 	ThresholdBase
 	// Embedded fields due to inline allOf schema
-	Type  string  `json:"type"`
-	Value float32 `json:"value"`
+	Type  LesserThresholdType `json:"type"`
+	Value float32             `json:"value"`
 }
+
+// LesserThresholdType defines model for LesserThreshold.Type.
+type LesserThresholdType string
 
 // LinePlusSingleStatProperties defines model for LinePlusSingleStatProperties.
 type LinePlusSingleStatProperties struct {
@@ -1074,27 +2069,36 @@ type LinePlusSingleStatProperties struct {
 	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
 
 	// Legend define encoding of data into a view's legend
-	Legend     Legend           `json:"legend"`
-	Note       string           `json:"note"`
-	Position   string           `json:"position"`
-	Prefix     string           `json:"prefix"`
-	Queries    []DashboardQuery `json:"queries"`
-	ShadeBelow *bool            `json:"shadeBelow,omitempty"`
-	Shape      string           `json:"shape"`
+	Legend     Legend                               `json:"legend"`
+	Note       string                               `json:"note"`
+	Position   LinePlusSingleStatPropertiesPosition `json:"position"`
+	Prefix     string                               `json:"prefix"`
+	Queries    []DashboardQuery                     `json:"queries"`
+	ShadeBelow *bool                                `json:"shadeBelow,omitempty"`
+	Shape      LinePlusSingleStatPropertiesShape    `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool    `json:"showNoteWhenEmpty"`
-	Suffix            string  `json:"suffix"`
-	Type              string  `json:"type"`
-	XColumn           *string `json:"xColumn,omitempty"`
-	YColumn           *string `json:"yColumn,omitempty"`
+	ShowNoteWhenEmpty bool                             `json:"showNoteWhenEmpty"`
+	Suffix            string                           `json:"suffix"`
+	Type              LinePlusSingleStatPropertiesType `json:"type"`
+	XColumn           *string                          `json:"xColumn,omitempty"`
+	YColumn           *string                          `json:"yColumn,omitempty"`
 }
+
+// LinePlusSingleStatPropertiesPosition defines model for LinePlusSingleStatProperties.Position.
+type LinePlusSingleStatPropertiesPosition string
+
+// LinePlusSingleStatPropertiesShape defines model for LinePlusSingleStatProperties.Shape.
+type LinePlusSingleStatPropertiesShape string
+
+// LinePlusSingleStatPropertiesType defines model for LinePlusSingleStatProperties.Type.
+type LinePlusSingleStatPropertiesType string
 
 // LineProtocolError defines model for LineProtocolError.
 type LineProtocolError struct {
 
 	// Code is the machine-readable error code.
-	Code string `json:"code"`
+	Code LineProtocolErrorCode `json:"code"`
 
 	// Err is a stack of errors that occurred during processing of the request. Useful for debugging.
 	Err string `json:"err"`
@@ -1109,11 +2113,14 @@ type LineProtocolError struct {
 	Op string `json:"op"`
 }
 
+// LineProtocolErrorCode defines model for LineProtocolError.Code.
+type LineProtocolErrorCode string
+
 // LineProtocolLengthError defines model for LineProtocolLengthError.
 type LineProtocolLengthError struct {
 
 	// Code is the machine-readable error code.
-	Code string `json:"code"`
+	Code LineProtocolLengthErrorCode `json:"code"`
 
 	// Max length in bytes for a body of line-protocol.
 	MaxLength int32 `json:"maxLength"`
@@ -1121,6 +2128,9 @@ type LineProtocolLengthError struct {
 	// Message is a human-readable message.
 	Message string `json:"message"`
 }
+
+// LineProtocolLengthErrorCode defines model for LineProtocolLengthError.Code.
+type LineProtocolLengthErrorCode string
 
 // Link defines model for Link.
 type Link string
@@ -1165,9 +2175,12 @@ type Logs struct {
 
 // MapVariableProperties defines model for MapVariableProperties.
 type MapVariableProperties struct {
-	Type   *string                       `json:"type,omitempty"`
+	Type   *MapVariablePropertiesType    `json:"type,omitempty"`
 	Values *MapVariableProperties_Values `json:"values,omitempty"`
 }
+
+// MapVariablePropertiesType defines model for MapVariableProperties.Type.
+type MapVariablePropertiesType string
 
 // MapVariableProperties_Values defines model for MapVariableProperties.Values.
 type MapVariableProperties_Values struct {
@@ -1176,10 +2189,16 @@ type MapVariableProperties_Values struct {
 
 // MarkdownViewProperties defines model for MarkdownViewProperties.
 type MarkdownViewProperties struct {
-	Note  string `json:"note"`
-	Shape string `json:"shape"`
-	Type  string `json:"type"`
+	Note  string                      `json:"note"`
+	Shape MarkdownViewPropertiesShape `json:"shape"`
+	Type  MarkdownViewPropertiesType  `json:"type"`
 }
+
+// MarkdownViewPropertiesShape defines model for MarkdownViewProperties.Shape.
+type MarkdownViewPropertiesShape string
+
+// MarkdownViewPropertiesType defines model for MarkdownViewProperties.Type.
+type MarkdownViewPropertiesType string
 
 // MemberAssignment defines model for MemberAssignment.
 type MemberAssignment struct {
@@ -1239,11 +2258,14 @@ type NotificationEndpointBase struct {
 	OrgID *string `json:"orgID,omitempty"`
 
 	// The status of the endpoint.
-	Status    *string                  `json:"status,omitempty"`
-	Type      NotificationEndpointType `json:"type"`
-	UpdatedAt *time.Time               `json:"updatedAt,omitempty"`
-	UserID    *string                  `json:"userID,omitempty"`
+	Status    *NotificationEndpointBaseStatus `json:"status,omitempty"`
+	Type      NotificationEndpointType        `json:"type"`
+	UpdatedAt *time.Time                      `json:"updatedAt,omitempty"`
+	UserID    *string                         `json:"userID,omitempty"`
 }
+
+// NotificationEndpointBaseStatus defines model for NotificationEndpointBase.Status.
+type NotificationEndpointBaseStatus string
 
 // NotificationEndpointDiscrimator defines model for NotificationEndpointDiscrimator.
 type NotificationEndpointDiscrimator interface{}
@@ -1253,10 +2275,13 @@ type NotificationEndpointType string
 
 // NotificationEndpointUpdate defines model for NotificationEndpointUpdate.
 type NotificationEndpointUpdate struct {
-	Description *string `json:"description,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Status      *string `json:"status,omitempty"`
+	Description *string                           `json:"description,omitempty"`
+	Name        *string                           `json:"name,omitempty"`
+	Status      *NotificationEndpointUpdateStatus `json:"status,omitempty"`
 }
+
+// NotificationEndpointUpdateStatus defines model for NotificationEndpointUpdate.Status.
+type NotificationEndpointUpdateStatus string
 
 // NotificationEndpoints defines model for NotificationEndpoints.
 type NotificationEndpoints struct {
@@ -1279,11 +2304,11 @@ type NotificationRuleBase struct {
 	EndpointID  string  `json:"endpointID"`
 
 	// The notification repetition interval.
-	Every         *string `json:"every,omitempty"`
-	Id            string  `json:"id"`
-	Labels        *Labels `json:"labels,omitempty"`
-	LastRunError  *string `json:"lastRunError,omitempty"`
-	LastRunStatus *string `json:"lastRunStatus,omitempty"`
+	Every         *string                            `json:"every,omitempty"`
+	Id            string                             `json:"id"`
+	Labels        *Labels                            `json:"labels,omitempty"`
+	LastRunError  *string                            `json:"lastRunError,omitempty"`
+	LastRunStatus *NotificationRuleBaseLastRunStatus `json:"lastRunStatus,omitempty"`
 
 	// Timestamp of latest scheduled, completed run, RFC3339.
 	LatestCompleted *time.Time `json:"latestCompleted,omitempty"`
@@ -1334,15 +2359,21 @@ type NotificationRuleBase struct {
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
 
+// NotificationRuleBaseLastRunStatus defines model for NotificationRuleBase.LastRunStatus.
+type NotificationRuleBaseLastRunStatus string
+
 // NotificationRuleDiscriminator defines model for NotificationRuleDiscriminator.
 type NotificationRuleDiscriminator interface{}
 
 // NotificationRuleUpdate defines model for NotificationRuleUpdate.
 type NotificationRuleUpdate struct {
-	Description *string `json:"description,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Status      *string `json:"status,omitempty"`
+	Description *string                       `json:"description,omitempty"`
+	Name        *string                       `json:"name,omitempty"`
+	Status      *NotificationRuleUpdateStatus `json:"status,omitempty"`
 }
+
+// NotificationRuleUpdateStatus defines model for NotificationRuleUpdate.Status.
+type NotificationRuleUpdateStatus string
 
 // NotificationRules defines model for NotificationRules.
 type NotificationRules struct {
@@ -1446,9 +2477,12 @@ type Organization struct {
 	Name string `json:"name"`
 
 	// If inactive the organization is inactive.
-	Status    *string    `json:"status,omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+	Status    *OrganizationStatus `json:"status,omitempty"`
+	UpdatedAt *time.Time          `json:"updatedAt,omitempty"`
 }
+
+// OrganizationStatus defines model for Organization.Status.
+type OrganizationStatus string
 
 // Organizations defines model for Organizations.
 type Organizations struct {
@@ -1501,9 +2535,12 @@ type PagerDutyNotificationRule struct {
 
 // PagerDutyNotificationRuleBase defines model for PagerDutyNotificationRuleBase.
 type PagerDutyNotificationRuleBase struct {
-	MessageTemplate string `json:"messageTemplate"`
-	Type            string `json:"type"`
+	MessageTemplate string                            `json:"messageTemplate"`
+	Type            PagerDutyNotificationRuleBaseType `json:"type"`
 }
+
+// PagerDutyNotificationRuleBaseType defines model for PagerDutyNotificationRuleBase.Type.
+type PagerDutyNotificationRuleBaseType string
 
 // ParenExpression defines model for ParenExpression.
 type ParenExpression struct {
@@ -1520,23 +2557,12 @@ type PasswordResetBody struct {
 
 // Permission defines model for Permission.
 type Permission struct {
-	Action   string `json:"action"`
-	Resource struct {
-
-		// If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
-		Id *string `json:"id,omitempty"`
-
-		// Optional name of the resource if the resource has a name field.
-		Name *string `json:"name,omitempty"`
-
-		// Optional name of the organization of the organization with orgID.
-		Org *string `json:"org,omitempty"`
-
-		// If orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.
-		OrgID *string `json:"orgID,omitempty"`
-		Type  string  `json:"type"`
-	} `json:"resource"`
+	Action   PermissionAction `json:"action"`
+	Resource Resource         `json:"resource"`
 }
+
+// PermissionAction defines model for Permission.Action.
+type PermissionAction string
 
 // PipeExpression defines model for PipeExpression.
 type PipeExpression struct {
@@ -1558,13 +2584,16 @@ type PipeLiteral struct {
 
 // Pkg defines model for Pkg.
 type Pkg []struct {
-	ApiVersion *string `json:"apiVersion,omitempty"`
-	Kind       *string `json:"kind,omitempty"`
+	ApiVersion *string  `json:"apiVersion,omitempty"`
+	Kind       *PkgKind `json:"kind,omitempty"`
 	Meta       *struct {
 		Name *string `json:"name,omitempty"`
 	} `json:"meta,omitempty"`
 	Spec *map[string]interface{} `json:"spec,omitempty"`
 }
+
+// PkgKind defines model for Pkg.Kind.
+type PkgKind string
 
 // PkgApply defines model for PkgApply.
 type PkgApply struct {
@@ -1867,38 +2896,50 @@ type Query struct {
 	Query string `json:"query"`
 
 	// The type of query. Must be "flux".
-	Type *string `json:"type,omitempty"`
+	Type *QueryType `json:"type,omitempty"`
 }
+
+// QueryType defines model for Query.Type.
+type QueryType string
 
 // QueryEditMode defines model for QueryEditMode.
 type QueryEditMode string
 
 // QueryVariableProperties defines model for QueryVariableProperties.
 type QueryVariableProperties struct {
-	Type   *string `json:"type,omitempty"`
+	Type   *QueryVariablePropertiesType `json:"type,omitempty"`
 	Values *struct {
 		Language *string `json:"language,omitempty"`
 		Query    *string `json:"query,omitempty"`
 	} `json:"values,omitempty"`
 }
 
+// QueryVariablePropertiesType defines model for QueryVariableProperties.Type.
+type QueryVariablePropertiesType string
+
 // RangeThreshold defines model for RangeThreshold.
 type RangeThreshold struct {
 	// Embedded struct due to allOf(#/components/schemas/ThresholdBase)
 	ThresholdBase
 	// Embedded fields due to inline allOf schema
-	Max    float32 `json:"max"`
-	Min    float32 `json:"min"`
-	Type   string  `json:"type"`
-	Within bool    `json:"within"`
+	Max    float32            `json:"max"`
+	Min    float32            `json:"min"`
+	Type   RangeThresholdType `json:"type"`
+	Within bool               `json:"within"`
 }
+
+// RangeThresholdType defines model for RangeThreshold.Type.
+type RangeThresholdType string
 
 // Ready defines model for Ready.
 type Ready struct {
-	Started *time.Time `json:"started,omitempty"`
-	Status  *string    `json:"status,omitempty"`
-	Up      *string    `json:"up,omitempty"`
+	Started *time.Time   `json:"started,omitempty"`
+	Status  *ReadyStatus `json:"status,omitempty"`
+	Up      *string      `json:"up,omitempty"`
 }
+
+// ReadyStatus defines model for Ready.Status.
+type ReadyStatus string
 
 // RegexpLiteral defines model for RegexpLiteral.
 type RegexpLiteral struct {
@@ -1921,13 +2962,36 @@ type RenamableField struct {
 	Visible *bool `json:"visible,omitempty"`
 }
 
+// Resource defines model for Resource.
+type Resource struct {
+
+	// If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
+	Id *string `json:"id,omitempty"`
+
+	// Optional name of the resource if the resource has a name field.
+	Name *string `json:"name,omitempty"`
+
+	// Optional name of the organization of the organization with orgID.
+	Org *string `json:"org,omitempty"`
+
+	// If orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.
+	OrgID *string      `json:"orgID,omitempty"`
+	Type  ResourceType `json:"type"`
+}
+
+// ResourceType defines model for Resource.Type.
+type ResourceType string
+
 // ResourceMember defines model for ResourceMember.
 type ResourceMember struct {
 	// Embedded struct due to allOf(#/components/schemas/User)
 	User
 	// Embedded fields due to inline allOf schema
-	Role *string `json:"role,omitempty"`
+	Role *ResourceMemberRole `json:"role,omitempty"`
 }
+
+// ResourceMemberRole defines model for ResourceMember.Role.
+type ResourceMemberRole string
 
 // ResourceMembers defines model for ResourceMembers.
 type ResourceMembers struct {
@@ -1942,8 +3006,11 @@ type ResourceOwner struct {
 	// Embedded struct due to allOf(#/components/schemas/User)
 	User
 	// Embedded fields due to inline allOf schema
-	Role *string `json:"role,omitempty"`
+	Role *ResourceOwnerRole `json:"role,omitempty"`
 }
+
+// ResourceOwnerRole defines model for ResourceOwner.Role.
+type ResourceOwnerRole string
 
 // ResourceOwners defines model for ResourceOwners.
 type ResourceOwners struct {
@@ -1957,9 +3024,12 @@ type ResourceOwners struct {
 type RetentionRule struct {
 
 	// Duration in seconds for how long data will be kept in the database.
-	EverySeconds int    `json:"everySeconds"`
-	Type         string `json:"type"`
+	EverySeconds int               `json:"everySeconds"`
+	Type         RetentionRuleType `json:"type"`
 }
+
+// RetentionRuleType defines model for RetentionRule.Type.
+type RetentionRuleType string
 
 // RetentionRules defines model for RetentionRules.
 type RetentionRules []RetentionRule
@@ -2035,9 +3105,12 @@ type Run struct {
 
 	// Time run started executing, RFC3339Nano.
 	StartedAt *time.Time `json:"startedAt,omitempty"`
-	Status    *string    `json:"status,omitempty"`
+	Status    *RunStatus `json:"status,omitempty"`
 	TaskID    *string    `json:"taskID,omitempty"`
 }
+
+// RunStatus defines model for Run.Status.
+type RunStatus string
 
 // RunManually defines model for RunManually.
 type RunManually struct {
@@ -2062,38 +3135,47 @@ type SMTPNotificationRule struct {
 
 // SMTPNotificationRuleBase defines model for SMTPNotificationRuleBase.
 type SMTPNotificationRuleBase struct {
-	BodyTemplate    *string `json:"bodyTemplate,omitempty"`
-	SubjectTemplate string  `json:"subjectTemplate"`
-	To              string  `json:"to"`
-	Type            string  `json:"type"`
+	BodyTemplate    *string                      `json:"bodyTemplate,omitempty"`
+	SubjectTemplate string                       `json:"subjectTemplate"`
+	To              string                       `json:"to"`
+	Type            SMTPNotificationRuleBaseType `json:"type"`
 }
+
+// SMTPNotificationRuleBaseType defines model for SMTPNotificationRuleBase.Type.
+type SMTPNotificationRuleBaseType string
 
 // ScatterViewProperties defines model for ScatterViewProperties.
 type ScatterViewProperties struct {
 
 	// Colors define color encoding of data into a visualization
-	Colors      []string         `json:"colors"`
-	FillColumns []string         `json:"fillColumns"`
-	Note        string           `json:"note"`
-	Queries     []DashboardQuery `json:"queries"`
-	Shape       string           `json:"shape"`
+	Colors      []string                   `json:"colors"`
+	FillColumns []string                   `json:"fillColumns"`
+	Note        string                     `json:"note"`
+	Queries     []DashboardQuery           `json:"queries"`
+	Shape       ScatterViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool      `json:"showNoteWhenEmpty"`
-	SymbolColumns     []string  `json:"symbolColumns"`
-	TimeFormat        *string   `json:"timeFormat,omitempty"`
-	Type              string    `json:"type"`
-	XAxisLabel        string    `json:"xAxisLabel"`
-	XColumn           string    `json:"xColumn"`
-	XDomain           []float32 `json:"xDomain"`
-	XPrefix           string    `json:"xPrefix"`
-	XSuffix           string    `json:"xSuffix"`
-	YAxisLabel        string    `json:"yAxisLabel"`
-	YColumn           string    `json:"yColumn"`
-	YDomain           []float32 `json:"yDomain"`
-	YPrefix           string    `json:"yPrefix"`
-	YSuffix           string    `json:"ySuffix"`
+	ShowNoteWhenEmpty bool                      `json:"showNoteWhenEmpty"`
+	SymbolColumns     []string                  `json:"symbolColumns"`
+	TimeFormat        *string                   `json:"timeFormat,omitempty"`
+	Type              ScatterViewPropertiesType `json:"type"`
+	XAxisLabel        string                    `json:"xAxisLabel"`
+	XColumn           string                    `json:"xColumn"`
+	XDomain           []float32                 `json:"xDomain"`
+	XPrefix           string                    `json:"xPrefix"`
+	XSuffix           string                    `json:"xSuffix"`
+	YAxisLabel        string                    `json:"yAxisLabel"`
+	YColumn           string                    `json:"yColumn"`
+	YDomain           []float32                 `json:"yDomain"`
+	YPrefix           string                    `json:"yPrefix"`
+	YSuffix           string                    `json:"ySuffix"`
 }
+
+// ScatterViewPropertiesShape defines model for ScatterViewProperties.Shape.
+type ScatterViewPropertiesShape string
+
+// ScatterViewPropertiesType defines model for ScatterViewProperties.Type.
+type ScatterViewPropertiesType string
 
 // ScraperTargetRequest defines model for ScraperTargetRequest.
 type ScraperTargetRequest struct {
@@ -2108,11 +3190,14 @@ type ScraperTargetRequest struct {
 	OrgID *string `json:"orgID,omitempty"`
 
 	// The type of the metrics to be parsed.
-	Type *string `json:"type,omitempty"`
+	Type *ScraperTargetRequestType `json:"type,omitempty"`
 
 	// The URL of the metrics endpoint.
 	Url *string `json:"url,omitempty"`
 }
+
+// ScraperTargetRequestType defines model for ScraperTargetRequest.Type.
+type ScraperTargetRequestType string
 
 // ScraperTargetResponse defines model for ScraperTargetResponse.
 type ScraperTargetResponse struct {
@@ -2181,19 +3266,25 @@ type SingleStatViewProperties struct {
 	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
 
 	// Legend define encoding of data into a view's legend
-	Legend  Legend           `json:"legend"`
-	Note    string           `json:"note"`
-	Prefix  string           `json:"prefix"`
-	Queries []DashboardQuery `json:"queries"`
-	Shape   string           `json:"shape"`
+	Legend  Legend                        `json:"legend"`
+	Note    string                        `json:"note"`
+	Prefix  string                        `json:"prefix"`
+	Queries []DashboardQuery              `json:"queries"`
+	Shape   SingleStatViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool   `json:"showNoteWhenEmpty"`
-	Suffix            string `json:"suffix"`
-	TickPrefix        string `json:"tickPrefix"`
-	TickSuffix        string `json:"tickSuffix"`
-	Type              string `json:"type"`
+	ShowNoteWhenEmpty bool                         `json:"showNoteWhenEmpty"`
+	Suffix            string                       `json:"suffix"`
+	TickPrefix        string                       `json:"tickPrefix"`
+	TickSuffix        string                       `json:"tickSuffix"`
+	Type              SingleStatViewPropertiesType `json:"type"`
 }
+
+// SingleStatViewPropertiesShape defines model for SingleStatViewProperties.Shape.
+type SingleStatViewPropertiesShape string
+
+// SingleStatViewPropertiesType defines model for SingleStatViewProperties.Type.
+type SingleStatViewPropertiesType string
 
 // SlackNotificationEndpoint defines model for SlackNotificationEndpoint.
 type SlackNotificationEndpoint struct {
@@ -2218,35 +3309,44 @@ type SlackNotificationRule struct {
 
 // SlackNotificationRuleBase defines model for SlackNotificationRuleBase.
 type SlackNotificationRuleBase struct {
-	Channel         *string `json:"channel,omitempty"`
-	MessageTemplate string  `json:"messageTemplate"`
-	Type            string  `json:"type"`
+	Channel         *string                       `json:"channel,omitempty"`
+	MessageTemplate string                        `json:"messageTemplate"`
+	Type            SlackNotificationRuleBaseType `json:"type"`
 }
+
+// SlackNotificationRuleBaseType defines model for SlackNotificationRuleBase.Type.
+type SlackNotificationRuleBaseType string
 
 // Source defines model for Source.
 type Source struct {
-	Default            *bool     `json:"default,omitempty"`
-	DefaultRP          *string   `json:"defaultRP,omitempty"`
-	Id                 *string   `json:"id,omitempty"`
-	InsecureSkipVerify *bool     `json:"insecureSkipVerify,omitempty"`
-	Languages          *[]string `json:"languages,omitempty"`
+	Default            *bool              `json:"default,omitempty"`
+	DefaultRP          *string            `json:"defaultRP,omitempty"`
+	Id                 *string            `json:"id,omitempty"`
+	InsecureSkipVerify *bool              `json:"insecureSkipVerify,omitempty"`
+	Languages          *[]SourceLanguages `json:"languages,omitempty"`
 	Links              *struct {
 		Buckets *string `json:"buckets,omitempty"`
 		Health  *string `json:"health,omitempty"`
 		Query   *string `json:"query,omitempty"`
 		Self    *string `json:"self,omitempty"`
 	} `json:"links,omitempty"`
-	MetaUrl      *string `json:"metaUrl,omitempty"`
-	Name         *string `json:"name,omitempty"`
-	OrgID        *string `json:"orgID,omitempty"`
-	Password     *string `json:"password,omitempty"`
-	SharedSecret *string `json:"sharedSecret,omitempty"`
-	Telegraf     *string `json:"telegraf,omitempty"`
-	Token        *string `json:"token,omitempty"`
-	Type         *string `json:"type,omitempty"`
-	Url          *string `json:"url,omitempty"`
-	Username     *string `json:"username,omitempty"`
+	MetaUrl      *string     `json:"metaUrl,omitempty"`
+	Name         *string     `json:"name,omitempty"`
+	OrgID        *string     `json:"orgID,omitempty"`
+	Password     *string     `json:"password,omitempty"`
+	SharedSecret *string     `json:"sharedSecret,omitempty"`
+	Telegraf     *string     `json:"telegraf,omitempty"`
+	Token        *string     `json:"token,omitempty"`
+	Type         *SourceType `json:"type,omitempty"`
+	Url          *string     `json:"url,omitempty"`
+	Username     *string     `json:"username,omitempty"`
 }
+
+// SourceLanguages defines model for Source.Languages.
+type SourceLanguages string
+
+// SourceType defines model for Source.Type.
+type SourceType string
 
 // Sources defines model for Sources.
 type Sources struct {
@@ -2289,10 +3389,10 @@ type TableViewProperties struct {
 	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
 
 	// fieldOptions represent the fields retrieved by the query with customization options
-	FieldOptions []RenamableField `json:"fieldOptions"`
-	Note         string           `json:"note"`
-	Queries      []DashboardQuery `json:"queries"`
-	Shape        string           `json:"shape"`
+	FieldOptions []RenamableField         `json:"fieldOptions"`
+	Note         string                   `json:"note"`
+	Queries      []DashboardQuery         `json:"queries"`
+	Shape        TableViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool `json:"showNoteWhenEmpty"`
@@ -2308,20 +3408,32 @@ type TableViewProperties struct {
 		VerticalTimeAxis *bool `json:"verticalTimeAxis,omitempty"`
 
 		// Wrapping describes the text wrapping style to be used in table views
-		Wrapping *string `json:"wrapping,omitempty"`
+		Wrapping *TableViewPropertiesTableOptionsWrapping `json:"wrapping,omitempty"`
 	} `json:"tableOptions"`
 
 	// timeFormat describes the display format for time values according to moment.js date formatting
-	TimeFormat string `json:"timeFormat"`
-	Type       string `json:"type"`
+	TimeFormat string                  `json:"timeFormat"`
+	Type       TableViewPropertiesType `json:"type"`
 }
+
+// TableViewPropertiesShape defines model for TableViewProperties.Shape.
+type TableViewPropertiesShape string
+
+// TableViewPropertiesTableOptionsWrapping defines model for TableViewProperties.TableOptions.Wrapping.
+type TableViewPropertiesTableOptionsWrapping string
+
+// TableViewPropertiesType defines model for TableViewProperties.Type.
+type TableViewPropertiesType string
 
 // TagRule defines model for TagRule.
 type TagRule struct {
-	Key      *string `json:"key,omitempty"`
-	Operator *string `json:"operator,omitempty"`
-	Value    *string `json:"value,omitempty"`
+	Key      *string          `json:"key,omitempty"`
+	Operator *TagRuleOperator `json:"operator,omitempty"`
+	Value    *string          `json:"value,omitempty"`
 }
+
+// TagRuleOperator defines model for TagRule.Operator.
+type TagRuleOperator string
 
 // Task defines model for Task.
 type Task struct {
@@ -2340,11 +3452,11 @@ type Task struct {
 	Every *string `json:"every,omitempty"`
 
 	// The Flux script to run for this task.
-	Flux          string  `json:"flux"`
-	Id            string  `json:"id"`
-	Labels        *Labels `json:"labels,omitempty"`
-	LastRunError  *string `json:"lastRunError,omitempty"`
-	LastRunStatus *string `json:"lastRunStatus,omitempty"`
+	Flux          string             `json:"flux"`
+	Id            string             `json:"id"`
+	Labels        *Labels            `json:"labels,omitempty"`
+	LastRunError  *string            `json:"lastRunError,omitempty"`
+	LastRunStatus *TaskLastRunStatus `json:"lastRunStatus,omitempty"`
 
 	// Timestamp of latest scheduled, completed run, RFC3339.
 	LatestCompleted *time.Time `json:"latestCompleted,omitempty"`
@@ -2386,6 +3498,9 @@ type Task struct {
 	Type      *string    `json:"type,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
+
+// TaskLastRunStatus defines model for Task.LastRunStatus.
+type TaskLastRunStatus string
 
 // TaskCreateRequest defines model for TaskCreateRequest.
 type TaskCreateRequest struct {
@@ -2469,32 +3584,56 @@ type TelegrafPlugin struct {
 
 // TelegrafPluginInputCpu defines model for TelegrafPluginInputCpu.
 type TelegrafPluginInputCpu struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                    `json:"comment,omitempty"`
+	Name    TelegrafPluginInputCpuName `json:"name"`
+	Type    TelegrafPluginInputCpuType `json:"type"`
 }
+
+// TelegrafPluginInputCpuName defines model for TelegrafPluginInputCpu.Name.
+type TelegrafPluginInputCpuName string
+
+// TelegrafPluginInputCpuType defines model for TelegrafPluginInputCpu.Type.
+type TelegrafPluginInputCpuType string
 
 // TelegrafPluginInputDisk defines model for TelegrafPluginInputDisk.
 type TelegrafPluginInputDisk struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                     `json:"comment,omitempty"`
+	Name    TelegrafPluginInputDiskName `json:"name"`
+	Type    TelegrafPluginInputDiskType `json:"type"`
 }
+
+// TelegrafPluginInputDiskName defines model for TelegrafPluginInputDisk.Name.
+type TelegrafPluginInputDiskName string
+
+// TelegrafPluginInputDiskType defines model for TelegrafPluginInputDisk.Type.
+type TelegrafPluginInputDiskType string
 
 // TelegrafPluginInputDiskio defines model for TelegrafPluginInputDiskio.
 type TelegrafPluginInputDiskio struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                       `json:"comment,omitempty"`
+	Name    TelegrafPluginInputDiskioName `json:"name"`
+	Type    TelegrafPluginInputDiskioType `json:"type"`
 }
+
+// TelegrafPluginInputDiskioName defines model for TelegrafPluginInputDiskio.Name.
+type TelegrafPluginInputDiskioName string
+
+// TelegrafPluginInputDiskioType defines model for TelegrafPluginInputDiskio.Type.
+type TelegrafPluginInputDiskioType string
 
 // TelegrafPluginInputDocker defines model for TelegrafPluginInputDocker.
 type TelegrafPluginInputDocker struct {
 	Comment *string                         `json:"comment,omitempty"`
 	Config  TelegrafPluginInputDockerConfig `json:"config"`
-	Name    string                          `json:"name"`
-	Type    string                          `json:"type"`
+	Name    TelegrafPluginInputDockerName   `json:"name"`
+	Type    TelegrafPluginInputDockerType   `json:"type"`
 }
+
+// TelegrafPluginInputDockerName defines model for TelegrafPluginInputDocker.Name.
+type TelegrafPluginInputDockerName string
+
+// TelegrafPluginInputDockerType defines model for TelegrafPluginInputDocker.Type.
+type TelegrafPluginInputDockerType string
 
 // TelegrafPluginInputDockerConfig defines model for TelegrafPluginInputDockerConfig.
 type TelegrafPluginInputDockerConfig struct {
@@ -2505,9 +3644,15 @@ type TelegrafPluginInputDockerConfig struct {
 type TelegrafPluginInputFile struct {
 	Comment *string                       `json:"comment,omitempty"`
 	Config  TelegrafPluginInputFileConfig `json:"config"`
-	Name    string                        `json:"name"`
-	Type    string                        `json:"type"`
+	Name    TelegrafPluginInputFileName   `json:"name"`
+	Type    TelegrafPluginInputFileType   `json:"type"`
 }
+
+// TelegrafPluginInputFileName defines model for TelegrafPluginInputFile.Name.
+type TelegrafPluginInputFileName string
+
+// TelegrafPluginInputFileType defines model for TelegrafPluginInputFile.Type.
+type TelegrafPluginInputFileType string
 
 // TelegrafPluginInputFileConfig defines model for TelegrafPluginInputFileConfig.
 type TelegrafPluginInputFileConfig struct {
@@ -2516,18 +3661,30 @@ type TelegrafPluginInputFileConfig struct {
 
 // TelegrafPluginInputKernel defines model for TelegrafPluginInputKernel.
 type TelegrafPluginInputKernel struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                       `json:"comment,omitempty"`
+	Name    TelegrafPluginInputKernelName `json:"name"`
+	Type    TelegrafPluginInputKernelType `json:"type"`
 }
+
+// TelegrafPluginInputKernelName defines model for TelegrafPluginInputKernel.Name.
+type TelegrafPluginInputKernelName string
+
+// TelegrafPluginInputKernelType defines model for TelegrafPluginInputKernel.Type.
+type TelegrafPluginInputKernelType string
 
 // TelegrafPluginInputKubernetes defines model for TelegrafPluginInputKubernetes.
 type TelegrafPluginInputKubernetes struct {
 	Comment *string                             `json:"comment,omitempty"`
 	Config  TelegrafPluginInputKubernetesConfig `json:"config"`
-	Name    string                              `json:"name"`
-	Type    string                              `json:"type"`
+	Name    TelegrafPluginInputKubernetesName   `json:"name"`
+	Type    TelegrafPluginInputKubernetesType   `json:"type"`
 }
+
+// TelegrafPluginInputKubernetesName defines model for TelegrafPluginInputKubernetes.Name.
+type TelegrafPluginInputKubernetesName string
+
+// TelegrafPluginInputKubernetesType defines model for TelegrafPluginInputKubernetes.Type.
+type TelegrafPluginInputKubernetesType string
 
 // TelegrafPluginInputKubernetesConfig defines model for TelegrafPluginInputKubernetesConfig.
 type TelegrafPluginInputKubernetesConfig struct {
@@ -2538,9 +3695,15 @@ type TelegrafPluginInputKubernetesConfig struct {
 type TelegrafPluginInputLogParser struct {
 	Comment *string                            `json:"comment,omitempty"`
 	Config  TelegrafPluginInputLogParserConfig `json:"config"`
-	Name    string                             `json:"name"`
-	Type    string                             `json:"type"`
+	Name    TelegrafPluginInputLogParserName   `json:"name"`
+	Type    TelegrafPluginInputLogParserType   `json:"type"`
 }
+
+// TelegrafPluginInputLogParserName defines model for TelegrafPluginInputLogParser.Name.
+type TelegrafPluginInputLogParserName string
+
+// TelegrafPluginInputLogParserType defines model for TelegrafPluginInputLogParser.Type.
+type TelegrafPluginInputLogParserType string
 
 // TelegrafPluginInputLogParserConfig defines model for TelegrafPluginInputLogParserConfig.
 type TelegrafPluginInputLogParserConfig struct {
@@ -2549,46 +3712,82 @@ type TelegrafPluginInputLogParserConfig struct {
 
 // TelegrafPluginInputMem defines model for TelegrafPluginInputMem.
 type TelegrafPluginInputMem struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                    `json:"comment,omitempty"`
+	Name    TelegrafPluginInputMemName `json:"name"`
+	Type    TelegrafPluginInputMemType `json:"type"`
 }
+
+// TelegrafPluginInputMemName defines model for TelegrafPluginInputMem.Name.
+type TelegrafPluginInputMemName string
+
+// TelegrafPluginInputMemType defines model for TelegrafPluginInputMem.Type.
+type TelegrafPluginInputMemType string
 
 // TelegrafPluginInputNet defines model for TelegrafPluginInputNet.
 type TelegrafPluginInputNet struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                    `json:"comment,omitempty"`
+	Name    TelegrafPluginInputNetName `json:"name"`
+	Type    TelegrafPluginInputNetType `json:"type"`
 }
+
+// TelegrafPluginInputNetName defines model for TelegrafPluginInputNet.Name.
+type TelegrafPluginInputNetName string
+
+// TelegrafPluginInputNetType defines model for TelegrafPluginInputNet.Type.
+type TelegrafPluginInputNetType string
 
 // TelegrafPluginInputNetResponse defines model for TelegrafPluginInputNetResponse.
 type TelegrafPluginInputNetResponse struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                            `json:"comment,omitempty"`
+	Name    TelegrafPluginInputNetResponseName `json:"name"`
+	Type    TelegrafPluginInputNetResponseType `json:"type"`
 }
+
+// TelegrafPluginInputNetResponseName defines model for TelegrafPluginInputNetResponse.Name.
+type TelegrafPluginInputNetResponseName string
+
+// TelegrafPluginInputNetResponseType defines model for TelegrafPluginInputNetResponse.Type.
+type TelegrafPluginInputNetResponseType string
 
 // TelegrafPluginInputNginx defines model for TelegrafPluginInputNginx.
 type TelegrafPluginInputNginx struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                      `json:"comment,omitempty"`
+	Name    TelegrafPluginInputNginxName `json:"name"`
+	Type    TelegrafPluginInputNginxType `json:"type"`
 }
+
+// TelegrafPluginInputNginxName defines model for TelegrafPluginInputNginx.Name.
+type TelegrafPluginInputNginxName string
+
+// TelegrafPluginInputNginxType defines model for TelegrafPluginInputNginx.Type.
+type TelegrafPluginInputNginxType string
 
 // TelegrafPluginInputProcesses defines model for TelegrafPluginInputProcesses.
 type TelegrafPluginInputProcesses struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                          `json:"comment,omitempty"`
+	Name    TelegrafPluginInputProcessesName `json:"name"`
+	Type    TelegrafPluginInputProcessesType `json:"type"`
 }
+
+// TelegrafPluginInputProcessesName defines model for TelegrafPluginInputProcesses.Name.
+type TelegrafPluginInputProcessesName string
+
+// TelegrafPluginInputProcessesType defines model for TelegrafPluginInputProcesses.Type.
+type TelegrafPluginInputProcessesType string
 
 // TelegrafPluginInputProcstat defines model for TelegrafPluginInputProcstat.
 type TelegrafPluginInputProcstat struct {
 	Comment *string                           `json:"comment,omitempty"`
 	Config  TelegrafPluginInputProcstatConfig `json:"config"`
-	Name    string                            `json:"name"`
-	Type    string                            `json:"type"`
+	Name    TelegrafPluginInputProcstatName   `json:"name"`
+	Type    TelegrafPluginInputProcstatType   `json:"type"`
 }
+
+// TelegrafPluginInputProcstatName defines model for TelegrafPluginInputProcstat.Name.
+type TelegrafPluginInputProcstatName string
+
+// TelegrafPluginInputProcstatType defines model for TelegrafPluginInputProcstat.Type.
+type TelegrafPluginInputProcstatType string
 
 // TelegrafPluginInputProcstatConfig defines model for TelegrafPluginInputProcstatConfig.
 type TelegrafPluginInputProcstatConfig struct {
@@ -2599,9 +3798,15 @@ type TelegrafPluginInputProcstatConfig struct {
 type TelegrafPluginInputPrometheus struct {
 	Comment *string                             `json:"comment,omitempty"`
 	Config  TelegrafPluginInputPrometheusConfig `json:"config"`
-	Name    string                              `json:"name"`
-	Type    string                              `json:"type"`
+	Name    TelegrafPluginInputPrometheusName   `json:"name"`
+	Type    TelegrafPluginInputPrometheusType   `json:"type"`
 }
+
+// TelegrafPluginInputPrometheusName defines model for TelegrafPluginInputPrometheus.Name.
+type TelegrafPluginInputPrometheusName string
+
+// TelegrafPluginInputPrometheusType defines model for TelegrafPluginInputPrometheus.Type.
+type TelegrafPluginInputPrometheusType string
 
 // TelegrafPluginInputPrometheusConfig defines model for TelegrafPluginInputPrometheusConfig.
 type TelegrafPluginInputPrometheusConfig struct {
@@ -2612,9 +3817,15 @@ type TelegrafPluginInputPrometheusConfig struct {
 type TelegrafPluginInputRedis struct {
 	Comment *string                        `json:"comment,omitempty"`
 	Config  TelegrafPluginInputRedisConfig `json:"config"`
-	Name    string                         `json:"name"`
-	Type    string                         `json:"type"`
+	Name    TelegrafPluginInputRedisName   `json:"name"`
+	Type    TelegrafPluginInputRedisType   `json:"type"`
 }
+
+// TelegrafPluginInputRedisName defines model for TelegrafPluginInputRedis.Name.
+type TelegrafPluginInputRedisName string
+
+// TelegrafPluginInputRedisType defines model for TelegrafPluginInputRedis.Type.
+type TelegrafPluginInputRedisType string
 
 // TelegrafPluginInputRedisConfig defines model for TelegrafPluginInputRedisConfig.
 type TelegrafPluginInputRedisConfig struct {
@@ -2624,18 +3835,30 @@ type TelegrafPluginInputRedisConfig struct {
 
 // TelegrafPluginInputSwap defines model for TelegrafPluginInputSwap.
 type TelegrafPluginInputSwap struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                     `json:"comment,omitempty"`
+	Name    TelegrafPluginInputSwapName `json:"name"`
+	Type    TelegrafPluginInputSwapType `json:"type"`
 }
+
+// TelegrafPluginInputSwapName defines model for TelegrafPluginInputSwap.Name.
+type TelegrafPluginInputSwapName string
+
+// TelegrafPluginInputSwapType defines model for TelegrafPluginInputSwap.Type.
+type TelegrafPluginInputSwapType string
 
 // TelegrafPluginInputSyslog defines model for TelegrafPluginInputSyslog.
 type TelegrafPluginInputSyslog struct {
 	Comment *string                         `json:"comment,omitempty"`
 	Config  TelegrafPluginInputSyslogConfig `json:"config"`
-	Name    string                          `json:"name"`
-	Type    string                          `json:"type"`
+	Name    TelegrafPluginInputSyslogName   `json:"name"`
+	Type    TelegrafPluginInputSyslogType   `json:"type"`
 }
+
+// TelegrafPluginInputSyslogName defines model for TelegrafPluginInputSyslog.Name.
+type TelegrafPluginInputSyslogName string
+
+// TelegrafPluginInputSyslogType defines model for TelegrafPluginInputSyslog.Type.
+type TelegrafPluginInputSyslogType string
 
 // TelegrafPluginInputSyslogConfig defines model for TelegrafPluginInputSyslogConfig.
 type TelegrafPluginInputSyslogConfig struct {
@@ -2644,41 +3867,68 @@ type TelegrafPluginInputSyslogConfig struct {
 
 // TelegrafPluginInputSystem defines model for TelegrafPluginInputSystem.
 type TelegrafPluginInputSystem struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                       `json:"comment,omitempty"`
+	Name    TelegrafPluginInputSystemName `json:"name"`
+	Type    TelegrafPluginInputSystemType `json:"type"`
 }
+
+// TelegrafPluginInputSystemName defines model for TelegrafPluginInputSystem.Name.
+type TelegrafPluginInputSystemName string
+
+// TelegrafPluginInputSystemType defines model for TelegrafPluginInputSystem.Type.
+type TelegrafPluginInputSystemType string
 
 // TelegrafPluginInputTail defines model for TelegrafPluginInputTail.
 type TelegrafPluginInputTail struct {
-	Comment *string `json:"comment,omitempty"`
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
+	Comment *string                     `json:"comment,omitempty"`
+	Name    TelegrafPluginInputTailName `json:"name"`
+	Type    TelegrafPluginInputTailType `json:"type"`
 }
+
+// TelegrafPluginInputTailName defines model for TelegrafPluginInputTail.Name.
+type TelegrafPluginInputTailName string
+
+// TelegrafPluginInputTailType defines model for TelegrafPluginInputTail.Type.
+type TelegrafPluginInputTailType string
 
 // TelegrafPluginOutputFile defines model for TelegrafPluginOutputFile.
 type TelegrafPluginOutputFile struct {
 	Comment *string                        `json:"comment,omitempty"`
 	Config  TelegrafPluginOutputFileConfig `json:"config"`
-	Name    string                         `json:"name"`
-	Type    string                         `json:"type"`
+	Name    TelegrafPluginOutputFileName   `json:"name"`
+	Type    TelegrafPluginOutputFileType   `json:"type"`
 }
+
+// TelegrafPluginOutputFileName defines model for TelegrafPluginOutputFile.Name.
+type TelegrafPluginOutputFileName string
+
+// TelegrafPluginOutputFileType defines model for TelegrafPluginOutputFile.Type.
+type TelegrafPluginOutputFileType string
 
 // TelegrafPluginOutputFileConfig defines model for TelegrafPluginOutputFileConfig.
 type TelegrafPluginOutputFileConfig struct {
 	Files []struct {
-		Path *string `json:"path,omitempty"`
-		Type *string `json:"type,omitempty"`
+		Path *string                                  `json:"path,omitempty"`
+		Type *TelegrafPluginOutputFileConfigFilesType `json:"type,omitempty"`
 	} `json:"files"`
 }
+
+// TelegrafPluginOutputFileConfigFilesType defines model for TelegrafPluginOutputFileConfig.Files.Type.
+type TelegrafPluginOutputFileConfigFilesType string
 
 // TelegrafPluginOutputInfluxDBV2 defines model for TelegrafPluginOutputInfluxDBV2.
 type TelegrafPluginOutputInfluxDBV2 struct {
 	Comment *string                              `json:"comment,omitempty"`
 	Config  TelegrafPluginOutputInfluxDBV2Config `json:"config"`
-	Name    string                               `json:"name"`
-	Type    string                               `json:"type"`
+	Name    TelegrafPluginOutputInfluxDBV2Name   `json:"name"`
+	Type    TelegrafPluginOutputInfluxDBV2Type   `json:"type"`
 }
+
+// TelegrafPluginOutputInfluxDBV2Name defines model for TelegrafPluginOutputInfluxDBV2.Name.
+type TelegrafPluginOutputInfluxDBV2Name string
+
+// TelegrafPluginOutputInfluxDBV2Type defines model for TelegrafPluginOutputInfluxDBV2.Type.
+type TelegrafPluginOutputInfluxDBV2Type string
 
 // TelegrafPluginOutputInfluxDBV2Config defines model for TelegrafPluginOutputInfluxDBV2Config.
 type TelegrafPluginOutputInfluxDBV2Config struct {
@@ -2757,9 +4007,12 @@ type ThresholdCheck struct {
 		Key   *string `json:"key,omitempty"`
 		Value *string `json:"value,omitempty"`
 	} `json:"tags,omitempty"`
-	Thresholds *[]Threshold `json:"thresholds,omitempty"`
-	Type       string       `json:"type"`
+	Thresholds *[]Threshold       `json:"thresholds,omitempty"`
+	Type       ThresholdCheckType `json:"type"`
 }
+
+// ThresholdCheckType defines model for ThresholdCheck.Type.
+type ThresholdCheckType string
 
 // UnaryExpression defines model for UnaryExpression.
 type UnaryExpression struct {
@@ -2789,8 +4042,11 @@ type User struct {
 	OauthID *string `json:"oauthID,omitempty"`
 
 	// If inactive the user is inactive.
-	Status *string `json:"status,omitempty"`
+	Status *UserStatus `json:"status,omitempty"`
 }
+
+// UserStatus defines model for User.Status.
+type UserStatus string
 
 // Users defines model for Users.
 type Users struct {
@@ -2875,20 +4131,29 @@ type XYViewProperties struct {
 	Geom   XYGeom           `json:"geom"`
 
 	// Legend define encoding of data into a view's legend
-	Legend     Legend           `json:"legend"`
-	Note       string           `json:"note"`
-	Position   string           `json:"position"`
-	Queries    []DashboardQuery `json:"queries"`
-	ShadeBelow *bool            `json:"shadeBelow,omitempty"`
-	Shape      string           `json:"shape"`
+	Legend     Legend                   `json:"legend"`
+	Note       string                   `json:"note"`
+	Position   XYViewPropertiesPosition `json:"position"`
+	Queries    []DashboardQuery         `json:"queries"`
+	ShadeBelow *bool                    `json:"shadeBelow,omitempty"`
+	Shape      XYViewPropertiesShape    `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool    `json:"showNoteWhenEmpty"`
-	TimeFormat        *string `json:"timeFormat,omitempty"`
-	Type              string  `json:"type"`
-	XColumn           *string `json:"xColumn,omitempty"`
-	YColumn           *string `json:"yColumn,omitempty"`
+	ShowNoteWhenEmpty bool                 `json:"showNoteWhenEmpty"`
+	TimeFormat        *string              `json:"timeFormat,omitempty"`
+	Type              XYViewPropertiesType `json:"type"`
+	XColumn           *string              `json:"xColumn,omitempty"`
+	YColumn           *string              `json:"yColumn,omitempty"`
 }
+
+// XYViewPropertiesPosition defines model for XYViewProperties.Position.
+type XYViewPropertiesPosition string
+
+// XYViewPropertiesShape defines model for XYViewProperties.Shape.
+type XYViewPropertiesShape string
+
+// XYViewPropertiesType defines model for XYViewProperties.Type.
+type XYViewPropertiesType string
 
 // Descending defines model for Descending.
 type Descending bool
@@ -3185,7 +4450,7 @@ type GetDashboardsParams struct {
 	Owner *string `json:"owner,omitempty"`
 
 	// The column to sort by.
-	SortBy *string `json:"sortBy,omitempty"`
+	SortBy *GetDashboardsParamsSortBy `json:"sortBy,omitempty"`
 
 	// List of dashboard IDs to return. If both `id and `owner` are specified, only `id` is used.
 	Id *[]string `json:"id,omitempty"`
@@ -3199,6 +4464,9 @@ type GetDashboardsParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
+
+// GetDashboardsParamsSortBy defines parameters for GetDashboards.
+type GetDashboardsParamsSortBy string
 
 // PostDashboardsJSONBody defines parameters for PostDashboards.
 type PostDashboardsJSONBody CreateDashboardRequest
@@ -3221,11 +4489,14 @@ type DeleteDashboardsIDParams struct {
 type GetDashboardsIDParams struct {
 
 	// Includes the cell view properties in the response if set to `properties`
-	Include *string `json:"include,omitempty"`
+	Include *GetDashboardsIDParamsInclude `json:"include,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
+
+// GetDashboardsIDParamsInclude defines parameters for GetDashboardsID.
+type GetDashboardsIDParamsInclude string
 
 // PatchDashboardsIDJSONBody defines parameters for PatchDashboardsID.
 type PatchDashboardsIDJSONBody Dashboard
@@ -3862,9 +5133,15 @@ type PostQueryParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
 	// The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
-	AcceptEncoding *string `json:"Accept-Encoding,omitempty"`
-	ContentType    *string `json:"Content-Type,omitempty"`
+	AcceptEncoding *PostQueryParamsAcceptEncoding `json:"Accept-Encoding,omitempty"`
+	ContentType    *PostQueryParamsContentType    `json:"Content-Type,omitempty"`
 }
+
+// PostQueryParamsAcceptEncoding defines parameters for PostQuery.
+type PostQueryParamsAcceptEncoding string
+
+// PostQueryParamsContentType defines parameters for PostQuery.
+type PostQueryParamsContentType string
 
 // PostQueryAnalyzeJSONBody defines parameters for PostQueryAnalyze.
 type PostQueryAnalyzeJSONBody Query
@@ -3873,9 +5150,12 @@ type PostQueryAnalyzeJSONBody Query
 type PostQueryAnalyzeParams struct {
 
 	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-	ContentType  *string    `json:"Content-Type,omitempty"`
+	ZapTraceSpan *TraceSpan                         `json:"Zap-Trace-Span,omitempty"`
+	ContentType  *PostQueryAnalyzeParamsContentType `json:"Content-Type,omitempty"`
 }
+
+// PostQueryAnalyzeParamsContentType defines parameters for PostQueryAnalyze.
+type PostQueryAnalyzeParamsContentType string
 
 // PostQueryAstJSONBody defines parameters for PostQueryAst.
 type PostQueryAstJSONBody LanguageRequest
@@ -3884,9 +5164,12 @@ type PostQueryAstJSONBody LanguageRequest
 type PostQueryAstParams struct {
 
 	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-	ContentType  *string    `json:"Content-Type,omitempty"`
+	ZapTraceSpan *TraceSpan                     `json:"Zap-Trace-Span,omitempty"`
+	ContentType  *PostQueryAstParamsContentType `json:"Content-Type,omitempty"`
 }
+
+// PostQueryAstParamsContentType defines parameters for PostQueryAst.
+type PostQueryAstParamsContentType string
 
 // GetQuerySuggestionsParams defines parameters for GetQuerySuggestions.
 type GetQuerySuggestionsParams struct {
@@ -4155,7 +5438,7 @@ type GetTasksParams struct {
 	OrgID *string `json:"orgID,omitempty"`
 
 	// Filter tasks by a status--"inactive" or "active".
-	Status *string `json:"status,omitempty"`
+	Status *GetTasksParamsStatus `json:"status,omitempty"`
 
 	// The number of tasks to return
 	Limit *int `json:"limit,omitempty"`
@@ -4163,6 +5446,9 @@ type GetTasksParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
+
+// GetTasksParamsStatus defines parameters for GetTasks.
+type GetTasksParamsStatus string
 
 // PostTasksJSONBody defines parameters for PostTasks.
 type PostTasksJSONBody TaskCreateRequest
@@ -4375,9 +5661,12 @@ type DeleteTelegrafsIDParams struct {
 type GetTelegrafsIDParams struct {
 
 	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-	Accept       *string    `json:"Accept,omitempty"`
+	ZapTraceSpan *TraceSpan                  `json:"Zap-Trace-Span,omitempty"`
+	Accept       *GetTelegrafsIDParamsAccept `json:"Accept,omitempty"`
 }
+
+// GetTelegrafsIDParamsAccept defines parameters for GetTelegrafsID.
+type GetTelegrafsIDParamsAccept string
 
 // PutTelegrafsIDJSONBody defines parameters for PutTelegrafsID.
 type PutTelegrafsIDJSONBody TelegrafRequest
@@ -4621,17 +5910,26 @@ type PostWriteParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
 	// When present, its value indicates to the database that compression is applied to the line-protocol body.
-	ContentEncoding *string `json:"Content-Encoding,omitempty"`
+	ContentEncoding *PostWriteParamsContentEncoding `json:"Content-Encoding,omitempty"`
 
 	// Content-Type is used to indicate the format of the data sent to the server.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *PostWriteParamsContentType `json:"Content-Type,omitempty"`
 
 	// Content-Length is an entity header is indicating the size of the entity-body, in bytes, sent to the database. If the length is greater than the database max body configuration option, a 413 response is sent.
 	ContentLength *int `json:"Content-Length,omitempty"`
 
 	// Specifies the return content format.
-	Accept *string `json:"Accept,omitempty"`
+	Accept *PostWriteParamsAccept `json:"Accept,omitempty"`
 }
+
+// PostWriteParamsContentEncoding defines parameters for PostWrite.
+type PostWriteParamsContentEncoding string
+
+// PostWriteParamsContentType defines parameters for PostWrite.
+type PostWriteParamsContentType string
+
+// PostWriteParamsAccept defines parameters for PostWrite.
+type PostWriteParamsAccept string
 
 // PostAuthorizationsRequestBody defines body for PostAuthorizations for application/json ContentType.
 type PostAuthorizationsJSONRequestBody PostAuthorizationsJSONBody

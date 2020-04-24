@@ -1,0 +1,86 @@
+// ClientWithResponses builds on ClientInterface to offer response payloads
+type ClientWithResponses struct {
+    ClientInterface
+}
+
+// NewClientWithResponses creates a new ClientWithResponses, which wraps
+// Client with return type handling
+func NewClientWithResponses(service ihttp.Service) (*ClientWithResponses) {
+	client := NewClient(service)
+	return &ClientWithResponses{client}
+}
+
+{{range .}}{{$opid := .OperationId}}{{$op := .}}
+type {{$opid | lcFirst}}Response struct {
+    Body         []byte
+	HTTPResponse *http.Response
+    {{- range getResponseTypeDefinitions .}}
+    {{.TypeName}} *{{.Schema.TypeDecl}}
+    {{- end}}
+}
+
+// Status returns HTTPResponse.Status
+func (r {{$opid | lcFirst}}Response) Status() string {
+    if r.HTTPResponse != nil {
+        return r.HTTPResponse.Status
+    }
+    return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r {{$opid | lcFirst}}Response) StatusCode() int {
+    if r.HTTPResponse != nil {
+        return r.HTTPResponse.StatusCode
+    }
+    return 0
+}
+{{end}}
+
+
+{{range .}}
+{{$opid := .OperationId -}}
+{{/* Generate client methods (with responses)*/}}
+
+// {{$opid}}{{if .HasBody}}WithBody{{end}}WithResponse request{{if .HasBody}} with arbitrary body{{end}} returning *{{$opid}}Response
+func (c *ClientWithResponses) {{$opid}}{{if .HasBody}}WithBody{{end}}WithResponse(ctx context.Context{{genParamArgs .PathParams}}{{if .RequiresParamObject}}, params *{{$opid}}Params{{end}}{{if .HasBody}}, contentType string, body io.Reader{{end}}) (*{{genResponseTypeName $opid}}, error){
+    rsp, err := c.{{$opid}}{{if .HasBody}}WithBody{{end}}(ctx{{genParamNames .PathParams}}{{if .RequiresParamObject}}, params{{end}}{{if .HasBody}}, contentType, body{{end}})
+    if err != nil {
+        return nil, err
+    }
+    return Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
+}
+
+{{$hasParams := .RequiresParamObject -}}
+{{$pathParams := .PathParams -}}
+{{$bodyRequired := .BodyRequired -}}
+{{range .Bodies}}
+func (c *ClientWithResponses) {{$opid}}{{.Suffix}}WithResponse(ctx context.Context{{genParamArgs $pathParams}}{{if $hasParams}}, params *{{$opid}}Params{{end}}, body {{$opid}}{{.NameTag}}RequestBody) (*{{genResponseTypeName $opid}}, error) {
+    rsp, err := c.{{$opid}}{{.Suffix}}(ctx{{genParamNames $pathParams}}{{if $hasParams}}, params{{end}}, body)
+    if err != nil {
+        return nil, err
+    }
+    return Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
+}
+{{end}}
+
+{{end}}{{/* operations */}}
+
+{{/* Generate parse functions for responses*/}}
+{{range .}}{{$opid := .OperationId}}
+
+// Parse{{genResponseTypeName $opid | ucFirst}} parses an HTTP response from a {{$opid}}WithResponse call
+func Parse{{genResponseTypeName $opid | ucFirst}}(rsp *http.Response) (*{{genResponseTypeName $opid}}, error) {
+    bodyBytes, err := ioutil.ReadAll(rsp.Body)
+    defer rsp.Body.Close()
+    if err != nil {
+        return nil, err
+    }
+
+    response := {{genResponsePayload $opid}}
+
+    {{genResponseUnmarshal .}}
+
+    return response, nil
+}
+{{end}}{{/* range . $opid := .OperationId */}}
+

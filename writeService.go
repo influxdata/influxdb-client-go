@@ -7,10 +7,10 @@ package influxdb2
 import (
 	"bytes"
 	"context"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"io"
 	"net/http"
 	"net/url"
-	"path"
 	"strings"
 	"sync"
 	"time"
@@ -31,20 +31,21 @@ type batch struct {
 type writeService struct {
 	org              string
 	bucket           string
-	client           InfluxDBClient
+	httpService      ihttp.Service
 	url              string
 	lastWriteAttempt time.Time
 	retryQueue       *queue
 	lock             sync.Mutex
+	client           InfluxDBClient
 }
 
-func newWriteService(org string, bucket string, client InfluxDBClient) *writeService {
+func newWriteService(org string, bucket string, httpService ihttp.Service, client InfluxDBClient) *writeService {
 	logger.SetDebugLevel(client.Options().LogLevel())
 	retryBufferLimit := client.Options().RetryBufferLimit() / client.Options().BatchSize()
 	if retryBufferLimit == 0 {
 		retryBufferLimit = 1
 	}
-	return &writeService{org: org, bucket: bucket, client: client, retryQueue: newQueue(int(retryBufferLimit))}
+	return &writeService{org: org, bucket: bucket, httpService: httpService, client: client, retryQueue: newQueue(int(retryBufferLimit))}
 }
 
 func (w *writeService) handleWrite(ctx context.Context, batch *batch) error {
@@ -111,11 +112,17 @@ func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
 		}
 	}
 	w.lastWriteAttempt = time.Now()
-	perror := w.client.postRequest(ctx, wUrl, body, func(req *http.Request) {
+	perror := w.httpService.PostRequest(ctx, wUrl, body, func(req *http.Request) {
 		if w.client.Options().UseGZip() {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
-	}, nil)
+	}, func(r *http.Response) error {
+		// discard body so connection can be reused
+		//_, _ = io.Copy(ioutil.Discard, r.Body)
+		//_ = r.Body.Close()
+		return nil
+	})
+
 	if perror != nil {
 		if perror.StatusCode == http.StatusTooManyRequests || perror.StatusCode == http.StatusServiceUnavailable {
 			logger.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
@@ -133,8 +140,6 @@ func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
 			logger.Errorf("Write error: %s\n", perror.Error())
 		}
 		return perror
-	} else {
-		w.lastWriteAttempt = time.Now()
 	}
 	return nil
 }
@@ -156,12 +161,14 @@ func (w *writeService) encodePoints(points ...*Point) (string, error) {
 
 func (w *writeService) writeUrl() (string, error) {
 	if w.url == "" {
-		u, err := url.Parse(w.client.ServerUrl())
+		u, err := url.Parse(w.httpService.ServerApiUrl())
 		if err != nil {
 			return "", err
 		}
-		u.Path = path.Join(u.Path, "/api/v2/write")
-
+		u, err = u.Parse("write")
+		if err != nil {
+			return "", err
+		}
 		params := u.Query()
 		params.Set("org", w.org)
 		params.Set("bucket", w.bucket)

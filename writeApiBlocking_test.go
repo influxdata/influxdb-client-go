@@ -15,12 +15,8 @@ import (
 )
 
 func TestWritePoint(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetBatchSize(5)
 	writeApi := newWriteApiBlockingImpl("my-org", "my-bucket", service, client)
 	points := genPoints(10)
@@ -36,12 +32,8 @@ func TestWritePoint(t *testing.T) {
 }
 
 func TestWriteRecord(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetBatchSize(5)
 	writeApi := newWriteApiBlockingImpl("my-org", "my-bucket", service, client)
 	lines := genRecords(10)
@@ -64,12 +56,8 @@ func TestWriteRecord(t *testing.T) {
 }
 
 func TestWriteContextCancel(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetBatchSize(5)
 	writeApi := newWriteApiBlockingImpl("my-org", "my-bucket", service, client)
 	lines := genRecords(10)

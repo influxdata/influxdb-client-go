@@ -84,7 +84,7 @@ func (t *testHttpService) PostRequest(_ context.Context, url string, body io.Rea
 		body, _ = gzip.NewReader(body)
 		t.wasGzip = true
 	}
-	assert.Equal(t.t, url, fmt.Sprintf("%s/api/v2/write?bucket=my-bucket&org=my-org&precision=ns", t.serverUrl))
+	assert.Equal(t.t, fmt.Sprintf("%swrite?bucket=my-bucket&org=my-org&precision=ns", t.serverUrl), url)
 
 	if t.ReplyError() != nil {
 		return t.ReplyError()
@@ -119,6 +119,18 @@ func (t *testHttpService) Lines() []string {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	return t.lines
+}
+
+func newTestClient() *client {
+	return &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+}
+
+func newTestService(t *testing.T, client InfluxDBClient) *testHttpService {
+	return &testHttpService{
+		t:         t,
+		options:   client.Options(),
+		serverUrl: client.ServerUrl() + "/api/v2/",
+	}
 }
 
 func genPoints(num int) []*Point {
@@ -165,12 +177,8 @@ func genRecords(num int) []string {
 }
 
 func TestWriteApiImpl_Write(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetBatchSize(5)
 	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(10)
@@ -188,12 +196,8 @@ func TestWriteApiImpl_Write(t *testing.T) {
 }
 
 func TestGzipWithFlushing(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetBatchSize(5).SetUseGZip(true)
 	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(5)
@@ -216,12 +220,8 @@ func TestGzipWithFlushing(t *testing.T) {
 	writeApi.Close()
 }
 func TestFlushInterval(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetBatchSize(10).SetFlushInterval(500)
 	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
 	points := genPoints(5)
@@ -247,12 +247,8 @@ func TestFlushInterval(t *testing.T) {
 }
 
 func TestRetry(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetLogLevel(3).
 		SetBatchSize(5).
 		SetRetryInterval(10000)
@@ -291,12 +287,8 @@ func TestRetry(t *testing.T) {
 }
 
 func TestWriteError(t *testing.T) {
-	client := &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-	service := &testHttpService{
-		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl(),
-	}
+	client := newTestClient()
+	service := newTestService(t, client)
 	client.options.SetLogLevel(3).SetBatchSize(5)
 	service.replyError = &ihttp.Error{
 		StatusCode: 400,

@@ -41,7 +41,6 @@ type ResponseCallback func(resp *http.Response) error
 func NewService(serverUrl, authorization string, tlsConfig *tls.Config) Service {
 	apiUrl, err := url.Parse(serverUrl)
 	if err == nil {
-		//apiUrl.Path = path.Join(apiUrl.Path, "/api/v2/")
 		apiUrl, err = apiUrl.Parse("/api/v2/")
 		if err == nil {
 			serverUrl = apiUrl.String()

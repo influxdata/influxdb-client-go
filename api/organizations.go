@@ -1,3 +1,7 @@
+// Copyright 2020 InfluxData, Inc. All rights reserved.
+// Use of this source code is governed by MIT
+// license that can be found in the LICENSE file.
+
 package api
 
 import (
@@ -10,7 +14,7 @@ import (
 type OrganizationsApi interface {
 	// GetOrganizations returns all organizations
 	GetOrganizations(ctx context.Context) (*[]domain.Organization, error)
-	// FindOrganizationByName returns an organization found using orgNme
+	// FindOrganizationByName returns an organization found using orgName
 	FindOrganizationByName(ctx context.Context, orgName string) (*domain.Organization, error)
 	// FindOrganizationById returns an organization found using orgId
 	FindOrganizationById(ctx context.Context, orgId string) (*domain.Organization, error)

@@ -718,10 +718,10 @@ type ClientInterface interface {
 	// GetUsersIDLogs request
 	GetUsersIDLogs(ctx context.Context, userID string, params *GetUsersIDLogsParams) (*http.Response, error)
 
-	// PutUsersIDPassword request  with any body
-	PutUsersIDPasswordWithBody(ctx context.Context, userID string, params *PutUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error)
+	// PostUsersIDPassword request  with any body
+	PostUsersIDPasswordWithBody(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error)
 
-	PutUsersIDPassword(ctx context.Context, userID string, params *PutUsersIDPasswordParams, body PutUsersIDPasswordJSONRequestBody) (*http.Response, error)
+	PostUsersIDPassword(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*http.Response, error)
 
 	// GetVariables request
 	GetVariables(ctx context.Context, params *GetVariablesParams) (*http.Response, error)
@@ -5029,8 +5029,8 @@ func (c *Client) GetUsersIDLogs(ctx context.Context, userID string, params *GetU
 	return res, nil
 }
 
-func (c *Client) PutUsersIDPasswordWithBody(ctx context.Context, userID string, params *PutUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutUsersIDPasswordRequestWithBody(c.service.ServerApiUrl(), userID, params, contentType, body)
+func (c *Client) PostUsersIDPasswordWithBody(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostUsersIDPasswordRequestWithBody(c.service.ServerApiUrl(), userID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -5046,8 +5046,8 @@ func (c *Client) PutUsersIDPasswordWithBody(ctx context.Context, userID string, 
 	return res, nil
 }
 
-func (c *Client) PutUsersIDPassword(ctx context.Context, userID string, params *PutUsersIDPasswordParams, body PutUsersIDPasswordJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutUsersIDPasswordRequest(c.service.ServerApiUrl(), userID, params, body)
+func (c *Client) PostUsersIDPassword(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostUsersIDPasswordRequest(c.service.ServerApiUrl(), userID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10269,6 +10269,22 @@ func NewGetOrgsRequest(server string, params *GetOrgsParams) (*http.Request, err
 
 	}
 
+	if params.UserID != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "userID", *params.UserID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
 	queryUrl.RawQuery = queryValues.Encode()
 
 	req, err := http.NewRequest("GET", queryUrl.String(), nil)
@@ -15314,19 +15330,19 @@ func NewGetUsersIDLogsRequest(server string, userID string, params *GetUsersIDLo
 	return req, nil
 }
 
-// NewPutUsersIDPasswordRequest calls the generic PutUsersIDPassword builder with application/json body
-func NewPutUsersIDPasswordRequest(server string, userID string, params *PutUsersIDPasswordParams, body PutUsersIDPasswordJSONRequestBody) (*http.Request, error) {
+// NewPostUsersIDPasswordRequest calls the generic PostUsersIDPassword builder with application/json body
+func NewPostUsersIDPasswordRequest(server string, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewPutUsersIDPasswordRequestWithBody(server, userID, params, "application/json", bodyReader)
+	return NewPostUsersIDPasswordRequestWithBody(server, userID, params, "application/json", bodyReader)
 }
 
-// NewPutUsersIDPasswordRequestWithBody generates requests for PutUsersIDPassword with any type of body
-func NewPutUsersIDPasswordRequestWithBody(server string, userID string, params *PutUsersIDPasswordParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewPostUsersIDPasswordRequestWithBody generates requests for PostUsersIDPassword with any type of body
+func NewPostUsersIDPasswordRequestWithBody(server string, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -15351,7 +15367,7 @@ func NewPutUsersIDPasswordRequestWithBody(server string, userID string, params *
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryUrl.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -20198,14 +20214,14 @@ func (r getUsersIDLogsResponse) StatusCode() int {
 	return 0
 }
 
-type putUsersIDPasswordResponse struct {
+type postUsersIDPasswordResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r putUsersIDPasswordResponse) Status() string {
+func (r postUsersIDPasswordResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -20213,7 +20229,7 @@ func (r putUsersIDPasswordResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putUsersIDPasswordResponse) StatusCode() int {
+func (r postUsersIDPasswordResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -22644,21 +22660,21 @@ func (c *ClientWithResponses) GetUsersIDLogsWithResponse(ctx context.Context, us
 	return ParseGetUsersIDLogsResponse(rsp)
 }
 
-// PutUsersIDPasswordWithBodyWithResponse request with arbitrary body returning *PutUsersIDPasswordResponse
-func (c *ClientWithResponses) PutUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PutUsersIDPasswordParams, contentType string, body io.Reader) (*putUsersIDPasswordResponse, error) {
-	rsp, err := c.PutUsersIDPasswordWithBody(ctx, userID, params, contentType, body)
+// PostUsersIDPasswordWithBodyWithResponse request with arbitrary body returning *PostUsersIDPasswordResponse
+func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*postUsersIDPasswordResponse, error) {
+	rsp, err := c.PostUsersIDPasswordWithBody(ctx, userID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePutUsersIDPasswordResponse(rsp)
+	return ParsePostUsersIDPasswordResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutUsersIDPasswordWithResponse(ctx context.Context, userID string, params *PutUsersIDPasswordParams, body PutUsersIDPasswordJSONRequestBody) (*putUsersIDPasswordResponse, error) {
-	rsp, err := c.PutUsersIDPassword(ctx, userID, params, body)
+func (c *ClientWithResponses) PostUsersIDPasswordWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*postUsersIDPasswordResponse, error) {
+	rsp, err := c.PostUsersIDPassword(ctx, userID, params, body)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePutUsersIDPasswordResponse(rsp)
+	return ParsePostUsersIDPasswordResponse(rsp)
 }
 
 // GetVariablesWithResponse request returning *GetVariablesResponse
@@ -28820,15 +28836,15 @@ func ParseGetUsersIDLogsResponse(rsp *http.Response) (*getUsersIDLogsResponse, e
 	return response, nil
 }
 
-// ParsePutUsersIDPasswordResponse parses an HTTP response from a PutUsersIDPasswordWithResponse call
-func ParsePutUsersIDPasswordResponse(rsp *http.Response) (*putUsersIDPasswordResponse, error) {
+// ParsePostUsersIDPasswordResponse parses an HTTP response from a PostUsersIDPasswordWithResponse call
+func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*postUsersIDPasswordResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putUsersIDPasswordResponse{
+	response := &postUsersIDPasswordResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

@@ -2892,6 +2892,9 @@ type Query struct {
 	// Represents a source from a single file
 	Extern *File `json:"extern,omitempty"`
 
+	// Specifies the time that should be reported as "now" in the query. Default is the server's now time.
+	Now *time.Time `json:"now,omitempty"`
+
 	// Query script to execute.
 	Query string `json:"query"`
 
@@ -4965,6 +4968,9 @@ type GetOrgsParams struct {
 	// Filter organizations to a specific organization ID.
 	OrgID *string `json:"orgID,omitempty"`
 
+	// Filter organizations to a specific user ID.
+	UserID *string `json:"userID,omitempty"`
+
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
@@ -5800,11 +5806,11 @@ type GetUsersIDLogsParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// PutUsersIDPasswordJSONBody defines parameters for PutUsersIDPassword.
-type PutUsersIDPasswordJSONBody PasswordResetBody
+// PostUsersIDPasswordJSONBody defines parameters for PostUsersIDPassword.
+type PostUsersIDPasswordJSONBody PasswordResetBody
 
-// PutUsersIDPasswordParams defines parameters for PutUsersIDPassword.
-type PutUsersIDPasswordParams struct {
+// PostUsersIDPasswordParams defines parameters for PostUsersIDPassword.
+type PostUsersIDPasswordParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -6138,8 +6144,8 @@ type PostUsersJSONRequestBody PostUsersJSONBody
 // PatchUsersIDRequestBody defines body for PatchUsersID for application/json ContentType.
 type PatchUsersIDJSONRequestBody PatchUsersIDJSONBody
 
-// PutUsersIDPasswordRequestBody defines body for PutUsersIDPassword for application/json ContentType.
-type PutUsersIDPasswordJSONRequestBody PutUsersIDPasswordJSONBody
+// PostUsersIDPasswordRequestBody defines body for PostUsersIDPassword for application/json ContentType.
+type PostUsersIDPasswordJSONRequestBody PostUsersIDPasswordJSONBody
 
 // PostVariablesRequestBody defines body for PostVariables for application/json ContentType.
 type PostVariablesJSONRequestBody PostVariablesJSONBody

@@ -1,3 +1,7 @@
+// Copyright 2020 InfluxData, Inc. All rights reserved.
+// Use of this source code is governed by MIT
+// license that can be found in the LICENSE file.
+
 package http
 
 import (
@@ -41,7 +45,6 @@ type ResponseCallback func(resp *http.Response) error
 func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequestTimeout uint) Service {
 	apiUrl, err := url.Parse(serverUrl)
 	if err == nil {
-		//apiUrl.Path = path.Join(apiUrl.Path, "/api/v2/")
 		apiUrl, err = apiUrl.Parse("/api/v2/")
 		if err == nil {
 			serverUrl = apiUrl.String()

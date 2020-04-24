@@ -137,7 +137,7 @@ func TestAuthorizationsApi(t *testing.T) {
 	}
 	client := NewClient("http://localhost:9999", authToken)
 	authApi := client.AuthorizationsApi()
-	listRes, err := authApi.FindAuthorizations(context.Background())
+	listRes, err := authApi.GetAuthorizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 1)
@@ -156,12 +156,12 @@ func TestAuthorizationsApi(t *testing.T) {
 	}
 	permissions := []domain.Permission{*permission}
 
-	auth, err := authApi.CreateAuthorizationWithOrgID(context.Background(), *org.Id, permissions)
+	auth, err := authApi.CreateAuthorizationWithOrgId(context.Background(), *org.Id, permissions)
 	require.Nil(t, err)
 	require.NotNil(t, auth)
 	assert.Equal(t, domain.AuthorizationUpdateRequestStatusActive, *auth.Status, *auth.Status)
 
-	listRes, err = authApi.FindAuthorizations(context.Background())
+	listRes, err = authApi.GetAuthorizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
@@ -171,7 +171,7 @@ func TestAuthorizationsApi(t *testing.T) {
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
 
-	listRes, err = authApi.FindAuthorizationsByOrgID(context.Background(), *org.Id)
+	listRes, err = authApi.FindAuthorizationsByOrgId(context.Background(), *org.Id)
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
@@ -191,7 +191,7 @@ func TestAuthorizationsApi(t *testing.T) {
 	require.NotNil(t, auth)
 	assert.Equal(t, domain.AuthorizationUpdateRequestStatusInactive, *auth.Status, *auth.Status)
 
-	listRes, err = authApi.FindAuthorizations(context.Background())
+	listRes, err = authApi.GetAuthorizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
@@ -199,7 +199,7 @@ func TestAuthorizationsApi(t *testing.T) {
 	err = authApi.DeleteAuthorization(context.Background(), *auth.Id)
 	require.Nil(t, err)
 
-	listRes, err = authApi.FindAuthorizations(context.Background())
+	listRes, err = authApi.GetAuthorizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 1)

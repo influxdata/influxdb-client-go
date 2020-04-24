@@ -407,12 +407,12 @@ func TestQueryRawResult(t *testing.T) {
 					w.Header().Set("Content-Type", "text/csv")
 					w.Header().Set("Content-Encoding", "gzip")
 					w.WriteHeader(http.StatusOK)
-					w.Write(bytes)
+					_, _ = w.Write(bytes)
 				}
 			}
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)

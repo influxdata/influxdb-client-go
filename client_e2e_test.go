@@ -8,6 +8,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/influxdata/influxdb-client-go/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"strconv"
@@ -62,6 +63,14 @@ func TestWrite(t *testing.T) {
 	}
 	client := NewClientWithOptions("http://localhost:9999", authToken, DefaultOptions().SetLogLevel(3))
 	writeApi := client.WriteApi("my-org", "my-bucket")
+	errCh := writeApi.Errors()
+	errorsCount := 0
+	go func() {
+		for err := range errCh {
+			errorsCount++
+			fmt.Println("Write error: ", err.Error())
+		}
+	}()
 	for i, f := 0, 3.3; i < 10; i++ {
 		writeApi.WriteRecord(fmt.Sprintf("test,a=%d,b=local f=%.2f,i=%di", i%2, f, i))
 		//writeApi.Flush()
@@ -78,6 +87,7 @@ func TestWrite(t *testing.T) {
 	}
 
 	client.Close()
+	assert.Equal(t, 0, errorsCount)
 
 }
 
@@ -119,4 +129,79 @@ func TestQuery(t *testing.T) {
 			t.Error(result.Err())
 		}
 	}
+}
+
+func TestAuthorizationsApi(t *testing.T) {
+	if !e2e {
+		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
+	}
+	client := NewClient("http://localhost:9999", authToken)
+	authApi := client.AuthorizationsApi()
+	listRes, err := authApi.GetAuthorizations(context.Background())
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 1)
+
+	orgName := "my-org"
+	org, err := client.OrganizationsApi().FindOrganizationByName(context.Background(), orgName)
+	require.Nil(t, err)
+	require.NotNil(t, org)
+	assert.Equal(t, orgName, org.Name)
+
+	permission := &domain.Permission{
+		Action: domain.PermissionActionWrite,
+		Resource: domain.Resource{
+			Type: domain.ResourceTypeBuckets,
+		},
+	}
+	permissions := []domain.Permission{*permission}
+
+	auth, err := authApi.CreateAuthorizationWithOrgId(context.Background(), *org.Id, permissions)
+	require.Nil(t, err)
+	require.NotNil(t, auth)
+	assert.Equal(t, domain.AuthorizationUpdateRequestStatusActive, *auth.Status, *auth.Status)
+
+	listRes, err = authApi.GetAuthorizations(context.Background())
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 2)
+
+	listRes, err = authApi.FindAuthorizationsByUserName(context.Background(), "my-user")
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 2)
+
+	listRes, err = authApi.FindAuthorizationsByOrgId(context.Background(), *org.Id)
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 2)
+
+	listRes, err = authApi.FindAuthorizationsByOrgName(context.Background(), "my-org")
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 2)
+
+	listRes, err = authApi.FindAuthorizationsByOrgName(context.Background(), "not-existent-org")
+	require.Nil(t, listRes)
+	require.NotNil(t, err)
+	//assert.Len(t, *listRes, 0)
+
+	auth, err = authApi.UpdateAuthorizationStatus(context.Background(), *auth.Id, domain.AuthorizationUpdateRequestStatusInactive)
+	require.Nil(t, err)
+	require.NotNil(t, auth)
+	assert.Equal(t, domain.AuthorizationUpdateRequestStatusInactive, *auth.Status, *auth.Status)
+
+	listRes, err = authApi.GetAuthorizations(context.Background())
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 2)
+
+	err = authApi.DeleteAuthorization(context.Background(), *auth.Id)
+	require.Nil(t, err)
+
+	listRes, err = authApi.GetAuthorizations(context.Background())
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 1)
+
 }

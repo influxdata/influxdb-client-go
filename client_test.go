@@ -6,6 +6,7 @@ package influxdb2
 
 import (
 	"context"
+	http2 "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"net/http"
@@ -17,7 +18,7 @@ import (
 func TestUserAgent(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(100 * time.Millisecond)
-		if r.Header.Get("User-Agent") == userAgent() {
+		if r.Header.Get("User-Agent") == http2.UserAgent {
 			w.WriteHeader(http.StatusOK)
 		} else {
 			w.WriteHeader(http.StatusNotFound)
@@ -37,7 +38,7 @@ func TestUserAgent(t *testing.T) {
 func TestServerError429(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(100 * time.Millisecond)
-		w.Header().Set("Retry-After","1")
+		w.Header().Set("Retry-After", "1")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusTooManyRequests)
 		w.Write([]byte(`{"code":"too many requests", "message":"exceeded rate limit"}`))
@@ -47,7 +48,7 @@ func TestServerError429(t *testing.T) {
 	c := NewClient(server.URL, "x")
 	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
-	perror, ok := err.(*Error)
+	perror, ok := err.(*http2.Error)
 	require.True(t, ok)
 	require.NotNil(t, perror)
 	assert.Equal(t, "too many requests", perror.Code)
@@ -65,7 +66,7 @@ func TestServerErrorNonJSON(t *testing.T) {
 	c := NewClient(server.URL, "x")
 	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
-	perror, ok := err.(*Error)
+	perror, ok := err.(*http2.Error)
 	require.True(t, ok)
 	require.NotNil(t, perror)
 	assert.Equal(t, "500 Internal Server Error", perror.Code)

@@ -286,7 +286,7 @@ readRow:
 		values := make(map[string]interface{})
 		for i, v := range row[1:] {
 			if q.table.Column(i) != nil {
-				values[q.table.Column(i).Name()], q.err = toValue(stringTernary(v, q.table.Column(i).DefaultValue()), q.table.Column(i).DataType())
+				values[q.table.Column(i).Name()], q.err = toValue(stringTernary(v, q.table.Column(i).DefaultValue()), q.table.Column(i).DataType(), q.table.Column(i).Name())
 				if q.err != nil {
 					return false
 				}
@@ -337,7 +337,7 @@ func stringTernary(a, b string) string {
 }
 
 // toValues converts s into type by t
-func toValue(s, t string) (interface{}, error) {
+func toValue(s, t, name string) (interface{}, error) {
 	switch t {
 	case stringDatatype:
 		return s, nil
@@ -361,6 +361,6 @@ func toValue(s, t string) (interface{}, error) {
 	case base64BinaryDataType:
 		return base64.StdEncoding.DecodeString(s)
 	default:
-		return nil, fmt.Errorf("%s has unknown data type %s", s, t)
+		return nil, fmt.Errorf("%s has unknown data type %s", name, t)
 	}
 }

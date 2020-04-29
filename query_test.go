@@ -552,9 +552,25 @@ func TestErrorInRow(t *testing.T) {
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "unknown query error", queryResult.Err().Error())
-
 }
 
+func TestInvalidDataType(t *testing.T) {
+	csvTable := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,int,string,duration,base64Binary,dateTime:RFC3339
+#group,false,false,true,true,false,true,true,false,false,false
+#default,_result,,,,,,,,,
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
+`
+
+	reader := strings.NewReader(csvTable)
+	csvReader := csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "deviceId has unknown data type int", queryResult.Err().Error())
+}
 func makeCSVstring(rows []string) string {
 	csvTable := strings.Join(rows, "\r\n")
 	return fmt.Sprintf("%s\r\n", csvTable)

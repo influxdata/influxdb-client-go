@@ -537,6 +537,22 @@ func TestErrorInRow(t *testing.T) {
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time", queryResult.Err().Error())
 
+	csvRowsErrorNoMessage := []string{
+		`#datatype,string,string`,
+		`#group,true,true`,
+		`#default,,`,
+		`,error,reference`,
+		`,,`}
+	csvTable = makeCSVstring(csvRowsErrorNoMessage)
+	reader = strings.NewReader(csvTable)
+	csvReader = csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "unknown query error", queryResult.Err().Error())
+
 }
 
 func makeCSVstring(rows []string) string {

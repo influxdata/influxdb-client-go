@@ -251,7 +251,7 @@ readRow:
 	case "":
 		if parsingState == parsingStateError {
 			var message string
-			if len(row) > 1 {
+			if len(row) > 1 && len(row[1]) > 0 {
 				message = row[1]
 			} else {
 				message = "unknown query error"

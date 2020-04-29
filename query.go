@@ -276,7 +276,7 @@ readRow:
 			goto readRow
 		}
 		if q.table == nil {
-			q.err = errors.New("parsing error, table definition not found")
+			q.err = errors.New("parsing error, datatype annotation not found")
 			return false
 		}
 		if len(row)-1 != len(q.table.Columns()) {
@@ -302,6 +302,10 @@ readRow:
 		}
 		goto readRow
 	case "#group":
+		if q.table == nil {
+			q.err = errors.New("parsing error, datatype annotation not found")
+			return false
+		}
 		for i, g := range row[1:] {
 			if q.table.Column(i) != nil {
 				q.table.Column(i).SetGroup(g == "true")
@@ -309,6 +313,10 @@ readRow:
 		}
 		goto readRow
 	case "#default":
+		if q.table == nil {
+			q.err = errors.New("parsing error, datatype annotation not found")
+			return false
+		}
 		for i, c := range row[1:] {
 			if q.table.Column(i) != nil {
 				q.table.Column(i).SetDefaultValue(c)

@@ -571,6 +571,68 @@ func TestInvalidDataType(t *testing.T) {
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "deviceId has unknown data type int", queryResult.Err().Error())
 }
+
+func TestMissingDatatypeAnnotation(t *testing.T) {
+	csvTable1 := `
+#group,false,false,true,true,false,true,true,false,false,false
+#default,_result,,,,,,,,,
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
+`
+
+	reader := strings.NewReader(csvTable1)
+	csvReader := csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
+}
+
+func TestDifferentNumberOfColumns(t *testing.T) {
+	csvTable := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,int,string,duration,base64Binary,dateTime:RFC3339
+#group,false,false,true,true,false,true,true,false,false,
+#default,_result,,,,,,,
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z,2345234
+`
+
+	reader := strings.NewReader(csvTable)
+	csvReader := csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "parsing error, row has different number of columns than table: 11 vs 10", queryResult.Err().Error())
+}
+
+func TestFluxError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(100 * time.Millisecond)
+		if r.Method == http.MethodPost {
+			_, _ = ioutil.ReadAll(r.Body)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"code":"invalid","message":"compilation failed: loc 4:17-4:86: expected an operator between two expressions"}`))
+		}
+	}))
+	defer server.Close()
+	client := NewClient(server.URL, "a")
+	queryApi := client.QueryApi("org")
+
+	result, err := queryApi.QueryRaw(context.Background(), "errored flux", nil)
+	assert.Equal(t, "", result)
+	require.NotNil(t, err)
+	assert.Equal(t, "invalid: compilation failed: loc 4:17-4:86: expected an operator between two expressions", err.Error())
+
+	tableRes, err := queryApi.Query(context.Background(), "errored flux")
+	assert.Nil(t, tableRes)
+	require.NotNil(t, err)
+	assert.Equal(t, "invalid: compilation failed: loc 4:17-4:86: expected an operator between two expressions", err.Error())
+
+}
+
 func makeCSVstring(rows []string) string {
 	csvTable := strings.Join(rows, "\r\n")
 	return fmt.Sprintf("%s\r\n", csvTable)

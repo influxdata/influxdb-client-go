@@ -309,6 +309,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	csvReader := csv.NewReader(reader)
 	csvReader.FieldsPerRecord = -1
 	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	assert.Equal(t, -1, queryResult.TablePosition())
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -316,6 +317,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord11)
 	assert.True(t, queryResult.tableChanged)
+	assert.Equal(t, 0, queryResult.TablePosition())
 
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
@@ -323,11 +325,13 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	assert.False(t, queryResult.tableChanged)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord12)
+	assert.Equal(t, 0, queryResult.TablePosition())
 
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
 	assert.True(t, queryResult.tableChanged)
+	assert.Equal(t, 1, queryResult.TablePosition())
 	require.Equal(t, queryResult.table, expectedTable2)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord21)
@@ -336,6 +340,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Nil(t, queryResult.Err())
 
 	assert.False(t, queryResult.tableChanged)
+	assert.Equal(t, 1, queryResult.TablePosition())
 	require.Equal(t, queryResult.table, expectedTable2)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord22)
@@ -344,6 +349,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Nil(t, queryResult.Err(), queryResult.Err())
 
 	assert.True(t, queryResult.tableChanged)
+	assert.Equal(t, 2, queryResult.TablePosition())
 	require.Equal(t, queryResult.table, expectedTable3)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord31)
@@ -352,6 +358,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Nil(t, queryResult.Err())
 
 	assert.False(t, queryResult.tableChanged)
+	assert.Equal(t, 2, queryResult.TablePosition())
 	require.Equal(t, queryResult.table, expectedTable3)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord32)
@@ -360,6 +367,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Nil(t, queryResult.Err())
 
 	assert.True(t, queryResult.tableChanged)
+	assert.Equal(t, 3, queryResult.TablePosition())
 	require.Equal(t, queryResult.table, expectedTable4)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord41)
@@ -368,6 +376,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Nil(t, queryResult.Err())
 
 	assert.False(t, queryResult.tableChanged)
+	assert.Equal(t, 3, queryResult.TablePosition())
 	require.Equal(t, queryResult.table, expectedTable4)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord42)
@@ -382,7 +391,7 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 #default,_result,,,,,,,,,
 ,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
 ,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
-,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
+,,1,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
 `
 	expectedTable := &FluxTableMetadata{position: 0,
 		columns: []*FluxColumn{
@@ -416,7 +425,7 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 	expectedRecord2 := &FluxRecord{table: 0,
 		values: map[string]interface{}{
 			"result":   "_result",
-			"table":    int64(0),
+			"table":    int64(1),
 			"_start":   mustParseTime("2020-04-28T12:36:50.990018157Z"),
 			"_stop":    mustParseTime("2020-04-28T12:51:50.990018157Z"),
 			"_time":    mustParseTime("2020-04-28T12:39:36.330153686Z"),
@@ -440,10 +449,12 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 	require.NotNil(t, queryResult.Record())
 	assert.Equal(t, queryResult.Record(), expectedRecord1)
 	assert.Nil(t, queryResult.Record().Value())
+	assert.Equal(t, 0, queryResult.TablePosition())
 
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 	assert.False(t, queryResult.tableChanged)
+	assert.Equal(t, 0, queryResult.TablePosition())
 	require.NotNil(t, queryResult.Record())
 	assert.Equal(t, queryResult.Record(), expectedRecord2)
 
@@ -585,6 +596,36 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 	csvReader := csv.NewReader(reader)
 	csvReader.FieldsPerRecord = -1
 	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
+
+	csvTable2 := `
+#default,_result,,,,,,,,,
+#group,false,false,true,true,false,true,true,false,false,false
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
+`
+
+	reader = strings.NewReader(csvTable2)
+	csvReader = csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
+
+	csvTable3 := `
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
+`
+
+	reader = strings.NewReader(csvTable3)
+	csvReader = csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())

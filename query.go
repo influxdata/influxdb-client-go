@@ -179,13 +179,13 @@ type QueryTableResult struct {
 	err           error
 }
 
-// TablePosition returns actual flux table position in the result.
-// Each new table is introduced by annotations
+// TablePosition returns actual flux table position in the result, or -1 if no table was found yet
+// Each new table is introduced by the #dataType annotation in csv
 func (q *QueryTableResult) TablePosition() int {
-	if q.tablePosition > 0 {
-		return q.tablePosition - 1
+	if q.table != nil {
+		return q.table.position
 	}
-	return q.tablePosition
+	return -1
 }
 
 // TableMetadata returns actual flux table metadata

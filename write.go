@@ -48,7 +48,7 @@ type writeBuffInfoReq struct {
 	writeBuffLen int
 }
 
-func newWriteApiImpl(org string, bucket string, service http.Service, client InfluxDBClient) *writeApiImpl {
+func newWriteApiImpl(org string, bucket string, service http.Service, client Client) *writeApiImpl {
 	w := &writeApiImpl{
 		service:      newWriteService(org, bucket, service, client),
 		writeBuffer:  make([]string, 0, client.Options().BatchSize()+1),
@@ -137,7 +137,7 @@ func (w *writeApiImpl) flushBuffer() {
 		w.writeCh <- batch
 		//	lines = lines[:0]
 		//}(w.writeBuffer)
-		//w.writeBuffer = make([]string,0, w.service.client.Options.BatchSize+1)
+		//w.writeBuffer = make([]string,0, w.service.clientImpl.Options.BatchSize+1)
 		w.writeBuffer = w.writeBuffer[:0]
 	}
 }
@@ -201,7 +201,7 @@ func (w *writeApiImpl) WriteRecord(line string) {
 }
 
 func (w *writeApiImpl) WritePoint(point *Point) {
-	//w.bufferCh <- point.ToLineProtocol(w.service.client.Options().Precision)
+	//w.bufferCh <- point.ToLineProtocol(w.service.clientImpl.Options().Precision)
 	line, err := w.service.encodePoints(point)
 	if err != nil {
 		logger.Errorf("point encoding error: %s\n", err.Error())

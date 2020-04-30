@@ -47,7 +47,7 @@ type QueryApi interface {
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
 }
 
-func newQueryApi(org string, service ihttp.Service, client InfluxDBClient) QueryApi {
+func newQueryApi(org string, service ihttp.Service, client Client) QueryApi {
 	return &queryApiImpl{
 		org:         org,
 		httpService: service,
@@ -59,7 +59,7 @@ func newQueryApi(org string, service ihttp.Service, client InfluxDBClient) Query
 type queryApiImpl struct {
 	org         string
 	httpService ihttp.Service
-	client      InfluxDBClient
+	client      Client
 	url         string
 	lock        sync.Mutex
 }

@@ -36,10 +36,10 @@ type writeService struct {
 	lastWriteAttempt time.Time
 	retryQueue       *queue
 	lock             sync.Mutex
-	client           InfluxDBClient
+	client           Client
 }
 
-func newWriteService(org string, bucket string, httpService ihttp.Service, client InfluxDBClient) *writeService {
+func newWriteService(org string, bucket string, httpService ihttp.Service, client Client) *writeService {
 	logger.SetDebugLevel(client.Options().LogLevel())
 	retryBufferLimit := client.Options().RetryBufferLimit() / client.Options().BatchSize()
 	if retryBufferLimit == 0 {

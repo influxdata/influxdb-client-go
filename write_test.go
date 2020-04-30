@@ -62,13 +62,13 @@ func (t *testHttpService) ReplyError() *ihttp.Error {
 	return t.replyError
 }
 
-func (t *testHttpService) SetAuthorization(authorization string) {
+func (t *testHttpService) SetAuthorization(_ string) {
 
 }
 func (t *testHttpService) GetRequest(_ context.Context, _ string, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
 	return nil
 }
-func (t *testHttpService) DoHttpRequest(req *http.Request, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
+func (t *testHttpService) DoHttpRequest(_ *http.Request, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
 	return nil
 }
 
@@ -121,11 +121,11 @@ func (t *testHttpService) Lines() []string {
 	return t.lines
 }
 
-func newTestClient() *client {
-	return &client{serverUrl: "http://locahost:4444", options: DefaultOptions()}
+func newTestClient() *clientImpl {
+	return &clientImpl{serverUrl: "http://locahost:4444", options: DefaultOptions()}
 }
 
-func newTestService(t *testing.T, client InfluxDBClient) *testHttpService {
+func newTestService(t *testing.T, client Client) *testHttpService {
 	return &testHttpService{
 		t:         t,
 		options:   client.Options(),

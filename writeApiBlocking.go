@@ -28,7 +28,7 @@ type writeApiBlockingImpl struct {
 }
 
 // creates writeApiBlockingImpl for org and bucket with underlying client
-func newWriteApiBlockingImpl(org string, bucket string, service http.Service, client InfluxDBClient) *writeApiBlockingImpl {
+func newWriteApiBlockingImpl(org string, bucket string, service http.Service, client Client) *writeApiBlockingImpl {
 	return &writeApiBlockingImpl{service: newWriteService(org, bucket, service, client)}
 }
 

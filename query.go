@@ -47,7 +47,7 @@ type QueryApi interface {
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
 }
 
-func newQueryApi(org string, service ihttp.Service, client InfluxDBClient) QueryApi {
+func newQueryApi(org string, service ihttp.Service, client Client) QueryApi {
 	return &queryApiImpl{
 		org:         org,
 		httpService: service,
@@ -59,7 +59,7 @@ func newQueryApi(org string, service ihttp.Service, client InfluxDBClient) Query
 type queryApiImpl struct {
 	org         string
 	httpService ihttp.Service
-	client      InfluxDBClient
+	client      Client
 	url         string
 	lock        sync.Mutex
 }
@@ -179,13 +179,13 @@ type QueryTableResult struct {
 	err           error
 }
 
-// TablePosition returns actual flux table position in the result.
-// Each new table is introduced by annotations
+// TablePosition returns actual flux table position in the result, or -1 if no table was found yet
+// Each new table is introduced by the #dataType annotation in csv
 func (q *QueryTableResult) TablePosition() int {
-	if q.tablePosition > 0 {
-		return q.tablePosition - 1
+	if q.table != nil {
+		return q.table.position
 	}
-	return q.tablePosition
+	return -1
 }
 
 // TableMetadata returns actual flux table metadata
@@ -251,7 +251,7 @@ readRow:
 	case "":
 		if parsingState == parsingStateError {
 			var message string
-			if len(row) > 1 {
+			if len(row) > 1 && len(row[1]) > 0 {
 				message = row[1]
 			} else {
 				message = "unknown query error"
@@ -276,7 +276,7 @@ readRow:
 			goto readRow
 		}
 		if q.table == nil {
-			q.err = errors.New("parsing error, table definition not found")
+			q.err = errors.New("parsing error, datatype annotation not found")
 			return false
 		}
 		if len(row)-1 != len(q.table.Columns()) {
@@ -286,7 +286,7 @@ readRow:
 		values := make(map[string]interface{})
 		for i, v := range row[1:] {
 			if q.table.Column(i) != nil {
-				values[q.table.Column(i).Name()], q.err = toValue(stringTernary(v, q.table.Column(i).DefaultValue()), q.table.Column(i).DataType())
+				values[q.table.Column(i).Name()], q.err = toValue(stringTernary(v, q.table.Column(i).DefaultValue()), q.table.Column(i).DataType(), q.table.Column(i).Name())
 				if q.err != nil {
 					return false
 				}
@@ -302,6 +302,10 @@ readRow:
 		}
 		goto readRow
 	case "#group":
+		if q.table == nil {
+			q.err = errors.New("parsing error, datatype annotation not found")
+			return false
+		}
 		for i, g := range row[1:] {
 			if q.table.Column(i) != nil {
 				q.table.Column(i).SetGroup(g == "true")
@@ -309,6 +313,10 @@ readRow:
 		}
 		goto readRow
 	case "#default":
+		if q.table == nil {
+			q.err = errors.New("parsing error, datatype annotation not found")
+			return false
+		}
 		for i, c := range row[1:] {
 			if q.table.Column(i) != nil {
 				q.table.Column(i).SetDefaultValue(c)
@@ -337,7 +345,7 @@ func stringTernary(a, b string) string {
 }
 
 // toValues converts s into type by t
-func toValue(s, t string) (interface{}, error) {
+func toValue(s, t, name string) (interface{}, error) {
 	switch t {
 	case stringDatatype:
 		return s, nil
@@ -361,6 +369,6 @@ func toValue(s, t string) (interface{}, error) {
 	case base64BinaryDataType:
 		return base64.StdEncoding.DecodeString(s)
 	default:
-		return nil, fmt.Errorf("%s has unknown data type %s", s, t)
+		return nil, fmt.Errorf("%s has unknown data type %s", name, t)
 	}
 }

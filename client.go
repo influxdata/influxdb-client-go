@@ -20,11 +20,11 @@ import (
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
 
-// InfluxDBClient provides API to communicate with InfluxDBServer
+// Client provides API to communicate with InfluxDBServer
 // There two APIs for writing, WriteApi and WriteApiBlocking.
 // WriteApi provides asynchronous, non-blocking, methods for writing time series data.
 // WriteApiBlocking provides blocking methods for writing time series data
-type InfluxDBClient interface {
+type Client interface {
 	// WriteApi returns the asynchronous, non-blocking, Write client.
 	WriteApi(org, bucket string) WriteApi
 	// WriteApi returns the synchronous, blocking, Write client.
@@ -51,8 +51,8 @@ type InfluxDBClient interface {
 	Ready(ctx context.Context) (bool, error)
 }
 
-// client implements InfluxDBClient interface
-type client struct {
+// clientImpl implements Client interface
+type clientImpl struct {
 	serverUrl   string
 	options     *Options
 	writeApis   []WriteApi
@@ -63,19 +63,19 @@ type client struct {
 	usersApi    api.UsersApi
 }
 
-// NewClient creates InfluxDBClient for connecting to given serverUrl with provided authentication token, with default options
+// NewClient creates Client for connecting to given serverUrl with provided authentication token, with the default options.
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
-func NewClient(serverUrl string, authToken string) InfluxDBClient {
+func NewClient(serverUrl string, authToken string) Client {
 	return NewClientWithOptions(serverUrl, authToken, DefaultOptions())
 }
 
-// NewClientWithOptions creates InfluxDBClient for connecting to given serverUrl with provided authentication token
+// NewClientWithOptions creates Client for connecting to given serverUrl with provided authentication token
 // and configured with custom Options
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
-func NewClientWithOptions(serverUrl string, authToken string, options *Options) InfluxDBClient {
-	client := &client{
+func NewClientWithOptions(serverUrl string, authToken string, options *Options) Client {
+	client := &clientImpl{
 		serverUrl:   serverUrl,
 		options:     options,
 		writeApis:   make([]WriteApi, 0, 5),
@@ -83,15 +83,15 @@ func NewClientWithOptions(serverUrl string, authToken string, options *Options) 
 	}
 	return client
 }
-func (c *client) Options() *Options {
+func (c *clientImpl) Options() *Options {
 	return c.options
 }
 
-func (c *client) ServerUrl() string {
+func (c *clientImpl) ServerUrl() string {
 	return c.serverUrl
 }
 
-func (c *client) Ready(ctx context.Context) (bool, error) {
+func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
 	readyUrl, err := url.Parse(c.serverUrl)
 	if err != nil {
 		return false, err
@@ -111,28 +111,28 @@ func (c *client) Ready(ctx context.Context) (bool, error) {
 	return readyRes, nil
 }
 
-func (c *client) WriteApi(org, bucket string) WriteApi {
+func (c *clientImpl) WriteApi(org, bucket string) WriteApi {
 	w := newWriteApiImpl(org, bucket, c.httpService, c)
 	c.writeApis = append(c.writeApis, w)
 	return w
 }
 
-func (c *client) WriteApiBlocking(org, bucket string) WriteApiBlocking {
+func (c *clientImpl) WriteApiBlocking(org, bucket string) WriteApiBlocking {
 	w := newWriteApiBlockingImpl(org, bucket, c.httpService, c)
 	return w
 }
 
-func (c *client) Close() {
+func (c *clientImpl) Close() {
 	for _, w := range c.writeApis {
 		w.Close()
 	}
 }
 
-func (c *client) QueryApi(org string) QueryApi {
+func (c *clientImpl) QueryApi(org string) QueryApi {
 	return newQueryApi(org, c.httpService, c)
 }
 
-func (c *client) AuthorizationsApi() api.AuthorizationsApi {
+func (c *clientImpl) AuthorizationsApi() api.AuthorizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.authApi == nil {
@@ -141,7 +141,7 @@ func (c *client) AuthorizationsApi() api.AuthorizationsApi {
 	return c.authApi
 }
 
-func (c *client) OrganizationsApi() api.OrganizationsApi {
+func (c *clientImpl) OrganizationsApi() api.OrganizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.orgApi == nil {
@@ -150,7 +150,7 @@ func (c *client) OrganizationsApi() api.OrganizationsApi {
 	return c.orgApi
 }
 
-func (c *client) UsersApi() api.UsersApi {
+func (c *clientImpl) UsersApi() api.UsersApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.usersApi == nil {

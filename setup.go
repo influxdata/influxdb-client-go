@@ -16,7 +16,7 @@ import (
 	"path"
 )
 
-func (c *client) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
+func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
 	if username == "" || password == "" {
 		return nil, errors.New("a username and password is required for a setup")
 	}
@@ -42,11 +42,13 @@ func (c *client) Setup(ctx context.Context, username, password, org, bucket stri
 	}
 	u.Path = path.Join(u.Path, "setup")
 
-	error := c.httpService.PostRequest(ctx, u.String(), bytes.NewReader(inputData), func(req *http.Request) {
+	perror := c.httpService.PostRequest(ctx, u.String(), bytes.NewReader(inputData), func(req *http.Request) {
 		req.Header.Add("Content-Type", "application/json; charset=utf-8")
 	},
 		func(resp *http.Response) error {
-			defer resp.Body.Close()
+			defer func() {
+				_ = resp.Body.Close()
+			}()
 			setupResponse := &domain.OnboardingResponse{}
 			if err := json.NewDecoder(resp.Body).Decode(setupResponse); err != nil {
 				return err
@@ -58,8 +60,8 @@ func (c *client) Setup(ctx context.Context, username, password, org, bucket stri
 			return nil
 		},
 	)
-	if error != nil {
-		return nil, error
+	if perror != nil {
+		return nil, perror
 	}
 	return setupResult, nil
 }

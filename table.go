@@ -155,7 +155,7 @@ func (r *FluxRecord) Time() time.Time {
 	return r.ValueByKey("_time").(time.Time)
 }
 
-// Value returns the actual field value
+// Value returns the default _value column value or nil if not present
 func (r *FluxRecord) Value() interface{} {
 	return r.ValueByKey("_value")
 }
@@ -175,7 +175,7 @@ func (r *FluxRecord) Values() map[string]interface{} {
 	return r.values
 }
 
-// ValueByKey returns value for given column key for the record
+// ValueByKey returns value for given column key for the record or nil of result has no value the column key
 func (r *FluxRecord) ValueByKey(key string) interface{} {
 	return r.values[key]
 }

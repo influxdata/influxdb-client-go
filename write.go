@@ -25,7 +25,9 @@ type WriteApi interface {
 	Flush()
 	// Flushes all pending writes and stop async processes. After this the Write client cannot be used
 	Close()
-	// Errors return channel for reading errors which occurs during async writes
+	// Errors returns a channel for reading errors which occurs during async writes.
+	// Must be called before performing any writes for errors to be collected.
+	// The chan is unbuffered and must be drained or the writer will block.
 	Errors() <-chan error
 }
 

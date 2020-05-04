@@ -346,6 +346,9 @@ func stringTernary(a, b string) string {
 
 // toValues converts s into type by t
 func toValue(s, t, name string) (interface{}, error) {
+	if s == "" {
+		return nil, nil
+	}
 	switch t {
 	case stringDatatype:
 		return s, nil

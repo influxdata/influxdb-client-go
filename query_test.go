@@ -648,6 +648,39 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 	assert.Equal(t, "parsing error, row has different number of columns than table: 11 vs 10", queryResult.Err().Error())
 }
 
+func TestEmptyValue(t *testing.T) {
+	csvTable := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
+#group,false,false,true,true,false,false,true,true,true,true
+#default,_result,,,,,,,,,
+,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,,f,test,1,adsfasdf
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,,adsfasdf
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:11:32.225467895Z,1122.45,f,test,3,
+`
+
+	reader := strings.NewReader(csvTable)
+	csvReader := csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+
+	require.NotNil(t, queryResult.Record())
+	assert.Nil(t, queryResult.Record().Value())
+
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.NotNil(t, queryResult.Record())
+	assert.Nil(t, queryResult.Record().ValueByKey("a"))
+
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.NotNil(t, queryResult.Record())
+	assert.Nil(t, queryResult.Record().ValueByKey("b"))
+
+	require.False(t, queryResult.Next())
+	require.Nil(t, queryResult.Err())
+}
+
 func TestFluxError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(100 * time.Millisecond)

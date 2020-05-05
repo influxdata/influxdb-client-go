@@ -75,6 +75,41 @@ func ExampleWriteApi() {
 	client.Close()
 }
 
+func ExampleWriteApi_errors() {
+	// Create client
+	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	// Get non-blocking write client
+	writeApi := client.WriteApi("my-org", "my-bucket")
+	// Get errors channel
+	errorsCh := writeApi.Errors()
+	// Create go proc for reading and logging errors
+	go func() {
+		for err := range errorsCh {
+			fmt.Printf("write error: %s\n", err.Error())
+		}
+	}()
+	// write some points
+	for i := 0; i < 100; i++ {
+		// create point
+		p := influxdb2.NewPointWithMeasurement("stat").
+			AddTag("id", fmt.Sprintf("rack_%v", i%10)).
+			AddTag("vendor", "AWS").
+			AddTag("hostname", fmt.Sprintf("host_%v", i%100)).
+			AddField("temperature", rand.Float64()*80.0).
+			AddField("disk_free", rand.Float64()*1000.0).
+			AddField("disk_total", (i/10+1)*1000000).
+			AddField("mem_total", (i/100+1)*10000000).
+			AddField("mem_free", rand.Uint64()).
+			SetTime(time.Now())
+		// write asynchronously
+		writeApi.WritePoint(p)
+	}
+	// Force all unwritten data to be sent
+	writeApi.Flush()
+	// Ensures background processes finishes
+	client.Close()
+}
+
 func ExampleQueryApi_query() {
 	// Create client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")

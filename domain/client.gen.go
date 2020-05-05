@@ -768,15 +768,7 @@ func (c *Client) GetRoutes(ctx context.Context, params *GetRoutesParams) (*http.
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetAuthorizations(ctx context.Context, params *GetAuthorizationsParams) (*http.Response, error) {
@@ -785,15 +777,7 @@ func (c *Client) GetAuthorizations(ctx context.Context, params *GetAuthorization
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostAuthorizationsWithBody(ctx context.Context, params *PostAuthorizationsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -802,15 +786,7 @@ func (c *Client) PostAuthorizationsWithBody(ctx context.Context, params *PostAut
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostAuthorizations(ctx context.Context, params *PostAuthorizationsParams, body PostAuthorizationsJSONRequestBody) (*http.Response, error) {
@@ -819,15 +795,7 @@ func (c *Client) PostAuthorizations(ctx context.Context, params *PostAuthorizati
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteAuthorizationsID(ctx context.Context, authID string, params *DeleteAuthorizationsIDParams) (*http.Response, error) {
@@ -836,15 +804,7 @@ func (c *Client) DeleteAuthorizationsID(ctx context.Context, authID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetAuthorizationsID(ctx context.Context, authID string, params *GetAuthorizationsIDParams) (*http.Response, error) {
@@ -853,15 +813,7 @@ func (c *Client) GetAuthorizationsID(ctx context.Context, authID string, params 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchAuthorizationsIDWithBody(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -870,15 +822,7 @@ func (c *Client) PatchAuthorizationsIDWithBody(ctx context.Context, authID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchAuthorizationsID(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*http.Response, error) {
@@ -887,15 +831,7 @@ func (c *Client) PatchAuthorizationsID(ctx context.Context, authID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBuckets(ctx context.Context, params *GetBucketsParams) (*http.Response, error) {
@@ -904,15 +840,7 @@ func (c *Client) GetBuckets(ctx context.Context, params *GetBucketsParams) (*htt
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsWithBody(ctx context.Context, params *PostBucketsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -921,15 +849,7 @@ func (c *Client) PostBucketsWithBody(ctx context.Context, params *PostBucketsPar
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBuckets(ctx context.Context, params *PostBucketsParams, body PostBucketsJSONRequestBody) (*http.Response, error) {
@@ -938,15 +858,7 @@ func (c *Client) PostBuckets(ctx context.Context, params *PostBucketsParams, bod
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsID(ctx context.Context, bucketID string, params *DeleteBucketsIDParams) (*http.Response, error) {
@@ -955,15 +867,7 @@ func (c *Client) DeleteBucketsID(ctx context.Context, bucketID string, params *D
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsID(ctx context.Context, bucketID string, params *GetBucketsIDParams) (*http.Response, error) {
@@ -972,15 +876,7 @@ func (c *Client) GetBucketsID(ctx context.Context, bucketID string, params *GetB
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchBucketsIDWithBody(ctx context.Context, bucketID string, params *PatchBucketsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -989,15 +885,7 @@ func (c *Client) PatchBucketsIDWithBody(ctx context.Context, bucketID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchBucketsID(ctx context.Context, bucketID string, params *PatchBucketsIDParams, body PatchBucketsIDJSONRequestBody) (*http.Response, error) {
@@ -1006,15 +894,7 @@ func (c *Client) PatchBucketsID(ctx context.Context, bucketID string, params *Pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDLabels(ctx context.Context, bucketID string, params *GetBucketsIDLabelsParams) (*http.Response, error) {
@@ -1023,15 +903,7 @@ func (c *Client) GetBucketsIDLabels(ctx context.Context, bucketID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDLabelsWithBody(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1040,15 +912,7 @@ func (c *Client) PostBucketsIDLabelsWithBody(ctx context.Context, bucketID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDLabels(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, body PostBucketsIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -1057,15 +921,7 @@ func (c *Client) PostBucketsIDLabels(ctx context.Context, bucketID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsIDLabelsID(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*http.Response, error) {
@@ -1074,15 +930,7 @@ func (c *Client) DeleteBucketsIDLabelsID(ctx context.Context, bucketID string, l
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDLogs(ctx context.Context, bucketID string, params *GetBucketsIDLogsParams) (*http.Response, error) {
@@ -1091,15 +939,7 @@ func (c *Client) GetBucketsIDLogs(ctx context.Context, bucketID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDMembers(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*http.Response, error) {
@@ -1108,15 +948,7 @@ func (c *Client) GetBucketsIDMembers(ctx context.Context, bucketID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDMembersWithBody(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1125,15 +957,7 @@ func (c *Client) PostBucketsIDMembersWithBody(ctx context.Context, bucketID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDMembers(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, body PostBucketsIDMembersJSONRequestBody) (*http.Response, error) {
@@ -1142,15 +966,7 @@ func (c *Client) PostBucketsIDMembers(ctx context.Context, bucketID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsIDMembersID(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDMembersIDParams) (*http.Response, error) {
@@ -1159,15 +975,7 @@ func (c *Client) DeleteBucketsIDMembersID(ctx context.Context, bucketID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDOwners(ctx context.Context, bucketID string, params *GetBucketsIDOwnersParams) (*http.Response, error) {
@@ -1176,15 +984,7 @@ func (c *Client) GetBucketsIDOwners(ctx context.Context, bucketID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDOwnersWithBody(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1193,15 +993,7 @@ func (c *Client) PostBucketsIDOwnersWithBody(ctx context.Context, bucketID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDOwners(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, body PostBucketsIDOwnersJSONRequestBody) (*http.Response, error) {
@@ -1210,15 +1002,7 @@ func (c *Client) PostBucketsIDOwners(ctx context.Context, bucketID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsIDOwnersID(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDOwnersIDParams) (*http.Response, error) {
@@ -1227,15 +1011,7 @@ func (c *Client) DeleteBucketsIDOwnersID(ctx context.Context, bucketID string, u
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecks(ctx context.Context, params *GetChecksParams) (*http.Response, error) {
@@ -1244,15 +1020,7 @@ func (c *Client) GetChecks(ctx context.Context, params *GetChecksParams) (*http.
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateCheckWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
@@ -1261,15 +1029,7 @@ func (c *Client) CreateCheckWithBody(ctx context.Context, contentType string, bo
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateCheck(ctx context.Context, body CreateCheckJSONRequestBody) (*http.Response, error) {
@@ -1278,15 +1038,7 @@ func (c *Client) CreateCheck(ctx context.Context, body CreateCheckJSONRequestBod
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteChecksID(ctx context.Context, checkID string, params *DeleteChecksIDParams) (*http.Response, error) {
@@ -1295,15 +1047,7 @@ func (c *Client) DeleteChecksID(ctx context.Context, checkID string, params *Del
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecksID(ctx context.Context, checkID string, params *GetChecksIDParams) (*http.Response, error) {
@@ -1312,15 +1056,7 @@ func (c *Client) GetChecksID(ctx context.Context, checkID string, params *GetChe
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchChecksIDWithBody(ctx context.Context, checkID string, params *PatchChecksIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1329,15 +1065,7 @@ func (c *Client) PatchChecksIDWithBody(ctx context.Context, checkID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchChecksID(ctx context.Context, checkID string, params *PatchChecksIDParams, body PatchChecksIDJSONRequestBody) (*http.Response, error) {
@@ -1346,15 +1074,7 @@ func (c *Client) PatchChecksID(ctx context.Context, checkID string, params *Patc
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutChecksIDWithBody(ctx context.Context, checkID string, params *PutChecksIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1363,15 +1083,7 @@ func (c *Client) PutChecksIDWithBody(ctx context.Context, checkID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutChecksID(ctx context.Context, checkID string, params *PutChecksIDParams, body PutChecksIDJSONRequestBody) (*http.Response, error) {
@@ -1380,15 +1092,7 @@ func (c *Client) PutChecksID(ctx context.Context, checkID string, params *PutChe
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecksIDLabels(ctx context.Context, checkID string, params *GetChecksIDLabelsParams) (*http.Response, error) {
@@ -1397,15 +1101,7 @@ func (c *Client) GetChecksIDLabels(ctx context.Context, checkID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostChecksIDLabelsWithBody(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1414,15 +1110,7 @@ func (c *Client) PostChecksIDLabelsWithBody(ctx context.Context, checkID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostChecksIDLabels(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, body PostChecksIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -1431,15 +1119,7 @@ func (c *Client) PostChecksIDLabels(ctx context.Context, checkID string, params 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteChecksIDLabelsID(ctx context.Context, checkID string, labelID string, params *DeleteChecksIDLabelsIDParams) (*http.Response, error) {
@@ -1448,15 +1128,7 @@ func (c *Client) DeleteChecksIDLabelsID(ctx context.Context, checkID string, lab
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecksIDQuery(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*http.Response, error) {
@@ -1465,15 +1137,7 @@ func (c *Client) GetChecksIDQuery(ctx context.Context, checkID string, params *G
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboards(ctx context.Context, params *GetDashboardsParams) (*http.Response, error) {
@@ -1482,15 +1146,7 @@ func (c *Client) GetDashboards(ctx context.Context, params *GetDashboardsParams)
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsWithBody(ctx context.Context, params *PostDashboardsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1499,15 +1155,7 @@ func (c *Client) PostDashboardsWithBody(ctx context.Context, params *PostDashboa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboards(ctx context.Context, params *PostDashboardsParams, body PostDashboardsJSONRequestBody) (*http.Response, error) {
@@ -1516,15 +1164,7 @@ func (c *Client) PostDashboards(ctx context.Context, params *PostDashboardsParam
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsID(ctx context.Context, dashboardID string, params *DeleteDashboardsIDParams) (*http.Response, error) {
@@ -1533,15 +1173,7 @@ func (c *Client) DeleteDashboardsID(ctx context.Context, dashboardID string, par
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsID(ctx context.Context, dashboardID string, params *GetDashboardsIDParams) (*http.Response, error) {
@@ -1550,15 +1182,7 @@ func (c *Client) GetDashboardsID(ctx context.Context, dashboardID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDWithBody(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1567,15 +1191,7 @@ func (c *Client) PatchDashboardsIDWithBody(ctx context.Context, dashboardID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsID(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, body PatchDashboardsIDJSONRequestBody) (*http.Response, error) {
@@ -1584,15 +1200,7 @@ func (c *Client) PatchDashboardsID(ctx context.Context, dashboardID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDCellsWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1601,15 +1209,7 @@ func (c *Client) PostDashboardsIDCellsWithBody(ctx context.Context, dashboardID 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDCells(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, body PostDashboardsIDCellsJSONRequestBody) (*http.Response, error) {
@@ -1618,15 +1218,7 @@ func (c *Client) PostDashboardsIDCells(ctx context.Context, dashboardID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDashboardsIDCellsWithBody(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1635,15 +1227,7 @@ func (c *Client) PutDashboardsIDCellsWithBody(ctx context.Context, dashboardID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDashboardsIDCells(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, body PutDashboardsIDCellsJSONRequestBody) (*http.Response, error) {
@@ -1652,15 +1236,7 @@ func (c *Client) PutDashboardsIDCells(ctx context.Context, dashboardID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDCellsID(ctx context.Context, dashboardID string, cellID string, params *DeleteDashboardsIDCellsIDParams) (*http.Response, error) {
@@ -1669,15 +1245,7 @@ func (c *Client) DeleteDashboardsIDCellsID(ctx context.Context, dashboardID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsIDWithBody(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1686,15 +1254,7 @@ func (c *Client) PatchDashboardsIDCellsIDWithBody(ctx context.Context, dashboard
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsID(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, body PatchDashboardsIDCellsIDJSONRequestBody) (*http.Response, error) {
@@ -1703,15 +1263,7 @@ func (c *Client) PatchDashboardsIDCellsID(ctx context.Context, dashboardID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDCellsIDView(ctx context.Context, dashboardID string, cellID string, params *GetDashboardsIDCellsIDViewParams) (*http.Response, error) {
@@ -1720,15 +1272,7 @@ func (c *Client) GetDashboardsIDCellsIDView(ctx context.Context, dashboardID str
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsIDViewWithBody(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1737,15 +1281,7 @@ func (c *Client) PatchDashboardsIDCellsIDViewWithBody(ctx context.Context, dashb
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsIDView(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, body PatchDashboardsIDCellsIDViewJSONRequestBody) (*http.Response, error) {
@@ -1754,15 +1290,7 @@ func (c *Client) PatchDashboardsIDCellsIDView(ctx context.Context, dashboardID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDLabels(ctx context.Context, dashboardID string, params *GetDashboardsIDLabelsParams) (*http.Response, error) {
@@ -1771,15 +1299,7 @@ func (c *Client) GetDashboardsIDLabels(ctx context.Context, dashboardID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDLabelsWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1788,15 +1308,7 @@ func (c *Client) PostDashboardsIDLabelsWithBody(ctx context.Context, dashboardID
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDLabels(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, body PostDashboardsIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -1805,15 +1317,7 @@ func (c *Client) PostDashboardsIDLabels(ctx context.Context, dashboardID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDLabelsID(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*http.Response, error) {
@@ -1822,15 +1326,7 @@ func (c *Client) DeleteDashboardsIDLabelsID(ctx context.Context, dashboardID str
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDLogs(ctx context.Context, dashboardID string, params *GetDashboardsIDLogsParams) (*http.Response, error) {
@@ -1839,15 +1335,7 @@ func (c *Client) GetDashboardsIDLogs(ctx context.Context, dashboardID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDMembers(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams) (*http.Response, error) {
@@ -1856,15 +1344,7 @@ func (c *Client) GetDashboardsIDMembers(ctx context.Context, dashboardID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDMembersWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1873,15 +1353,7 @@ func (c *Client) PostDashboardsIDMembersWithBody(ctx context.Context, dashboardI
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDMembers(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, body PostDashboardsIDMembersJSONRequestBody) (*http.Response, error) {
@@ -1890,15 +1362,7 @@ func (c *Client) PostDashboardsIDMembers(ctx context.Context, dashboardID string
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDMembersID(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDMembersIDParams) (*http.Response, error) {
@@ -1907,15 +1371,7 @@ func (c *Client) DeleteDashboardsIDMembersID(ctx context.Context, dashboardID st
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDOwners(ctx context.Context, dashboardID string, params *GetDashboardsIDOwnersParams) (*http.Response, error) {
@@ -1924,15 +1380,7 @@ func (c *Client) GetDashboardsIDOwners(ctx context.Context, dashboardID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDOwnersWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1941,15 +1389,7 @@ func (c *Client) PostDashboardsIDOwnersWithBody(ctx context.Context, dashboardID
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDOwners(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, body PostDashboardsIDOwnersJSONRequestBody) (*http.Response, error) {
@@ -1958,15 +1398,7 @@ func (c *Client) PostDashboardsIDOwners(ctx context.Context, dashboardID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDOwnersID(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams) (*http.Response, error) {
@@ -1975,15 +1407,7 @@ func (c *Client) DeleteDashboardsIDOwnersID(ctx context.Context, dashboardID str
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDeleteWithBody(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -1992,15 +1416,7 @@ func (c *Client) PostDeleteWithBody(ctx context.Context, params *PostDeleteParam
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDelete(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*http.Response, error) {
@@ -2009,15 +1425,7 @@ func (c *Client) PostDelete(ctx context.Context, params *PostDeleteParams, body 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDocumentsTemplates(ctx context.Context, params *GetDocumentsTemplatesParams) (*http.Response, error) {
@@ -2026,15 +1434,7 @@ func (c *Client) GetDocumentsTemplates(ctx context.Context, params *GetDocuments
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplatesWithBody(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2043,15 +1443,7 @@ func (c *Client) PostDocumentsTemplatesWithBody(ctx context.Context, params *Pos
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplates(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*http.Response, error) {
@@ -2060,15 +1452,7 @@ func (c *Client) PostDocumentsTemplates(ctx context.Context, params *PostDocumen
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDocumentsTemplatesID(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*http.Response, error) {
@@ -2077,15 +1461,7 @@ func (c *Client) DeleteDocumentsTemplatesID(ctx context.Context, templateID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDocumentsTemplatesID(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*http.Response, error) {
@@ -2094,15 +1470,7 @@ func (c *Client) GetDocumentsTemplatesID(ctx context.Context, templateID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDocumentsTemplatesIDWithBody(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2111,15 +1479,7 @@ func (c *Client) PutDocumentsTemplatesIDWithBody(ctx context.Context, templateID
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDocumentsTemplatesID(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*http.Response, error) {
@@ -2128,15 +1488,7 @@ func (c *Client) PutDocumentsTemplatesID(ctx context.Context, templateID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*http.Response, error) {
@@ -2145,15 +1497,7 @@ func (c *Client) GetDocumentsTemplatesIDLabels(ctx context.Context, templateID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplatesIDLabelsWithBody(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2162,15 +1506,7 @@ func (c *Client) PostDocumentsTemplatesIDLabelsWithBody(ctx context.Context, tem
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -2179,15 +1515,7 @@ func (c *Client) PostDocumentsTemplatesIDLabels(ctx context.Context, templateID 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Response, error) {
@@ -2196,32 +1524,16 @@ func (c *Client) DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templat
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetHealth(ctx context.Context, params *GetHealthParams) (*http.Response, error) {
-	req, err := NewGetHealthRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetHealthRequest(c.service.ServerUrl(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetLabels(ctx context.Context, params *GetLabelsParams) (*http.Response, error) {
@@ -2230,15 +1542,7 @@ func (c *Client) GetLabels(ctx context.Context, params *GetLabelsParams) (*http.
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostLabelsWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
@@ -2247,15 +1551,7 @@ func (c *Client) PostLabelsWithBody(ctx context.Context, contentType string, bod
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostLabels(ctx context.Context, body PostLabelsJSONRequestBody) (*http.Response, error) {
@@ -2264,15 +1560,7 @@ func (c *Client) PostLabels(ctx context.Context, body PostLabelsJSONRequestBody)
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteLabelsID(ctx context.Context, labelID string, params *DeleteLabelsIDParams) (*http.Response, error) {
@@ -2281,15 +1569,7 @@ func (c *Client) DeleteLabelsID(ctx context.Context, labelID string, params *Del
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetLabelsID(ctx context.Context, labelID string, params *GetLabelsIDParams) (*http.Response, error) {
@@ -2298,15 +1578,7 @@ func (c *Client) GetLabelsID(ctx context.Context, labelID string, params *GetLab
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchLabelsIDWithBody(ctx context.Context, labelID string, params *PatchLabelsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2315,15 +1587,7 @@ func (c *Client) PatchLabelsIDWithBody(ctx context.Context, labelID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchLabelsID(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*http.Response, error) {
@@ -2332,15 +1596,7 @@ func (c *Client) PatchLabelsID(ctx context.Context, labelID string, params *Patc
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetMe(ctx context.Context, params *GetMeParams) (*http.Response, error) {
@@ -2349,15 +1605,7 @@ func (c *Client) GetMe(ctx context.Context, params *GetMeParams) (*http.Response
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutMePasswordWithBody(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2366,15 +1614,7 @@ func (c *Client) PutMePasswordWithBody(ctx context.Context, params *PutMePasswor
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutMePassword(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*http.Response, error) {
@@ -2383,15 +1623,7 @@ func (c *Client) PutMePassword(ctx context.Context, params *PutMePasswordParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationEndpoints(ctx context.Context, params *GetNotificationEndpointsParams) (*http.Response, error) {
@@ -2400,15 +1632,7 @@ func (c *Client) GetNotificationEndpoints(ctx context.Context, params *GetNotifi
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationEndpointWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
@@ -2417,15 +1641,7 @@ func (c *Client) CreateNotificationEndpointWithBody(ctx context.Context, content
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationEndpoint(ctx context.Context, body CreateNotificationEndpointJSONRequestBody) (*http.Response, error) {
@@ -2434,15 +1650,7 @@ func (c *Client) CreateNotificationEndpoint(ctx context.Context, body CreateNoti
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationEndpointsID(ctx context.Context, endpointID string, params *DeleteNotificationEndpointsIDParams) (*http.Response, error) {
@@ -2451,15 +1659,7 @@ func (c *Client) DeleteNotificationEndpointsID(ctx context.Context, endpointID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationEndpointsID(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDParams) (*http.Response, error) {
@@ -2468,15 +1668,7 @@ func (c *Client) GetNotificationEndpointsID(ctx context.Context, endpointID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationEndpointsIDWithBody(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2485,15 +1677,7 @@ func (c *Client) PatchNotificationEndpointsIDWithBody(ctx context.Context, endpo
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationEndpointsID(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, body PatchNotificationEndpointsIDJSONRequestBody) (*http.Response, error) {
@@ -2502,15 +1686,7 @@ func (c *Client) PatchNotificationEndpointsID(ctx context.Context, endpointID st
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationEndpointsIDWithBody(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2519,15 +1695,7 @@ func (c *Client) PutNotificationEndpointsIDWithBody(ctx context.Context, endpoin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationEndpointsID(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, body PutNotificationEndpointsIDJSONRequestBody) (*http.Response, error) {
@@ -2536,15 +1704,7 @@ func (c *Client) PutNotificationEndpointsID(ctx context.Context, endpointID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationEndpointsIDLabels(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDLabelsParams) (*http.Response, error) {
@@ -2553,15 +1713,7 @@ func (c *Client) GetNotificationEndpointsIDLabels(ctx context.Context, endpointI
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationEndpointIDLabelsWithBody(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2570,15 +1722,7 @@ func (c *Client) PostNotificationEndpointIDLabelsWithBody(ctx context.Context, e
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationEndpointIDLabels(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, body PostNotificationEndpointIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -2587,15 +1731,7 @@ func (c *Client) PostNotificationEndpointIDLabels(ctx context.Context, endpointI
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationEndpointsIDLabelsID(ctx context.Context, endpointID string, labelID string, params *DeleteNotificationEndpointsIDLabelsIDParams) (*http.Response, error) {
@@ -2604,15 +1740,7 @@ func (c *Client) DeleteNotificationEndpointsIDLabelsID(ctx context.Context, endp
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRules(ctx context.Context, params *GetNotificationRulesParams) (*http.Response, error) {
@@ -2621,15 +1749,7 @@ func (c *Client) GetNotificationRules(ctx context.Context, params *GetNotificati
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationRuleWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
@@ -2638,15 +1758,7 @@ func (c *Client) CreateNotificationRuleWithBody(ctx context.Context, contentType
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationRule(ctx context.Context, body CreateNotificationRuleJSONRequestBody) (*http.Response, error) {
@@ -2655,15 +1767,7 @@ func (c *Client) CreateNotificationRule(ctx context.Context, body CreateNotifica
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationRulesID(ctx context.Context, ruleID string, params *DeleteNotificationRulesIDParams) (*http.Response, error) {
@@ -2672,15 +1776,7 @@ func (c *Client) DeleteNotificationRulesID(ctx context.Context, ruleID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRulesID(ctx context.Context, ruleID string, params *GetNotificationRulesIDParams) (*http.Response, error) {
@@ -2689,15 +1785,7 @@ func (c *Client) GetNotificationRulesID(ctx context.Context, ruleID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationRulesIDWithBody(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2706,15 +1794,7 @@ func (c *Client) PatchNotificationRulesIDWithBody(ctx context.Context, ruleID st
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationRulesID(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, body PatchNotificationRulesIDJSONRequestBody) (*http.Response, error) {
@@ -2723,15 +1803,7 @@ func (c *Client) PatchNotificationRulesID(ctx context.Context, ruleID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationRulesIDWithBody(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2740,15 +1812,7 @@ func (c *Client) PutNotificationRulesIDWithBody(ctx context.Context, ruleID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationRulesID(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, body PutNotificationRulesIDJSONRequestBody) (*http.Response, error) {
@@ -2757,15 +1821,7 @@ func (c *Client) PutNotificationRulesID(ctx context.Context, ruleID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRulesIDLabels(ctx context.Context, ruleID string, params *GetNotificationRulesIDLabelsParams) (*http.Response, error) {
@@ -2774,15 +1830,7 @@ func (c *Client) GetNotificationRulesIDLabels(ctx context.Context, ruleID string
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationRuleIDLabelsWithBody(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2791,15 +1839,7 @@ func (c *Client) PostNotificationRuleIDLabelsWithBody(ctx context.Context, ruleI
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationRuleIDLabels(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, body PostNotificationRuleIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -2808,15 +1848,7 @@ func (c *Client) PostNotificationRuleIDLabels(ctx context.Context, ruleID string
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationRulesIDLabelsID(ctx context.Context, ruleID string, labelID string, params *DeleteNotificationRulesIDLabelsIDParams) (*http.Response, error) {
@@ -2825,15 +1857,7 @@ func (c *Client) DeleteNotificationRulesIDLabelsID(ctx context.Context, ruleID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRulesIDQuery(ctx context.Context, ruleID string, params *GetNotificationRulesIDQueryParams) (*http.Response, error) {
@@ -2842,15 +1866,7 @@ func (c *Client) GetNotificationRulesIDQuery(ctx context.Context, ruleID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgs(ctx context.Context, params *GetOrgsParams) (*http.Response, error) {
@@ -2859,15 +1875,7 @@ func (c *Client) GetOrgs(ctx context.Context, params *GetOrgsParams) (*http.Resp
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsWithBody(ctx context.Context, params *PostOrgsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2876,15 +1884,7 @@ func (c *Client) PostOrgsWithBody(ctx context.Context, params *PostOrgsParams, c
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgs(ctx context.Context, params *PostOrgsParams, body PostOrgsJSONRequestBody) (*http.Response, error) {
@@ -2893,15 +1893,7 @@ func (c *Client) PostOrgs(ctx context.Context, params *PostOrgsParams, body Post
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsID(ctx context.Context, orgID string, params *DeleteOrgsIDParams) (*http.Response, error) {
@@ -2910,15 +1902,7 @@ func (c *Client) DeleteOrgsID(ctx context.Context, orgID string, params *DeleteO
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsID(ctx context.Context, orgID string, params *GetOrgsIDParams) (*http.Response, error) {
@@ -2927,15 +1911,7 @@ func (c *Client) GetOrgsID(ctx context.Context, orgID string, params *GetOrgsIDP
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsIDWithBody(ctx context.Context, orgID string, params *PatchOrgsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2944,15 +1920,7 @@ func (c *Client) PatchOrgsIDWithBody(ctx context.Context, orgID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsID(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*http.Response, error) {
@@ -2961,15 +1929,7 @@ func (c *Client) PatchOrgsID(ctx context.Context, orgID string, params *PatchOrg
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error) {
@@ -2978,15 +1938,7 @@ func (c *Client) GetOrgsIDLabels(ctx context.Context, orgID string, params *GetO
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDLabelsWithBody(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -2995,15 +1947,7 @@ func (c *Client) PostOrgsIDLabelsWithBody(ctx context.Context, orgID string, par
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDLabels(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, body PostOrgsIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -3012,15 +1956,7 @@ func (c *Client) PostOrgsIDLabels(ctx context.Context, orgID string, params *Pos
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Response, error) {
@@ -3029,15 +1965,7 @@ func (c *Client) DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDLogs(ctx context.Context, orgID string, params *GetOrgsIDLogsParams) (*http.Response, error) {
@@ -3046,15 +1974,7 @@ func (c *Client) GetOrgsIDLogs(ctx context.Context, orgID string, params *GetOrg
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDMembers(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*http.Response, error) {
@@ -3063,15 +1983,7 @@ func (c *Client) GetOrgsIDMembers(ctx context.Context, orgID string, params *Get
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDMembersWithBody(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3080,15 +1992,7 @@ func (c *Client) PostOrgsIDMembersWithBody(ctx context.Context, orgID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDMembers(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, body PostOrgsIDMembersJSONRequestBody) (*http.Response, error) {
@@ -3097,15 +2001,7 @@ func (c *Client) PostOrgsIDMembers(ctx context.Context, orgID string, params *Po
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDMembersID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDMembersIDParams) (*http.Response, error) {
@@ -3114,15 +2010,7 @@ func (c *Client) DeleteOrgsIDMembersID(ctx context.Context, orgID string, userID
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDOwners(ctx context.Context, orgID string, params *GetOrgsIDOwnersParams) (*http.Response, error) {
@@ -3131,15 +2019,7 @@ func (c *Client) GetOrgsIDOwners(ctx context.Context, orgID string, params *GetO
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDOwnersWithBody(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3148,15 +2028,7 @@ func (c *Client) PostOrgsIDOwnersWithBody(ctx context.Context, orgID string, par
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDOwners(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, body PostOrgsIDOwnersJSONRequestBody) (*http.Response, error) {
@@ -3165,15 +2037,7 @@ func (c *Client) PostOrgsIDOwners(ctx context.Context, orgID string, params *Pos
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDOwnersID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDOwnersIDParams) (*http.Response, error) {
@@ -3182,15 +2046,7 @@ func (c *Client) DeleteOrgsIDOwnersID(ctx context.Context, orgID string, userID 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDSecrets(ctx context.Context, orgID string, params *GetOrgsIDSecretsParams) (*http.Response, error) {
@@ -3199,15 +2055,7 @@ func (c *Client) GetOrgsIDSecrets(ctx context.Context, orgID string, params *Get
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsIDSecretsWithBody(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3216,15 +2064,7 @@ func (c *Client) PatchOrgsIDSecretsWithBody(ctx context.Context, orgID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsIDSecrets(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, body PatchOrgsIDSecretsJSONRequestBody) (*http.Response, error) {
@@ -3233,15 +2073,7 @@ func (c *Client) PatchOrgsIDSecrets(ctx context.Context, orgID string, params *P
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDSecretsWithBody(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3250,15 +2082,7 @@ func (c *Client) PostOrgsIDSecretsWithBody(ctx context.Context, orgID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error) {
@@ -3267,15 +2091,7 @@ func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *Po
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreatePkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
@@ -3284,15 +2100,7 @@ func (c *Client) CreatePkgWithBody(ctx context.Context, contentType string, body
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreatePkg(ctx context.Context, body CreatePkgJSONRequestBody) (*http.Response, error) {
@@ -3301,15 +2109,7 @@ func (c *Client) CreatePkg(ctx context.Context, body CreatePkgJSONRequestBody) (
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) ApplyPkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
@@ -3318,15 +2118,7 @@ func (c *Client) ApplyPkgWithBody(ctx context.Context, contentType string, body 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*http.Response, error) {
@@ -3335,15 +2127,7 @@ func (c *Client) ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*h
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryWithBody(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3352,15 +2136,7 @@ func (c *Client) PostQueryWithBody(ctx context.Context, params *PostQueryParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQuery(ctx context.Context, params *PostQueryParams, body PostQueryJSONRequestBody) (*http.Response, error) {
@@ -3369,15 +2145,7 @@ func (c *Client) PostQuery(ctx context.Context, params *PostQueryParams, body Po
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAnalyzeWithBody(ctx context.Context, params *PostQueryAnalyzeParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3386,15 +2154,7 @@ func (c *Client) PostQueryAnalyzeWithBody(ctx context.Context, params *PostQuery
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAnalyze(ctx context.Context, params *PostQueryAnalyzeParams, body PostQueryAnalyzeJSONRequestBody) (*http.Response, error) {
@@ -3403,15 +2163,7 @@ func (c *Client) PostQueryAnalyze(ctx context.Context, params *PostQueryAnalyzeP
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAstWithBody(ctx context.Context, params *PostQueryAstParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3420,15 +2172,7 @@ func (c *Client) PostQueryAstWithBody(ctx context.Context, params *PostQueryAstP
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAst(ctx context.Context, params *PostQueryAstParams, body PostQueryAstJSONRequestBody) (*http.Response, error) {
@@ -3437,15 +2181,7 @@ func (c *Client) PostQueryAst(ctx context.Context, params *PostQueryAstParams, b
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetQuerySuggestions(ctx context.Context, params *GetQuerySuggestionsParams) (*http.Response, error) {
@@ -3454,15 +2190,7 @@ func (c *Client) GetQuerySuggestions(ctx context.Context, params *GetQuerySugges
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetQuerySuggestionsName(ctx context.Context, name string, params *GetQuerySuggestionsNameParams) (*http.Response, error) {
@@ -3471,32 +2199,16 @@ func (c *Client) GetQuerySuggestionsName(ctx context.Context, name string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error) {
-	req, err := NewGetReadyRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetReadyRequest(c.service.ServerUrl(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapers(ctx context.Context, params *GetScrapersParams) (*http.Response, error) {
@@ -3505,15 +2217,7 @@ func (c *Client) GetScrapers(ctx context.Context, params *GetScrapersParams) (*h
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersWithBody(ctx context.Context, params *PostScrapersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3522,15 +2226,7 @@ func (c *Client) PostScrapersWithBody(ctx context.Context, params *PostScrapersP
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapers(ctx context.Context, params *PostScrapersParams, body PostScrapersJSONRequestBody) (*http.Response, error) {
@@ -3539,15 +2235,7 @@ func (c *Client) PostScrapers(ctx context.Context, params *PostScrapersParams, b
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersID(ctx context.Context, scraperTargetID string, params *DeleteScrapersIDParams) (*http.Response, error) {
@@ -3556,15 +2244,7 @@ func (c *Client) DeleteScrapersID(ctx context.Context, scraperTargetID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersID(ctx context.Context, scraperTargetID string, params *GetScrapersIDParams) (*http.Response, error) {
@@ -3573,15 +2253,7 @@ func (c *Client) GetScrapersID(ctx context.Context, scraperTargetID string, para
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersIDWithBody(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3590,15 +2262,7 @@ func (c *Client) PatchScrapersIDWithBody(ctx context.Context, scraperTargetID st
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersID(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, body PatchScrapersIDJSONRequestBody) (*http.Response, error) {
@@ -3607,15 +2271,7 @@ func (c *Client) PatchScrapersID(ctx context.Context, scraperTargetID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersIDLabels(ctx context.Context, scraperTargetID string, params *GetScrapersIDLabelsParams) (*http.Response, error) {
@@ -3624,15 +2280,7 @@ func (c *Client) GetScrapersIDLabels(ctx context.Context, scraperTargetID string
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDLabelsWithBody(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3641,15 +2289,7 @@ func (c *Client) PostScrapersIDLabelsWithBody(ctx context.Context, scraperTarget
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDLabels(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, body PostScrapersIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -3658,15 +2298,7 @@ func (c *Client) PostScrapersIDLabels(ctx context.Context, scraperTargetID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersIDLabelsID(ctx context.Context, scraperTargetID string, labelID string, params *DeleteScrapersIDLabelsIDParams) (*http.Response, error) {
@@ -3675,15 +2307,7 @@ func (c *Client) DeleteScrapersIDLabelsID(ctx context.Context, scraperTargetID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersIDLabelsIDWithBody(ctx context.Context, scraperTargetID string, labelID string, params *PatchScrapersIDLabelsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3692,15 +2316,7 @@ func (c *Client) PatchScrapersIDLabelsIDWithBody(ctx context.Context, scraperTar
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersIDLabelsID(ctx context.Context, scraperTargetID string, labelID string, params *PatchScrapersIDLabelsIDParams, body PatchScrapersIDLabelsIDJSONRequestBody) (*http.Response, error) {
@@ -3709,15 +2325,7 @@ func (c *Client) PatchScrapersIDLabelsID(ctx context.Context, scraperTargetID st
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersIDMembers(ctx context.Context, scraperTargetID string, params *GetScrapersIDMembersParams) (*http.Response, error) {
@@ -3726,15 +2334,7 @@ func (c *Client) GetScrapersIDMembers(ctx context.Context, scraperTargetID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDMembersWithBody(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3743,15 +2343,7 @@ func (c *Client) PostScrapersIDMembersWithBody(ctx context.Context, scraperTarge
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDMembers(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, body PostScrapersIDMembersJSONRequestBody) (*http.Response, error) {
@@ -3760,15 +2352,7 @@ func (c *Client) PostScrapersIDMembers(ctx context.Context, scraperTargetID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersIDMembersID(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDMembersIDParams) (*http.Response, error) {
@@ -3777,15 +2361,7 @@ func (c *Client) DeleteScrapersIDMembersID(ctx context.Context, scraperTargetID 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersIDOwners(ctx context.Context, scraperTargetID string, params *GetScrapersIDOwnersParams) (*http.Response, error) {
@@ -3794,15 +2370,7 @@ func (c *Client) GetScrapersIDOwners(ctx context.Context, scraperTargetID string
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDOwnersWithBody(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3811,15 +2379,7 @@ func (c *Client) PostScrapersIDOwnersWithBody(ctx context.Context, scraperTarget
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDOwners(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, body PostScrapersIDOwnersJSONRequestBody) (*http.Response, error) {
@@ -3828,15 +2388,7 @@ func (c *Client) PostScrapersIDOwners(ctx context.Context, scraperTargetID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersIDOwnersID(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDOwnersIDParams) (*http.Response, error) {
@@ -3845,15 +2397,7 @@ func (c *Client) DeleteScrapersIDOwnersID(ctx context.Context, scraperTargetID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSetup(ctx context.Context, params *GetSetupParams) (*http.Response, error) {
@@ -3862,15 +2406,7 @@ func (c *Client) GetSetup(ctx context.Context, params *GetSetupParams) (*http.Re
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSetupWithBody(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3879,15 +2415,7 @@ func (c *Client) PostSetupWithBody(ctx context.Context, params *PostSetupParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSetup(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*http.Response, error) {
@@ -3896,15 +2424,7 @@ func (c *Client) PostSetup(ctx context.Context, params *PostSetupParams, body Po
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSignin(ctx context.Context, params *PostSigninParams) (*http.Response, error) {
@@ -3913,15 +2433,7 @@ func (c *Client) PostSignin(ctx context.Context, params *PostSigninParams) (*htt
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSignout(ctx context.Context, params *PostSignoutParams) (*http.Response, error) {
@@ -3930,15 +2442,7 @@ func (c *Client) PostSignout(ctx context.Context, params *PostSignoutParams) (*h
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSources(ctx context.Context, params *GetSourcesParams) (*http.Response, error) {
@@ -3947,15 +2451,7 @@ func (c *Client) GetSources(ctx context.Context, params *GetSourcesParams) (*htt
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSourcesWithBody(ctx context.Context, params *PostSourcesParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -3964,15 +2460,7 @@ func (c *Client) PostSourcesWithBody(ctx context.Context, params *PostSourcesPar
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSources(ctx context.Context, params *PostSourcesParams, body PostSourcesJSONRequestBody) (*http.Response, error) {
@@ -3981,15 +2469,7 @@ func (c *Client) PostSources(ctx context.Context, params *PostSourcesParams, bod
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteSourcesID(ctx context.Context, sourceID string, params *DeleteSourcesIDParams) (*http.Response, error) {
@@ -3998,15 +2478,7 @@ func (c *Client) DeleteSourcesID(ctx context.Context, sourceID string, params *D
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSourcesID(ctx context.Context, sourceID string, params *GetSourcesIDParams) (*http.Response, error) {
@@ -4015,15 +2487,7 @@ func (c *Client) GetSourcesID(ctx context.Context, sourceID string, params *GetS
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchSourcesIDWithBody(ctx context.Context, sourceID string, params *PatchSourcesIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4032,15 +2496,7 @@ func (c *Client) PatchSourcesIDWithBody(ctx context.Context, sourceID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchSourcesID(ctx context.Context, sourceID string, params *PatchSourcesIDParams, body PatchSourcesIDJSONRequestBody) (*http.Response, error) {
@@ -4049,15 +2505,7 @@ func (c *Client) PatchSourcesID(ctx context.Context, sourceID string, params *Pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSourcesIDBuckets(ctx context.Context, sourceID string, params *GetSourcesIDBucketsParams) (*http.Response, error) {
@@ -4066,15 +2514,7 @@ func (c *Client) GetSourcesIDBuckets(ctx context.Context, sourceID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSourcesIDHealth(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*http.Response, error) {
@@ -4083,15 +2523,7 @@ func (c *Client) GetSourcesIDHealth(ctx context.Context, sourceID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasks(ctx context.Context, params *GetTasksParams) (*http.Response, error) {
@@ -4100,15 +2532,7 @@ func (c *Client) GetTasks(ctx context.Context, params *GetTasksParams) (*http.Re
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksWithBody(ctx context.Context, params *PostTasksParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4117,15 +2541,7 @@ func (c *Client) PostTasksWithBody(ctx context.Context, params *PostTasksParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasks(ctx context.Context, params *PostTasksParams, body PostTasksJSONRequestBody) (*http.Response, error) {
@@ -4134,15 +2550,7 @@ func (c *Client) PostTasks(ctx context.Context, params *PostTasksParams, body Po
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksID(ctx context.Context, taskID string, params *DeleteTasksIDParams) (*http.Response, error) {
@@ -4151,15 +2559,7 @@ func (c *Client) DeleteTasksID(ctx context.Context, taskID string, params *Delet
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksID(ctx context.Context, taskID string, params *GetTasksIDParams) (*http.Response, error) {
@@ -4168,15 +2568,7 @@ func (c *Client) GetTasksID(ctx context.Context, taskID string, params *GetTasks
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchTasksIDWithBody(ctx context.Context, taskID string, params *PatchTasksIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4185,15 +2577,7 @@ func (c *Client) PatchTasksIDWithBody(ctx context.Context, taskID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchTasksID(ctx context.Context, taskID string, params *PatchTasksIDParams, body PatchTasksIDJSONRequestBody) (*http.Response, error) {
@@ -4202,15 +2586,7 @@ func (c *Client) PatchTasksID(ctx context.Context, taskID string, params *PatchT
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDLabels(ctx context.Context, taskID string, params *GetTasksIDLabelsParams) (*http.Response, error) {
@@ -4219,15 +2595,7 @@ func (c *Client) GetTasksIDLabels(ctx context.Context, taskID string, params *Ge
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDLabelsWithBody(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4236,15 +2604,7 @@ func (c *Client) PostTasksIDLabelsWithBody(ctx context.Context, taskID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDLabels(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, body PostTasksIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -4253,15 +2613,7 @@ func (c *Client) PostTasksIDLabels(ctx context.Context, taskID string, params *P
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDLabelsID(ctx context.Context, taskID string, labelID string, params *DeleteTasksIDLabelsIDParams) (*http.Response, error) {
@@ -4270,15 +2622,7 @@ func (c *Client) DeleteTasksIDLabelsID(ctx context.Context, taskID string, label
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDLogs(ctx context.Context, taskID string, params *GetTasksIDLogsParams) (*http.Response, error) {
@@ -4287,15 +2631,7 @@ func (c *Client) GetTasksIDLogs(ctx context.Context, taskID string, params *GetT
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDMembers(ctx context.Context, taskID string, params *GetTasksIDMembersParams) (*http.Response, error) {
@@ -4304,15 +2640,7 @@ func (c *Client) GetTasksIDMembers(ctx context.Context, taskID string, params *G
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDMembersWithBody(ctx context.Context, taskID string, params *PostTasksIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4321,15 +2649,7 @@ func (c *Client) PostTasksIDMembersWithBody(ctx context.Context, taskID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDMembers(ctx context.Context, taskID string, params *PostTasksIDMembersParams, body PostTasksIDMembersJSONRequestBody) (*http.Response, error) {
@@ -4338,15 +2658,7 @@ func (c *Client) PostTasksIDMembers(ctx context.Context, taskID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDMembersID(ctx context.Context, taskID string, userID string, params *DeleteTasksIDMembersIDParams) (*http.Response, error) {
@@ -4355,15 +2667,7 @@ func (c *Client) DeleteTasksIDMembersID(ctx context.Context, taskID string, user
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDOwners(ctx context.Context, taskID string, params *GetTasksIDOwnersParams) (*http.Response, error) {
@@ -4372,15 +2676,7 @@ func (c *Client) GetTasksIDOwners(ctx context.Context, taskID string, params *Ge
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDOwnersWithBody(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4389,15 +2685,7 @@ func (c *Client) PostTasksIDOwnersWithBody(ctx context.Context, taskID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDOwners(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, body PostTasksIDOwnersJSONRequestBody) (*http.Response, error) {
@@ -4406,15 +2694,7 @@ func (c *Client) PostTasksIDOwners(ctx context.Context, taskID string, params *P
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDOwnersID(ctx context.Context, taskID string, userID string, params *DeleteTasksIDOwnersIDParams) (*http.Response, error) {
@@ -4423,15 +2703,7 @@ func (c *Client) DeleteTasksIDOwnersID(ctx context.Context, taskID string, userI
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDRuns(ctx context.Context, taskID string, params *GetTasksIDRunsParams) (*http.Response, error) {
@@ -4440,15 +2712,7 @@ func (c *Client) GetTasksIDRuns(ctx context.Context, taskID string, params *GetT
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDRunsWithBody(ctx context.Context, taskID string, params *PostTasksIDRunsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4457,15 +2721,7 @@ func (c *Client) PostTasksIDRunsWithBody(ctx context.Context, taskID string, par
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDRuns(ctx context.Context, taskID string, params *PostTasksIDRunsParams, body PostTasksIDRunsJSONRequestBody) (*http.Response, error) {
@@ -4474,15 +2730,7 @@ func (c *Client) PostTasksIDRuns(ctx context.Context, taskID string, params *Pos
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDRunsID(ctx context.Context, taskID string, runID string, params *DeleteTasksIDRunsIDParams) (*http.Response, error) {
@@ -4491,15 +2739,7 @@ func (c *Client) DeleteTasksIDRunsID(ctx context.Context, taskID string, runID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDRunsID(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDParams) (*http.Response, error) {
@@ -4508,15 +2748,7 @@ func (c *Client) GetTasksIDRunsID(ctx context.Context, taskID string, runID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDRunsIDLogs(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*http.Response, error) {
@@ -4525,15 +2757,7 @@ func (c *Client) GetTasksIDRunsIDLogs(ctx context.Context, taskID string, runID 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDRunsIDRetry(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*http.Response, error) {
@@ -4542,15 +2766,7 @@ func (c *Client) PostTasksIDRunsIDRetry(ctx context.Context, taskID string, runI
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafPlugins(ctx context.Context, params *GetTelegrafPluginsParams) (*http.Response, error) {
@@ -4559,15 +2775,7 @@ func (c *Client) GetTelegrafPlugins(ctx context.Context, params *GetTelegrafPlug
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafs(ctx context.Context, params *GetTelegrafsParams) (*http.Response, error) {
@@ -4576,15 +2784,7 @@ func (c *Client) GetTelegrafs(ctx context.Context, params *GetTelegrafsParams) (
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsWithBody(ctx context.Context, params *PostTelegrafsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4593,15 +2793,7 @@ func (c *Client) PostTelegrafsWithBody(ctx context.Context, params *PostTelegraf
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafs(ctx context.Context, params *PostTelegrafsParams, body PostTelegrafsJSONRequestBody) (*http.Response, error) {
@@ -4610,15 +2802,7 @@ func (c *Client) PostTelegrafs(ctx context.Context, params *PostTelegrafsParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsID(ctx context.Context, telegrafID string, params *DeleteTelegrafsIDParams) (*http.Response, error) {
@@ -4627,15 +2811,7 @@ func (c *Client) DeleteTelegrafsID(ctx context.Context, telegrafID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsID(ctx context.Context, telegrafID string, params *GetTelegrafsIDParams) (*http.Response, error) {
@@ -4644,15 +2820,7 @@ func (c *Client) GetTelegrafsID(ctx context.Context, telegrafID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutTelegrafsIDWithBody(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4661,15 +2829,7 @@ func (c *Client) PutTelegrafsIDWithBody(ctx context.Context, telegrafID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutTelegrafsID(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, body PutTelegrafsIDJSONRequestBody) (*http.Response, error) {
@@ -4678,15 +2838,7 @@ func (c *Client) PutTelegrafsID(ctx context.Context, telegrafID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsIDLabels(ctx context.Context, telegrafID string, params *GetTelegrafsIDLabelsParams) (*http.Response, error) {
@@ -4695,15 +2847,7 @@ func (c *Client) GetTelegrafsIDLabels(ctx context.Context, telegrafID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDLabelsWithBody(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4712,15 +2856,7 @@ func (c *Client) PostTelegrafsIDLabelsWithBody(ctx context.Context, telegrafID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDLabels(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, body PostTelegrafsIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -4729,15 +2865,7 @@ func (c *Client) PostTelegrafsIDLabels(ctx context.Context, telegrafID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsIDLabelsID(ctx context.Context, telegrafID string, labelID string, params *DeleteTelegrafsIDLabelsIDParams) (*http.Response, error) {
@@ -4746,15 +2874,7 @@ func (c *Client) DeleteTelegrafsIDLabelsID(ctx context.Context, telegrafID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsIDMembers(ctx context.Context, telegrafID string, params *GetTelegrafsIDMembersParams) (*http.Response, error) {
@@ -4763,15 +2883,7 @@ func (c *Client) GetTelegrafsIDMembers(ctx context.Context, telegrafID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDMembersWithBody(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4780,15 +2892,7 @@ func (c *Client) PostTelegrafsIDMembersWithBody(ctx context.Context, telegrafID 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDMembers(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, body PostTelegrafsIDMembersJSONRequestBody) (*http.Response, error) {
@@ -4797,15 +2901,7 @@ func (c *Client) PostTelegrafsIDMembers(ctx context.Context, telegrafID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsIDMembersID(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDMembersIDParams) (*http.Response, error) {
@@ -4814,15 +2910,7 @@ func (c *Client) DeleteTelegrafsIDMembersID(ctx context.Context, telegrafID stri
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsIDOwners(ctx context.Context, telegrafID string, params *GetTelegrafsIDOwnersParams) (*http.Response, error) {
@@ -4831,15 +2919,7 @@ func (c *Client) GetTelegrafsIDOwners(ctx context.Context, telegrafID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDOwnersWithBody(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4848,15 +2928,7 @@ func (c *Client) PostTelegrafsIDOwnersWithBody(ctx context.Context, telegrafID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDOwners(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, body PostTelegrafsIDOwnersJSONRequestBody) (*http.Response, error) {
@@ -4865,15 +2937,7 @@ func (c *Client) PostTelegrafsIDOwners(ctx context.Context, telegrafID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsIDOwnersID(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*http.Response, error) {
@@ -4882,15 +2946,7 @@ func (c *Client) DeleteTelegrafsIDOwnersID(ctx context.Context, telegrafID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetUsers(ctx context.Context, params *GetUsersParams) (*http.Response, error) {
@@ -4899,15 +2955,7 @@ func (c *Client) GetUsers(ctx context.Context, params *GetUsersParams) (*http.Re
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsersWithBody(ctx context.Context, params *PostUsersParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4916,15 +2964,7 @@ func (c *Client) PostUsersWithBody(ctx context.Context, params *PostUsersParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsers(ctx context.Context, params *PostUsersParams, body PostUsersJSONRequestBody) (*http.Response, error) {
@@ -4933,15 +2973,7 @@ func (c *Client) PostUsers(ctx context.Context, params *PostUsersParams, body Po
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteUsersID(ctx context.Context, userID string, params *DeleteUsersIDParams) (*http.Response, error) {
@@ -4950,15 +2982,7 @@ func (c *Client) DeleteUsersID(ctx context.Context, userID string, params *Delet
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetUsersID(ctx context.Context, userID string, params *GetUsersIDParams) (*http.Response, error) {
@@ -4967,15 +2991,7 @@ func (c *Client) GetUsersID(ctx context.Context, userID string, params *GetUsers
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchUsersIDWithBody(ctx context.Context, userID string, params *PatchUsersIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -4984,15 +3000,7 @@ func (c *Client) PatchUsersIDWithBody(ctx context.Context, userID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchUsersID(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*http.Response, error) {
@@ -5001,15 +3009,7 @@ func (c *Client) PatchUsersID(ctx context.Context, userID string, params *PatchU
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetUsersIDLogs(ctx context.Context, userID string, params *GetUsersIDLogsParams) (*http.Response, error) {
@@ -5018,15 +3018,7 @@ func (c *Client) GetUsersIDLogs(ctx context.Context, userID string, params *GetU
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsersIDPasswordWithBody(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -5035,15 +3027,7 @@ func (c *Client) PostUsersIDPasswordWithBody(ctx context.Context, userID string,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsersIDPassword(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*http.Response, error) {
@@ -5052,15 +3036,7 @@ func (c *Client) PostUsersIDPassword(ctx context.Context, userID string, params 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetVariables(ctx context.Context, params *GetVariablesParams) (*http.Response, error) {
@@ -5069,15 +3045,7 @@ func (c *Client) GetVariables(ctx context.Context, params *GetVariablesParams) (
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariablesWithBody(ctx context.Context, params *PostVariablesParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -5086,15 +3054,7 @@ func (c *Client) PostVariablesWithBody(ctx context.Context, params *PostVariable
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariables(ctx context.Context, params *PostVariablesParams, body PostVariablesJSONRequestBody) (*http.Response, error) {
@@ -5103,15 +3063,7 @@ func (c *Client) PostVariables(ctx context.Context, params *PostVariablesParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteVariablesID(ctx context.Context, variableID string, params *DeleteVariablesIDParams) (*http.Response, error) {
@@ -5120,15 +3072,7 @@ func (c *Client) DeleteVariablesID(ctx context.Context, variableID string, param
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetVariablesID(ctx context.Context, variableID string, params *GetVariablesIDParams) (*http.Response, error) {
@@ -5137,15 +3081,7 @@ func (c *Client) GetVariablesID(ctx context.Context, variableID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchVariablesIDWithBody(ctx context.Context, variableID string, params *PatchVariablesIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -5154,15 +3090,7 @@ func (c *Client) PatchVariablesIDWithBody(ctx context.Context, variableID string
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchVariablesID(ctx context.Context, variableID string, params *PatchVariablesIDParams, body PatchVariablesIDJSONRequestBody) (*http.Response, error) {
@@ -5171,15 +3099,7 @@ func (c *Client) PatchVariablesID(ctx context.Context, variableID string, params
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutVariablesIDWithBody(ctx context.Context, variableID string, params *PutVariablesIDParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -5188,15 +3108,7 @@ func (c *Client) PutVariablesIDWithBody(ctx context.Context, variableID string, 
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutVariablesID(ctx context.Context, variableID string, params *PutVariablesIDParams, body PutVariablesIDJSONRequestBody) (*http.Response, error) {
@@ -5205,15 +3117,7 @@ func (c *Client) PutVariablesID(ctx context.Context, variableID string, params *
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetVariablesIDLabels(ctx context.Context, variableID string, params *GetVariablesIDLabelsParams) (*http.Response, error) {
@@ -5222,15 +3126,7 @@ func (c *Client) GetVariablesIDLabels(ctx context.Context, variableID string, pa
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariablesIDLabelsWithBody(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -5239,15 +3135,7 @@ func (c *Client) PostVariablesIDLabelsWithBody(ctx context.Context, variableID s
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariablesIDLabels(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, body PostVariablesIDLabelsJSONRequestBody) (*http.Response, error) {
@@ -5256,15 +3144,7 @@ func (c *Client) PostVariablesIDLabels(ctx context.Context, variableID string, p
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteVariablesIDLabelsID(ctx context.Context, variableID string, labelID string, params *DeleteVariablesIDLabelsIDParams) (*http.Response, error) {
@@ -5273,15 +3153,7 @@ func (c *Client) DeleteVariablesIDLabelsID(ctx context.Context, variableID strin
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostWriteWithBody(ctx context.Context, params *PostWriteParams, contentType string, body io.Reader) (*http.Response, error) {
@@ -5290,15 +3162,7 @@ func (c *Client) PostWriteWithBody(ctx context.Context, params *PostWriteParams,
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	var res *http.Response
-	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-		res = resp
-		return nil
-	})
-	if perr != nil {
-		return nil, perr
-	}
-	return res, nil
+	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 // NewGetRoutesRequest generates requests for GetRoutes

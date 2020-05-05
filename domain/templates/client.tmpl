@@ -33,41 +33,29 @@ type ClientInterface interface {
 {{range . -}}
 {{$hasParams := .RequiresParamObject -}}
 {{$pathParams := .PathParams -}}
+{{$lenServers :=  0 -}}
+{{if .Spec.Servers}}
+{{$lenServers =  len .Spec.Servers -}}
+{{end}}
 {{$opid := .OperationId -}}
 
 func (c *Client) {{$opid}}{{if .HasBody}}WithBody{{end}}(ctx context.Context{{genParamArgs $pathParams}}{{if $hasParams}}, params *{{$opid}}Params{{end}}{{if .HasBody}}, contentType string, body io.Reader{{end}}) (*http.Response, error) {
-    req, err := New{{$opid}}Request{{if .HasBody}}WithBody{{end}}(c.service.ServerApiUrl(){{genParamNames .PathParams}}{{if $hasParams}}, params{{end}}{{if .HasBody}}, contentType, body{{end}})
+    req, err := New{{$opid}}Request{{if .HasBody}}WithBody{{end}}(c.service.{{if eq $lenServers 0}}ServerApiUrl(){{else}}ServerUrl(){{end}}{{genParamNames .PathParams}}{{if $hasParams}}, params{{end}}{{if .HasBody}}, contentType, body{{end}})
     if err != nil {
         return nil, err
     }
     req = req.WithContext(ctx)
-    var res *http.Response
-   	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-   		res = resp
-   		return nil
-   	})
-   	if perr != nil {
-        return nil, perr
-    }
-   	return res, nil
+    return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
 {{range .Bodies}}
 func (c *Client) {{$opid}}{{.Suffix}}(ctx context.Context{{genParamArgs $pathParams}}{{if $hasParams}}, params *{{$opid}}Params{{end}}, body {{$opid}}{{.NameTag}}RequestBody) (*http.Response, error) {
-    req, err := New{{$opid}}{{.Suffix}}Request(c.service.ServerApiUrl(){{genParamNames $pathParams}}{{if $hasParams}}, params{{end}}, body)
+    req, err := New{{$opid}}{{.Suffix}}Request(c.service.{{if eq $lenServers 0}}ServerApiUrl(){{else}}ServerUrl(){{end}}{{genParamNames $pathParams}}{{if $hasParams}}, params{{end}}, body)
     if err != nil {
         return nil, err
     }
     req = req.WithContext(ctx)
-    var res *http.Response
-   	perr := c.service.DoHttpRequest(req, nil, func(resp *http.Response) error {
-   		res = resp
-   		return nil
-   	})
-    if perr != nil {
-        return nil, perr
-    }
-    return res, nil
+    return c.service.DoHttpRequestWithResponse(req, nil)
 }
 {{end}}{{/* range .Bodies */}}
 {{end}}

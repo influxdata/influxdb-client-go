@@ -9,9 +9,9 @@
 1. [#108](https://github.com/influxdata/influxdb-client-go/issues/108) Fix default retry interval doc
 1. [#110](https://github.com/influxdata/influxdb-client-go/issues/110) Allowing empty (nil) values
 
-
 ### Documentation
  - [#112](https://github.com/influxdata/influxdb-client-go/pull/112) Clarify how to use client with InfluxDB 1.8+
+ - [#115](https://github.com/influxdata/influxdb-client-go/pull/115) Doc and examples for reading write api errors 
 
 ## 1.1.0 [2020-04-24]
 ### Features

@@ -7,18 +7,21 @@
 
 This repository contains the reference Go client for InfluxDB 2.
 
+#### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+ ([see details](#influxdb-18-api-compatibility)). For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb1-go](https://github.com/influxdata/influxdb1-client) client library.
+
 - [Features](#features)
 - [Documentation](#documentation)
 - [How To Use](#how-to-use)
     - [Basic Example](#basic-example)
     - [Writes in Detail](#writes)
     - [Queries in Detail](#queries)
+- [InfluxDB 1.8 API compatibility](#influxdb-18-api-compatibility)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Features
 
-- InfluxDB 2 client
+- InfluxDB 2 client 
     - Querying data 
         - using the Flux language
         - into raw data, flux table representation
@@ -303,6 +306,76 @@ func main() {
 }    
 ```
 
+## InfluxDB 1.8 API compatibility
+  
+  [InfluxDB 1.8.0 introduced forward compatibility APIs](https://docs.influxdata.com/influxdb/latest/tools/api/#influxdb-2-0-api-compatibility-endpoints) for InfluxDB 2.0. This allow you to easily move from InfluxDB 1.x to InfluxDB 2.0 Cloud or open source.
+  
+  Client API usage differences summary:
+    1. Use the form `username:password` for an **authentication token**. Example: `my-user:my-password`. Use an empty string (`""`) if the server doesn't require authentication.
+    1. The organization parameter is not used. Use an empty string (`""`) where necessary.
+    1. Use the form `database/retention-policy` where a **bucket** is required. Skip retention policy if the default retention policy should be used. Examples: `telegraf/autogen`, `telegraf`.  
+  
+  The following forward compatible APIs are available:
+  
+  | API | Endpoint | Description |
+  |:----------|:----------|:----------|
+  | [WriteApi](write.go) (also [WriteApiBlocking](writeApiBlocking.go))| [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
+  | [QueryApi](query.go) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false)
+  
+### Example
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/influxdata/influxdb-client-go"
+)
+
+func main() {
+    userName := "my-user"
+    password := "my-password"
+    // Create a client
+    // Supply a string in the form: "username:password" as a token. Set empty value for an unauthenticated server
+    client := influxdb2.NewClient("http://localhost:8086", fmt.Sprintf("%s:%s",userName, password))
+    // Get the blocking write client
+    // Supply a string in the form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
+    // Org name is not used
+    writeApi := client.WriteApiBlocking("", "test/autogen")
+    // create point using full params constructor
+    p := influxdb2.NewPoint("stat",
+        map[string]string{"unit": "temperature"},
+        map[string]interface{}{"avg": 24.5, "max": 45},
+        time.Now())
+    // Write data
+    err := writeApi.WritePoint(context.Background(), p)
+    if err != nil {
+        fmt.Printf("Write error: %s\n", err.Error())
+    }
+
+    // Get query client. Org name is not used
+    queryApi := client.QueryApi("")
+    // Supply string in a form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
+    result, err := queryApi.Query(context.Background(), `from(bucket:"test")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+    if err == nil {
+        for result.Next() {
+            if result.TableChanged() {
+                fmt.Printf("table: %s\n", result.TableMetadata().String())
+            }
+            fmt.Printf("row: %s\n", result.Record().String())
+        }
+        if result.Err() != nil {
+            fmt.Printf("Query error: %s\n", result.Err().Error())
+        }
+    } else {
+        fmt.Printf("Query error: %s\n", err.Error())
+    }
+    // Close client
+    client.Close()
+}
+```
 ## Contributing
 
 If you would like to contribute code you can do through GitHub by forking the repository and sending a pull request into the `master` branch.

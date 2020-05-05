@@ -1,9 +1,12 @@
-## 1.2.0
-## Breaking Change
+## 1.2.0 [in progress]
+### Breaking Change
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/100) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
 
-## Bug fixes 
+### Bug fixes 
 1. [#110](https://github.com/influxdata/influxdb-client-go/issues/110) Allowing empty (nil) values
+
+### Documentation
+ - [#112](https://github.com/influxdata/influxdb-client-go/pull/112) Clarify how to use client with InfluxDB 1.8+
 
 ## 1.1.0 [2020-04-24]
 ### Features

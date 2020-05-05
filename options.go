@@ -15,7 +15,7 @@ type Options struct {
 	batchSize uint
 	// Interval, in ms, in which is buffer flushed if it has not been already written (by reaching batch size) . Default 1000ms
 	flushInterval uint
-	// Default retry interval in ms, if not sent by server. Default 30s
+	// Default retry interval in ms, if not sent by server. Default 1000ms
 	retryInterval uint
 	// Maximum count of retry attempts of failed writes
 	maxRetries uint
@@ -56,7 +56,7 @@ func (o *Options) SetFlushInterval(flushIntervalMs uint) *Options {
 	return o
 }
 
-// RetryInterval returns retry interval in ms
+// RetryInterval returns the retry interval in ms
 func (o *Options) RetryInterval() uint {
 	return o.retryInterval
 }

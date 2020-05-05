@@ -3,7 +3,9 @@
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/100) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
 
 ### Bug fixes 
+1. [#102](https://github.com/influxdata/influxdb-client-go/issues/110) Fix default retry interval doc
 1. [#110](https://github.com/influxdata/influxdb-client-go/issues/110) Allowing empty (nil) values
+
 
 ### Documentation
  - [#112](https://github.com/influxdata/influxdb-client-go/pull/112) Clarify how to use client with InfluxDB 1.8+

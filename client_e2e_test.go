@@ -28,7 +28,7 @@ func TestReady(t *testing.T) {
 	if !e2e {
 		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
 	}
-	client := NewClient("http://localhost:9999", "my-token-123")
+	client := NewClient("http://localhost:9999", "")
 
 	ok, err := client.Ready(context.Background())
 	if err != nil {
@@ -56,6 +56,21 @@ func TestSetup(t *testing.T) {
 	require.NotNil(t, err)
 	assert.Equal(t, "conflict: onboarding has already been completed", err.Error())
 }
+
+func TestHealth(t *testing.T) {
+	if !e2e {
+		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
+	}
+	client := NewClient("http://localhost:9999", "")
+
+	health, err := client.Health(context.Background())
+	if err != nil {
+		t.Error(err)
+	}
+	require.NotNil(t, health)
+	assert.Equal(t, domain.HealthCheckStatusPass, health.Status)
+}
+
 func TestWrite(t *testing.T) {
 	if !e2e {
 		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")

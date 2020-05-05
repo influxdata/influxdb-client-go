@@ -1,4 +1,7 @@
 ## 1.2.0 [in progress]
+### Features
+1. [#120](https://github.com/influxdata/influxdb-client-go/pull/120) Health check API   
+
 ### Breaking Change
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/100) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
 

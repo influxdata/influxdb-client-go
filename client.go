@@ -2,8 +2,8 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-// package influxdb2 provides API for using InfluxDB client in Go
-// It's intended to use with InfluxDB 2 server
+// Package influxdb2 provides API for using InfluxDB client in Go.
+// It's intended to use with InfluxDB 2 server. WriteApi, QueryApi and Health work also with InfluxDB 1.8
 package influxdb2
 
 import (
@@ -20,14 +20,14 @@ import (
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
 
-// Client provides API to communicate with InfluxDBServer
+// Client provides API to communicate with InfluxDBServer.
 // There two APIs for writing, WriteApi and WriteApiBlocking.
 // WriteApi provides asynchronous, non-blocking, methods for writing time series data.
-// WriteApiBlocking provides blocking methods for writing time series data
+// WriteApiBlocking provides blocking methods for writing time series data.
 type Client interface {
-	// WriteApi returns the asynchronous, non-blocking, Write client.
+	// WriteApi returns the asynchronous, non-blocking, Write client
 	WriteApi(org, bucket string) WriteApi
-	// WriteApi returns the synchronous, blocking, Write client.
+	// WriteApi returns the synchronous, blocking, Write client
 	WriteApiBlocking(org, bucket string) WriteApiBlocking
 	// QueryApi returns Query client
 	QueryApi(org string) QueryApi
@@ -41,14 +41,17 @@ type Client interface {
 	Close()
 	// Options returns the options associated with client
 	Options() *Options
-	// serverUrl returns the url of the server url client talks to
+	// ServerUrl returns the url of the server url client talks to
 	ServerUrl() string
 	// Setup sends request to initialise new InfluxDB server with user, org and bucket, and data retention period
-	// Retention period of zero will result to infinite retention
-	// and returns details about newly created entities along with the authorization object
+	// and returns details about newly created entities along with the authorization object.
+	// Retention period of zero will result to infinite retention.
 	Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error)
-	// Ready checks InfluxDB server is running
+	// Ready checks InfluxDB server is running. It doesn't validate authentication params.
 	Ready(ctx context.Context) (bool, error)
+	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
+	// Health doesn't validate authentication params.
+	Health(ctx context.Context) (*domain.HealthCheck, error)
 }
 
 // clientImpl implements Client interface
@@ -58,6 +61,7 @@ type clientImpl struct {
 	writeApis   []WriteApi
 	lock        sync.Mutex
 	httpService ihttp.Service
+	apiClient   *domain.ClientWithResponses
 	authApi     api.AuthorizationsApi
 	orgApi      api.OrganizationsApi
 	usersApi    api.UsersApi
@@ -75,11 +79,13 @@ func NewClient(serverUrl string, authToken string) Client {
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
 func NewClientWithOptions(serverUrl string, authToken string, options *Options) Client {
+	service := ihttp.NewService(serverUrl, "Token "+authToken, options.tlsConfig, options.httpRequestTimeout)
 	client := &clientImpl{
 		serverUrl:   serverUrl,
 		options:     options,
 		writeApis:   make([]WriteApi, 0, 5),
-		httpService: ihttp.NewService(serverUrl, "Token "+authToken, options.tlsConfig, options.httpRequestTimeout),
+		httpService: service,
+		apiClient:   domain.NewClientWithResponses(service),
 	}
 	return client
 }

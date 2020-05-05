@@ -18,40 +18,44 @@ import (
 	"time"
 )
 
-type Service interface {
-	PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
-	GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
-	DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
-	SetAuthorization(authorization string)
-	Authorization() string
-	HttpClient() *http.Client
-	ServerApiUrl() string
-}
-
-type serviceImpl struct {
-	serverApiUrl  string
-	authorization string
-	client        *http.Client
-}
-
-func (s *serviceImpl) ServerApiUrl() string {
-	return s.serverApiUrl
-}
-
 // Http operation callbacks
 type RequestCallback func(req *http.Request)
 type ResponseCallback func(resp *http.Response) error
 
+// Service handles HTTP operations with taking care of mandatory request headers
+type Service interface {
+	PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	DoHttpRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error)
+	SetAuthorization(authorization string)
+	Authorization() string
+	HttpClient() *http.Client
+	ServerApiUrl() string
+	ServerUrl() string
+}
+
+// serviceImpl implements Service interface
+type serviceImpl struct {
+	serverApiUrl  string
+	serverUrl     string
+	authorization string
+	client        *http.Client
+}
+
+// NewService creates instance of http Service with given parameters
 func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequestTimeout uint) Service {
 	apiUrl, err := url.Parse(serverUrl)
+	serverApiUrl := serverUrl
 	if err == nil {
 		apiUrl, err = apiUrl.Parse("/api/v2/")
 		if err == nil {
-			serverUrl = apiUrl.String()
+			serverApiUrl = apiUrl.String()
 		}
 	}
 	return &serviceImpl{
-		serverApiUrl:  serverUrl,
+		serverApiUrl:  serverApiUrl,
+		serverUrl:     serverUrl,
 		authorization: authorization,
 		client: &http.Client{
 			Timeout: time.Second * time.Duration(httpRequestTimeout),
@@ -64,6 +68,14 @@ func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequ
 			},
 		},
 	}
+}
+
+func (s *serviceImpl) ServerApiUrl() string {
+	return s.serverApiUrl
+}
+
+func (s *serviceImpl) ServerUrl() string {
+	return s.serverUrl
 }
 
 func (s *serviceImpl) SetAuthorization(authorization string) {
@@ -91,12 +103,7 @@ func (s *serviceImpl) doHttpRequestWithUrl(ctx context.Context, method, url stri
 }
 
 func (s *serviceImpl) DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	req.Header.Set("Authorization", s.authorization)
-	req.Header.Set("User-Agent", UserAgent)
-	if requestCallback != nil {
-		requestCallback(req)
-	}
-	resp, err := s.client.Do(req)
+	resp, err := s.DoHttpRequestWithResponse(req, requestCallback)
 	if err != nil {
 		return NewError(err)
 	}
@@ -111,6 +118,15 @@ func (s *serviceImpl) DoHttpRequest(req *http.Request, requestCallback RequestCa
 		}
 	}
 	return nil
+}
+
+func (s *serviceImpl) DoHttpRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error) {
+	req.Header.Set("Authorization", s.authorization)
+	req.Header.Set("User-Agent", UserAgent)
+	if requestCallback != nil {
+		requestCallback(req)
+	}
+	return s.client.Do(req)
 }
 
 func (s *serviceImpl) GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {

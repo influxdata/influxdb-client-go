@@ -33,6 +33,10 @@ type testHttpService struct {
 	lock           sync.Mutex
 }
 
+func (t *testHttpService) ServerUrl() string {
+	return t.serverUrl
+}
+
 func (t *testHttpService) ServerApiUrl() string {
 	return t.serverUrl
 }
@@ -70,6 +74,10 @@ func (t *testHttpService) GetRequest(_ context.Context, _ string, _ ihttp.Reques
 }
 func (t *testHttpService) DoHttpRequest(_ *http.Request, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
 	return nil
+}
+
+func (t *testHttpService) DoHttpRequestWithResponse(_ *http.Request, _ ihttp.RequestCallback) (*http.Response, error) {
+	return nil, nil
 }
 
 func (t *testHttpService) PostRequest(_ context.Context, url string, body io.Reader, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {

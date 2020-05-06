@@ -7,7 +7,6 @@ package api
 import (
 	"context"
 	"github.com/influxdata/influxdb-client-go/domain"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
 
 // AuthorizationsApi provides methods for organizing Authorization in a InfluxDB server
@@ -36,9 +35,7 @@ type authorizationsApiImpl struct {
 	apiClient *domain.ClientWithResponses
 }
 
-func NewAuthorizationApi(service ihttp.Service) AuthorizationsApi {
-
-	apiClient := domain.NewClientWithResponses(service)
+func NewAuthorizationApi(apiClient *domain.ClientWithResponses) AuthorizationsApi {
 	return &authorizationsApiImpl{
 		apiClient: apiClient,
 	}

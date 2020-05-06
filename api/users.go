@@ -8,7 +8,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/influxdata/influxdb-client-go/domain"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
 
 // UsersApi provides methods for managing users in a InfluxDB server
@@ -43,9 +42,7 @@ type usersApiImpl struct {
 	apiClient *domain.ClientWithResponses
 }
 
-func NewUsersApi(service ihttp.Service) UsersApi {
-
-	apiClient := domain.NewClientWithResponses(service)
+func NewUsersApi(apiClient *domain.ClientWithResponses) UsersApi {
 	return &usersApiImpl{
 		apiClient: apiClient,
 	}

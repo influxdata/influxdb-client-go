@@ -7,7 +7,6 @@ package api
 import (
 	"context"
 	"github.com/influxdata/influxdb-client-go/domain"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
 
 // OrganizationsApi provides methods for managing Organizations in a InfluxDB server
@@ -60,9 +59,7 @@ type organizationsApiImpl struct {
 	apiClient *domain.ClientWithResponses
 }
 
-func NewOrganizationsApi(service ihttp.Service) OrganizationsApi {
-
-	apiClient := domain.NewClientWithResponses(service)
+func NewOrganizationsApi(apiClient *domain.ClientWithResponses) OrganizationsApi {
 	return &organizationsApiImpl{
 		apiClient: apiClient,
 	}

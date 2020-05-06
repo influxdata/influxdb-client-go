@@ -8,12 +8,8 @@ package influxdb2
 
 import (
 	"context"
+	"errors"
 	"github.com/influxdata/influxdb-client-go/api"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"path"
 	"sync"
 
 	"github.com/influxdata/influxdb-client-go/domain"
@@ -98,23 +94,57 @@ func (c *clientImpl) ServerUrl() string {
 }
 
 func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
-	readyUrl, err := url.Parse(c.serverUrl)
+	params := &domain.GetReadyParams{}
+	response, err := c.apiClient.GetReadyWithResponse(ctx, params)
 	if err != nil {
 		return false, err
 	}
-	readyUrl.Path = path.Join(readyUrl.Path, "ready")
-	readyRes := false
-	perror := c.httpService.GetRequest(ctx, readyUrl.String(), nil, func(resp *http.Response) error {
-		// discard body so connection can be reused
-		_, _ = io.Copy(ioutil.Discard, resp.Body)
-		_ = resp.Body.Close()
-		readyRes = resp.StatusCode == http.StatusOK
-		return nil
-	})
-	if perror != nil {
-		return false, perror
+	if response.JSONDefault != nil {
+		return false, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
-	return readyRes, nil
+	return true, nil
+}
+
+func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
+	if username == "" || password == "" {
+		return nil, errors.New("a username and password is required for a setup")
+	}
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	params := &domain.PostSetupParams{}
+	body := &domain.PostSetupJSONRequestBody{
+		Bucket:             bucket,
+		Org:                org,
+		Password:           password,
+		RetentionPeriodHrs: &retentionPeriodHours,
+		Username:           username,
+	}
+	response, err := c.apiClient.PostSetupWithResponse(ctx, params, *body)
+	if err != nil {
+		return nil, err
+	}
+	if response.JSONDefault != nil {
+		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+	}
+	c.httpService.SetAuthorization("Token " + *response.JSON201.Auth.Token)
+	return response.JSON201, nil
+}
+
+func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
+	params := &domain.GetHealthParams{}
+	response, err := c.apiClient.GetHealthWithResponse(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	if response.JSONDefault != nil {
+		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+	}
+	if response.JSON503 != nil {
+		//unhealthy server
+		return response.JSON503, nil
+	}
+
+	return response.JSON200, nil
 }
 
 func (c *clientImpl) WriteApi(org, bucket string) WriteApi {
@@ -142,7 +172,7 @@ func (c *clientImpl) AuthorizationsApi() api.AuthorizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.authApi == nil {
-		c.authApi = api.NewAuthorizationApi(c.httpService)
+		c.authApi = api.NewAuthorizationApi(c.apiClient)
 	}
 	return c.authApi
 }
@@ -151,7 +181,7 @@ func (c *clientImpl) OrganizationsApi() api.OrganizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.orgApi == nil {
-		c.orgApi = api.NewOrganizationsApi(c.httpService)
+		c.orgApi = api.NewOrganizationsApi(c.apiClient)
 	}
 	return c.orgApi
 }
@@ -160,7 +190,7 @@ func (c *clientImpl) UsersApi() api.UsersApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.usersApi == nil {
-		c.usersApi = api.NewUsersApi(c.httpService)
+		c.usersApi = api.NewUsersApi(c.apiClient)
 	}
 	return c.usersApi
 }

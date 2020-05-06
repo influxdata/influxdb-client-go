@@ -16890,6 +16890,7 @@ type postSetupResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *OnboardingResponse
+	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
@@ -25029,6 +25030,13 @@ func ParsePostSetupResponse(rsp *http.Response) (*postSetupResponse, error) {
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
 
 	}
 

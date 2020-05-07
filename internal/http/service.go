@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -45,6 +46,9 @@ type serviceImpl struct {
 
 // NewService creates instance of http Service with given parameters
 func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequestTimeout uint) Service {
+	if strings.HasSuffix(serverUrl, "/") {
+		serverUrl = serverUrl[:len(serverUrl)-1]
+	}
 	apiUrl, err := url.Parse(serverUrl)
 	serverApiUrl := serverUrl
 	if err == nil {

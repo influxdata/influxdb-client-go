@@ -21,6 +21,21 @@ import (
 // WriteApi provides asynchronous, non-blocking, methods for writing time series data.
 // WriteApiBlocking provides blocking methods for writing time series data.
 type Client interface {
+	// Setup sends request to initialise new InfluxDB server with user, org and bucket, and data retention period
+	// and returns details about newly created entities along with the authorization object.
+	// Retention period of zero will result to infinite retention.
+	Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error)
+	// Ready checks InfluxDB server is running. It doesn't validate authentication params.
+	Ready(ctx context.Context) (bool, error)
+	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
+	// Health doesn't validate authentication params.
+	Health(ctx context.Context) (*domain.HealthCheck, error)
+	// Close ensures all ongoing asynchronous write clients finish
+	Close()
+	// Options returns the options associated with client
+	Options() *Options
+	// ServerUrl returns the url of the server url client talks to
+	ServerUrl() string
 	// WriteApi returns the asynchronous, non-blocking, Write client
 	WriteApi(org, bucket string) WriteApi
 	// WriteApi returns the synchronous, blocking, Write client
@@ -33,21 +48,8 @@ type Client interface {
 	OrganizationsApi() api.OrganizationsApi
 	// UsersApi returns Users API client
 	UsersApi() api.UsersApi
-	// Close ensures all ongoing asynchronous write clients finish
-	Close()
-	// Options returns the options associated with client
-	Options() *Options
-	// ServerUrl returns the url of the server url client talks to
-	ServerUrl() string
-	// Setup sends request to initialise new InfluxDB server with user, org and bucket, and data retention period
-	// and returns details about newly created entities along with the authorization object.
-	// Retention period of zero will result to infinite retention.
-	Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error)
-	// Ready checks InfluxDB server is running. It doesn't validate authentication params.
-	Ready(ctx context.Context) (bool, error)
-	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
-	// Health doesn't validate authentication params.
-	Health(ctx context.Context) (*domain.HealthCheck, error)
+	// DeleteApi returns Delete API client
+	DeleteApi() api.DeleteApi
 }
 
 // clientImpl implements Client interface
@@ -61,6 +63,7 @@ type clientImpl struct {
 	authApi     api.AuthorizationsApi
 	orgApi      api.OrganizationsApi
 	usersApi    api.UsersApi
+	deleteApi   api.DeleteApi
 }
 
 // NewClient creates Client for connecting to given serverUrl with provided authentication token, with the default options.
@@ -193,4 +196,13 @@ func (c *clientImpl) UsersApi() api.UsersApi {
 		c.usersApi = api.NewUsersApi(c.apiClient)
 	}
 	return c.usersApi
+}
+
+func (c *clientImpl) DeleteApi() api.DeleteApi {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.deleteApi == nil {
+		c.deleteApi = api.NewDeleteApi(c.apiClient)
+	}
+	return c.deleteApi
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 )
@@ -397,4 +398,70 @@ func TestUsers(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, users)
 	assert.Len(t, *users, 1)
+}
+
+func TestDelete(t *testing.T) {
+	if !e2e {
+		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
+	}
+	client := NewClient("http://localhost:9999", authToken)
+	writeApi := client.WriteApiBlocking("my-org", "my-bucket")
+	queryApi := client.QueryApi("my-org")
+	tmStart := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
+	writeF := func(start time.Time, count int64) time.Time {
+		tm := start
+		for i, f := int64(0), 0.0; i < count; i++ {
+			p := NewPoint("test",
+				map[string]string{"a": strconv.FormatInt(i%2, 10), "b": "static"},
+				map[string]interface{}{"f": f, "i": i},
+				tm)
+			err := writeApi.WritePoint(context.Background(), p)
+			require.Nil(t, err, err)
+			f += 1.2
+			tm = tm.Add(time.Minute)
+		}
+		return tm
+	}
+	countF := func(start, stop time.Time) int64 {
+		result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: `+start.Format(time.RFC3339)+`, stop:`+stop.Format(time.RFC3339)+`) 
+		|> filter(fn: (r) => r._measurement == "test" and r._field == "f")
+		|> drop(columns: ["a", "b"])
+		|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+		|> count(column: "f")`)
+
+		require.Nil(t, err, err)
+		count := int64(0)
+		if result.Next() {
+			require.NotNil(t, result.Record().ValueByKey("f"))
+			count = result.Record().ValueByKey("f").(int64)
+		}
+		return count
+	}
+	tmEnd := writeF(tmStart, 100)
+	assert.Equal(t, int64(100), countF(tmStart, tmEnd))
+	deleteApi := client.DeleteApi()
+
+	err := deleteApi.DeleteWithName(context.Background(), "my-org", "my-bucket", tmStart, tmEnd, "")
+	require.Nil(t, err, err)
+	assert.Equal(t, int64(0), countF(tmStart, tmEnd))
+
+	tmEnd = writeF(tmStart, 100)
+	assert.Equal(t, int64(100), countF(tmStart, tmEnd))
+
+	err = deleteApi.DeleteWithName(context.Background(), "my-org", "my-bucket", tmStart, tmEnd, "a=1")
+	require.Nil(t, err, err)
+	assert.Equal(t, int64(50), countF(tmStart, tmEnd))
+
+	err = deleteApi.DeleteWithName(context.Background(), "my-org", "my-bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
+	require.Nil(t, err, err)
+	assert.Equal(t, int64(25), countF(tmStart, tmEnd))
+
+	err = deleteApi.DeleteWithName(context.Background(), "org", "my-bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
+	require.NotNil(t, err, err)
+	assert.True(t, strings.Contains(err.Error(), "not found"))
+
+	err = deleteApi.DeleteWithName(context.Background(), "my-org", "bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
+	require.NotNil(t, err, err)
+	assert.True(t, strings.Contains(err.Error(), "not found"))
+
 }

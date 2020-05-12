@@ -41,9 +41,9 @@ type OrganizationsApi interface {
 	RemoveMember(ctx context.Context, org *domain.Organization, user *domain.User) error
 	// RemoveMember removes a member with id memberId from an organization with orgId
 	RemoveMemberWithId(ctx context.Context, orgId, memberId string) error
-	// GetMembers returns members of an organization
+	// GetOwners returns owners of an organization
 	GetOwners(ctx context.Context, org *domain.Organization) (*[]domain.ResourceOwner, error)
-	// GetMembersWithId returns members of an organization with orgId
+	// GetOwnersWithId returns owners of an organization with orgId
 	GetOwnersWithId(ctx context.Context, orgId string) (*[]domain.ResourceOwner, error)
 	// AddOwner add a user to an organization
 	AddOwner(ctx context.Context, org *domain.Organization, user *domain.User) (*domain.ResourceOwner, error)

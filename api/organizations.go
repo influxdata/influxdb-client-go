@@ -9,49 +9,49 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
-// OrganizationsApi provides methods for managing Organizations in a InfluxDB server
+// OrganizationsApi provides methods for managing Organizations in a InfluxDB server.
 type OrganizationsApi interface {
-	// GetOrganizations returns all organizations
+	// GetOrganizations returns all organizations.
 	GetOrganizations(ctx context.Context) (*[]domain.Organization, error)
-	// FindOrganizationByName returns an organization found using orgName
+	// FindOrganizationByName returns an organization found using orgName.
 	FindOrganizationByName(ctx context.Context, orgName string) (*domain.Organization, error)
-	// FindOrganizationById returns an organization found using orgId
+	// FindOrganizationById returns an organization found using orgId.
 	FindOrganizationById(ctx context.Context, orgId string) (*domain.Organization, error)
-	// FindOrganizationsByUserId returns organizations an user with userID belongs to
+	// FindOrganizationsByUserId returns organizations an user with userID belongs to.
 	FindOrganizationsByUserId(ctx context.Context, orgId string) (*[]domain.Organization, error)
-	// CreateOrganization creates new organization
+	// CreateOrganization creates new organization.
 	CreateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error)
-	// CreateOrganizationWithName creates new organization with orgName and with status active
+	// CreateOrganizationWithName creates new organization with orgName and with status active.
 	CreateOrganizationWithName(ctx context.Context, orgName string) (*domain.Organization, error)
-	// UpdateOrganization updates organization
+	// UpdateOrganization updates organization.
 	UpdateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error)
-	// DeleteOrganization deletes an organization
+	// DeleteOrganization deletes an organization.
 	DeleteOrganization(ctx context.Context, org *domain.Organization) error
-	// DeleteOrganizationWithId deletes an organization with orgId
+	// DeleteOrganizationWithId deletes an organization with orgId.
 	DeleteOrganizationWithId(ctx context.Context, orgId string) error
-	// GetMembers returns members of an organization
+	// GetMembers returns members of an organization.
 	GetMembers(ctx context.Context, org *domain.Organization) (*[]domain.ResourceMember, error)
-	// GetMembersWithId returns members of an organization with orgId
+	// GetMembersWithId returns members of an organization with orgId.
 	GetMembersWithId(ctx context.Context, orgId string) (*[]domain.ResourceMember, error)
-	// AddMember add a user to an organization
+	// AddMember adds a member to an organization.
 	AddMember(ctx context.Context, org *domain.Organization, user *domain.User) (*domain.ResourceMember, error)
-	// AddMember add a member with id memberId to an organization with orgId
+	// AddMember adds a member with id memberId to an organization with orgId.
 	AddMemberWithId(ctx context.Context, orgId, memberId string) (*domain.ResourceMember, error)
-	// RemoveMember removes a user from an organization
+	// RemoveMember removes a member from an organization.
 	RemoveMember(ctx context.Context, org *domain.Organization, user *domain.User) error
-	// RemoveMember removes a member with id memberId from an organization with orgId
+	// RemoveMember removes a member with id memberId from an organization with orgId.
 	RemoveMemberWithId(ctx context.Context, orgId, memberId string) error
-	// GetOwners returns owners of an organization
+	// GetOwners returns owners of an organization.
 	GetOwners(ctx context.Context, org *domain.Organization) (*[]domain.ResourceOwner, error)
-	// GetOwnersWithId returns owners of an organization with orgId
+	// GetOwnersWithId returns owners of an organization with orgId.
 	GetOwnersWithId(ctx context.Context, orgId string) (*[]domain.ResourceOwner, error)
-	// AddOwner add a user to an organization
+	// AddOwner adds an owner to an organization.
 	AddOwner(ctx context.Context, org *domain.Organization, user *domain.User) (*domain.ResourceOwner, error)
-	// AddOwner add an owner with id memberId to an organization with orgId
+	// AddOwner adds an owner with id memberId to an organization with orgId.
 	AddOwnerWithId(ctx context.Context, orgId, memberId string) (*domain.ResourceOwner, error)
-	// RemoveOwner  a user from an organization
+	// RemoveOwner removes an owner from an organization.
 	RemoveOwner(ctx context.Context, org *domain.Organization, user *domain.User) error
-	// RemoveOwner removes a member with id memberId from an organization with orgId
+	// RemoveOwner removes an owner with id memberId from an organization with orgId.
 	RemoveOwnerWithId(ctx context.Context, orgId, memberId string) error
 }
 

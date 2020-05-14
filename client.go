@@ -50,6 +50,8 @@ type Client interface {
 	UsersApi() api.UsersApi
 	// DeleteApi returns Delete API client
 	DeleteApi() api.DeleteApi
+	// BucketsApi returns Delete API client
+	BucketsApi() api.BucketsApi
 }
 
 // clientImpl implements Client interface
@@ -64,6 +66,7 @@ type clientImpl struct {
 	orgApi      api.OrganizationsApi
 	usersApi    api.UsersApi
 	deleteApi   api.DeleteApi
+	bucketsApi  api.BucketsApi
 }
 
 // NewClient creates Client for connecting to given serverUrl with provided authentication token, with the default options.
@@ -205,4 +208,13 @@ func (c *clientImpl) DeleteApi() api.DeleteApi {
 		c.deleteApi = api.NewDeleteApi(c.apiClient)
 	}
 	return c.deleteApi
+}
+
+func (c *clientImpl) BucketsApi() api.BucketsApi {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.bucketsApi == nil {
+		c.bucketsApi = api.NewBucketsApi(c.apiClient)
+	}
+	return c.bucketsApi
 }

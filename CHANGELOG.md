@@ -2,13 +2,14 @@
 ### Features
 1. [#120](https://github.com/influxdata/influxdb-client-go/pull/120) Health check API   
 1. [#122](https://github.com/influxdata/influxdb-client-go/pull/122) Delete API
+1. [#124](https://github.com/influxdata/influxdb-client-go/pull/124) Buckets API
 
 ### Breaking Change
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/100) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
 
 ### Bug fixes 
 1. [#108](https://github.com/influxdata/influxdb-client-go/issues/108) Fix default retry interval doc
-1. [#110](https://github.com/influxdata/influxdb-client-go/issues/110) Allowing empty (nil) values
+1. [#110](https://github.com/influxdata/influxdb-client-go/issues/110) Allowing empty (nil) values in query result
 
 ### Documentation
  - [#112](https://github.com/influxdata/influxdb-client-go/pull/112) Clarify how to use client with InfluxDB 1.8+

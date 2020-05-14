@@ -8,6 +8,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/influxdata/influxdb-client-go/api"
 	"github.com/influxdata/influxdb-client-go/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -404,6 +405,7 @@ func TestDelete(t *testing.T) {
 	if !e2e {
 		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
 	}
+	ctx := context.Background()
 	client := NewClient("http://localhost:9999", authToken)
 	writeApi := client.WriteApiBlocking("my-org", "my-bucket")
 	queryApi := client.QueryApi("my-org")
@@ -415,7 +417,7 @@ func TestDelete(t *testing.T) {
 				map[string]string{"a": strconv.FormatInt(i%2, 10), "b": "static"},
 				map[string]interface{}{"f": f, "i": i},
 				tm)
-			err := writeApi.WritePoint(context.Background(), p)
+			err := writeApi.WritePoint(ctx, p)
 			require.Nil(t, err, err)
 			f += 1.2
 			tm = tm.Add(time.Minute)
@@ -423,7 +425,7 @@ func TestDelete(t *testing.T) {
 		return tm
 	}
 	countF := func(start, stop time.Time) int64 {
-		result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: `+start.Format(time.RFC3339)+`, stop:`+stop.Format(time.RFC3339)+`) 
+		result, err := queryApi.Query(ctx, `from(bucket:"my-bucket")|> range(start: `+start.Format(time.RFC3339)+`, stop:`+stop.Format(time.RFC3339)+`) 
 		|> filter(fn: (r) => r._measurement == "test" and r._field == "f")
 		|> drop(columns: ["a", "b"])
 		|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
@@ -441,27 +443,288 @@ func TestDelete(t *testing.T) {
 	assert.Equal(t, int64(100), countF(tmStart, tmEnd))
 	deleteApi := client.DeleteApi()
 
-	err := deleteApi.DeleteWithName(context.Background(), "my-org", "my-bucket", tmStart, tmEnd, "")
+	org, err := client.OrganizationsApi().FindOrganizationByName(ctx, "my-org")
+	require.Nil(t, err, err)
+	require.NotNil(t, org)
+
+	bucket, err := client.BucketsApi().FindBucketByName(ctx, "my-bucket")
+	require.Nil(t, err, err)
+	require.NotNil(t, bucket)
+
+	err = deleteApi.DeleteWithName(ctx, "my-org", "my-bucket", tmStart, tmEnd, "")
 	require.Nil(t, err, err)
 	assert.Equal(t, int64(0), countF(tmStart, tmEnd))
 
 	tmEnd = writeF(tmStart, 100)
 	assert.Equal(t, int64(100), countF(tmStart, tmEnd))
 
-	err = deleteApi.DeleteWithName(context.Background(), "my-org", "my-bucket", tmStart, tmEnd, "a=1")
+	err = deleteApi.DeleteWithId(ctx, *org.Id, *bucket.Id, tmStart, tmEnd, "a=1")
 	require.Nil(t, err, err)
 	assert.Equal(t, int64(50), countF(tmStart, tmEnd))
 
-	err = deleteApi.DeleteWithName(context.Background(), "my-org", "my-bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
+	err = deleteApi.Delete(ctx, org, bucket, tmStart.Add(50*time.Minute), tmEnd, "b=static")
 	require.Nil(t, err, err)
 	assert.Equal(t, int64(25), countF(tmStart, tmEnd))
 
-	err = deleteApi.DeleteWithName(context.Background(), "org", "my-bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
+	err = deleteApi.DeleteWithName(ctx, "org", "my-bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
 	require.NotNil(t, err, err)
 	assert.True(t, strings.Contains(err.Error(), "not found"))
 
-	err = deleteApi.DeleteWithName(context.Background(), "my-org", "bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
+	err = deleteApi.DeleteWithName(ctx, "my-org", "bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
 	require.NotNil(t, err, err)
 	assert.True(t, strings.Contains(err.Error(), "not found"))
+}
 
+func TestBuckets(t *testing.T) {
+	if !e2e {
+		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
+	}
+	ctx := context.Background()
+	client := NewClient("http://localhost:9999", authToken)
+
+	bucketsApi := client.BucketsApi()
+
+	buckets, err := bucketsApi.GetBuckets(ctx)
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	//at least three buckets, my-bucket and two system buckets.
+	assert.True(t, len(*buckets) > 2)
+
+	// test find existing bucket
+	bucket, err := bucketsApi.FindBucketByName(ctx, "my-bucket")
+	require.Nil(t, err, err)
+	require.NotNil(t, bucket)
+	assert.Equal(t, "my-bucket", bucket.Name)
+	// test find non-existing bucket, bug - returns system buckets
+	//bucket, err = bucketsApi.FindBucketByName(ctx, "not existing bucket")
+	//require.NotNil(t, err)
+	//require.Nil(t, bucket)
+
+	// create organizatiton for bucket
+	org, err := client.OrganizationsApi().CreateOrganizationWithName(ctx, "bucket-org")
+	require.Nil(t, err)
+	require.NotNil(t, org)
+
+	// collect all buckets including system ones created for new organization
+	buckets, err = bucketsApi.GetBuckets(ctx)
+	require.Nil(t, err, err)
+	//store #all buckets before creating new ones
+	bucketsNum := len(*buckets)
+
+	name := "bucket-x"
+	b, err := bucketsApi.CreateBucketWithName(ctx, org, name, domain.RetentionRule{EverySeconds: 3600 * 1}, domain.RetentionRule{EverySeconds: 3600 * 24})
+	require.Nil(t, err, err)
+	require.NotNil(t, b)
+	assert.Equal(t, name, b.Name)
+	assert.Len(t, b.RetentionRules, 1)
+
+	// Test update
+	desc := "bucket description"
+	b.Description = &desc
+	b.RetentionRules = []domain.RetentionRule{{EverySeconds: 60}}
+	b, err = bucketsApi.UpdateBucket(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, b)
+	assert.Equal(t, name, b.Name)
+	assert.Equal(t, desc, *b.Description)
+	assert.Len(t, b.RetentionRules, 1)
+
+	// Test owners
+	userOwner, err := client.UsersApi().CreateUserWithName(ctx, "bucket-owner")
+	require.Nil(t, err, err)
+	require.NotNil(t, userOwner)
+
+	owners, err := bucketsApi.GetOwners(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, owners)
+	assert.Len(t, *owners, 0)
+
+	owner, err := bucketsApi.AddOwner(ctx, b, userOwner)
+	require.Nil(t, err, err)
+	require.NotNil(t, owner)
+	assert.Equal(t, *userOwner.Id, *owner.Id)
+
+	owners, err = bucketsApi.GetOwners(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, owners)
+	assert.Len(t, *owners, 1)
+
+	err = bucketsApi.RemoveOwnerWithId(ctx, *b.Id, *(&(*owners)[0]).Id)
+	require.Nil(t, err, err)
+
+	owners, err = bucketsApi.GetOwners(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, owners)
+	assert.Len(t, *owners, 0)
+
+	//test failures
+	_, err = bucketsApi.AddOwnerWithId(ctx, "000000000000000", *userOwner.Id)
+	assert.NotNil(t, err)
+
+	_, err = bucketsApi.AddOwnerWithId(ctx, *b.Id, "000000000000000")
+	assert.NotNil(t, err)
+
+	_, err = bucketsApi.GetOwnersWithId(ctx, "000000000000000")
+	assert.NotNil(t, err)
+
+	err = bucketsApi.RemoveOwnerWithId(ctx, *b.Id, "000000000000000")
+	assert.NotNil(t, err)
+
+	err = bucketsApi.RemoveOwnerWithId(ctx, "000000000000000", *userOwner.Id)
+	assert.NotNil(t, err)
+
+	// No logs returned https://github.com/influxdata/influxdb/issues/18048
+	//logs, err := bucketsApi.GetLogs(ctx, b)
+	//require.Nil(t, err, err)
+	//require.NotNil(t, logs)
+	//assert.Len(t, *logs, 0)
+
+	// Test members
+	userMember, err := client.UsersApi().CreateUserWithName(ctx, "bucket-member")
+	require.Nil(t, err, err)
+	require.NotNil(t, userMember)
+
+	members, err := bucketsApi.GetMembers(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, members)
+	assert.Len(t, *members, 0)
+
+	member, err := bucketsApi.AddMember(ctx, b, userMember)
+	require.Nil(t, err, err)
+	require.NotNil(t, member)
+	assert.Equal(t, *userMember.Id, *member.Id)
+
+	members, err = bucketsApi.GetMembers(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, members)
+	assert.Len(t, *members, 1)
+
+	err = bucketsApi.RemoveMemberWithId(ctx, *b.Id, *(&(*members)[0]).Id)
+	require.Nil(t, err, err)
+
+	members, err = bucketsApi.GetMembers(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, members)
+	assert.Len(t, *members, 0)
+
+	//test failures
+	_, err = bucketsApi.AddMemberWithId(ctx, "000000000000000", *userMember.Id)
+	assert.NotNil(t, err)
+
+	_, err = bucketsApi.AddMemberWithId(ctx, *b.Id, "000000000000000")
+	assert.NotNil(t, err)
+
+	_, err = bucketsApi.GetMembersWithId(ctx, "000000000000000")
+	assert.NotNil(t, err)
+
+	err = bucketsApi.RemoveMemberWithId(ctx, *b.Id, "000000000000000")
+	assert.NotNil(t, err)
+
+	err = bucketsApi.RemoveMemberWithId(ctx, "000000000000000", *userMember.Id)
+	assert.NotNil(t, err)
+
+	err = bucketsApi.DeleteBucketWithId(ctx, *b.Id)
+	assert.Nil(t, err, err)
+
+	err = client.UsersApi().DeleteUser(ctx, userOwner)
+	assert.Nil(t, err, err)
+
+	err = client.UsersApi().DeleteUser(ctx, userMember)
+	assert.Nil(t, err, err)
+
+	//test failures
+	_, err = bucketsApi.FindBucketById(ctx, *b.Id)
+	assert.NotNil(t, err)
+
+	_, err = bucketsApi.UpdateBucket(ctx, b)
+	assert.NotNil(t, err)
+
+	b.OrgID = b.Id
+	_, err = bucketsApi.CreateBucket(ctx, b)
+	assert.NotNil(t, err)
+
+	// create bucket by object
+	b = &domain.Bucket{
+		Description:    &desc,
+		Name:           name,
+		OrgID:          org.Id,
+		RetentionRules: []domain.RetentionRule{{EverySeconds: 3600}},
+	}
+
+	b, err = bucketsApi.CreateBucket(ctx, b)
+	require.Nil(t, err, err)
+	require.NotNil(t, b)
+	assert.Equal(t, name, b.Name)
+	assert.Equal(t, *org.Id, *b.OrgID)
+	assert.Equal(t, desc, *b.Description)
+	assert.Len(t, b.RetentionRules, 1)
+
+	// fail duplicit name
+	_, err = bucketsApi.CreateBucketWithName(ctx, org, b.Name)
+	assert.NotNil(t, err)
+
+	// fail org not found
+	_, err = bucketsApi.CreateBucketWithNameWithId(ctx, *b.Id, b.Name)
+	assert.NotNil(t, err)
+
+	err = bucketsApi.DeleteBucketWithId(ctx, *b.Id)
+	assert.Nil(t, err, err)
+
+	err = bucketsApi.DeleteBucketWithId(ctx, *b.Id)
+	assert.NotNil(t, err)
+
+	// create new buckets inside org
+	for i := 0; i < 30; i++ {
+		name := fmt.Sprintf("bucket-%03d", i)
+		b, err := bucketsApi.CreateBucketWithName(ctx, org, name)
+		require.Nil(t, err, err)
+		require.NotNil(t, b)
+		assert.Equal(t, name, b.Name)
+	}
+
+	// test paging, 1st page
+	buckets, err = bucketsApi.GetBuckets(ctx)
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	assert.Len(t, *buckets, 20)
+	// test paging, 2nd, last page
+	buckets, err = bucketsApi.GetBuckets(ctx, api.PagingWithOffset(20))
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	//+2 is a bug, when using offset>4 there are returned also system buckets
+	assert.Len(t, *buckets, 10+2+bucketsNum)
+	// test paging with increase limit to cover all buckets
+	buckets, err = bucketsApi.GetBuckets(ctx, api.PagingWithLimit(100))
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	assert.Len(t, *buckets, 30+bucketsNum)
+	// test filtering buckets by org id
+	buckets, err = bucketsApi.FindBucketsByOrgId(ctx, *org.Id, api.PagingWithLimit(100))
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	assert.Len(t, *buckets, 30+2)
+	// test filtering buckets by org name
+	buckets, err = bucketsApi.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	assert.Len(t, *buckets, 30+2)
+	// delete buckete
+	for _, b := range *buckets {
+		if strings.HasPrefix(b.Name, "bucket-") {
+			err = bucketsApi.DeleteBucket(ctx, &b)
+			assert.Nil(t, err, err)
+		}
+	}
+	// check all created buckets deleted
+	buckets, err = bucketsApi.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
+	require.Nil(t, err, err)
+	require.NotNil(t, buckets)
+	assert.Len(t, *buckets, 2)
+
+	err = client.OrganizationsApi().DeleteOrganization(ctx, org)
+	assert.Nil(t, err, err)
+
+	// should fail with org not found
+	_, err = bucketsApi.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
+	assert.NotNil(t, err)
 }

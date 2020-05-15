@@ -201,12 +201,16 @@ func TestWriteApiImpl_Write(t *testing.T) {
 func TestGzipWithFlushing(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
 	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
+	log.Log.SetDebugLevel(4)
 	points := genPoints(5)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
-	time.Sleep(time.Millisecond * 10)
-	require.Len(t, service.Lines(), 5)
+	start := time.Now()
+	writeApi.waitForFlushing()
+	end := time.Now()
+	fmt.Printf("Flash duration: %dns\n", end.Sub(start).Nanoseconds())
+	assert.Len(t, service.Lines(), 5)
 	assert.True(t, service.wasGzip)
 
 	service.Close()
@@ -214,8 +218,8 @@ func TestGzipWithFlushing(t *testing.T) {
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
-	time.Sleep(time.Millisecond * 10)
-	require.Len(t, service.Lines(), 5)
+	writeApi.waitForFlushing()
+	assert.Len(t, service.Lines(), 5)
 	assert.False(t, service.wasGzip)
 
 	writeApi.Close()

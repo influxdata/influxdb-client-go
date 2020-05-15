@@ -2,11 +2,14 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package api
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
+	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
 	"strings"
 	"time"
 )
@@ -20,7 +23,7 @@ type WriteApi interface {
 	// WritePoint writes asynchronously Point into bucket.
 	// WritePoint adds Point into the buffer which is sent on the background when it reaches the batch size.
 	// Blocking alternative is available in the WriteApiBlocking interface
-	WritePoint(point *Point)
+	WritePoint(point *write.Point)
 	// Flush forces all pending writes from the buffer to be sent
 	Flush()
 	// Flushes all pending writes and stop async processes. After this the Write client cannot be used
@@ -32,10 +35,10 @@ type WriteApi interface {
 }
 
 type writeApiImpl struct {
-	service     *writeService
+	service     *iwrite.Service
 	writeBuffer []string
 
-	writeCh      chan *batch
+	writeCh      chan *iwrite.Batch
 	bufferCh     chan string
 	writeStop    chan int
 	bufferStop   chan int
@@ -44,17 +47,18 @@ type writeApiImpl struct {
 	errCh        chan error
 	bufferInfoCh chan writeBuffInfoReq
 	writeInfoCh  chan writeBuffInfoReq
+	writeOptions *write.Options
 }
 
 type writeBuffInfoReq struct {
 	writeBuffLen int
 }
 
-func newWriteApiImpl(org string, bucket string, service http.Service, client Client) *writeApiImpl {
+func NewWriteApiImpl(org string, bucket string, service http.Service, writeOptions *write.Options) *writeApiImpl {
 	w := &writeApiImpl{
-		service:      newWriteService(org, bucket, service, client),
-		writeBuffer:  make([]string, 0, client.Options().BatchSize()+1),
-		writeCh:      make(chan *batch),
+		service:      iwrite.NewService(org, bucket, service, writeOptions),
+		writeBuffer:  make([]string, 0, writeOptions.BatchSize()+1),
+		writeCh:      make(chan *iwrite.Batch),
 		doneCh:       make(chan int),
 		bufferCh:     make(chan string),
 		bufferStop:   make(chan int),
@@ -62,6 +66,7 @@ func newWriteApiImpl(org string, bucket string, service http.Service, client Cli
 		bufferFlush:  make(chan int),
 		bufferInfoCh: make(chan writeBuffInfoReq),
 		writeInfoCh:  make(chan writeBuffInfoReq),
+		writeOptions: writeOptions,
 	}
 	go w.bufferProc()
 	go w.writeProc()
@@ -88,7 +93,7 @@ func (w *writeApiImpl) waitForFlushing() {
 		if writeBuffInfo.writeBuffLen == 0 {
 			break
 		}
-		logger.Info("Waiting buffer is flushed")
+		log.Log.Info("Waiting buffer is flushed")
 		time.Sleep(time.Millisecond)
 	}
 	for {
@@ -97,21 +102,21 @@ func (w *writeApiImpl) waitForFlushing() {
 		if writeBuffInfo.writeBuffLen == 0 {
 			break
 		}
-		logger.Info("Waiting buffer is flushed")
+		log.Log.Info("Waiting buffer is flushed")
 		time.Sleep(time.Millisecond)
 	}
 	//time.Sleep(time.Millisecond)
 }
 
 func (w *writeApiImpl) bufferProc() {
-	logger.Info("Buffer proc started")
-	ticker := time.NewTicker(time.Duration(w.service.client.Options().FlushInterval()) * time.Millisecond)
+	log.Log.Info("Buffer proc started")
+	ticker := time.NewTicker(time.Duration(w.writeOptions.FlushInterval()) * time.Millisecond)
 x:
 	for {
 		select {
 		case line := <-w.bufferCh:
 			w.writeBuffer = append(w.writeBuffer, line)
-			if len(w.writeBuffer) == int(w.service.client.Options().BatchSize()) {
+			if len(w.writeBuffer) == int(w.writeOptions.BatchSize()) {
 				w.flushBuffer()
 			}
 		case <-ticker.C:
@@ -127,15 +132,15 @@ x:
 			w.bufferInfoCh <- buffInfo
 		}
 	}
-	logger.Info("Buffer proc finished")
+	log.Log.Info("Buffer proc finished")
 	w.doneCh <- 1
 }
 
 func (w *writeApiImpl) flushBuffer() {
 	if len(w.writeBuffer) > 0 {
 		//go func(lines []string) {
-		logger.Info("sending batch")
-		batch := &batch{batch: buffer(w.writeBuffer)}
+		log.Log.Info("sending batch")
+		batch := iwrite.NewBatch(buffer(w.writeBuffer), w.writeOptions.RetryInterval())
 		w.writeCh <- batch
 		//	lines = lines[:0]
 		//}(w.writeBuffer)
@@ -145,24 +150,24 @@ func (w *writeApiImpl) flushBuffer() {
 }
 
 func (w *writeApiImpl) writeProc() {
-	logger.Info("Write proc started")
+	log.Log.Info("Write proc started")
 x:
 	for {
 		select {
 		case batch := <-w.writeCh:
-			err := w.service.handleWrite(context.Background(), batch)
+			err := w.service.HandleWrite(context.Background(), batch)
 			if err != nil && w.errCh != nil {
 				w.errCh <- err
 			}
 		case <-w.writeStop:
-			logger.Info("Write proc: received stop")
+			log.Log.Info("Write proc: received stop")
 			break x
 		case buffInfo := <-w.writeInfoCh:
 			buffInfo.writeBuffLen = len(w.writeCh)
 			w.writeInfoCh <- buffInfo
 		}
 	}
-	logger.Info("Write proc finished")
+	log.Log.Info("Write proc finished")
 	w.doneCh <- 1
 }
 
@@ -202,11 +207,11 @@ func (w *writeApiImpl) WriteRecord(line string) {
 	w.bufferCh <- string(b)
 }
 
-func (w *writeApiImpl) WritePoint(point *Point) {
+func (w *writeApiImpl) WritePoint(point *write.Point) {
 	//w.bufferCh <- point.ToLineProtocol(w.service.clientImpl.Options().Precision)
-	line, err := w.service.encodePoints(point)
+	line, err := w.service.EncodePoints(point)
 	if err != nil {
-		logger.Errorf("point encoding error: %s\n", err.Error())
+		log.Log.Errorf("point encoding error: %s\n", err.Error())
 	} else {
 		w.bufferCh <- line
 	}

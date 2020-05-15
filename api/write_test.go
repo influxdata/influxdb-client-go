@@ -2,15 +2,12 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package api
 
 import (
 	"compress/gzip"
 	"context"
 	"fmt"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -19,13 +16,18 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/influxdata/influxdb-client-go/api/write"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type testHttpService struct {
 	serverUrl      string
 	authorization  string
 	lines          []string
-	options        *Options
 	t              *testing.T
 	wasGzip        bool
 	requestHandler func(c *testHttpService, url string, body io.Reader) error
@@ -129,25 +131,20 @@ func (t *testHttpService) Lines() []string {
 	return t.lines
 }
 
-func newTestClient() *clientImpl {
-	return &clientImpl{serverUrl: "http://locahost:4444", options: DefaultOptions()}
-}
-
-func newTestService(t *testing.T, client Client) *testHttpService {
+func newTestService(t *testing.T, serverUrl string) *testHttpService {
 	return &testHttpService{
 		t:         t,
-		options:   client.Options(),
-		serverUrl: client.ServerUrl() + "/api/v2/",
+		serverUrl: serverUrl + "/api/v2/",
 	}
 }
 
-func genPoints(num int) []*Point {
-	points := make([]*Point, num)
+func genPoints(num int) []*write.Point {
+	points := make([]*write.Point, num)
 	rand.Seed(321)
 
 	t := time.Now()
 	for i := 0; i < len(points); i++ {
-		points[i] = NewPoint(
+		points[i] = write.NewPoint(
 			"test",
 			map[string]string{
 				"id":       fmt.Sprintf("rack_%v", i%10),
@@ -185,10 +182,8 @@ func genRecords(num int) []string {
 }
 
 func TestWriteApiImpl_Write(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetBatchSize(5)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	points := genPoints(10)
 	for _, p := range points {
 		writeApi.WritePoint(p)
@@ -196,7 +191,7 @@ func TestWriteApiImpl_Write(t *testing.T) {
 	writeApi.Close()
 	require.Len(t, service.Lines(), 10)
 	for i, p := range points {
-		line := p.ToLineProtocol(client.options.Precision())
+		line := write.PointToLineProtocol(p, writeApi.writeOptions.Precision())
 		//cut off last \n char
 		line = line[:len(line)-1]
 		assert.Equal(t, service.Lines()[i], line)
@@ -204,10 +199,8 @@ func TestWriteApiImpl_Write(t *testing.T) {
 }
 
 func TestGzipWithFlushing(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetBatchSize(5).SetUseGZip(true)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
 	points := genPoints(5)
 	for _, p := range points {
 		writeApi.WritePoint(p)
@@ -217,7 +210,7 @@ func TestGzipWithFlushing(t *testing.T) {
 	assert.True(t, service.wasGzip)
 
 	service.Close()
-	client.options.SetUseGZip(false)
+	writeApi.writeOptions.SetUseGZip(false)
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
@@ -228,10 +221,8 @@ func TestGzipWithFlushing(t *testing.T) {
 	writeApi.Close()
 }
 func TestFlushInterval(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetBatchSize(10).SetFlushInterval(500)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(10).SetFlushInterval(500))
 	points := genPoints(5)
 	for _, p := range points {
 		writeApi.WritePoint(p)
@@ -242,8 +233,7 @@ func TestFlushInterval(t *testing.T) {
 	writeApi.Close()
 
 	service.Close()
-	client.options.SetFlushInterval(2000)
-	writeApi = newWriteApiImpl("my-org", "my-bucket", service, client)
+	writeApi = NewWriteApiImpl("my-org", "my-bucket", service, writeApi.writeOptions.SetFlushInterval(2000))
 	for _, p := range points {
 		writeApi.WritePoint(p)
 	}
@@ -255,12 +245,9 @@ func TestFlushInterval(t *testing.T) {
 }
 
 func TestRetry(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetLogLevel(3).
-		SetBatchSize(5).
-		SetRetryInterval(10000)
-	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	log.Log.SetDebugLevel(5)
+	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetRetryInterval(10000))
 	points := genPoints(15)
 	for i := 0; i < 5; i++ {
 		writeApi.WritePoint(points[i])
@@ -295,15 +282,14 @@ func TestRetry(t *testing.T) {
 }
 
 func TestWriteError(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetLogLevel(3).SetBatchSize(5)
+	service := newTestService(t, "http://localhost:8888")
+	log.Log.SetDebugLevel(3)
 	service.replyError = &ihttp.Error{
 		StatusCode: 400,
 		Code:       "write",
 		Message:    "error",
 	}
-	writeApi := newWriteApiImpl("my-org", "my-bucket", service, client)
+	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	errCh := writeApi.Errors()
 	var recErr error
 	var wg sync.WaitGroup
@@ -320,5 +306,4 @@ func TestWriteError(t *testing.T) {
 	wg.Wait()
 	require.NotNil(t, recErr)
 	writeApi.Close()
-	client.Close()
 }

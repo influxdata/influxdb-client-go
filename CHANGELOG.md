@@ -1,11 +1,14 @@
 ## 1.2.0 [in progress]
+
+### Breaking Changes
+ - [#107](https://github.com/influxdata/influxdb-client-go/pull/107) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
+ - [#125](https://github.com/influxdata/influxdb-client-go/pull/125) `WriteApi`,`WriteApiBlocking`,`QueryApi` interfaces and related objects like `Point`, `FluxTableMetadata`, `FluxTableColumn`, `FluxRecord`, moved to the `api` ( and `api/write`, `api/query`) packages
+ to provide consistent interface 
+ 
 ### Features
 1. [#120](https://github.com/influxdata/influxdb-client-go/pull/120) Health check API   
 1. [#122](https://github.com/influxdata/influxdb-client-go/pull/122) Delete API
 1. [#124](https://github.com/influxdata/influxdb-client-go/pull/124) Buckets API
-
-### Breaking Change
- - [#107](https://github.com/influxdata/influxdb-client-go/pull/100) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
 
 ### Bug fixes 
 1. [#108](https://github.com/influxdata/influxdb-client-go/issues/108) Fix default retry interval doc

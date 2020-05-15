@@ -2,10 +2,11 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package api
+package examples
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/api"
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
@@ -14,6 +15,14 @@ import (
 
 // Fake options to satisfy Client itnerface
 type Options struct {
+}
+
+func (o *Options) SetBatchSize(_ uint) *Options {
+	return o
+}
+
+func DefaultOptions() *Options {
+	return nil
 }
 
 type fakeClient struct {
@@ -49,38 +58,37 @@ func (c *fakeClient) Health(_ context.Context) (*domain.HealthCheck, error) {
 	return nil, nil
 }
 
-//func (c *fakeClient) WriteApi(org, bucket string) WriteApi {
-//	return nil
-//}
+func (c *fakeClient) WriteApi(_, _ string) api.WriteApi {
+	return nil
+}
 
-//func (c *fakeClient) WriteApiBlocking(org, bucket string) WriteApiBlocking {
-//	w := newWriteApiBlockingImpl(org, bucket, c.httpService, c)
-//	return w
-//}
+func (c *fakeClient) WriteApiBlocking(_, _ string) api.WriteApiBlocking {
+	return nil
+}
 
 func (c *fakeClient) Close() {
 }
 
-//func (c *fakeClient) QueryApi(org string) QueryApi {
-//	return nil
-//}
-
-func (c *fakeClient) AuthorizationsApi() AuthorizationsApi {
+func (c *fakeClient) QueryApi(_ string) api.QueryApi {
 	return nil
 }
 
-func (c *fakeClient) OrganizationsApi() OrganizationsApi {
+func (c *fakeClient) AuthorizationsApi() api.AuthorizationsApi {
 	return nil
 }
 
-func (c *fakeClient) UsersApi() UsersApi {
+func (c *fakeClient) OrganizationsApi() api.OrganizationsApi {
 	return nil
 }
 
-func (c *fakeClient) DeleteApi() DeleteApi {
+func (c *fakeClient) UsersApi() api.UsersApi {
 	return nil
 }
 
-func (c *fakeClient) BucketsApi() BucketsApi {
+func (c *fakeClient) DeleteApi() api.DeleteApi {
+	return nil
+}
+
+func (c *fakeClient) BucketsApi() api.BucketsApi {
 	return nil
 }

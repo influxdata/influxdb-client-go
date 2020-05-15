@@ -2,7 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package query
 
 import (
 	"fmt"
@@ -32,9 +32,14 @@ type FluxRecord struct {
 	values map[string]interface{}
 }
 
-// newFluxTableMetadata creates FluxTableMetadata for the table on position
-func newFluxTableMetadata(position int) *FluxTableMetadata {
-	return &FluxTableMetadata{position: position, columns: make([]*FluxColumn, 0, 10)}
+// NewFluxTableMetadata creates FluxTableMetadata for the table on position
+func NewFluxTableMetadata(position int) *FluxTableMetadata {
+	return NewFluxTableMetadataFull(position, make([]*FluxColumn, 0, 10))
+}
+
+// NewFluxTableMetadataFull creates FluxTableMetadata
+func NewFluxTableMetadataFull(position int, columns []*FluxColumn) *FluxTableMetadata {
+	return &FluxTableMetadata{position: position, columns: columns}
 }
 
 // Position returns position of the table in the flux query result
@@ -76,8 +81,13 @@ func (f *FluxTableMetadata) String() string {
 }
 
 // newFluxColumn creates FluxColumn for position and data type
-func newFluxColumn(index int, dataType string) *FluxColumn {
+func NewFluxColumn(index int, dataType string) *FluxColumn {
 	return &FluxColumn{index: index, dataType: dataType}
+}
+
+// newFluxColumn creates FluxColumn
+func NewFluxColumnFull(dataType string, defaultValue string, name string, group bool, index int) *FluxColumn {
+	return &FluxColumn{index: index, name: name, dataType: dataType, group: group, defaultValue: defaultValue}
 }
 
 // SetDefaultValue sets default value for the column
@@ -131,7 +141,7 @@ func (f *FluxColumn) String() string {
 }
 
 // newFluxRecord returns new record for the table with values
-func newFluxRecord(table int, values map[string]interface{}) *FluxRecord {
+func NewFluxRecord(table int, values map[string]interface{}) *FluxRecord {
 	return &FluxRecord{table: table, values: values}
 }
 

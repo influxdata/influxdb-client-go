@@ -9,6 +9,8 @@ import (
 	"log"
 )
 
+var Log Logger
+
 // Logger provides filtered and categorized logging API.
 // It logs to standard logger, only errors by default
 type Logger struct {

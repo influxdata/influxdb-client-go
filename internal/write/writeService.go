@@ -2,12 +2,11 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package write
 
 import (
 	"bytes"
 	"context"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"io"
 	"net/http"
 	"net/url"
@@ -15,20 +14,27 @@ import (
 	"sync"
 	"time"
 
+	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/gzip"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/log"
 	lp "github.com/influxdata/line-protocol"
 )
 
-var logger log.Logger
-
-type batch struct {
+type Batch struct {
 	batch         string
 	retryInterval uint
 	retries       uint
 }
 
-type writeService struct {
+func NewBatch(data string, retryInterval uint) *Batch {
+	return &Batch{
+		batch:         data,
+		retryInterval: retryInterval,
+	}
+}
+
+type Service struct {
 	org              string
 	bucket           string
 	httpService      ihttp.Service
@@ -36,38 +42,38 @@ type writeService struct {
 	lastWriteAttempt time.Time
 	retryQueue       *queue
 	lock             sync.Mutex
-	client           Client
+	writeOptions     *write.Options
 }
 
-func newWriteService(org string, bucket string, httpService ihttp.Service, client Client) *writeService {
-	logger.SetDebugLevel(client.Options().LogLevel())
-	retryBufferLimit := client.Options().RetryBufferLimit() / client.Options().BatchSize()
+func NewService(org string, bucket string, httpService ihttp.Service, options *write.Options) *Service {
+
+	retryBufferLimit := options.RetryBufferLimit() / options.BatchSize()
 	if retryBufferLimit == 0 {
 		retryBufferLimit = 1
 	}
-	return &writeService{org: org, bucket: bucket, httpService: httpService, client: client, retryQueue: newQueue(int(retryBufferLimit))}
+	return &Service{org: org, bucket: bucket, httpService: httpService, writeOptions: options, retryQueue: newQueue(int(retryBufferLimit))}
 }
 
-func (w *writeService) handleWrite(ctx context.Context, batch *batch) error {
-	logger.Debug("Write proc: received write request")
+func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
+	log.Log.Debug("Write proc: received write request")
 	batchToWrite := batch
 	retrying := false
 	for {
 		select {
 		case <-ctx.Done():
-			logger.Debug("Write proc: ctx cancelled req")
+			log.Log.Debug("Write proc: ctx cancelled req")
 			return ctx.Err()
 		default:
 		}
 		if !w.retryQueue.isEmpty() {
-			logger.Debug("Write proc: taking batch from retry queue")
+			log.Log.Debug("Write proc: taking batch from retry queue")
 			if !retrying {
 				b := w.retryQueue.first()
 				// Can we write? In case of retryable error we must wait a bit
 				if w.lastWriteAttempt.IsZero() || time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(b.retryInterval))) {
 					retrying = true
 				} else {
-					logger.Warn("Write proc: cannot write yet, storing batch to queue")
+					log.Log.Warn("Write proc: cannot write yet, storing batch to queue")
 					w.retryQueue.push(batch)
 					batchToWrite = nil
 				}
@@ -77,14 +83,14 @@ func (w *writeService) handleWrite(ctx context.Context, batch *batch) error {
 				batchToWrite.retries++
 				if batch != nil {
 					if w.retryQueue.push(batch) {
-						logger.Warn("Write proc: Retry buffer full, discarding oldest batch")
+						log.Log.Warn("Write proc: Retry buffer full, discarding oldest batch")
 					}
 					batch = nil
 				}
 			}
 		}
 		if batchToWrite != nil {
-			err := w.writeBatch(ctx, batchToWrite)
+			err := w.WriteBatch(ctx, batchToWrite)
 			batchToWrite = nil
 			if err != nil {
 				return err
@@ -96,16 +102,16 @@ func (w *writeService) handleWrite(ctx context.Context, batch *batch) error {
 	return nil
 }
 
-func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
-	wUrl, err := w.writeUrl()
+func (w *Service) WriteBatch(ctx context.Context, batch *Batch) error {
+	wUrl, err := w.WriteUrl()
 	if err != nil {
-		logger.Errorf("%s\n", err.Error())
+		log.Log.Errorf("%s\n", err.Error())
 		return err
 	}
 	var body io.Reader
 	body = strings.NewReader(batch.batch)
-	logger.Debugf("Writing batch: %s", batch.batch)
-	if w.client.Options().UseGZip() {
+	log.Log.Debugf("Writing batch: %s", batch.batch)
+	if w.writeOptions.UseGZip() {
 		body, err = gzip.CompressWithGzip(body)
 		if err != nil {
 			return err
@@ -113,7 +119,7 @@ func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
 	}
 	w.lastWriteAttempt = time.Now()
 	perror := w.httpService.PostRequest(ctx, wUrl, body, func(req *http.Request) {
-		if w.client.Options().UseGZip() {
+		if w.writeOptions.UseGZip() {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
 	}, func(r *http.Response) error {
@@ -125,31 +131,31 @@ func (w *writeService) writeBatch(ctx context.Context, batch *batch) error {
 
 	if perror != nil {
 		if perror.StatusCode == http.StatusTooManyRequests || perror.StatusCode == http.StatusServiceUnavailable {
-			logger.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
+			log.Log.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
 			if perror.RetryAfter > 0 {
 				batch.retryInterval = perror.RetryAfter * 1000
 			} else {
-				batch.retryInterval = w.client.Options().RetryInterval()
+				batch.retryInterval = w.writeOptions.RetryInterval()
 			}
-			if batch.retries < w.client.Options().MaxRetries() {
+			if batch.retries < w.writeOptions.MaxRetries() {
 				if w.retryQueue.push(batch) {
-					logger.Warn("Retry buffer full, discarding oldest batch")
+					log.Log.Warn("Retry buffer full, discarding oldest batch")
 				}
 			}
 		} else {
-			logger.Errorf("Write error: %s\n", perror.Error())
+			log.Log.Errorf("Write error: %s\n", perror.Error())
 		}
 		return perror
 	}
 	return nil
 }
 
-func (w *writeService) encodePoints(points ...*Point) (string, error) {
+func (w *Service) EncodePoints(points ...*write.Point) (string, error) {
 	var buffer bytes.Buffer
 	e := lp.NewEncoder(&buffer)
 	e.SetFieldTypeSupport(lp.UintSupport)
 	e.FailOnFieldErr(true)
-	e.SetPrecision(w.client.Options().Precision())
+	e.SetPrecision(w.writeOptions.Precision())
 	for _, point := range points {
 		_, err := e.Encode(point)
 		if err != nil {
@@ -159,7 +165,7 @@ func (w *writeService) encodePoints(points ...*Point) (string, error) {
 	return buffer.String(), nil
 }
 
-func (w *writeService) writeUrl() (string, error) {
+func (w *Service) WriteUrl() (string, error) {
 	if w.url == "" {
 		u, err := url.Parse(w.httpService.ServerApiUrl())
 		if err != nil {
@@ -172,7 +178,7 @@ func (w *writeService) writeUrl() (string, error) {
 		params := u.Query()
 		params.Set("org", w.org)
 		params.Set("bucket", w.bucket)
-		params.Set("precision", precisionToString(w.client.Options().Precision()))
+		params.Set("precision", precisionToString(w.writeOptions.Precision()))
 		u.RawQuery = params.Encode()
 		w.lock.Lock()
 		w.url = u.String()

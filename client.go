@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"github.com/influxdata/influxdb-client-go/api"
+	"github.com/influxdata/influxdb-client-go/internal/log"
 	"sync"
 
 	"github.com/influxdata/influxdb-client-go/domain"
@@ -37,11 +38,11 @@ type Client interface {
 	// ServerUrl returns the url of the server url client talks to
 	ServerUrl() string
 	// WriteApi returns the asynchronous, non-blocking, Write client
-	WriteApi(org, bucket string) WriteApi
+	WriteApi(org, bucket string) api.WriteApi
 	// WriteApi returns the synchronous, blocking, Write client
-	WriteApiBlocking(org, bucket string) WriteApiBlocking
+	WriteApiBlocking(org, bucket string) api.WriteApiBlocking
 	// QueryApi returns Query client
-	QueryApi(org string) QueryApi
+	QueryApi(org string) api.QueryApi
 	// AuthorizationsApi returns Authorizations API client
 	AuthorizationsApi() api.AuthorizationsApi
 	// OrganizationsApi returns Organizations API client
@@ -58,7 +59,7 @@ type Client interface {
 type clientImpl struct {
 	serverUrl   string
 	options     *Options
-	writeApis   []WriteApi
+	writeApis   []api.WriteApi
 	lock        sync.Mutex
 	httpService ihttp.Service
 	apiClient   *domain.ClientWithResponses
@@ -81,14 +82,15 @@ func NewClient(serverUrl string, authToken string) Client {
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
 func NewClientWithOptions(serverUrl string, authToken string, options *Options) Client {
-	service := ihttp.NewService(serverUrl, "Token "+authToken, options.tlsConfig, options.httpRequestTimeout)
+	service := ihttp.NewService(serverUrl, "Token "+authToken, options.httpOptions)
 	client := &clientImpl{
 		serverUrl:   serverUrl,
 		options:     options,
-		writeApis:   make([]WriteApi, 0, 5),
+		writeApis:   make([]api.WriteApi, 0, 5),
 		httpService: service,
 		apiClient:   domain.NewClientWithResponses(service),
 	}
+	log.Log.SetDebugLevel(client.Options().LogLevel())
 	return client
 }
 func (c *clientImpl) Options() *Options {
@@ -153,14 +155,14 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 	return response.JSON200, nil
 }
 
-func (c *clientImpl) WriteApi(org, bucket string) WriteApi {
-	w := newWriteApiImpl(org, bucket, c.httpService, c)
+func (c *clientImpl) WriteApi(org, bucket string) api.WriteApi {
+	w := api.NewWriteApiImpl(org, bucket, c.httpService, c.options.writeOptions)
 	c.writeApis = append(c.writeApis, w)
 	return w
 }
 
-func (c *clientImpl) WriteApiBlocking(org, bucket string) WriteApiBlocking {
-	w := newWriteApiBlockingImpl(org, bucket, c.httpService, c)
+func (c *clientImpl) WriteApiBlocking(org, bucket string) api.WriteApiBlocking {
+	w := api.NewWriteApiBlockingImpl(org, bucket, c.httpService, c.options.writeOptions)
 	return w
 }
 
@@ -170,8 +172,8 @@ func (c *clientImpl) Close() {
 	}
 }
 
-func (c *clientImpl) QueryApi(org string) QueryApi {
-	return newQueryApi(org, c.httpService, c)
+func (c *clientImpl) QueryApi(org string) api.QueryApi {
+	return api.NewQueryApi(org, c.httpService)
 }
 
 func (c *clientImpl) AuthorizationsApi() api.AuthorizationsApi {

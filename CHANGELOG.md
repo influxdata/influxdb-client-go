@@ -1,4 +1,4 @@
-## 1.2.0 [in progress]
+## 1.2.0 [2020-05-15]
 
 ### Breaking Changes
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/107) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions

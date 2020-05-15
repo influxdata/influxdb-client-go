@@ -32,8 +32,9 @@ This repository contains the reference Go client for InfluxDB 2.
         - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/writeApiBlocking.go) ways
         - [How to writes](#writes)  
     - InfluxDB 2 API
-        - setup
-        - ready
+        - setup, ready, health
+        - authotizations, users, organizations
+        - buckets, delete
      
 ## Documentation
 

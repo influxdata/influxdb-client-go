@@ -200,8 +200,8 @@ func TestWriteApiImpl_Write(t *testing.T) {
 
 func TestGzipWithFlushing(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
-	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
 	log.Log.SetDebugLevel(4)
+	writeApi := NewWriteApiImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
 	points := genPoints(5)
 	for _, p := range points {
 		writeApi.WritePoint(p)

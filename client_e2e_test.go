@@ -93,6 +93,10 @@ func TestWrite(t *testing.T) {
 		f += 3.3
 	}
 
+	err := client.WriteApiBlocking("my-org", "my-bucket").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("test").
+		AddTag("a", "3").AddField("i", 20))
+	assert.Nil(t, err)
+
 	client.Close()
 	assert.Equal(t, 0, errorsCount)
 
@@ -102,7 +106,7 @@ func TestQueryRaw(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
 	queryApi := client.QueryApi("my-org")
-	res, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "test")`, nil)
+	res, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
 	if err != nil {
 		t.Error(err)
 	} else {

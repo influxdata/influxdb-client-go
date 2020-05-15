@@ -5,7 +5,9 @@
 package influxdb2
 
 import (
+	"github.com/influxdata/influxdb-client-go/api"
 	"github.com/influxdata/influxdb-client-go/api/write"
+	"github.com/influxdata/influxdb-client-go/domain"
 	"time"
 )
 
@@ -25,4 +27,9 @@ func NewPoint(
 	ts time.Time,
 ) *write.Point {
 	return write.NewPoint(measurement, tags, fields, ts)
+}
+
+// DefaultDialect return flux query Dialect with full annotations (datatype, group, default), header and comma char as a delimiter
+func DefaultDialect() *domain.Dialect {
+	return api.DefaultDialect()
 }

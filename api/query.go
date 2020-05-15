@@ -246,6 +246,7 @@ readRow:
 	if len(row) <= 1 {
 		goto readRow
 	}
+
 	switch row[0] {
 	case "":
 		if parsingState == parsingStateError {

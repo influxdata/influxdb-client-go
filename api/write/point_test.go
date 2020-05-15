@@ -2,13 +2,12 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package write
 
 import (
 	"bytes"
 	"fmt"
 	"math/rand"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -44,85 +43,6 @@ func init() {
 		if i%10 == 0 {
 			t = t.Add(time.Second)
 		}
-	}
-}
-
-// ToLineProtocol creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
-// and write result to the string builder
-func (m *Point) ToLineProtocolBuffer(sb *strings.Builder, precision time.Duration) {
-	escapeKey(sb, m.Name())
-	sb.WriteRune(',')
-	for i, t := range m.tags {
-		if i > 0 {
-			sb.WriteString(",")
-		}
-		escapeKey(sb, t.Key)
-		sb.WriteString("=")
-		escapeKey(sb, t.Value)
-	}
-	sb.WriteString(" ")
-	for i, f := range m.fields {
-		if i > 0 {
-			sb.WriteString(",")
-		}
-		escapeKey(sb, f.Key)
-		sb.WriteString("=")
-		switch f.Value.(type) {
-		case string:
-			sb.WriteString(`"`)
-			escapeValue(sb, f.Value.(string))
-			sb.WriteString(`"`)
-		default:
-			sb.WriteString(fmt.Sprintf("%v", f.Value))
-		}
-		switch f.Value.(type) {
-		case int64:
-			sb.WriteString("i")
-		case uint64:
-			sb.WriteString("u")
-		}
-	}
-	if !m.timestamp.IsZero() {
-		sb.WriteString(" ")
-		switch precision {
-		case time.Microsecond:
-			sb.WriteString(strconv.FormatInt(m.Time().UnixNano()/1000, 10))
-		case time.Millisecond:
-			sb.WriteString(strconv.FormatInt(m.Time().UnixNano()/1000000, 10))
-		case time.Second:
-			sb.WriteString(strconv.FormatInt(m.Time().Unix(), 10))
-		default:
-			sb.WriteString(strconv.FormatInt(m.Time().UnixNano(), 10))
-		}
-	}
-	sb.WriteString("\n")
-}
-
-// ToLineProtocol creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
-func (m *Point) ToLineProtocol(precision time.Duration) string {
-	var sb strings.Builder
-	sb.Grow(1024)
-	m.ToLineProtocolBuffer(&sb, precision)
-	return sb.String()
-}
-
-func escapeKey(sb *strings.Builder, key string) {
-	for _, r := range key {
-		switch r {
-		case ' ', ',', '=':
-			sb.WriteString(`\`)
-		}
-		sb.WriteRune(r)
-	}
-}
-
-func escapeValue(sb *strings.Builder, value string) {
-	for _, r := range value {
-		switch r {
-		case '\\', '"':
-			sb.WriteString(`\`)
-		}
-		sb.WriteRune(r)
 	}
 }
 
@@ -186,7 +106,7 @@ func verifyPoint(t *testing.T, p *Point) {
 		{Key: "uint32", Value: uint64(34578)},
 		{Key: "uint8", Value: uint64(34)},
 	})
-	line := p.ToLineProtocol(time.Nanosecond)
+	line := PointToLineProtocol(p, time.Nanosecond)
 	assert.True(t, strings.HasSuffix(line, "\n"))
 	//cut off last \n char
 	line = line[:len(line)-1]
@@ -234,19 +154,19 @@ func TestPrecision(t *testing.T) {
 	p.AddField("float64", 80.1234567)
 
 	p.SetTime(time.Unix(60, 89))
-	line := p.ToLineProtocol(time.Nanosecond)
+	line := PointToLineProtocol(p, time.Nanosecond)
 	assert.Equal(t, line, "test,id=10 float64=80.1234567 60000000089\n")
 
 	p.SetTime(time.Unix(60, 56789))
-	line = p.ToLineProtocol(time.Microsecond)
+	line = PointToLineProtocol(p, time.Microsecond)
 	assert.Equal(t, line, "test,id=10 float64=80.1234567 60000056\n")
 
 	p.SetTime(time.Unix(60, 123456789))
-	line = p.ToLineProtocol(time.Millisecond)
+	line = PointToLineProtocol(p, time.Millisecond)
 	assert.Equal(t, line, "test,id=10 float64=80.1234567 60123\n")
 
 	p.SetTime(time.Unix(60, 123456789))
-	line = p.ToLineProtocol(time.Second)
+	line = PointToLineProtocol(p, time.Second)
 	assert.Equal(t, line, "test,id=10 float64=80.1234567 60\n")
 }
 
@@ -258,7 +178,7 @@ func BenchmarkPointEncoderSingle(b *testing.B) {
 		for _, p := range points {
 			var buffer bytes.Buffer
 			e := lp.NewEncoder(&buffer)
-			e.Encode(p)
+			_, _ = e.Encode(p)
 			buff.WriteString(buffer.String())
 		}
 		s = buff.String()
@@ -270,7 +190,7 @@ func BenchmarkPointEncoderMulti(b *testing.B) {
 		var buffer bytes.Buffer
 		e := lp.NewEncoder(&buffer)
 		for _, p := range points {
-			e.Encode(p)
+			_, _ = e.Encode(p)
 		}
 		s = buffer.String()
 	}
@@ -280,7 +200,7 @@ func BenchmarkPointStringSingle(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		var buff strings.Builder
 		for _, p := range points {
-			buff.WriteString(p.ToLineProtocol(time.Nanosecond))
+			buff.WriteString(PointToLineProtocol(p, time.Nanosecond))
 		}
 		s = buff.String()
 	}
@@ -290,7 +210,7 @@ func BenchmarkPointStringMulti(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		var buff strings.Builder
 		for _, p := range points {
-			p.ToLineProtocolBuffer(&buff, time.Nanosecond)
+			PointToLineProtocolBuffer(p, &buff, time.Nanosecond)
 		}
 		s = buff.String()
 	}

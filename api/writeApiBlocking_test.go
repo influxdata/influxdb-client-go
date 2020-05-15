@@ -2,29 +2,30 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package api
 
 import (
 	"context"
-	"github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/influxdata/influxdb-client-go/api/write"
+	"github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWritePoint(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetBatchSize(5)
-	writeApi := newWriteApiBlockingImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	writeApi := NewWriteApiBlockingImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	points := genPoints(10)
 	err := writeApi.WritePoint(context.Background(), points...)
 	require.Nil(t, err)
 	require.Len(t, service.lines, 10)
 	for i, p := range points {
-		line := p.ToLineProtocol(client.options.Precision())
+		line := write.PointToLineProtocol(p, writeApi.writeOptions.Precision())
 		//cut off last \n char
 		line = line[:len(line)-1]
 		assert.Equal(t, service.lines[i], line)
@@ -32,10 +33,8 @@ func TestWritePoint(t *testing.T) {
 }
 
 func TestWriteRecord(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetBatchSize(5)
-	writeApi := newWriteApiBlockingImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	writeApi := NewWriteApiBlockingImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	lines := genRecords(10)
 	err := writeApi.WriteRecord(context.Background(), lines...)
 	require.Nil(t, err)
@@ -56,10 +55,8 @@ func TestWriteRecord(t *testing.T) {
 }
 
 func TestWriteContextCancel(t *testing.T) {
-	client := newTestClient()
-	service := newTestService(t, client)
-	client.options.SetBatchSize(5)
-	writeApi := newWriteApiBlockingImpl("my-org", "my-bucket", service, client)
+	service := newTestService(t, "http://localhost:8888")
+	writeApi := NewWriteApiBlockingImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	lines := genRecords(10)
 	ctx, cancel := context.WithCancel(context.Background())
 	var err error

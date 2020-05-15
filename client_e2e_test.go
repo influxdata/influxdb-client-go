@@ -1,36 +1,36 @@
+// +build e2e
+
 // Copyright 2020 InfluxData, Inc. All rights reserved.
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package influxdb2_test
 
 import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/influxdata/influxdb-client-go/api"
-	"github.com/influxdata/influxdb-client-go/domain"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/influxdata/influxdb-client-go/api/write"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go"
+	"github.com/influxdata/influxdb-client-go/api"
+	"github.com/influxdata/influxdb-client-go/domain"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-var e2e bool
 var authToken string
 
 func init() {
-	flag.BoolVar(&e2e, "e2e", false, "run the end tests (requires a working influxdb instance on 127.0.0.1)")
 	flag.StringVar(&authToken, "token", "", "authentication token")
 }
 
 func TestReady(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", "")
+	client := influxdb2.NewClient("http://localhost:9999", "")
 
 	ok, err := client.Ready(context.Background())
 	if err != nil {
@@ -42,10 +42,7 @@ func TestReady(t *testing.T) {
 }
 
 func TestSetup(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClientWithOptions("http://localhost:9999", "", DefaultOptions().SetLogLevel(2))
+	client := influxdb2.NewClientWithOptions("http://localhost:9999", "", influxdb2.DefaultOptions().SetLogLevel(2))
 	response, err := client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
 	if err != nil {
 		t.Error(err)
@@ -60,10 +57,7 @@ func TestSetup(t *testing.T) {
 }
 
 func TestHealth(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", "")
+	client := influxdb2.NewClient("http://localhost:9999", "")
 
 	health, err := client.Health(context.Background())
 	if err != nil {
@@ -74,10 +68,7 @@ func TestHealth(t *testing.T) {
 }
 
 func TestWrite(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClientWithOptions("http://localhost:9999", authToken, DefaultOptions().SetLogLevel(3))
+	client := influxdb2.NewClientWithOptions("http://localhost:9999", authToken, influxdb2.DefaultOptions().SetLogLevel(3))
 	writeApi := client.WriteApi("my-org", "my-bucket")
 	errCh := writeApi.Errors()
 	errorsCount := 0
@@ -94,7 +85,7 @@ func TestWrite(t *testing.T) {
 	}
 
 	for i, f := int64(10), 33.0; i < 20; i++ {
-		p := NewPoint("test",
+		p := influxdb2.NewPoint("test",
 			map[string]string{"a": strconv.FormatInt(i%2, 10), "b": "static"},
 			map[string]interface{}{"f": f, "i": i},
 			time.Now())
@@ -108,10 +99,7 @@ func TestWrite(t *testing.T) {
 }
 
 func TestQueryRaw(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
 	queryApi := client.QueryApi("my-org")
 	res, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "test")`, nil)
@@ -124,10 +112,7 @@ func TestQueryRaw(t *testing.T) {
 }
 
 func TestQuery(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
 	queryApi := client.QueryApi("my-org")
 	fmt.Println("QueryResult")
@@ -148,10 +133,7 @@ func TestQuery(t *testing.T) {
 }
 
 func TestAuthorizationsApi(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 	authApi := client.AuthorizationsApi()
 	listRes, err := authApi.GetAuthorizations(context.Background())
 	require.Nil(t, err)
@@ -223,10 +205,7 @@ func TestAuthorizationsApi(t *testing.T) {
 }
 
 func TestOrganizations(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 	orgsApi := client.OrganizationsApi()
 	usersApi := client.UsersApi()
 	orgName := "my-org-2"
@@ -357,10 +336,7 @@ func TestOrganizations(t *testing.T) {
 }
 
 func TestUsers(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
 	usersApi := client.UsersApi()
 
@@ -402,18 +378,15 @@ func TestUsers(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
 	ctx := context.Background()
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 	writeApi := client.WriteApiBlocking("my-org", "my-bucket")
 	queryApi := client.QueryApi("my-org")
 	tmStart := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
 	writeF := func(start time.Time, count int64) time.Time {
 		tm := start
 		for i, f := int64(0), 0.0; i < count; i++ {
-			p := NewPoint("test",
+			p := write.NewPoint("test",
 				map[string]string{"a": strconv.FormatInt(i%2, 10), "b": "static"},
 				map[string]interface{}{"f": f, "i": i},
 				tm)
@@ -476,11 +449,8 @@ func TestDelete(t *testing.T) {
 }
 
 func TestBuckets(t *testing.T) {
-	if !e2e {
-		t.Skip("e2e not enabled. Launch InfluxDB 2 on localhost and run test with -e2e")
-	}
 	ctx := context.Background()
-	client := NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
 	bucketsApi := client.BucketsApi()
 

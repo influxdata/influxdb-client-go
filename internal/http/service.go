@@ -6,7 +6,6 @@ package http
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -16,6 +15,8 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 )
 
 // Http operation callbacks
@@ -44,7 +45,7 @@ type serviceImpl struct {
 }
 
 // NewService creates instance of http Service with given parameters
-func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequestTimeout uint) Service {
+func NewService(serverUrl, authorization string, httpOptions *http2.Options) Service {
 	apiUrl, err := url.Parse(serverUrl)
 	serverApiUrl := serverUrl
 	if err == nil {
@@ -58,13 +59,13 @@ func NewService(serverUrl, authorization string, tlsConfig *tls.Config, httpRequ
 		serverUrl:     serverUrl,
 		authorization: authorization,
 		client: &http.Client{
-			Timeout: time.Second * time.Duration(httpRequestTimeout),
+			Timeout: time.Second * time.Duration(httpOptions.HttpRequestTimeout()),
 			Transport: &http.Transport{
 				DialContext: (&net.Dialer{
 					Timeout: 5 * time.Second,
 				}).DialContext,
 				TLSHandshakeTimeout: 5 * time.Second,
-				TLSClientConfig:     tlsConfig,
+				TLSClientConfig:     httpOptions.TlsConfig(),
 			},
 		},
 	}

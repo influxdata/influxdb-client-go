@@ -2,11 +2,13 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package api
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/http"
+	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
 	"strings"
 )
 
@@ -19,24 +21,22 @@ type WriteApiBlocking interface {
 	// WritePoint data point into bucket.
 	// WritePoint writes without implicit batching. Batch is created from given number of points
 	// Non-blocking alternative is available in the WriteApi interface
-	WritePoint(ctx context.Context, point ...*Point) error
+	WritePoint(ctx context.Context, point ...*write.Point) error
 }
 
 // writeApiBlockingImpl implements WriteApiBlocking interface
 type writeApiBlockingImpl struct {
-	service *writeService
+	service      *iwrite.Service
+	writeOptions *write.Options
 }
 
 // creates writeApiBlockingImpl for org and bucket with underlying client
-func newWriteApiBlockingImpl(org string, bucket string, service http.Service, client Client) *writeApiBlockingImpl {
-	return &writeApiBlockingImpl{service: newWriteService(org, bucket, service, client)}
+func NewWriteApiBlockingImpl(org string, bucket string, service http.Service, writeOptions *write.Options) *writeApiBlockingImpl {
+	return &writeApiBlockingImpl{service: iwrite.NewService(org, bucket, service, writeOptions), writeOptions: writeOptions}
 }
 
 func (w *writeApiBlockingImpl) write(ctx context.Context, line string) error {
-	err := w.service.handleWrite(ctx, &batch{
-		batch:         line,
-		retryInterval: w.service.client.Options().RetryInterval(),
-	})
+	err := w.service.HandleWrite(ctx, iwrite.NewBatch(line, w.writeOptions.RetryInterval()))
 	return err
 }
 
@@ -55,8 +55,8 @@ func (w *writeApiBlockingImpl) WriteRecord(ctx context.Context, line ...string) 
 	return nil
 }
 
-func (w *writeApiBlockingImpl) WritePoint(ctx context.Context, point ...*Point) error {
-	line, err := w.service.encodePoints(point...)
+func (w *writeApiBlockingImpl) WritePoint(ctx context.Context, point ...*write.Point) error {
+	line, err := w.service.EncodePoints(point...)
 	if err != nil {
 		return err
 	}

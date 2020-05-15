@@ -2,7 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package api
 
 import (
 	"bytes"
@@ -13,7 +13,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -24,7 +23,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/influxdata/influxdb-client-go/api/query"
 	"github.com/influxdata/influxdb-client-go/domain"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
 
 const (
@@ -47,11 +48,10 @@ type QueryApi interface {
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
 }
 
-func newQueryApi(org string, service ihttp.Service, client Client) QueryApi {
+func NewQueryApi(org string, service ihttp.Service) QueryApi {
 	return &queryApiImpl{
 		org:         org,
 		httpService: service,
-		client:      client,
 	}
 }
 
@@ -59,7 +59,6 @@ func newQueryApi(org string, service ihttp.Service, client Client) QueryApi {
 type queryApiImpl struct {
 	org         string
 	httpService ihttp.Service
-	client      Client
 	url         string
 	lock        sync.Mutex
 }
@@ -174,8 +173,8 @@ type QueryTableResult struct {
 	csvReader     *csv.Reader
 	tablePosition int
 	tableChanged  bool
-	table         *FluxTableMetadata
-	record        *FluxRecord
+	table         *query.FluxTableMetadata
+	record        *query.FluxRecord
 	err           error
 }
 
@@ -183,13 +182,13 @@ type QueryTableResult struct {
 // Each new table is introduced by the #dataType annotation in csv
 func (q *QueryTableResult) TablePosition() int {
 	if q.table != nil {
-		return q.table.position
+		return q.table.Position()
 	}
 	return -1
 }
 
 // TableMetadata returns actual flux table metadata
-func (q *QueryTableResult) TableMetadata() *FluxTableMetadata {
+func (q *QueryTableResult) TableMetadata() *query.FluxTableMetadata {
 	return q.table
 }
 
@@ -201,7 +200,7 @@ func (q *QueryTableResult) TableChanged() bool {
 
 // Record returns last parsed flux table data row
 // Use Record methods to access value and row properties
-func (q *QueryTableResult) Record() *FluxRecord {
+func (q *QueryTableResult) Record() *query.FluxRecord {
 	return q.record
 }
 
@@ -292,13 +291,13 @@ readRow:
 				}
 			}
 		}
-		q.record = newFluxRecord(q.table.Position(), values)
+		q.record = query.NewFluxRecord(q.table.Position(), values)
 	case "#datatype":
-		q.table = newFluxTableMetadata(q.tablePosition)
+		q.table = query.NewFluxTableMetadata(q.tablePosition)
 		q.tablePosition++
 		q.tableChanged = true
 		for i, d := range row[1:] {
-			q.table.AddColumn(newFluxColumn(i, d))
+			q.table.AddColumn(query.NewFluxColumn(i, d))
 		}
 		goto readRow
 	case "#group":

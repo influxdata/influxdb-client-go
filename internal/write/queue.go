@@ -2,9 +2,11 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package write
 
-import "container/list"
+import (
+	"container/list"
+)
 
 type queue struct {
 	list  *list.List
@@ -14,7 +16,7 @@ type queue struct {
 func newQueue(limit int) *queue {
 	return &queue{list: list.New(), limit: limit}
 }
-func (q *queue) push(batch *batch) bool {
+func (q *queue) push(batch *Batch) bool {
 	overWrite := false
 	if q.list.Len() == q.limit {
 		q.pop()
@@ -24,18 +26,18 @@ func (q *queue) push(batch *batch) bool {
 	return overWrite
 }
 
-func (q *queue) pop() *batch {
+func (q *queue) pop() *Batch {
 	el := q.list.Front()
 	if el != nil {
 		q.list.Remove(el)
-		return el.Value.(*batch)
+		return el.Value.(*Batch)
 	}
 	return nil
 }
 
-func (q *queue) first() *batch {
+func (q *queue) first() *Batch {
 	el := q.list.Front()
-	return el.Value.(*batch)
+	return el.Value.(*Batch)
 }
 
 func (q *queue) isEmpty() bool {

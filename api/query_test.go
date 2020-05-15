@@ -2,13 +2,16 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-package influxdb2
+package api
 
 import (
 	"context"
 	"encoding/csv"
 	"fmt"
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
+	"github.com/influxdata/influxdb-client-go/api/query"
 	"github.com/influxdata/influxdb-client-go/internal/gzip"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -37,22 +40,22 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
 
 `
-	expectedTable := &FluxTableMetadata{position: 0,
-		columns: []*FluxColumn{
-			{dataType: "string", defaultValue: "_result", name: "result", group: false, index: 0},
-			{dataType: "long", defaultValue: "", name: "table", group: false, index: 1},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_start", group: true, index: 2},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_stop", group: true, index: 3},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_time", group: false, index: 4},
-			{dataType: "double", defaultValue: "", name: "_value", group: false, index: 5},
-			{dataType: "string", defaultValue: "", name: "_field", group: true, index: 6},
-			{dataType: "string", defaultValue: "", name: "_measurement", group: true, index: 7},
-			{dataType: "string", defaultValue: "", name: "a", group: true, index: 8},
-			{dataType: "string", defaultValue: "", name: "b", group: true, index: 9},
+	expectedTable := query.NewFluxTableMetadataFull(0,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("double", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", true, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
+			query.NewFluxColumnFull("string", "", "a", true, 8),
+			query.NewFluxColumnFull("string", "", "b", true, 9),
 		},
-	}
-	expectedRecord1 := &FluxRecord{table: 0,
-		values: map[string]interface{}{
+	)
+	expectedRecord1 := query.NewFluxRecord(0,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(0),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -64,10 +67,10 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 			"a":            "1",
 			"b":            "adsfasdf",
 		},
-	}
+	)
 
-	expectedRecord2 := &FluxRecord{table: 0,
-		values: map[string]interface{}{
+	expectedRecord2 := query.NewFluxRecord(0,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(0),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -79,7 +82,7 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 			"a":            "1",
 			"b":            "adsfasdf",
 		},
-	}
+	)
 
 	reader := strings.NewReader(csvTable)
 	csvReader := csv.NewReader(reader)
@@ -133,22 +136,22 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 ,,3,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.969100374Z,2,i,test,0,adsfasdf
 
 `
-	expectedTable1 := &FluxTableMetadata{position: 0,
-		columns: []*FluxColumn{
-			{dataType: "string", defaultValue: "_result", name: "result", group: false, index: 0},
-			{dataType: "long", defaultValue: "", name: "table", group: false, index: 1},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_start", group: true, index: 2},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_stop", group: true, index: 3},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_time", group: false, index: 4},
-			{dataType: "double", defaultValue: "", name: "_value", group: false, index: 5},
-			{dataType: "string", defaultValue: "", name: "_field", group: true, index: 6},
-			{dataType: "string", defaultValue: "", name: "_measurement", group: true, index: 7},
-			{dataType: "string", defaultValue: "", name: "a", group: true, index: 8},
-			{dataType: "string", defaultValue: "", name: "b", group: true, index: 9},
+	expectedTable1 := query.NewFluxTableMetadataFull(0,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("double", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", true, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
+			query.NewFluxColumnFull("string", "", "a", true, 8),
+			query.NewFluxColumnFull("string", "", "b", true, 9),
 		},
-	}
-	expectedRecord11 := &FluxRecord{table: 0,
-		values: map[string]interface{}{
+	)
+	expectedRecord11 := query.NewFluxRecord(0,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(0),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -160,9 +163,9 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "1",
 			"b":            "adsfasdf",
 		},
-	}
-	expectedRecord12 := &FluxRecord{table: 0,
-		values: map[string]interface{}{
+	)
+	expectedRecord12 := query.NewFluxRecord(0,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(0),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -174,24 +177,24 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "1",
 			"b":            "adsfasdf",
 		},
-	}
+	)
 
-	expectedTable2 := &FluxTableMetadata{position: 1,
-		columns: []*FluxColumn{
-			{dataType: "string", defaultValue: "_result", name: "result", group: false, index: 0},
-			{dataType: "long", defaultValue: "", name: "table", group: false, index: 1},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_start", group: true, index: 2},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_stop", group: true, index: 3},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_time", group: false, index: 4},
-			{dataType: "long", defaultValue: "", name: "_value", group: false, index: 5},
-			{dataType: "string", defaultValue: "", name: "_field", group: true, index: 6},
-			{dataType: "string", defaultValue: "", name: "_measurement", group: true, index: 7},
-			{dataType: "string", defaultValue: "", name: "a", group: true, index: 8},
-			{dataType: "string", defaultValue: "", name: "b", group: true, index: 9},
+	expectedTable2 := query.NewFluxTableMetadataFull(1,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("long", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", true, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
+			query.NewFluxColumnFull("string", "", "a", true, 8),
+			query.NewFluxColumnFull("string", "", "b", true, 9),
 		},
-	}
-	expectedRecord21 := &FluxRecord{table: 1,
-		values: map[string]interface{}{
+	)
+	expectedRecord21 := query.NewFluxRecord(1,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(1),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -203,9 +206,9 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "1",
 			"b":            "adsfasdf",
 		},
-	}
-	expectedRecord22 := &FluxRecord{table: 1,
-		values: map[string]interface{}{
+	)
+	expectedRecord22 := query.NewFluxRecord(1,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(1),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -217,24 +220,24 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "1",
 			"b":            "adsfasdf",
 		},
-	}
+	)
 
-	expectedTable3 := &FluxTableMetadata{position: 2,
-		columns: []*FluxColumn{
-			{dataType: "string", defaultValue: "_result", name: "result", group: false, index: 0},
-			{dataType: "long", defaultValue: "", name: "table", group: false, index: 1},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_start", group: true, index: 2},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_stop", group: true, index: 3},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_time", group: false, index: 4},
-			{dataType: "bool", defaultValue: "", name: "_value", group: false, index: 5},
-			{dataType: "string", defaultValue: "", name: "_field", group: true, index: 6},
-			{dataType: "string", defaultValue: "", name: "_measurement", group: true, index: 7},
-			{dataType: "string", defaultValue: "", name: "a", group: true, index: 8},
-			{dataType: "string", defaultValue: "", name: "b", group: true, index: 9},
+	expectedTable3 := query.NewFluxTableMetadataFull(2,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("bool", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", true, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
+			query.NewFluxColumnFull("string", "", "a", true, 8),
+			query.NewFluxColumnFull("string", "", "b", true, 9),
 		},
-	}
-	expectedRecord31 := &FluxRecord{table: 2,
-		values: map[string]interface{}{
+	)
+	expectedRecord31 := query.NewFluxRecord(2,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(2),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -246,9 +249,9 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "0",
 			"b":            "adsfasdf",
 		},
-	}
-	expectedRecord32 := &FluxRecord{table: 2,
-		values: map[string]interface{}{
+	)
+	expectedRecord32 := query.NewFluxRecord(2,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(2),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -260,24 +263,24 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "0",
 			"b":            "adsfasdf",
 		},
-	}
+	)
 
-	expectedTable4 := &FluxTableMetadata{position: 3,
-		columns: []*FluxColumn{
-			{dataType: "string", defaultValue: "_result", name: "result", group: false, index: 0},
-			{dataType: "long", defaultValue: "", name: "table", group: false, index: 1},
-			{dataType: "dateTime:RFC3339Nano", defaultValue: "", name: "_start", group: true, index: 2},
-			{dataType: "dateTime:RFC3339Nano", defaultValue: "", name: "_stop", group: true, index: 3},
-			{dataType: "dateTime:RFC3339Nano", defaultValue: "", name: "_time", group: false, index: 4},
-			{dataType: "unsignedLong", defaultValue: "", name: "_value", group: false, index: 5},
-			{dataType: "string", defaultValue: "", name: "_field", group: true, index: 6},
-			{dataType: "string", defaultValue: "", name: "_measurement", group: true, index: 7},
-			{dataType: "string", defaultValue: "", name: "a", group: true, index: 8},
-			{dataType: "string", defaultValue: "", name: "b", group: true, index: 9},
+	expectedTable4 := query.NewFluxTableMetadataFull(3,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339Nano", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339Nano", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339Nano", "", "_time", false, 4),
+			query.NewFluxColumnFull("unsignedLong", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", true, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
+			query.NewFluxColumnFull("string", "", "a", true, 8),
+			query.NewFluxColumnFull("string", "", "b", true, 9),
 		},
-	}
-	expectedRecord41 := &FluxRecord{table: 3,
-		values: map[string]interface{}{
+	)
+	expectedRecord41 := query.NewFluxRecord(3,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(3),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -289,9 +292,9 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "0",
 			"b":            "adsfasdf",
 		},
-	}
-	expectedRecord42 := &FluxRecord{table: 3,
-		values: map[string]interface{}{
+	)
+	expectedRecord42 := query.NewFluxRecord(3,
+		map[string]interface{}{
 			"result":       "_result",
 			"table":        int64(3),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
@@ -303,7 +306,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			"a":            "0",
 			"b":            "adsfasdf",
 		},
-	}
+	)
 
 	reader := strings.NewReader(csvTable)
 	csvReader := csv.NewReader(reader)
@@ -393,22 +396,22 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 ,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
 ,,1,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
 `
-	expectedTable := &FluxTableMetadata{position: 0,
-		columns: []*FluxColumn{
-			{dataType: "string", defaultValue: "_result", name: "result", group: false, index: 0},
-			{dataType: "long", defaultValue: "", name: "table", group: false, index: 1},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_start", group: true, index: 2},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_stop", group: true, index: 3},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "_time", group: false, index: 4},
-			{dataType: "long", defaultValue: "", name: "deviceId", group: true, index: 5},
-			{dataType: "string", defaultValue: "", name: "sensor", group: true, index: 6},
-			{dataType: "duration", defaultValue: "", name: "elapsed", group: false, index: 7},
-			{dataType: "base64Binary", defaultValue: "", name: "note", group: false, index: 8},
-			{dataType: "dateTime:RFC3339", defaultValue: "", name: "start", group: false, index: 9},
+	expectedTable := query.NewFluxTableMetadataFull(0,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("long", "", "deviceId", true, 5),
+			query.NewFluxColumnFull("string", "", "sensor", true, 6),
+			query.NewFluxColumnFull("duration", "", "elapsed", false, 7),
+			query.NewFluxColumnFull("base64Binary", "", "note", false, 8),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "start", false, 9),
 		},
-	}
-	expectedRecord1 := &FluxRecord{table: 0,
-		values: map[string]interface{}{
+	)
+	expectedRecord1 := query.NewFluxRecord(0,
+		map[string]interface{}{
 			"result":   "_result",
 			"table":    int64(0),
 			"_start":   mustParseTime("2020-04-28T12:36:50.990018157Z"),
@@ -420,10 +423,10 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 			"note":     []byte("datainbase64"),
 			"start":    time.Date(2020, 4, 27, 0, 0, 0, 0, time.UTC),
 		},
-	}
+	)
 
-	expectedRecord2 := &FluxRecord{table: 0,
-		values: map[string]interface{}{
+	expectedRecord2 := query.NewFluxRecord(0,
+		map[string]interface{}{
 			"result":   "_result",
 			"table":    int64(1),
 			"_start":   mustParseTime("2020-04-28T12:36:50.990018157Z"),
@@ -435,7 +438,7 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 			"note":     []byte("xxxxxccccccddddd"),
 			"start":    time.Date(2020, 4, 28, 0, 0, 0, 0, time.UTC),
 		},
-	}
+	)
 
 	reader := strings.NewReader(csvTable)
 	csvReader := csv.NewReader(reader)
@@ -505,8 +508,7 @@ func TestQueryRawResult(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	client := NewClient(server.URL, "a")
-	queryApi := client.QueryApi("org")
+	queryApi := NewQueryApi("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
 
 	result, err := queryApi.QueryRaw(context.Background(), "flux", nil)
 	require.Nil(t, err)
@@ -692,8 +694,7 @@ func TestFluxError(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	client := NewClient(server.URL, "a")
-	queryApi := client.QueryApi("org")
+	queryApi := NewQueryApi("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
 
 	result, err := queryApi.QueryRaw(context.Background(), "errored flux", nil)
 	assert.Equal(t, "", result)

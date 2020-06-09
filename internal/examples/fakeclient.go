@@ -92,3 +92,7 @@ func (c *fakeClient) DeleteApi() api.DeleteApi {
 func (c *fakeClient) BucketsApi() api.BucketsApi {
 	return nil
 }
+
+func (c *fakeClient) LabelsApi() api.LabelsApi {
+	return nil
+}

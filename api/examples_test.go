@@ -323,3 +323,49 @@ func ExampleUsersApi() {
 	// Ensures background processes finishes
 	client.Close()
 }
+
+func ExampleLabelsApi() {
+	// Create influxdb client
+	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+
+	ctx := context.Background()
+	// Get Labels API client
+	labelsApi := client.LabelsApi()
+	// Get Organizations API client
+	orgsApi := client.OrganizationsApi()
+
+	// Get organization that will own label
+	myorg, err := orgsApi.FindOrganizationByName(ctx, "my-org")
+	if err != nil {
+		panic(err)
+	}
+
+	labelName := "Active State"
+	props := map[string]string{"color": "33ffdd", "description": "Marks org active"}
+	label, err := labelsApi.CreateLabelWithName(ctx, myorg, labelName, props)
+	if err != nil {
+		panic(err)
+	}
+
+	// Get organization that will have the label
+	org, err := orgsApi.FindOrganizationByName(ctx, "IT")
+	if err != nil {
+		panic(err)
+	}
+
+	// Add label to org
+	_, err = orgsApi.AddLabel(ctx, org, label)
+	if err != nil {
+		panic(err)
+	}
+
+	// Change color property
+	label.Properties.AdditionalProperties = map[string]string{"color": "ff1122"}
+	label, err = labelsApi.UpdateLabel(ctx, label)
+	if err != nil {
+		panic(err)
+	}
+
+	// Close the client
+	client.Close()
+}

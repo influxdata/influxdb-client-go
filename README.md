@@ -34,6 +34,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - InfluxDB 2 API
         - setup
         - ready
+        - ...
      
 ## Documentation
 

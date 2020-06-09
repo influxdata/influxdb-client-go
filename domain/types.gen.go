@@ -86,6 +86,13 @@ const (
 	CheckViewPropertiesTypeCheck CheckViewPropertiesType = "check"
 )
 
+// Defines values for CloudUserRole.
+const (
+	CloudUserRoleMember CloudUserRole = "member"
+
+	CloudUserRoleOwner CloudUserRole = "owner"
+)
+
 // Defines values for ConstantVariablePropertiesType.
 const (
 	ConstantVariablePropertiesTypeConstant ConstantVariablePropertiesType = "constant"
@@ -247,6 +254,13 @@ const (
 // Defines values for InfluxQLQueryType.
 const (
 	InfluxQLQueryTypeInfluxql InfluxQLQueryType = "influxql"
+)
+
+// Defines values for InviteRole.
+const (
+	InviteRoleMember InviteRole = "member"
+
+	InviteRoleOwner InviteRole = "owner"
 )
 
 // Defines values for LegendOrientation.
@@ -464,6 +478,8 @@ const (
 	ResourceTypeChecks ResourceType = "checks"
 
 	ResourceTypeDashboards ResourceType = "dashboards"
+
+	ResourceTypeDbrp ResourceType = "dbrp"
 
 	ResourceTypeDocuments ResourceType = "documents"
 
@@ -1282,7 +1298,7 @@ type CheckViewProperties struct {
 	CheckID string `json:"checkID"`
 
 	// Colors define color encoding of data into a visualization
-	Colors  []string                 `json:"colors"`
+	Colors  []DashboardColor         `json:"colors"`
 	Queries []DashboardQuery         `json:"queries"`
 	Shape   CheckViewPropertiesShape `json:"shape"`
 	Type    CheckViewPropertiesType  `json:"type"`
@@ -1298,6 +1314,31 @@ type CheckViewPropertiesType string
 type Checks struct {
 	Checks *[]Check `json:"checks,omitempty"`
 	Links  *Links   `json:"links,omitempty"`
+}
+
+// CloudUser defines model for CloudUser.
+type CloudUser struct {
+	Email     string  `json:"email"`
+	FirstName *string `json:"firstName,omitempty"`
+
+	// the idpe id of the user
+	Id       string  `json:"id"`
+	LastName *string `json:"lastName,omitempty"`
+	Links    *struct {
+		Self *string `json:"self,omitempty"`
+	} `json:"links,omitempty"`
+	Role CloudUserRole `json:"role"`
+}
+
+// CloudUserRole defines model for CloudUser.Role.
+type CloudUserRole string
+
+// CloudUsers defines model for CloudUsers.
+type CloudUsers struct {
+	Links *struct {
+		Self *string `json:"self,omitempty"`
+	} `json:"links,omitempty"`
+	Users *[]CloudUser `json:"users,omitempty"`
 }
 
 // ConditionalExpression defines model for ConditionalExpression.
@@ -1354,6 +1395,50 @@ type CustomCheck struct {
 
 // CustomCheckType defines model for CustomCheck.Type.
 type CustomCheckType string
+
+// DBRP defines model for DBRP.
+type DBRP struct {
+
+	// the bucket ID used as target for the translation.
+	BucketID string `json:"bucketID"`
+
+	// InfluxDB v1 database
+	Database string `json:"database"`
+
+	// Specify if this mapping represents the default retention policy for the database specificed.
+	Default *bool `json:"default,omitempty"`
+
+	// the mapping identifier
+	Id    *string `json:"id,omitempty"`
+	Links *Links  `json:"links,omitempty"`
+
+	// the organization that owns this mapping.
+	Org string `json:"org"`
+
+	// the organization ID that owns this mapping.
+	OrgID string `json:"orgID"`
+
+	// InfluxDB v1 retention policy
+	RetentionPolicy string `json:"retention_policy"`
+}
+
+// DBRPUpdate defines model for DBRPUpdate.
+type DBRPUpdate struct {
+
+	// InfluxDB v1 database
+	Database *string `json:"database,omitempty"`
+	Default  *bool   `json:"default,omitempty"`
+	Links    *Links  `json:"links,omitempty"`
+
+	// InfluxDB v1 retention policy
+	RetentionPolicy *string `json:"retention_policy,omitempty"`
+}
+
+// DBRPs defines model for DBRPs.
+type DBRPs struct {
+	Links                 *Links  `json:"links,omitempty"`
+	NotificationEndpoints *[]DBRP `json:"notificationEndpoints,omitempty"`
+}
 
 // Dashboard defines model for Dashboard.
 type Dashboard struct {
@@ -1704,6 +1789,11 @@ type File struct {
 	Type *NodeType `json:"type,omitempty"`
 }
 
+// Flags defines model for Flags.
+type Flags struct {
+	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
 // FloatLiteral defines model for FloatLiteral.
 type FloatLiteral struct {
 
@@ -1834,9 +1924,11 @@ type HTTPNotificationRuleBaseType string
 // HealthCheck defines model for HealthCheck.
 type HealthCheck struct {
 	Checks  *[]HealthCheck    `json:"checks,omitempty"`
+	Commit  *string           `json:"commit,omitempty"`
 	Message *string           `json:"message,omitempty"`
 	Name    string            `json:"name"`
 	Status  HealthCheckStatus `json:"status"`
+	Version *string           `json:"version,omitempty"`
 }
 
 // HealthCheckStatus defines model for HealthCheck.Status.
@@ -1957,6 +2049,30 @@ type IntegerLiteral struct {
 	Value *string   `json:"value,omitempty"`
 }
 
+// Invite defines model for Invite.
+type Invite struct {
+	Email     string     `json:"email"`
+	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
+
+	// the idpe id of the invite
+	Id    string `json:"id"`
+	Links *struct {
+		Self *string `json:"self,omitempty"`
+	} `json:"links,omitempty"`
+	Role InviteRole `json:"role"`
+}
+
+// InviteRole defines model for Invite.Role.
+type InviteRole string
+
+// Invites defines model for Invites.
+type Invites struct {
+	Invites *[]Invite `json:"invites,omitempty"`
+	Links   *struct {
+		Self *string `json:"self,omitempty"`
+	} `json:"links,omitempty"`
+}
+
 // IsOnboarding defines model for IsOnboarding.
 type IsOnboarding struct {
 
@@ -2009,7 +2125,12 @@ type LabelUpdate struct {
 	Name *string `json:"name,omitempty"`
 
 	// Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.
-	Properties *map[string]interface{} `json:"properties,omitempty"`
+	Properties *LabelUpdate_Properties `json:"properties,omitempty"`
+}
+
+// LabelUpdate_Properties defines model for LabelUpdate.Properties.
+type LabelUpdate_Properties struct {
+	AdditionalProperties map[string]string `json:"-"`
 }
 
 // Labels defines model for Labels.
@@ -2080,6 +2201,7 @@ type LinePlusSingleStatProperties struct {
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                             `json:"showNoteWhenEmpty"`
 	Suffix            string                           `json:"suffix"`
+	TimeFormat        *string                          `json:"timeFormat,omitempty"`
 	Type              LinePlusSingleStatPropertiesType `json:"type"`
 	XColumn           *string                          `json:"xColumn,omitempty"`
 	YColumn           *string                          `json:"yColumn,omitempty"`
@@ -2606,6 +2728,7 @@ type PkgApply struct {
 		Url         string  `json:"url"`
 	} `json:"remotes,omitempty"`
 	Secrets *PkgApply_Secrets `json:"secrets,omitempty"`
+	StackID *string           `json:"stackID,omitempty"`
 }
 
 // PkgApply_Secrets defines model for PkgApply.Secrets.
@@ -2645,99 +2768,167 @@ type PkgCreateKind string
 type PkgSummary struct {
 	Diff *struct {
 		Buckets *[]struct {
-			Id   *string `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
-			New  *struct {
+			Id  *string `json:"id,omitempty"`
+			New *struct {
 				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
 
 				// Rules to expire or retain data.  No rules means data never expires.
 				RetentionRules *RetentionRules `json:"retentionRules,omitempty"`
 			} `json:"new,omitempty"`
 			Old *struct {
 				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
 
 				// Rules to expire or retain data.  No rules means data never expires.
 				RetentionRules *RetentionRules `json:"retentionRules,omitempty"`
 			} `json:"old,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
+			StateStatus *string `json:"stateStatus,omitempty"`
 		} `json:"buckets,omitempty"`
 		Checks *[]struct {
-			Id   *string             `json:"id,omitempty"`
-			Name *string             `json:"name,omitempty"`
-			New  *CheckDiscriminator `json:"new,omitempty"`
-			Old  *CheckDiscriminator `json:"old,omitempty"`
+			Id          *string             `json:"id,omitempty"`
+			New         *CheckDiscriminator `json:"new,omitempty"`
+			Old         *CheckDiscriminator `json:"old,omitempty"`
+			PkgName     *string             `json:"pkgName,omitempty"`
+			StateStatus *string             `json:"stateStatus,omitempty"`
 		} `json:"checks,omitempty"`
 		Dashboards *[]struct {
-			Charts      *[]PkgChart `json:"charts,omitempty"`
-			Description *string     `json:"description,omitempty"`
-			Name        *string     `json:"name,omitempty"`
+			Id  *string `json:"id,omitempty"`
+			New *struct {
+				Charts      *[]PkgChart `json:"charts,omitempty"`
+				Description *string     `json:"description,omitempty"`
+				Name        *string     `json:"name,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Charts      *[]PkgChart `json:"charts,omitempty"`
+				Description *string     `json:"description,omitempty"`
+				Name        *string     `json:"name,omitempty"`
+			} `json:"old,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
+			StateStatus *string `json:"stateStatus,omitempty"`
 		} `json:"dashboards,omitempty"`
 		LabelMappings *[]struct {
-			IsNew        *bool   `json:"isNew,omitempty"`
-			LabelID      *string `json:"labelID,omitempty"`
-			LabelName    *string `json:"labelName,omitempty"`
-			ResourceID   *string `json:"resourceID,omitempty"`
-			ResourceName *string `json:"resourceName,omitempty"`
-			ResourceType *string `json:"resourceType,omitempty"`
+			LabelID         *string `json:"labelID,omitempty"`
+			LabelName       *string `json:"labelName,omitempty"`
+			LabelPkgName    *string `json:"labelPkgName,omitempty"`
+			ResourceID      *string `json:"resourceID,omitempty"`
+			ResourceName    *string `json:"resourceName,omitempty"`
+			ResourcePkgName *string `json:"resourcePkgName,omitempty"`
+			ResourceType    *string `json:"resourceType,omitempty"`
+			Status          *string `json:"status,omitempty"`
 		} `json:"labelMappings,omitempty"`
 		Labels *[]struct {
-			Id   *string `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
-			New  *struct {
+			Id  *string `json:"id,omitempty"`
+			New *struct {
 				Color       *string `json:"color,omitempty"`
 				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
 			} `json:"new,omitempty"`
 			Old *struct {
 				Color       *string `json:"color,omitempty"`
 				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
 			} `json:"old,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
+			StateStatus *string `json:"stateStatus,omitempty"`
 		} `json:"labels,omitempty"`
 		NotificationEndpoints *[]struct {
-			Id   *string                          `json:"id,omitempty"`
-			Name *string                          `json:"name,omitempty"`
-			New  *NotificationEndpointDiscrimator `json:"new,omitempty"`
-			Old  *NotificationEndpointDiscrimator `json:"old,omitempty"`
+			Id          *string                          `json:"id,omitempty"`
+			New         *NotificationEndpointDiscrimator `json:"new,omitempty"`
+			Old         *NotificationEndpointDiscrimator `json:"old,omitempty"`
+			PkgName     *string                          `json:"pkgName,omitempty"`
+			StateStatus *string                          `json:"stateStatus,omitempty"`
 		} `json:"notificationEndpoints,omitempty"`
 		NotificationRules *[]struct {
-			Description     *string `json:"description,omitempty"`
-			EndpointID      *string `json:"endpointID,omitempty"`
-			EndpointName    *string `json:"endpointName,omitempty"`
-			EndpointType    *string `json:"endpointType,omitempty"`
-			Every           *string `json:"every,omitempty"`
-			MessageTemplate *string `json:"messageTemplate,omitempty"`
-			Name            *string `json:"name,omitempty"`
-			Offset          *string `json:"offset,omitempty"`
-			Status          *string `json:"status,omitempty"`
-			StatusRules     *[]struct {
-				CurrentLevel  *string `json:"currentLevel,omitempty"`
-				PreviousLevel *string `json:"previousLevel,omitempty"`
-			} `json:"statusRules,omitempty"`
-			TagRules *[]struct {
-				Key      *string `json:"key,omitempty"`
-				Operator *string `json:"operator,omitempty"`
-				Value    *string `json:"value,omitempty"`
-			} `json:"tagRules,omitempty"`
+			Id  *string `json:"id,omitempty"`
+			New *struct {
+				Description     *string `json:"description,omitempty"`
+				EndpointID      *string `json:"endpointID,omitempty"`
+				EndpointName    *string `json:"endpointName,omitempty"`
+				EndpointType    *string `json:"endpointType,omitempty"`
+				Every           *string `json:"every,omitempty"`
+				MessageTemplate *string `json:"messageTemplate,omitempty"`
+				Name            *string `json:"name,omitempty"`
+				Offset          *string `json:"offset,omitempty"`
+				Status          *string `json:"status,omitempty"`
+				StatusRules     *[]struct {
+					CurrentLevel  *string `json:"currentLevel,omitempty"`
+					PreviousLevel *string `json:"previousLevel,omitempty"`
+				} `json:"statusRules,omitempty"`
+				TagRules *[]struct {
+					Key      *string `json:"key,omitempty"`
+					Operator *string `json:"operator,omitempty"`
+					Value    *string `json:"value,omitempty"`
+				} `json:"tagRules,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Description     *string `json:"description,omitempty"`
+				EndpointID      *string `json:"endpointID,omitempty"`
+				EndpointName    *string `json:"endpointName,omitempty"`
+				EndpointType    *string `json:"endpointType,omitempty"`
+				Every           *string `json:"every,omitempty"`
+				MessageTemplate *string `json:"messageTemplate,omitempty"`
+				Name            *string `json:"name,omitempty"`
+				Offset          *string `json:"offset,omitempty"`
+				Status          *string `json:"status,omitempty"`
+				StatusRules     *[]struct {
+					CurrentLevel  *string `json:"currentLevel,omitempty"`
+					PreviousLevel *string `json:"previousLevel,omitempty"`
+				} `json:"statusRules,omitempty"`
+				TagRules *[]struct {
+					Key      *string `json:"key,omitempty"`
+					Operator *string `json:"operator,omitempty"`
+					Value    *string `json:"value,omitempty"`
+				} `json:"tagRules,omitempty"`
+			} `json:"old,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
+			StateStatus *string `json:"stateStatus,omitempty"`
 		} `json:"notificationRules,omitempty"`
 		Tasks *[]struct {
-			Cron        *string `json:"cron,omitempty"`
-			Description *string `json:"description,omitempty"`
-			Every       *string `json:"every,omitempty"`
-			Name        *string `json:"name,omitempty"`
-			Offset      *string `json:"offset,omitempty"`
-			Query       *string `json:"query,omitempty"`
-			Status      *string `json:"status,omitempty"`
+			Id  *string `json:"id,omitempty"`
+			New *struct {
+				Cron        *string `json:"cron,omitempty"`
+				Description *string `json:"description,omitempty"`
+				Every       *string `json:"every,omitempty"`
+				Name        *string `json:"name,omitempty"`
+				Offset      *string `json:"offset,omitempty"`
+				Query       *string `json:"query,omitempty"`
+				Status      *string `json:"status,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Cron        *string `json:"cron,omitempty"`
+				Description *string `json:"description,omitempty"`
+				Every       *string `json:"every,omitempty"`
+				Name        *string `json:"name,omitempty"`
+				Offset      *string `json:"offset,omitempty"`
+				Query       *string `json:"query,omitempty"`
+				Status      *string `json:"status,omitempty"`
+			} `json:"old,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
+			StateStatus *string `json:"stateStatus,omitempty"`
 		} `json:"tasks,omitempty"`
-		TelegrafConfigs *[]TelegrafRequest `json:"telegrafConfigs,omitempty"`
-		Variables       *[]struct {
-			Id   *string `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
-			New  *struct {
+		TelegrafConfigs *[]struct {
+			Id          *string          `json:"id,omitempty"`
+			New         *TelegrafRequest `json:"new,omitempty"`
+			Old         *TelegrafRequest `json:"old,omitempty"`
+			PkgName     *string          `json:"pkgName,omitempty"`
+			StateStatus *string          `json:"stateStatus,omitempty"`
+		} `json:"telegrafConfigs,omitempty"`
+		Variables *[]struct {
+			Id  *string `json:"id,omitempty"`
+			New *struct {
 				Args        *VariableProperties `json:"args,omitempty"`
 				Description *string             `json:"description,omitempty"`
+				Name        *string             `json:"name,omitempty"`
 			} `json:"new,omitempty"`
 			Old *struct {
 				Args        *VariableProperties `json:"args,omitempty"`
 				Description *string             `json:"description,omitempty"`
+				Name        *string             `json:"name,omitempty"`
 			} `json:"old,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
+			StateStatus *string `json:"stateStatus,omitempty"`
 		} `json:"variables,omitempty"`
 	} `json:"diff,omitempty"`
 	Errors *[]struct {
@@ -2746,6 +2937,7 @@ type PkgSummary struct {
 		Kind    *string   `json:"kind,omitempty"`
 		Reason  *string   `json:"reason,omitempty"`
 	} `json:"errors,omitempty"`
+	StackID *string `json:"stackID,omitempty"`
 	Summary *struct {
 		Buckets *[]struct {
 			Description       *string            `json:"description,omitempty"`
@@ -2753,6 +2945,7 @@ type PkgSummary struct {
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			Name              *string            `json:"name,omitempty"`
 			OrgID             *string            `json:"orgID,omitempty"`
+			PkgName           *string            `json:"pkgName,omitempty"`
 			RetentionPeriod   *int               `json:"retentionPeriod,omitempty"`
 		} `json:"buckets,omitempty"`
 		Checks *[]struct {
@@ -2760,6 +2953,7 @@ type PkgSummary struct {
 			CheckDiscriminator
 			// Embedded fields due to inline allOf schema
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
+			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"checks,omitempty"`
 		Dashboards *[]struct {
 			Charts            *[]PkgChart        `json:"charts,omitempty"`
@@ -2768,13 +2962,17 @@ type PkgSummary struct {
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			Name              *string            `json:"name,omitempty"`
 			OrgID             *string            `json:"orgID,omitempty"`
+			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"dashboards,omitempty"`
 		LabelMappings *[]struct {
-			LabelID      *string `json:"labelID,omitempty"`
-			LabelName    *string `json:"labelName,omitempty"`
-			ResourceID   *string `json:"resourceID,omitempty"`
-			ResourceName *string `json:"resourceName,omitempty"`
-			ResourceType *string `json:"resourceType,omitempty"`
+			LabelID         *string `json:"labelID,omitempty"`
+			LabelName       *string `json:"labelName,omitempty"`
+			LabelPkgName    *string `json:"labelPkgName,omitempty"`
+			ResourceID      *string `json:"resourceID,omitempty"`
+			ResourceName    *string `json:"resourceName,omitempty"`
+			ResourcePkgName *string `json:"resourcePkgName,omitempty"`
+			ResourceType    *string `json:"resourceType,omitempty"`
+			Status          *string `json:"status,omitempty"`
 		} `json:"labelMappings,omitempty"`
 		Labels                *[]PkgSummaryLabel `json:"labels,omitempty"`
 		MissingEnvRefs        *[]string          `json:"missingEnvRefs,omitempty"`
@@ -2784,17 +2982,19 @@ type PkgSummary struct {
 			NotificationEndpointDiscrimator
 			// Embedded fields due to inline allOf schema
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
+			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"notificationEndpoints,omitempty"`
 		NotificationRules *[]struct {
 			Description       *string            `json:"description,omitempty"`
 			EndpointID        *string            `json:"endpointID,omitempty"`
-			EndpointName      *string            `json:"endpointName,omitempty"`
+			EndpointPkgName   *string            `json:"endpointPkgName,omitempty"`
 			EndpointType      *string            `json:"endpointType,omitempty"`
 			Every             *string            `json:"every,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			MessageTemplate   *string            `json:"messageTemplate,omitempty"`
 			Name              *string            `json:"name,omitempty"`
 			Offset            *string            `json:"offset,omitempty"`
+			PkgName           *string            `json:"pkgName,omitempty"`
 			Status            *string            `json:"status,omitempty"`
 			StatusRules       *[]struct {
 				CurrentLevel  *string `json:"currentLevel,omitempty"`
@@ -2813,6 +3013,7 @@ type PkgSummary struct {
 			Id          *string `json:"id,omitempty"`
 			Name        *string `json:"name,omitempty"`
 			Offset      *string `json:"offset,omitempty"`
+			PkgName     *string `json:"pkgName,omitempty"`
 			Query       *string `json:"query,omitempty"`
 			Status      *string `json:"status,omitempty"`
 		} `json:"tasks,omitempty"`
@@ -2821,6 +3022,7 @@ type PkgSummary struct {
 			TelegrafRequest
 			// Embedded fields due to inline allOf schema
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
+			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"telegrafConfigs,omitempty"`
 		Variables *[]struct {
 			Arguments         *VariableProperties `json:"arguments,omitempty"`
@@ -2829,6 +3031,7 @@ type PkgSummary struct {
 			LabelAssociations *[]PkgSummaryLabel  `json:"labelAssociations,omitempty"`
 			Name              *string             `json:"name,omitempty"`
 			OrgID             *string             `json:"orgID,omitempty"`
+			PkgName           *string             `json:"pkgName,omitempty"`
 		} `json:"variables,omitempty"`
 	} `json:"summary,omitempty"`
 }
@@ -2839,6 +3042,7 @@ type PkgSummaryLabel struct {
 	Id              *string `json:"id,omitempty"`
 	Name            *string `json:"name,omitempty"`
 	OrgID           *string `json:"orgID,omitempty"`
+	PkgName         *string `json:"pkgName,omitempty"`
 	RetentionPeriod *string `json:"retentionPeriod,omitempty"`
 }
 
@@ -3053,6 +3257,7 @@ type Routes struct {
 	External       *struct {
 		StatusFeed *string `json:"statusFeed,omitempty"`
 	} `json:"external,omitempty"`
+	Flags *string `json:"flags,omitempty"`
 	Me    *string `json:"me,omitempty"`
 	Orgs  *string `json:"orgs,omitempty"`
 	Query *struct {
@@ -4502,7 +4707,15 @@ type GetDashboardsIDParams struct {
 type GetDashboardsIDParamsInclude string
 
 // PatchDashboardsIDJSONBody defines parameters for PatchDashboardsID.
-type PatchDashboardsIDJSONBody Dashboard
+type PatchDashboardsIDJSONBody struct {
+	Cells *CellWithViewProperties `json:"cells,omitempty"`
+
+	// optional, when provided will replace the description
+	Description *string `json:"description,omitempty"`
+
+	// optional, when provided will replace the name
+	Name *string `json:"name,omitempty"`
+}
 
 // PatchDashboardsIDParams defines parameters for PatchDashboardsID.
 type PatchDashboardsIDParams struct {
@@ -4646,6 +4859,74 @@ type DeleteDashboardsIDOwnersIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// GetDBRPsParams defines parameters for GetDBRPs.
+type GetDBRPsParams struct {
+
+	// Specifies the organization ID to filter on
+	OrgID string `json:"orgID"`
+
+	// Specifies the mapping ID to filter on
+	Id *string `json:"id,omitempty"`
+
+	// Specifies the bucket ID to filter on
+	BucketID *string `json:"bucketID,omitempty"`
+
+	// Specifies filtering on default
+	Default *bool `json:"default,omitempty"`
+
+	// Specifies the database to filter on
+	Db *string `json:"db,omitempty"`
+
+	// Specifies the retention policy to filter on
+	Rp *string `json:"rp,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostDBRPJSONBody defines parameters for PostDBRP.
+type PostDBRPJSONBody DBRP
+
+// PostDBRPParams defines parameters for PostDBRP.
+type PostDBRPParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// DeleteDBRPIDParams defines parameters for DeleteDBRPID.
+type DeleteDBRPIDParams struct {
+
+	// Specifies the organization ID of the mapping
+	OrgID string `json:"orgID"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetDBRPsIDParams defines parameters for GetDBRPsID.
+type GetDBRPsIDParams struct {
+
+	// Specifies the organization ID of the mapping
+	OrgID string `json:"orgID"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PatchDBRPIDJSONBody defines parameters for PatchDBRPID.
+type PatchDBRPIDJSONBody DBRPUpdate
+
+// PatchDBRPIDParams defines parameters for PatchDBRPID.
+type PatchDBRPIDParams struct {
+
+	// Specifies the organization ID of the mapping
+	OrgID string `json:"orgID"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
 // PostDeleteJSONBody defines parameters for PostDelete.
 type PostDeleteJSONBody DeletePredicateRequest
 
@@ -4734,6 +5015,13 @@ type PostDocumentsTemplatesIDLabelsParams struct {
 
 // DeleteDocumentsTemplatesIDLabelsIDParams defines parameters for DeleteDocumentsTemplatesIDLabelsID.
 type DeleteDocumentsTemplatesIDLabelsIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetFlagsParams defines parameters for GetFlags.
+type GetFlagsParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5009,6 +5297,30 @@ type PatchOrgsIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// PostOrgsIDInvitesJSONBody defines parameters for PostOrgsIDInvites.
+type PostOrgsIDInvitesJSONBody Invite
+
+// PostOrgsIDInvitesParams defines parameters for PostOrgsIDInvites.
+type PostOrgsIDInvitesParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// DeleteOrgsIDInviteIDParams defines parameters for DeleteOrgsIDInviteID.
+type DeleteOrgsIDInviteIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostOrgsIDInviteIDResendParams defines parameters for PostOrgsIDInviteIDResend.
+type PostOrgsIDInviteIDResendParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
 // GetOrgsIDLabelsParams defines parameters for GetOrgsIDLabels.
 type GetOrgsIDLabelsParams struct {
 
@@ -5117,11 +5429,60 @@ type PostOrgsIDSecretsParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// GetCloudUsersParams defines parameters for GetCloudUsers.
+type GetCloudUsersParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// DeleteOrgsIDCloudUserIDParams defines parameters for DeleteOrgsIDCloudUserID.
+type DeleteOrgsIDCloudUserIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
 // CreatePkgJSONBody defines parameters for CreatePkg.
 type CreatePkgJSONBody PkgCreate
 
 // ApplyPkgJSONBody defines parameters for ApplyPkg.
 type ApplyPkgJSONBody PkgApply
+
+// ListStacksParams defines parameters for ListStacks.
+type ListStacksParams struct {
+
+	// The organization id of the stacks
+	OrgID string `json:"orgID"`
+
+	// A collection of names to filter the list by.
+	Name *string `json:"name,omitempty"`
+
+	// A collection of stackIDs to filter the list by.
+	StackID *string `json:"stackID,omitempty"`
+}
+
+// CreateStackJSONBody defines parameters for CreateStack.
+type CreateStackJSONBody struct {
+	Description *string   `json:"description,omitempty"`
+	Name        *string   `json:"name,omitempty"`
+	OrgID       *string   `json:"orgID,omitempty"`
+	Urls        *[]string `json:"urls,omitempty"`
+}
+
+// DeleteStackParams defines parameters for DeleteStack.
+type DeleteStackParams struct {
+
+	// The organization id of the user
+	OrgID string `json:"orgID"`
+}
+
+// ExportStackParams defines parameters for ExportStack.
+type ExportStackParams struct {
+
+	// The organization id of the user
+	OrgID string `json:"orgID"`
+}
 
 // PostQueryJSONBody defines parameters for PostQuery.
 type PostQueryJSONBody interface{}
@@ -5345,6 +5706,16 @@ type PostSetupJSONBody OnboardingRequest
 
 // PostSetupParams defines parameters for PostSetup.
 type PostSetupParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostSetupUserJSONBody defines parameters for PostSetupUser.
+type PostSetupUserJSONBody OnboardingRequest
+
+// PostSetupUserParams defines parameters for PostSetupUser.
+type PostSetupUserParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5997,6 +6368,12 @@ type PostDashboardsIDMembersJSONRequestBody PostDashboardsIDMembersJSONBody
 // PostDashboardsIDOwnersRequestBody defines body for PostDashboardsIDOwners for application/json ContentType.
 type PostDashboardsIDOwnersJSONRequestBody PostDashboardsIDOwnersJSONBody
 
+// PostDBRPRequestBody defines body for PostDBRP for application/json ContentType.
+type PostDBRPJSONRequestBody PostDBRPJSONBody
+
+// PatchDBRPIDRequestBody defines body for PatchDBRPID for application/json ContentType.
+type PatchDBRPIDJSONRequestBody PatchDBRPIDJSONBody
+
 // PostDeleteRequestBody defines body for PostDelete for application/json ContentType.
 type PostDeleteJSONRequestBody PostDeleteJSONBody
 
@@ -6048,6 +6425,9 @@ type PostOrgsJSONRequestBody PostOrgsJSONBody
 // PatchOrgsIDRequestBody defines body for PatchOrgsID for application/json ContentType.
 type PatchOrgsIDJSONRequestBody PatchOrgsIDJSONBody
 
+// PostOrgsIDInvitesRequestBody defines body for PostOrgsIDInvites for application/json ContentType.
+type PostOrgsIDInvitesJSONRequestBody PostOrgsIDInvitesJSONBody
+
 // PostOrgsIDLabelsRequestBody defines body for PostOrgsIDLabels for application/json ContentType.
 type PostOrgsIDLabelsJSONRequestBody PostOrgsIDLabelsJSONBody
 
@@ -6068,6 +6448,9 @@ type CreatePkgJSONRequestBody CreatePkgJSONBody
 
 // ApplyPkgRequestBody defines body for ApplyPkg for application/json ContentType.
 type ApplyPkgJSONRequestBody ApplyPkgJSONBody
+
+// CreateStackRequestBody defines body for CreateStack for application/json ContentType.
+type CreateStackJSONRequestBody CreateStackJSONBody
 
 // PostQueryRequestBody defines body for PostQuery for application/json ContentType.
 type PostQueryJSONRequestBody PostQueryJSONBody
@@ -6098,6 +6481,9 @@ type PostScrapersIDOwnersJSONRequestBody PostScrapersIDOwnersJSONBody
 
 // PostSetupRequestBody defines body for PostSetup for application/json ContentType.
 type PostSetupJSONRequestBody PostSetupJSONBody
+
+// PostSetupUserRequestBody defines body for PostSetupUser for application/json ContentType.
+type PostSetupUserJSONRequestBody PostSetupUserJSONBody
 
 // PostSourcesRequestBody defines body for PostSources for application/json ContentType.
 type PostSourcesJSONRequestBody PostSourcesJSONBody
@@ -6158,6 +6544,59 @@ type PutVariablesIDJSONRequestBody PutVariablesIDJSONBody
 
 // PostVariablesIDLabelsRequestBody defines body for PostVariablesIDLabels for application/json ContentType.
 type PostVariablesIDLabelsJSONRequestBody PostVariablesIDLabelsJSONBody
+
+// Getter for additional properties for Flags. Returns the specified
+// element and whether it was found
+func (a Flags) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for Flags
+func (a *Flags) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for Flags to handle AdditionalProperties
+func (a *Flags) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for Flags to handle AdditionalProperties
+func (a Flags) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+		}
+	}
+	return json.Marshal(object)
+}
 
 // Getter for additional properties for FluxSuggestion_Params. Returns the specified
 // element and whether it was found
@@ -6359,6 +6798,59 @@ func (a *LabelCreateRequest_Properties) UnmarshalJSON(b []byte) error {
 
 // Override default JSON handling for LabelCreateRequest_Properties to handle AdditionalProperties
 func (a LabelCreateRequest_Properties) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for LabelUpdate_Properties. Returns the specified
+// element and whether it was found
+func (a LabelUpdate_Properties) Get(fieldName string) (value string, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for LabelUpdate_Properties
+func (a *LabelUpdate_Properties) Set(fieldName string, value string) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]string)
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for LabelUpdate_Properties to handle AdditionalProperties
+func (a *LabelUpdate_Properties) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]string)
+		for fieldName, fieldBuf := range object {
+			var fieldVal string
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for LabelUpdate_Properties to handle AdditionalProperties
+func (a LabelUpdate_Properties) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
 

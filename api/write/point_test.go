@@ -7,7 +7,9 @@ package write
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"math/rand"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -46,6 +48,61 @@ func init() {
 	}
 }
 
+type ia int
+
+type st struct {
+	d float64
+	b bool
+}
+
+func (s st) String() string {
+	return fmt.Sprintf("%.2f d %v", s.d, s.b)
+}
+
+func TestConvert(t *testing.T) {
+	obj := []struct {
+		val       interface{}
+		targetVal interface{}
+	}{
+		{int(-5), int64(-5)},
+		{int8(5), int64(5)},
+		{int16(-51), int64(-51)},
+		{int32(5), int64(5)},
+		{int64(555), int64(555)},
+		{uint(5), uint64(5)},
+		{uint8(55), uint64(55)},
+		{uint16(51), uint64(51)},
+		{uint32(555), uint64(555)},
+		{uint64(5555), uint64(5555)},
+		{"a", "a"},
+		{true, true},
+		{float32(1.2), float64(1.2)},
+		{float64(2.2), float64(2.2)},
+		{ia(4), "4"},
+		{[]string{"a", "b"}, "[a b]"},
+		{map[int]string{1: "a", 2: "b"}, "map[1:a 2:b]"},
+		{struct {
+			a int
+			s string
+		}{0, "x"}, "{0 x}"},
+		{st{1.22, true}, "1.22 d true"},
+	}
+	for _, tv := range obj {
+		t.Run(reflect.TypeOf(tv.val).String(), func(t *testing.T) {
+			v := convertField(tv.val)
+			assert.Equal(t, reflect.TypeOf(tv.targetVal), reflect.TypeOf(v))
+			if f, ok := tv.targetVal.(float64); ok {
+				val := reflect.ValueOf(tv.val)
+				ft := reflect.TypeOf(float64(0))
+				assert.True(t, val.Type().ConvertibleTo(ft))
+				valf := val.Convert(ft)
+				assert.True(t, math.Abs(f-valf.Float()) < 1e-6)
+			} else {
+				assert.EqualValues(t, tv.targetVal, v)
+			}
+		})
+	}
+}
 func TestNewPoint(t *testing.T) {
 	p := NewPoint(
 		"test",

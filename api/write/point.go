@@ -5,6 +5,7 @@
 package write
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
@@ -155,6 +156,6 @@ func convertField(v interface{}) interface{} {
 	case time.Duration:
 		return v.String()
 	default:
-		panic("unsupported type")
+		return fmt.Sprintf("%v", v)
 	}
 }

@@ -2,6 +2,9 @@
 ### Features
 1. [#131](https://github.com/influxdata/influxdb-client-go/pull/131) Labels API
 
+### Bug fixes 
+1. [#132](https://github.com/influxdata/influxdb-client-go/pull/132) Properly handle errors instead of panics
+
 ## 1.2.0 [2020-05-15]
 ### Breaking Changes
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/107) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions

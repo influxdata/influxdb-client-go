@@ -1,5 +1,8 @@
-## 1.2.0 [2020-05-15]
+## 1.3.0 [in progress]
+### Features
+1. [#131](https://github.com/influxdata/influxdb-client-go/pull/131) Labels API
 
+## 1.2.0 [2020-05-15]
 ### Breaking Changes
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/107) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
  - [#125](https://github.com/influxdata/influxdb-client-go/pull/125) `WriteApi`,`WriteApiBlocking`,`QueryApi` interfaces and related objects like `Point`, `FluxTableMetadata`, `FluxTableColumn`, `FluxRecord`, moved to the `api` ( and `api/write`, `api/query`) packages

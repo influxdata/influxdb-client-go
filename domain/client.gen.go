@@ -9,11 +9,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
+	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
@@ -230,6 +232,25 @@ type ClientInterface interface {
 	// DeleteDashboardsIDOwnersID request
 	DeleteDashboardsIDOwnersID(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams) (*http.Response, error)
 
+	// GetDBRPs request
+	GetDBRPs(ctx context.Context, params *GetDBRPsParams) (*http.Response, error)
+
+	// PostDBRP request  with any body
+	PostDBRPWithBody(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostDBRP(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*http.Response, error)
+
+	// DeleteDBRPID request
+	DeleteDBRPID(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*http.Response, error)
+
+	// GetDBRPsID request
+	GetDBRPsID(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*http.Response, error)
+
+	// PatchDBRPID request  with any body
+	PatchDBRPIDWithBody(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PatchDBRPID(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*http.Response, error)
+
 	// PostDelete request  with any body
 	PostDeleteWithBody(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*http.Response, error)
 
@@ -264,6 +285,9 @@ type ClientInterface interface {
 
 	// DeleteDocumentsTemplatesIDLabelsID request
 	DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Response, error)
+
+	// GetFlags request
+	GetFlags(ctx context.Context, params *GetFlagsParams) (*http.Response, error)
 
 	// GetHealth request
 	GetHealth(ctx context.Context, params *GetHealthParams) (*http.Response, error)
@@ -387,6 +411,17 @@ type ClientInterface interface {
 
 	PatchOrgsID(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*http.Response, error)
 
+	// PostOrgsIDInvites request  with any body
+	PostOrgsIDInvitesWithBody(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostOrgsIDInvites(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Response, error)
+
+	// DeleteOrgsIDInviteID request
+	DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Response, error)
+
+	// PostOrgsIDInviteIDResend request
+	PostOrgsIDInviteIDResend(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*http.Response, error)
+
 	// GetOrgsIDLabels request
 	GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error)
 
@@ -436,6 +471,12 @@ type ClientInterface interface {
 
 	PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error)
 
+	// GetCloudUsers request
+	GetCloudUsers(ctx context.Context, orgID string, params *GetCloudUsersParams) (*http.Response, error)
+
+	// DeleteOrgsIDCloudUserID request
+	DeleteOrgsIDCloudUserID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Response, error)
+
 	// CreatePkg request  with any body
 	CreatePkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
 
@@ -445,6 +486,20 @@ type ClientInterface interface {
 	ApplyPkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
 
 	ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*http.Response, error)
+
+	// ListStacks request
+	ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error)
+
+	// CreateStack request  with any body
+	CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
+
+	CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error)
+
+	// DeleteStack request
+	DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error)
+
+	// ExportStack request
+	ExportStack(ctx context.Context, stackId string, params *ExportStackParams) (*http.Response, error)
 
 	// PostQuery request  with any body
 	PostQueryWithBody(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*http.Response, error)
@@ -534,6 +589,11 @@ type ClientInterface interface {
 	PostSetupWithBody(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*http.Response, error)
 
 	PostSetup(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*http.Response, error)
+
+	// PostSetupUser request  with any body
+	PostSetupUserWithBody(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostSetupUser(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Response, error)
 
 	// PostSignin request
 	PostSignin(ctx context.Context, params *PostSigninParams) (*http.Response, error)
@@ -1410,6 +1470,69 @@ func (c *Client) DeleteDashboardsIDOwnersID(ctx context.Context, dashboardID str
 	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetDBRPs(ctx context.Context, params *GetDBRPsParams) (*http.Response, error) {
+	req, err := NewGetDBRPsRequest(c.service.ServerApiUrl(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostDBRPWithBody(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostDBRPRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostDBRP(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostDBRPRequest(c.service.ServerApiUrl(), params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteDBRPID(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*http.Response, error) {
+	req, err := NewDeleteDBRPIDRequest(c.service.ServerApiUrl(), dbrpID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetDBRPsID(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*http.Response, error) {
+	req, err := NewGetDBRPsIDRequest(c.service.ServerApiUrl(), dbrpID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchDBRPIDWithBody(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPatchDBRPIDRequestWithBody(c.service.ServerApiUrl(), dbrpID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchDBRPID(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*http.Response, error) {
+	req, err := NewPatchDBRPIDRequest(c.service.ServerApiUrl(), dbrpID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
 func (c *Client) PostDeleteWithBody(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*http.Response, error) {
 	req, err := NewPostDeleteRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
 	if err != nil {
@@ -1520,6 +1643,15 @@ func (c *Client) PostDocumentsTemplatesIDLabels(ctx context.Context, templateID 
 
 func (c *Client) DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Response, error) {
 	req, err := NewDeleteDocumentsTemplatesIDLabelsIDRequest(c.service.ServerApiUrl(), templateID, labelID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetFlags(ctx context.Context, params *GetFlagsParams) (*http.Response, error) {
+	req, err := NewGetFlagsRequest(c.service.ServerApiUrl(), params)
 	if err != nil {
 		return nil, err
 	}
@@ -1932,6 +2064,42 @@ func (c *Client) PatchOrgsID(ctx context.Context, orgID string, params *PatchOrg
 	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
+func (c *Client) PostOrgsIDInvitesWithBody(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostOrgsIDInvitesRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostOrgsIDInvites(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostOrgsIDInvitesRequest(c.service.ServerApiUrl(), orgID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Response, error) {
+	req, err := NewDeleteOrgsIDInviteIDRequest(c.service.ServerApiUrl(), orgID, inviteID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostOrgsIDInviteIDResend(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*http.Response, error) {
+	req, err := NewPostOrgsIDInviteIDResendRequest(c.service.ServerApiUrl(), orgID, inviteID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
 func (c *Client) GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error) {
 	req, err := NewGetOrgsIDLabelsRequest(c.service.ServerApiUrl(), orgID, params)
 	if err != nil {
@@ -2094,6 +2262,24 @@ func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *Po
 	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetCloudUsers(ctx context.Context, orgID string, params *GetCloudUsersParams) (*http.Response, error) {
+	req, err := NewGetCloudUsersRequest(c.service.ServerApiUrl(), orgID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteOrgsIDCloudUserID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Response, error) {
+	req, err := NewDeleteOrgsIDCloudUserIDRequest(c.service.ServerApiUrl(), orgID, userID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
 func (c *Client) CreatePkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
 	req, err := NewCreatePkgRequestWithBody(c.service.ServerApiUrl(), contentType, body)
 	if err != nil {
@@ -2123,6 +2309,51 @@ func (c *Client) ApplyPkgWithBody(ctx context.Context, contentType string, body 
 
 func (c *Client) ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*http.Response, error) {
 	req, err := NewApplyPkgRequest(c.service.ServerApiUrl(), body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error) {
+	req, err := NewListStacksRequest(c.service.ServerApiUrl(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewCreateStackRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error) {
+	req, err := NewCreateStackRequest(c.service.ServerApiUrl(), body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error) {
+	req, err := NewDeleteStackRequest(c.service.ServerApiUrl(), stackId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) ExportStack(ctx context.Context, stackId string, params *ExportStackParams) (*http.Response, error) {
+	req, err := NewExportStackRequest(c.service.ServerApiUrl(), stackId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2420,6 +2651,24 @@ func (c *Client) PostSetupWithBody(ctx context.Context, params *PostSetupParams,
 
 func (c *Client) PostSetup(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*http.Response, error) {
 	req, err := NewPostSetupRequest(c.service.ServerApiUrl(), params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostSetupUserWithBody(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostSetupUserRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostSetupUser(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostSetupUserRequest(c.service.ServerApiUrl(), params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6124,6 +6373,385 @@ func NewDeleteDashboardsIDOwnersIDRequest(server string, dashboardID string, use
 	return req, nil
 }
 
+// NewGetDBRPsRequest generates requests for GetDBRPs
+func NewGetDBRPsRequest(server string, params *GetDBRPsParams) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/dbrps")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if params.Id != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "id", *params.Id); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.BucketID != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "bucketID", *params.BucketID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Default != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "default", *params.Default); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Db != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "db", *params.Db); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Rp != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "rp", *params.Rp); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPostDBRPRequest calls the generic PostDBRP builder with application/json body
+func NewPostDBRPRequest(server string, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostDBRPRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostDBRPRequestWithBody generates requests for PostDBRP with any type of body
+func NewPostDBRPRequestWithBody(server string, params *PostDBRPParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/dbrps")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewDeleteDBRPIDRequest generates requests for DeleteDBRPID
+func NewDeleteDBRPIDRequest(server string, dbrpID string, params *DeleteDBRPIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "dbrpID", dbrpID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/dbrps/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetDBRPsIDRequest generates requests for GetDBRPsID
+func NewGetDBRPsIDRequest(server string, dbrpID string, params *GetDBRPsIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "dbrpID", dbrpID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/dbrps/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPatchDBRPIDRequest calls the generic PatchDBRPID builder with application/json body
+func NewPatchDBRPIDRequest(server string, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchDBRPIDRequestWithBody(server, dbrpID, params, "application/json", bodyReader)
+}
+
+// NewPatchDBRPIDRequestWithBody generates requests for PatchDBRPID with any type of body
+func NewPatchDBRPIDRequestWithBody(server string, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "dbrpID", dbrpID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/dbrps/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
 // NewPostDeleteRequest calls the generic PostDelete builder with application/json body
 func NewPostDeleteRequest(server string, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -6649,6 +7277,44 @@ func NewDeleteDocumentsTemplatesIDLabelsIDRequest(server string, templateID stri
 	}
 
 	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetFlagsRequest generates requests for GetFlags
+func NewGetFlagsRequest(server string, params *GetFlagsParams) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/flags")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8367,6 +9033,167 @@ func NewPatchOrgsIDRequestWithBody(server string, orgID string, params *PatchOrg
 	return req, nil
 }
 
+// NewPostOrgsIDInvitesRequest calls the generic PostOrgsIDInvites builder with application/json body
+func NewPostOrgsIDInvitesRequest(server string, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrgsIDInvitesRequestWithBody(server, orgID, params, "application/json", bodyReader)
+}
+
+// NewPostOrgsIDInvitesRequestWithBody generates requests for PostOrgsIDInvites with any type of body
+func NewPostOrgsIDInvitesRequestWithBody(server string, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/orgs/%s/invites", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewDeleteOrgsIDInviteIDRequest generates requests for DeleteOrgsIDInviteID
+func NewDeleteOrgsIDInviteIDRequest(server string, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParam("simple", false, "inviteID", inviteID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/orgs/%s/invites/%s", pathParam0, pathParam1)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPostOrgsIDInviteIDResendRequest generates requests for PostOrgsIDInviteIDResend
+func NewPostOrgsIDInviteIDResendRequest(server string, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParam("simple", false, "inviteID", inviteID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/orgs/%s/invites/%s/resend", pathParam0, pathParam1)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
 // NewGetOrgsIDLabelsRequest generates requests for GetOrgsIDLabels
 func NewGetOrgsIDLabelsRequest(server string, orgID string, params *GetOrgsIDLabelsParams) (*http.Request, error) {
 	var err error
@@ -9069,6 +9896,103 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 	return req, nil
 }
 
+// NewGetCloudUsersRequest generates requests for GetCloudUsers
+func NewGetCloudUsersRequest(server string, orgID string, params *GetCloudUsersParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/orgs/%s/users", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewDeleteOrgsIDCloudUserIDRequest generates requests for DeleteOrgsIDCloudUserID
+func NewDeleteOrgsIDCloudUserIDRequest(server string, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParam("simple", false, "userID", userID)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/orgs/%s/users/%s", pathParam0, pathParam1)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
 // NewCreatePkgRequest calls the generic CreatePkg builder with application/json body
 func NewCreatePkgRequest(server string, body CreatePkgJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -9144,6 +10068,220 @@ func NewApplyPkgRequestWithBody(server string, contentType string, body io.Reade
 	}
 
 	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewListStacksRequest generates requests for ListStacks
+func NewListStacksRequest(server string, params *ListStacksParams) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/packages/stacks")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if params.Name != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "name", *params.Name); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.StackID != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "stackID", *params.StackID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateStackRequest calls the generic CreateStack builder with application/json body
+func NewCreateStackRequest(server string, body CreateStackJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateStackRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateStackRequestWithBody generates requests for CreateStack with any type of body
+func NewCreateStackRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/packages/stacks")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewDeleteStackRequest generates requests for DeleteStack
+func NewDeleteStackRequest(server string, stackId string, params *DeleteStackParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/packages/stacks/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewExportStackRequest generates requests for ExportStack
+func NewExportStackRequest(server string, stackId string, params *ExportStackParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/packages/stacks/%s/export", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryUrl.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryUrl.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
 	return req, nil
 }
 
@@ -10386,6 +11524,56 @@ func NewPostSetupRequestWithBody(server string, params *PostSetupParams, content
 	}
 
 	basePath := fmt.Sprintf("/setup")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewPostSetupUserRequest calls the generic PostSetupUser builder with application/json body
+func NewPostSetupUserRequest(server string, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostSetupUserRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostSetupUserRequestWithBody generates requests for PostSetupUser with any type of body
+func NewPostSetupUserRequestWithBody(server string, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/setup/user")
 	if basePath[0] == '/' {
 		basePath = basePath[1:]
 	}
@@ -15091,6 +16279,126 @@ func (r deleteDashboardsIDOwnersIDResponse) StatusCode() int {
 	return 0
 }
 
+type getDBRPsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DBRPs
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r getDBRPsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r getDBRPsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type postDBRPResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DBRP
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r postDBRPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r postDBRPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type deleteDBRPIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r deleteDBRPIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r deleteDBRPIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type getDBRPsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DBRP
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r getDBRPsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r getDBRPsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type patchDBRPIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DBRP
+	JSON400      *Error
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r patchDBRPIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r patchDBRPIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type postDeleteResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -15293,6 +16601,29 @@ func (r deleteDocumentsTemplatesIDLabelsIDResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r deleteDocumentsTemplatesIDLabelsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type getFlagsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Flags
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r getFlagsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r getFlagsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -16042,6 +17373,74 @@ func (r patchOrgsIDResponse) StatusCode() int {
 	return 0
 }
 
+type postOrgsIDInvitesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Invite
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r postOrgsIDInvitesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r postOrgsIDInvitesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type deleteOrgsIDInviteIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r deleteOrgsIDInviteIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r deleteOrgsIDInviteIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type postOrgsIDInviteIDResendResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Invite
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r postOrgsIDInviteIDResendResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r postOrgsIDInviteIDResendResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type getOrgsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -16339,10 +17738,56 @@ func (r postOrgsIDSecretsResponse) StatusCode() int {
 	return 0
 }
 
+type getCloudUsersResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *CloudUsers
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r getCloudUsersResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r getCloudUsersResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type deleteOrgsIDCloudUserIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r deleteOrgsIDCloudUserIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r deleteOrgsIDCloudUserIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type createPkgResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Pkg
+	YAML200      *Pkg
 	JSONDefault  *Error
 }
 
@@ -16380,6 +17825,124 @@ func (r applyPkgResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r applyPkgResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type listStacksResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]struct {
+		CreatedAt   *time.Time `json:"createdAt,omitempty"`
+		Description *string    `json:"description,omitempty"`
+		Id          *string    `json:"id,omitempty"`
+		Name        *string    `json:"name,omitempty"`
+		OrgID       *string    `json:"orgID,omitempty"`
+		Resources   *struct {
+			ApiVersion   *string `json:"apiVersion,omitempty"`
+			Associations *[]struct {
+				Kind    *string `json:"kind,omitempty"`
+				PkgName *string `json:"pkgName,omitempty"`
+			} `json:"associations,omitempty"`
+			Kind       *string `json:"kind,omitempty"`
+			PkgName    *string `json:"pkgName,omitempty"`
+			ResourceID *string `json:"resourceID,omitempty"`
+		} `json:"resources,omitempty"`
+		UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+		Urls      *[]string  `json:"urls,omitempty"`
+	}
+	JSONDefault *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r listStacksResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r listStacksResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type createStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		CreatedAt   *time.Time `json:"createdAt,omitempty"`
+		Description *string    `json:"description,omitempty"`
+		Id          *string    `json:"id,omitempty"`
+		Name        *string    `json:"name,omitempty"`
+		OrgID       *string    `json:"orgID,omitempty"`
+		UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
+		Urls        *[]string  `json:"urls,omitempty"`
+	}
+	JSONDefault *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r createStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r createStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type deleteStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r deleteStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r deleteStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type exportStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Pkg
+	YAML200      *Pkg
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r exportStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r exportStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -16903,6 +18466,29 @@ func (r postSetupResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r postSetupResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type postSetupUserResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *OnboardingResponse
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r postSetupUserResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r postSetupUserResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18963,6 +20549,67 @@ func (c *ClientWithResponses) DeleteDashboardsIDOwnersIDWithResponse(ctx context
 	return ParseDeleteDashboardsIDOwnersIDResponse(rsp)
 }
 
+// GetDBRPsWithResponse request returning *GetDBRPsResponse
+func (c *ClientWithResponses) GetDBRPsWithResponse(ctx context.Context, params *GetDBRPsParams) (*getDBRPsResponse, error) {
+	rsp, err := c.GetDBRPs(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDBRPsResponse(rsp)
+}
+
+// PostDBRPWithBodyWithResponse request with arbitrary body returning *PostDBRPResponse
+func (c *ClientWithResponses) PostDBRPWithBodyWithResponse(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*postDBRPResponse, error) {
+	rsp, err := c.PostDBRPWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostDBRPResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostDBRPWithResponse(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*postDBRPResponse, error) {
+	rsp, err := c.PostDBRP(ctx, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostDBRPResponse(rsp)
+}
+
+// DeleteDBRPIDWithResponse request returning *DeleteDBRPIDResponse
+func (c *ClientWithResponses) DeleteDBRPIDWithResponse(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*deleteDBRPIDResponse, error) {
+	rsp, err := c.DeleteDBRPID(ctx, dbrpID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDBRPIDResponse(rsp)
+}
+
+// GetDBRPsIDWithResponse request returning *GetDBRPsIDResponse
+func (c *ClientWithResponses) GetDBRPsIDWithResponse(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*getDBRPsIDResponse, error) {
+	rsp, err := c.GetDBRPsID(ctx, dbrpID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDBRPsIDResponse(rsp)
+}
+
+// PatchDBRPIDWithBodyWithResponse request with arbitrary body returning *PatchDBRPIDResponse
+func (c *ClientWithResponses) PatchDBRPIDWithBodyWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*patchDBRPIDResponse, error) {
+	rsp, err := c.PatchDBRPIDWithBody(ctx, dbrpID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchDBRPIDResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchDBRPIDWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*patchDBRPIDResponse, error) {
+	rsp, err := c.PatchDBRPID(ctx, dbrpID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchDBRPIDResponse(rsp)
+}
+
 // PostDeleteWithBodyWithResponse request with arbitrary body returning *PostDeleteResponse
 func (c *ClientWithResponses) PostDeleteWithBodyWithResponse(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*postDeleteResponse, error) {
 	rsp, err := c.PostDeleteWithBody(ctx, params, contentType, body)
@@ -19074,6 +20721,15 @@ func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx
 		return nil, err
 	}
 	return ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp)
+}
+
+// GetFlagsWithResponse request returning *GetFlagsResponse
+func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams) (*getFlagsResponse, error) {
+	rsp, err := c.GetFlags(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFlagsResponse(rsp)
 }
 
 // GetHealthWithResponse request returning *GetHealthResponse
@@ -19468,6 +21124,41 @@ func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID
 	return ParsePatchOrgsIDResponse(rsp)
 }
 
+// PostOrgsIDInvitesWithBodyWithResponse request with arbitrary body returning *PostOrgsIDInvitesResponse
+func (c *ClientWithResponses) PostOrgsIDInvitesWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*postOrgsIDInvitesResponse, error) {
+	rsp, err := c.PostOrgsIDInvitesWithBody(ctx, orgID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostOrgsIDInvitesResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostOrgsIDInvitesWithResponse(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*postOrgsIDInvitesResponse, error) {
+	rsp, err := c.PostOrgsIDInvites(ctx, orgID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostOrgsIDInvitesResponse(rsp)
+}
+
+// DeleteOrgsIDInviteIDWithResponse request returning *DeleteOrgsIDInviteIDResponse
+func (c *ClientWithResponses) DeleteOrgsIDInviteIDWithResponse(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*deleteOrgsIDInviteIDResponse, error) {
+	rsp, err := c.DeleteOrgsIDInviteID(ctx, orgID, inviteID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteOrgsIDInviteIDResponse(rsp)
+}
+
+// PostOrgsIDInviteIDResendWithResponse request returning *PostOrgsIDInviteIDResendResponse
+func (c *ClientWithResponses) PostOrgsIDInviteIDResendWithResponse(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*postOrgsIDInviteIDResendResponse, error) {
+	rsp, err := c.PostOrgsIDInviteIDResend(ctx, orgID, inviteID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostOrgsIDInviteIDResendResponse(rsp)
+}
+
 // GetOrgsIDLabelsWithResponse request returning *GetOrgsIDLabelsResponse
 func (c *ClientWithResponses) GetOrgsIDLabelsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*getOrgsIDLabelsResponse, error) {
 	rsp, err := c.GetOrgsIDLabels(ctx, orgID, params)
@@ -19625,6 +21316,24 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context,
 	return ParsePostOrgsIDSecretsResponse(rsp)
 }
 
+// GetCloudUsersWithResponse request returning *GetCloudUsersResponse
+func (c *ClientWithResponses) GetCloudUsersWithResponse(ctx context.Context, orgID string, params *GetCloudUsersParams) (*getCloudUsersResponse, error) {
+	rsp, err := c.GetCloudUsers(ctx, orgID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCloudUsersResponse(rsp)
+}
+
+// DeleteOrgsIDCloudUserIDWithResponse request returning *DeleteOrgsIDCloudUserIDResponse
+func (c *ClientWithResponses) DeleteOrgsIDCloudUserIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*deleteOrgsIDCloudUserIDResponse, error) {
+	rsp, err := c.DeleteOrgsIDCloudUserID(ctx, orgID, userID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteOrgsIDCloudUserIDResponse(rsp)
+}
+
 // CreatePkgWithBodyWithResponse request with arbitrary body returning *CreatePkgResponse
 func (c *ClientWithResponses) CreatePkgWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createPkgResponse, error) {
 	rsp, err := c.CreatePkgWithBody(ctx, contentType, body)
@@ -19657,6 +21366,50 @@ func (c *ClientWithResponses) ApplyPkgWithResponse(ctx context.Context, body App
 		return nil, err
 	}
 	return ParseApplyPkgResponse(rsp)
+}
+
+// ListStacksWithResponse request returning *ListStacksResponse
+func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params *ListStacksParams) (*listStacksResponse, error) {
+	rsp, err := c.ListStacks(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListStacksResponse(rsp)
+}
+
+// CreateStackWithBodyWithResponse request with arbitrary body returning *CreateStackResponse
+func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createStackResponse, error) {
+	rsp, err := c.CreateStackWithBody(ctx, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateStackResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody) (*createStackResponse, error) {
+	rsp, err := c.CreateStack(ctx, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateStackResponse(rsp)
+}
+
+// DeleteStackWithResponse request returning *DeleteStackResponse
+func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams) (*deleteStackResponse, error) {
+	rsp, err := c.DeleteStack(ctx, stackId, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteStackResponse(rsp)
+}
+
+// ExportStackWithResponse request returning *ExportStackResponse
+func (c *ClientWithResponses) ExportStackWithResponse(ctx context.Context, stackId string, params *ExportStackParams) (*exportStackResponse, error) {
+	rsp, err := c.ExportStack(ctx, stackId, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportStackResponse(rsp)
 }
 
 // PostQueryWithBodyWithResponse request with arbitrary body returning *PostQueryResponse
@@ -19944,6 +21697,23 @@ func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params 
 		return nil, err
 	}
 	return ParsePostSetupResponse(rsp)
+}
+
+// PostSetupUserWithBodyWithResponse request with arbitrary body returning *PostSetupUserResponse
+func (c *ClientWithResponses) PostSetupUserWithBodyWithResponse(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*postSetupUserResponse, error) {
+	rsp, err := c.PostSetupUserWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostSetupUserResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostSetupUserWithResponse(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*postSetupUserResponse, error) {
+	rsp, err := c.PostSetupUser(ctx, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostSetupUserResponse(rsp)
 }
 
 // PostSigninWithResponse request returning *PostSigninResponse
@@ -22429,6 +24199,206 @@ func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*deleteDashboa
 	return response, nil
 }
 
+// ParseGetDBRPsResponse parses an HTTP response from a GetDBRPsWithResponse call
+func ParseGetDBRPsResponse(rsp *http.Response) (*getDBRPsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &getDBRPsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DBRPs
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostDBRPResponse parses an HTTP response from a PostDBRPWithResponse call
+func ParsePostDBRPResponse(rsp *http.Response) (*postDBRPResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &postDBRPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DBRP
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDBRPIDResponse parses an HTTP response from a DeleteDBRPIDWithResponse call
+func ParseDeleteDBRPIDResponse(rsp *http.Response) (*deleteDBRPIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &deleteDBRPIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetDBRPsIDResponse parses an HTTP response from a GetDBRPsIDWithResponse call
+func ParseGetDBRPsIDResponse(rsp *http.Response) (*getDBRPsIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &getDBRPsIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DBRP
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchDBRPIDResponse parses an HTTP response from a PatchDBRPIDWithResponse call
+func ParsePatchDBRPIDResponse(rsp *http.Response) (*patchDBRPIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &patchDBRPIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DBRP
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParsePostDeleteResponse parses an HTTP response from a PostDeleteWithResponse call
 func ParsePostDeleteResponse(rsp *http.Response) (*postDeleteResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -22720,6 +24690,39 @@ func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*delet
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFlagsResponse parses an HTTP response from a GetFlagsWithResponse call
+func ParseGetFlagsResponse(rsp *http.Response) (*getFlagsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &getFlagsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Flags
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
@@ -23838,6 +25841,98 @@ func ParsePatchOrgsIDResponse(rsp *http.Response) (*patchOrgsIDResponse, error) 
 	return response, nil
 }
 
+// ParsePostOrgsIDInvitesResponse parses an HTTP response from a PostOrgsIDInvitesWithResponse call
+func ParsePostOrgsIDInvitesResponse(rsp *http.Response) (*postOrgsIDInvitesResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &postOrgsIDInvitesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Invite
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteOrgsIDInviteIDResponse parses an HTTP response from a DeleteOrgsIDInviteIDWithResponse call
+func ParseDeleteOrgsIDInviteIDResponse(rsp *http.Response) (*deleteOrgsIDInviteIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &deleteOrgsIDInviteIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrgsIDInviteIDResendResponse parses an HTTP response from a PostOrgsIDInviteIDResendWithResponse call
+func ParsePostOrgsIDInviteIDResendResponse(rsp *http.Response) (*postOrgsIDInviteIDResendResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &postOrgsIDInviteIDResendResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Invite
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetOrgsIDLabelsResponse parses an HTTP response from a GetOrgsIDLabelsWithResponse call
 func ParseGetOrgsIDLabelsResponse(rsp *http.Response) (*getOrgsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -24253,6 +26348,65 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*postOrgsIDSecretsRespo
 	return response, nil
 }
 
+// ParseGetCloudUsersResponse parses an HTTP response from a GetCloudUsersWithResponse call
+func ParseGetCloudUsersResponse(rsp *http.Response) (*getCloudUsersResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &getCloudUsersResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CloudUsers
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteOrgsIDCloudUserIDResponse parses an HTTP response from a DeleteOrgsIDCloudUserIDWithResponse call
+func ParseDeleteOrgsIDCloudUserIDResponse(rsp *http.Response) (*deleteOrgsIDCloudUserIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &deleteOrgsIDCloudUserIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCreatePkgResponse parses an HTTP response from a CreatePkgWithResponse call
 func ParseCreatePkgResponse(rsp *http.Response) (*createPkgResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -24272,7 +26426,7 @@ func ParseCreatePkgResponse(rsp *http.Response) (*createPkgResponse, error) {
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON200 = &dest
+		response.YAML200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
@@ -24280,6 +26434,13 @@ func ParseCreatePkgResponse(rsp *http.Response) (*createPkgResponse, error) {
 			return nil, err
 		}
 		response.JSONDefault = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "yaml") && rsp.StatusCode == 200:
+		var dest Pkg
+		if err := yaml.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.YAML200 = &dest
 
 	}
 
@@ -24320,6 +26481,164 @@ func ParseApplyPkgResponse(rsp *http.Response) (*applyPkgResponse, error) {
 			return nil, err
 		}
 		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListStacksResponse parses an HTTP response from a ListStacksWithResponse call
+func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &listStacksResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []struct {
+			CreatedAt   *time.Time `json:"createdAt,omitempty"`
+			Description *string    `json:"description,omitempty"`
+			Id          *string    `json:"id,omitempty"`
+			Name        *string    `json:"name,omitempty"`
+			OrgID       *string    `json:"orgID,omitempty"`
+			Resources   *struct {
+				ApiVersion   *string `json:"apiVersion,omitempty"`
+				Associations *[]struct {
+					Kind    *string `json:"kind,omitempty"`
+					PkgName *string `json:"pkgName,omitempty"`
+				} `json:"associations,omitempty"`
+				Kind       *string `json:"kind,omitempty"`
+				PkgName    *string `json:"pkgName,omitempty"`
+				ResourceID *string `json:"resourceID,omitempty"`
+			} `json:"resources,omitempty"`
+			UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+			Urls      *[]string  `json:"urls,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateStackResponse parses an HTTP response from a CreateStackWithResponse call
+func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &createStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			CreatedAt   *time.Time `json:"createdAt,omitempty"`
+			Description *string    `json:"description,omitempty"`
+			Id          *string    `json:"id,omitempty"`
+			Name        *string    `json:"name,omitempty"`
+			OrgID       *string    `json:"orgID,omitempty"`
+			UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
+			Urls        *[]string  `json:"urls,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteStackResponse parses an HTTP response from a DeleteStackWithResponse call
+func ParseDeleteStackResponse(rsp *http.Response) (*deleteStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &deleteStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExportStackResponse parses an HTTP response from a ExportStackWithResponse call
+func ParseExportStackResponse(rsp *http.Response) (*exportStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &exportStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Pkg
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.YAML200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "yaml") && rsp.StatusCode == 200:
+		var dest Pkg
+		if err := yaml.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.YAML200 = &dest
 
 	}
 
@@ -25019,6 +27338,39 @@ func ParsePostSetupResponse(rsp *http.Response) (*postSetupResponse, error) {
 	}
 
 	response := &postSetupResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest OnboardingResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostSetupUserResponse parses an HTTP response from a PostSetupUserWithResponse call
+func ParsePostSetupUserResponse(rsp *http.Response) (*postSetupUserResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &postSetupUserResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

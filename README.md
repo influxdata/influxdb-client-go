@@ -35,6 +35,7 @@ This repository contains the reference Go client for InfluxDB 2.
         - setup, ready, health
         - authotizations, users, organizations
         - buckets, delete
+        - ...
      
 ## Documentation
 

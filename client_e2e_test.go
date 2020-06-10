@@ -702,3 +702,139 @@ func TestBuckets(t *testing.T) {
 	_, err = bucketsApi.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
 	assert.NotNil(t, err)
 }
+
+func TestLabels(t *testing.T) {
+	client := influxdb2.NewClientWithOptions("http://localhost:9999", authToken, influxdb2.DefaultOptions().SetLogLevel(3))
+	labelsApi := client.LabelsApi()
+	orgApi := client.OrganizationsApi()
+
+	ctx := context.Background()
+
+	myorg, err := orgApi.FindOrganizationByName(ctx, "my-org")
+	require.Nil(t, err, err)
+	require.NotNil(t, myorg)
+
+	labels, err := labelsApi.GetLabels(ctx)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 0)
+
+	labelName := "Active State"
+	props := map[string]string{"color": "#33ffddd", "description": "Marks org active"}
+	label, err := labelsApi.CreateLabelWithName(ctx, myorg, labelName, props)
+	require.Nil(t, err, err)
+	require.NotNil(t, label)
+	assert.Equal(t, labelName, *label.Name)
+	require.NotNil(t, label.Properties)
+	assert.Equal(t, props, label.Properties.AdditionalProperties)
+
+	//remove properties
+	label.Properties.AdditionalProperties = map[string]string{"color": "", "description": ""}
+	label2, err := labelsApi.UpdateLabel(ctx, label)
+	require.Nil(t, err, err)
+	require.NotNil(t, label2)
+	assert.Equal(t, labelName, *label2.Name)
+	assert.Nil(t, label2.Properties)
+
+	label2, err = labelsApi.FindLabelById(ctx, *label.Id)
+	require.Nil(t, err, err)
+	require.NotNil(t, label2)
+	assert.Equal(t, labelName, *label2.Name)
+
+	label2, err = labelsApi.FindLabelById(ctx, "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	label2, err = labelsApi.FindLabelByName(ctx, *myorg.Id, labelName)
+	require.Nil(t, err, err)
+	require.NotNil(t, label2)
+	assert.Equal(t, labelName, *label2.Name)
+
+	label2, err = labelsApi.FindLabelByName(ctx, *myorg.Id, "wrong label")
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	labels, err = labelsApi.GetLabels(ctx)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 1)
+
+	labels, err = labelsApi.FindLabelsByOrg(ctx, myorg)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 1)
+
+	labels, err = labelsApi.FindLabelsByOrgId(ctx, *myorg.Id)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 1)
+
+	labels, err = labelsApi.FindLabelsByOrgId(ctx, "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, labels)
+
+	// duplicate label
+	label2, err = labelsApi.CreateLabelWithName(ctx, myorg, labelName, nil)
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	labels, err = orgApi.GetLabels(ctx, myorg)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 0)
+
+	org, err := orgApi.CreateOrganizationWithName(ctx, "org1")
+	require.Nil(t, err, err)
+	require.NotNil(t, org)
+
+	labels, err = orgApi.GetLabels(ctx, org)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 0)
+
+	labelx, err := orgApi.AddLabel(ctx, org, label)
+	require.Nil(t, err, err)
+	require.NotNil(t, labelx)
+
+	labels, err = orgApi.GetLabels(ctx, org)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 1)
+
+	err = orgApi.RemoveLabel(ctx, org, label)
+	require.Nil(t, err, err)
+
+	labels, err = orgApi.GetLabels(ctx, org)
+	require.Nil(t, err, err)
+	require.NotNil(t, labels)
+	assert.Len(t, *labels, 0)
+
+	labels, err = orgApi.GetLabelsWithId(ctx, "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, labels)
+
+	label2, err = orgApi.AddLabelWithId(ctx, *org.Id, "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	label2, err = orgApi.AddLabelWithId(ctx, "000000000000000", "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	err = orgApi.RemoveLabelWithId(ctx, *org.Id, "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	err = orgApi.RemoveLabelWithId(ctx, "000000000000000", "000000000000000")
+	require.NotNil(t, err, err)
+	require.Nil(t, label2)
+
+	err = orgApi.DeleteOrganization(ctx, org)
+	assert.Nil(t, err, err)
+
+	err = labelsApi.DeleteLabel(ctx, label)
+	require.Nil(t, err, err)
+
+	err = labelsApi.DeleteLabel(ctx, label)
+	require.NotNil(t, err, err)
+}

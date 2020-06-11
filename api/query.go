@@ -179,7 +179,7 @@ type QueryTableResult struct {
 }
 
 // TablePosition returns actual flux table position in the result, or -1 if no table was found yet
-// Each new table is introduced by the #dataType annotation in csv
+// Each new table is introduced by an annotation in csv
 func (q *QueryTableResult) TablePosition() int {
 	if q.table != nil {
 		return q.table.Position()
@@ -208,6 +208,7 @@ type parsingState int
 
 const (
 	parsingStateNormal parsingState = iota
+	parsingStateAnnotation
 	parsingStateNameRow
 	parsingStateError
 )
@@ -233,6 +234,7 @@ func (q *QueryTableResult) Next() bool {
 	}()
 	parsingState := parsingStateNormal
 	q.tableChanged = false
+	dataTypeAnnotationFound := false
 readRow:
 	row, q.err = q.csvReader.Read()
 	if q.err == io.EOF {
@@ -246,23 +248,36 @@ readRow:
 	if len(row) <= 1 {
 		goto readRow
 	}
-
+	if len(row[0]) > 0 && row[0][0] == '#' {
+		if parsingState == parsingStateNormal {
+			q.table = query.NewFluxTableMetadata(q.tablePosition)
+			q.tablePosition++
+			q.tableChanged = true
+			for i := range row[1:] {
+				q.table.AddColumn(query.NewFluxColumn(i))
+			}
+			parsingState = parsingStateAnnotation
+		}
+	}
+	if q.table == nil {
+		q.err = errors.New("parsing error, annotations not found")
+		return false
+	}
+	if len(row)-1 != len(q.table.Columns()) {
+		q.err = fmt.Errorf("parsing error, row has different number of columns than the table: %d vs %d", len(row)-1, len(q.table.Columns()))
+		return false
+	}
 	switch row[0] {
 	case "":
-		if parsingState == parsingStateError {
-			var message string
-			if len(row) > 1 && len(row[1]) > 0 {
-				message = row[1]
-			} else {
-				message = "unknown query error"
+		switch parsingState {
+		case parsingStateAnnotation:
+			if !dataTypeAnnotationFound {
+				q.err = errors.New("parsing error, datatype annotation not found")
+				return false
 			}
-			reference := ""
-			if len(row) > 2 && len(row[2]) > 0 {
-				reference = fmt.Sprintf(",%s", row[2])
-			}
-			q.err = fmt.Errorf("%s%s", message, reference)
-			return false
-		} else if parsingState == parsingStateNameRow {
+			parsingState = parsingStateNameRow
+			fallthrough
+		case parsingStateNameRow:
 			if row[1] == "error" {
 				parsingState = parsingStateError
 			} else {
@@ -274,13 +289,18 @@ readRow:
 				parsingState = parsingStateNormal
 			}
 			goto readRow
-		}
-		if q.table == nil {
-			q.err = errors.New("parsing error, datatype annotation not found")
-			return false
-		}
-		if len(row)-1 != len(q.table.Columns()) {
-			q.err = fmt.Errorf("parsing error, row has different number of columns than table: %d vs %d", len(row)-1, len(q.table.Columns()))
+		case parsingStateError:
+			var message string
+			if len(row) > 1 && len(row[1]) > 0 {
+				message = row[1]
+			} else {
+				message = "unknown query error"
+			}
+			reference := ""
+			if len(row) > 2 && len(row[2]) > 0 {
+				reference = fmt.Sprintf(",%s", row[2])
+			}
+			q.err = fmt.Errorf("%s%s", message, reference)
 			return false
 		}
 		values := make(map[string]interface{})
@@ -294,18 +314,14 @@ readRow:
 		}
 		q.record = query.NewFluxRecord(q.table.Position(), values)
 	case "#datatype":
-		q.table = query.NewFluxTableMetadata(q.tablePosition)
-		q.tablePosition++
-		q.tableChanged = true
+		dataTypeAnnotationFound = true
 		for i, d := range row[1:] {
-			q.table.AddColumn(query.NewFluxColumn(i, d))
+			if q.table.Column(i) != nil {
+				q.table.Column(i).SetDataType(d)
+			}
 		}
 		goto readRow
 	case "#group":
-		if q.table == nil {
-			q.err = errors.New("parsing error, datatype annotation not found")
-			return false
-		}
 		for i, g := range row[1:] {
 			if q.table.Column(i) != nil {
 				q.table.Column(i).SetGroup(g == "true")
@@ -313,17 +329,11 @@ readRow:
 		}
 		goto readRow
 	case "#default":
-		if q.table == nil {
-			q.err = errors.New("parsing error, datatype annotation not found")
-			return false
-		}
 		for i, c := range row[1:] {
 			if q.table.Column(i) != nil {
 				q.table.Column(i).SetDefaultValue(c)
 			}
 		}
-		// there comes column names after defaults
-		parsingState = parsingStateNameRow
 		goto readRow
 	}
 	// don't close query

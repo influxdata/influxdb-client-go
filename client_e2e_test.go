@@ -78,23 +78,26 @@ func TestWrite(t *testing.T) {
 			fmt.Println("Write error: ", err.Error())
 		}
 	}()
+	timestamp := time.Now()
 	for i, f := 0, 3.3; i < 10; i++ {
-		writeApi.WriteRecord(fmt.Sprintf("test,a=%d,b=local f=%.2f,i=%di", i%2, f, i))
+		writeApi.WriteRecord(fmt.Sprintf("test,a=%d,b=local f=%.2f,i=%di %d", i%2, f, i, timestamp.UnixNano()))
 		//writeApi.Flush()
 		f += 3.3
+		timestamp = timestamp.Add(time.Nanosecond)
 	}
 
 	for i, f := int64(10), 33.0; i < 20; i++ {
 		p := influxdb2.NewPoint("test",
 			map[string]string{"a": strconv.FormatInt(i%2, 10), "b": "static"},
 			map[string]interface{}{"f": f, "i": i},
-			time.Now())
+			timestamp)
 		writeApi.WritePoint(p)
 		f += 3.3
+		timestamp = timestamp.Add(time.Nanosecond)
 	}
 
 	err := client.WriteApiBlocking("my-org", "my-bucket").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("test").
-		AddTag("a", "3").AddField("i", 20))
+		AddTag("a", "3").AddField("i", 20).AddField("f", 4.4))
 	assert.Nil(t, err)
 
 	client.Close()
@@ -106,7 +109,7 @@ func TestQueryRaw(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
 	queryApi := client.QueryApi("my-org")
-	res, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
+	res, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
 	if err != nil {
 		t.Error(err)
 	} else {
@@ -124,7 +127,9 @@ func TestQuery(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	} else {
+		rows := 0
 		for result.Next() {
+			rows++
 			if result.TableChanged() {
 				fmt.Printf("table: %s\n", result.TableMetadata().String())
 			}
@@ -133,7 +138,9 @@ func TestQuery(t *testing.T) {
 		if result.Err() != nil {
 			t.Error(result.Err())
 		}
+		assert.Equal(t, 42, rows)
 	}
+
 }
 
 func TestAuthorizationsApi(t *testing.T) {

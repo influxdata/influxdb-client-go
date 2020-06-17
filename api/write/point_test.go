@@ -205,6 +205,40 @@ func TestPointAdd(t *testing.T) {
 	verifyPoint(t, p)
 }
 
+func TestPointFluent(t *testing.T) {
+	p := NewPointWithMeasurement("test").
+		AddTag("id", "10ad=").
+		AddTag("ven=dor", "AWS").
+		AddTag(`host"name`, "host_a").
+		//test re-setting same tag
+		AddTag(`host"name`, `ho\st "a"`).
+		AddTag(`x\" x`, "a b").
+		SortTags().
+		AddField("float64", 80.1234567).
+		AddField("float32", float32(80.0)).
+		AddField("int", -1234567890).
+		AddField("int8", int8(-34)).
+		AddField("int16", int16(-3456)).
+		AddField("int32", int32(-34567)).
+		AddField("int64", int64(-1234567890)).
+		AddField("uint", uint(12345677890)).
+		AddField("uint8", uint8(34)).
+		AddField("uint16", uint16(3456)).
+		AddField("uint32", uint32(34578)).
+		AddField("uint 64", uint64(0)).
+		// test re-setting same field
+		AddField("uint 64", uint64(41234567890)).
+		AddField("bo\\ol", false).
+		AddField(`"string"`, `six, "seven", eight`).
+		AddField("stri=ng", `six=seven\, eight`).
+		AddField("time", time.Date(2020, time.March, 20, 10, 30, 23, 123456789, time.UTC)).
+		AddField("duration", time.Duration(4*time.Hour+24*time.Minute+3*time.Second)).
+		SortFields().
+		SetTime(time.Unix(60, 70))
+
+	verifyPoint(t, p)
+}
+
 func TestPrecision(t *testing.T) {
 	p := NewPointWithMeasurement("test")
 	p.AddTag("id", "10")

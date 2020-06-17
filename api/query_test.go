@@ -585,6 +585,183 @@ func TestInvalidDataType(t *testing.T) {
 	assert.Equal(t, "deviceId has unknown data type int", queryResult.Err().Error())
 }
 
+func TestReorderedAnnotations(t *testing.T) {
+	expectedTable := query.NewFluxTableMetadataFull(0,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("double", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", true, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
+			query.NewFluxColumnFull("string", "", "a", true, 8),
+			query.NewFluxColumnFull("string", "", "b", true, 9),
+		},
+	)
+	expectedRecord1 := query.NewFluxRecord(0,
+		map[string]interface{}{
+			"result":       "_result",
+			"table":        int64(0),
+			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
+			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
+			"_time":        mustParseTime("2020-02-18T10:34:08.135814545Z"),
+			"_value":       1.4,
+			"_field":       "f",
+			"_measurement": "test",
+			"a":            "1",
+			"b":            "adsfasdf",
+		},
+	)
+
+	expectedRecord2 := query.NewFluxRecord(0,
+		map[string]interface{}{
+			"result":       "_result",
+			"table":        int64(0),
+			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
+			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
+			"_time":        mustParseTime("2020-02-18T22:08:44.850214724Z"),
+			"_value":       6.6,
+			"_field":       "f",
+			"_measurement": "test",
+			"a":            "1",
+			"b":            "adsfasdf",
+		},
+	)
+
+	csvTable1 := `#group,false,false,true,true,false,false,true,true,true,true
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
+#default,_result,,,,,,,,,
+,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
+
+`
+	reader := strings.NewReader(csvTable1)
+	csvReader := csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+
+	require.Equal(t, queryResult.table, expectedTable)
+	assert.True(t, queryResult.tableChanged)
+	require.NotNil(t, queryResult.Record())
+	require.Equal(t, queryResult.Record(), expectedRecord1)
+
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+	assert.False(t, queryResult.tableChanged)
+	require.NotNil(t, queryResult.Record())
+	require.Equal(t, queryResult.Record(), expectedRecord2)
+
+	require.False(t, queryResult.Next())
+	require.Nil(t, queryResult.Err())
+
+	csvTable2 := `#default,_result,,,,,,,,,
+#group,false,false,true,true,false,false,true,true,true,true
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
+,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
+
+`
+	reader = strings.NewReader(csvTable2)
+	csvReader = csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+
+	require.Equal(t, queryResult.table, expectedTable)
+	assert.True(t, queryResult.tableChanged)
+	require.NotNil(t, queryResult.Record())
+	require.Equal(t, queryResult.Record(), expectedRecord1)
+
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+	assert.False(t, queryResult.tableChanged)
+	require.NotNil(t, queryResult.Record())
+	require.Equal(t, queryResult.Record(), expectedRecord2)
+
+	require.False(t, queryResult.Next())
+	require.Nil(t, queryResult.Err())
+}
+
+func TestDatatypeOnlyAnnotation(t *testing.T) {
+	expectedTable := query.NewFluxTableMetadataFull(0,
+		[]*query.FluxColumn{
+			query.NewFluxColumnFull("string", "", "result", false, 0),
+			query.NewFluxColumnFull("long", "", "table", false, 1),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", false, 2),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", false, 3),
+			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
+			query.NewFluxColumnFull("double", "", "_value", false, 5),
+			query.NewFluxColumnFull("string", "", "_field", false, 6),
+			query.NewFluxColumnFull("string", "", "_measurement", false, 7),
+			query.NewFluxColumnFull("string", "", "a", false, 8),
+			query.NewFluxColumnFull("string", "", "b", false, 9),
+		},
+	)
+	expectedRecord1 := query.NewFluxRecord(0,
+		map[string]interface{}{
+			"result":       nil,
+			"table":        int64(0),
+			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
+			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
+			"_time":        mustParseTime("2020-02-18T10:34:08.135814545Z"),
+			"_value":       1.4,
+			"_field":       "f",
+			"_measurement": "test",
+			"a":            "1",
+			"b":            "adsfasdf",
+		},
+	)
+
+	expectedRecord2 := query.NewFluxRecord(0,
+		map[string]interface{}{
+			"result":       nil,
+			"table":        int64(0),
+			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
+			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
+			"_time":        mustParseTime("2020-02-18T22:08:44.850214724Z"),
+			"_value":       6.6,
+			"_field":       "f",
+			"_measurement": "test",
+			"a":            "1",
+			"b":            "adsfasdf",
+		},
+	)
+
+	csvTable1 := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
+,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
+,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
+
+`
+	reader := strings.NewReader(csvTable1)
+	csvReader := csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+
+	require.Equal(t, queryResult.table, expectedTable)
+	assert.True(t, queryResult.tableChanged)
+	require.NotNil(t, queryResult.Record())
+	require.Equal(t, queryResult.Record(), expectedRecord1)
+
+	require.True(t, queryResult.Next(), queryResult.Err())
+	require.Nil(t, queryResult.Err())
+	assert.False(t, queryResult.tableChanged)
+	require.NotNil(t, queryResult.Record())
+	require.Equal(t, queryResult.Record(), expectedRecord2)
+
+	require.False(t, queryResult.Next())
+	require.Nil(t, queryResult.Err())
+}
+
 func TestMissingDatatypeAnnotation(t *testing.T) {
 	csvTable1 := `
 #group,false,false,true,true,false,true,true,false,false,false
@@ -617,26 +794,28 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
+}
 
+func TestMissingAnnotations(t *testing.T) {
 	csvTable3 := `
 ,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
 ,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
 ,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
-`
 
-	reader = strings.NewReader(csvTable3)
-	csvReader = csv.NewReader(reader)
+`
+	reader := strings.NewReader(csvTable3)
+	csvReader := csv.NewReader(reader)
 	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
-	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
+	assert.Equal(t, "parsing error, annotations not found", queryResult.Err().Error())
 }
 
 func TestDifferentNumberOfColumns(t *testing.T) {
 	csvTable := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,int,string,duration,base64Binary,dateTime:RFC3339
 #group,false,false,true,true,false,true,true,false,false,
-#default,_result,,,,,,,
+#default,_result,,,,,,,,,
 ,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
 ,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z,2345234
 `
@@ -647,7 +826,37 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
-	assert.Equal(t, "parsing error, row has different number of columns than table: 11 vs 10", queryResult.Err().Error())
+	assert.Equal(t, "parsing error, row has different number of columns than the table: 11 vs 10", queryResult.Err().Error())
+
+	csvTable2 := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,int,string,duration,base64Binary,dateTime:RFC3339
+#group,false,false,true,true,false,true,true,false,false,
+#default,_result,,,,,,,
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z,2345234
+`
+
+	reader = strings.NewReader(csvTable2)
+	csvReader = csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "parsing error, row has different number of columns than the table: 8 vs 10", queryResult.Err().Error())
+
+	csvTable3 := `#default,_result,,,,,,,
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,int,string,duration,base64Binary,dateTime:RFC3339
+#group,false,false,true,true,false,true,true,false,false,
+,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
+,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z,2345234
+`
+
+	reader = strings.NewReader(csvTable3)
+	csvReader = csv.NewReader(reader)
+	csvReader.FieldsPerRecord = -1
+	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	require.False(t, queryResult.Next())
+	require.NotNil(t, queryResult.Err())
+	assert.Equal(t, "parsing error, row has different number of columns than the table: 10 vs 8", queryResult.Err().Error())
 }
 
 func TestEmptyValue(t *testing.T) {

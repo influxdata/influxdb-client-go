@@ -80,9 +80,9 @@ func (f *FluxTableMetadata) String() string {
 	return buffer.String()
 }
 
-// newFluxColumn creates FluxColumn for position and data type
-func NewFluxColumn(index int, dataType string) *FluxColumn {
-	return &FluxColumn{index: index, dataType: dataType}
+// newFluxColumn creates FluxColumn for position
+func NewFluxColumn(index int) *FluxColumn {
+	return &FluxColumn{index: index}
 }
 
 // newFluxColumn creates FluxColumn

@@ -3,7 +3,8 @@
 1. [#131](https://github.com/influxdata/influxdb-client-go/pull/131) Labels API
 
 ### Bug fixes 
-1. [#132](https://github.com/influxdata/influxdb-client-go/pull/132) Properly handle errors instead of panics
+1. [#132](https://github.com/influxdata/influxdb-client-go/pull/132) Handle unsupported write type as string instead of generating panic
+1. [#134](https://github.com/influxdata/influxdb-client-go/pull/134) FluxQueryResult: support reordering of annotations
 
 ## 1.2.0 [2020-05-15]
 ### Breaking Changes

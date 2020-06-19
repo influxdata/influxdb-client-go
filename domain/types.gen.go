@@ -394,54 +394,6 @@ const (
 	PermissionActionWrite PermissionAction = "write"
 )
 
-// Defines values for PkgKind.
-const (
-	PkgKindBucket PkgKind = "Bucket"
-
-	PkgKindCheckDeadman PkgKind = "CheckDeadman"
-
-	PkgKindCheckThreshold PkgKind = "CheckThreshold"
-
-	PkgKindDashboard PkgKind = "Dashboard"
-
-	PkgKindLabel PkgKind = "Label"
-
-	PkgKindNotificationEndpointHTTP PkgKind = "NotificationEndpointHTTP"
-
-	PkgKindNotificationEndpointPagerDuty PkgKind = "NotificationEndpointPagerDuty"
-
-	PkgKindNotificationEndpointSlack PkgKind = "NotificationEndpointSlack"
-
-	PkgKindNotificationRule PkgKind = "NotificationRule"
-
-	PkgKindTask PkgKind = "Task"
-
-	PkgKindTelegraf PkgKind = "Telegraf"
-
-	PkgKindVariable PkgKind = "Variable"
-)
-
-// Defines values for PkgCreateKind.
-const (
-	PkgCreateKindBucket PkgCreateKind = "bucket"
-
-	PkgCreateKindCheck PkgCreateKind = "check"
-
-	PkgCreateKindDashboard PkgCreateKind = "dashboard"
-
-	PkgCreateKindLabel PkgCreateKind = "label"
-
-	PkgCreateKindNotificationEndpoint PkgCreateKind = "notification_endpoint"
-
-	PkgCreateKindNotificationRule PkgCreateKind = "notification_rule"
-
-	PkgCreateKindTask PkgCreateKind = "task"
-
-	PkgCreateKindTelegraf PkgCreateKind = "telegraf"
-
-	PkgCreateKindVariable PkgCreateKind = "variable"
-)
-
 // Defines values for QueryType.
 const (
 	QueryTypeFlux QueryType = "flux"
@@ -875,6 +827,37 @@ const (
 	TelegrafPluginOutputInfluxDBV2TypeOutput TelegrafPluginOutputInfluxDBV2Type = "output"
 )
 
+// Defines values for TemplateKind.
+const (
+	TemplateKindBucket TemplateKind = "Bucket"
+
+	TemplateKindCheck TemplateKind = "Check"
+
+	TemplateKindCheckDeadman TemplateKind = "CheckDeadman"
+
+	TemplateKindCheckThreshold TemplateKind = "CheckThreshold"
+
+	TemplateKindDashboard TemplateKind = "Dashboard"
+
+	TemplateKindLabel TemplateKind = "Label"
+
+	TemplateKindNotificationEndpoint TemplateKind = "NotificationEndpoint"
+
+	TemplateKindNotificationEndpointHTTP TemplateKind = "NotificationEndpointHTTP"
+
+	TemplateKindNotificationEndpointPagerDuty TemplateKind = "NotificationEndpointPagerDuty"
+
+	TemplateKindNotificationEndpointSlack TemplateKind = "NotificationEndpointSlack"
+
+	TemplateKindNotificationRule TemplateKind = "NotificationRule"
+
+	TemplateKindTask TemplateKind = "Task"
+
+	TemplateKindTelegraf TemplateKind = "Telegraf"
+
+	TemplateKindVariable TemplateKind = "Variable"
+)
+
 // Defines values for ThresholdCheckType.
 const (
 	ThresholdCheckTypeThreshold ThresholdCheckType = "threshold"
@@ -1102,9 +1085,6 @@ type Bucket struct {
 
 		// URI of resource.
 		Labels *Link `json:"labels,omitempty"`
-
-		// URI of resource.
-		Logs *Link `json:"logs,omitempty"`
 
 		// URI of resource.
 		Members *Link `json:"members,omitempty"`
@@ -1457,9 +1437,6 @@ type Dashboard struct {
 		Labels *Link `json:"labels,omitempty"`
 
 		// URI of resource.
-		Logs *Link `json:"logs,omitempty"`
-
-		// URI of resource.
 		Members *Link `json:"members,omitempty"`
 
 		// URI of resource.
@@ -1524,9 +1501,6 @@ type DashboardWithViewProperties struct {
 
 		// URI of resource.
 		Labels *Link `json:"labels,omitempty"`
-
-		// URI of resource.
-		Logs *Link `json:"logs,omitempty"`
 
 		// URI of resource.
 		Members *Link `json:"members,omitempty"`
@@ -2530,30 +2504,6 @@ type OnboardingResponse struct {
 	User   *User          `json:"user,omitempty"`
 }
 
-// OperationLog defines model for OperationLog.
-type OperationLog struct {
-
-	// A description of the event that occurred.
-	Description *string `json:"description,omitempty"`
-	Links       *struct {
-
-		// URI of resource.
-		User *Link `json:"user,omitempty"`
-	} `json:"links,omitempty"`
-
-	// Time event occurred, RFC3339Nano.
-	Time *time.Time `json:"time,omitempty"`
-
-	// ID of the user who operated the event.
-	UserID *string `json:"userID,omitempty"`
-}
-
-// OperationLogs defines model for OperationLogs.
-type OperationLogs struct {
-	Links *Links          `json:"links,omitempty"`
-	Logs  *[]OperationLog `json:"logs,omitempty"`
-}
-
 // OptionStatement defines model for OptionStatement.
 type OptionStatement struct {
 	Assignment *interface{} `json:"assignment,omitempty"`
@@ -2577,9 +2527,6 @@ type Organization struct {
 
 		// URI of resource.
 		Labels *Link `json:"labels,omitempty"`
-
-		// URI of resource.
-		Logs *Link `json:"logs,omitempty"`
 
 		// URI of resource.
 		Members *Link `json:"members,omitempty"`
@@ -2706,29 +2653,35 @@ type PipeLiteral struct {
 
 // Pkg defines model for Pkg.
 type Pkg []struct {
-	ApiVersion *string  `json:"apiVersion,omitempty"`
-	Kind       *PkgKind `json:"kind,omitempty"`
+	ApiVersion *string       `json:"apiVersion,omitempty"`
+	Kind       *TemplateKind `json:"kind,omitempty"`
 	Meta       *struct {
 		Name *string `json:"name,omitempty"`
 	} `json:"meta,omitempty"`
 	Spec *map[string]interface{} `json:"spec,omitempty"`
 }
 
-// PkgKind defines model for Pkg.Kind.
-type PkgKind string
-
 // PkgApply defines model for PkgApply.
 type PkgApply struct {
-	DryRun   *bool   `json:"dryRun,omitempty"`
-	OrgID    *string `json:"orgID,omitempty"`
-	Package  *Pkg    `json:"package,omitempty"`
-	Packages *[]Pkg  `json:"packages,omitempty"`
-	Remotes  *[]struct {
+	Actions *[]interface{} `json:"actions,omitempty"`
+	DryRun  *bool          `json:"dryRun,omitempty"`
+	OrgID   *string        `json:"orgID,omitempty"`
+	Remotes *[]struct {
 		ContentType *string `json:"contentType,omitempty"`
 		Url         string  `json:"url"`
 	} `json:"remotes,omitempty"`
-	Secrets *PkgApply_Secrets `json:"secrets,omitempty"`
-	StackID *string           `json:"stackID,omitempty"`
+	Secrets  *PkgApply_Secrets `json:"secrets,omitempty"`
+	StackID  *string           `json:"stackID,omitempty"`
+	Template *struct {
+		ContentType *string   `json:"contentType,omitempty"`
+		Package     *Pkg      `json:"package,omitempty"`
+		Sources     *[]string `json:"sources,omitempty"`
+	} `json:"template,omitempty"`
+	Templates *[]struct {
+		ContentType *string   `json:"contentType,omitempty"`
+		Package     *Pkg      `json:"package,omitempty"`
+		Sources     *[]string `json:"sources,omitempty"`
+	} `json:"templates,omitempty"`
 }
 
 // PkgApply_Secrets defines model for PkgApply.Secrets.
@@ -2750,19 +2703,32 @@ type PkgCreate struct {
 	OrgIDs *[]struct {
 		OrgID           *string `json:"orgID,omitempty"`
 		ResourceFilters *struct {
-			ByLabel        *[]string        `json:"byLabel,omitempty"`
-			ByResourceKind *[]PkgCreateKind `json:"byResourceKind,omitempty"`
+			ByLabel        *[]string       `json:"byLabel,omitempty"`
+			ByResourceKind *[]TemplateKind `json:"byResourceKind,omitempty"`
 		} `json:"resourceFilters,omitempty"`
 	} `json:"orgIDs,omitempty"`
 	Resources *struct {
-		Id   string        `json:"id"`
-		Kind PkgCreateKind `json:"kind"`
-		Name *string       `json:"name,omitempty"`
+		Id   string       `json:"id"`
+		Kind TemplateKind `json:"kind"`
+		Name *string      `json:"name,omitempty"`
 	} `json:"resources,omitempty"`
 }
 
-// PkgCreateKind defines model for PkgCreateKind.
-type PkgCreateKind string
+// PkgEnvReferences defines model for PkgEnvReferences.
+type PkgEnvReferences []struct {
+
+	// Default value that will be provided for the reference when no value is provided
+	DefaultValue string `json:"defaultValue"`
+
+	// Key identified as environment reference and is the key identified in the template
+	EnvRefKey string `json:"envRefKey"`
+
+	// Field the environment reference corresponds too
+	ResourceField string `json:"resourceField"`
+
+	// Value provided to fulfill reference
+	Value *string `json:"value,omitempty"`
+}
 
 // PkgSummary defines model for PkgSummary.
 type PkgSummary struct {
@@ -2932,15 +2898,17 @@ type PkgSummary struct {
 		} `json:"variables,omitempty"`
 	} `json:"diff,omitempty"`
 	Errors *[]struct {
-		Fields  *[]string `json:"fields,omitempty"`
-		Indexes *[]int    `json:"indexes,omitempty"`
-		Kind    *string   `json:"kind,omitempty"`
-		Reason  *string   `json:"reason,omitempty"`
+		Fields  *[]string     `json:"fields,omitempty"`
+		Indexes *[]int        `json:"indexes,omitempty"`
+		Kind    *TemplateKind `json:"kind,omitempty"`
+		Reason  *string       `json:"reason,omitempty"`
 	} `json:"errors,omitempty"`
-	StackID *string `json:"stackID,omitempty"`
+	Sources *[]string `json:"sources,omitempty"`
+	StackID *string   `json:"stackID,omitempty"`
 	Summary *struct {
 		Buckets *[]struct {
 			Description       *string            `json:"description,omitempty"`
+			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
 			Id                *string            `json:"id,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			Name              *string            `json:"name,omitempty"`
@@ -2952,12 +2920,14 @@ type PkgSummary struct {
 			// Embedded struct due to allOf(#/components/schemas/CheckDiscriminator)
 			CheckDiscriminator
 			// Embedded fields due to inline allOf schema
+			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"checks,omitempty"`
 		Dashboards *[]struct {
 			Charts            *[]PkgChart        `json:"charts,omitempty"`
 			Description       *string            `json:"description,omitempty"`
+			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
 			Id                *string            `json:"id,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			Name              *string            `json:"name,omitempty"`
@@ -2981,6 +2951,7 @@ type PkgSummary struct {
 			// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscrimator)
 			NotificationEndpointDiscrimator
 			// Embedded fields due to inline allOf schema
+			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"notificationEndpoints,omitempty"`
@@ -2989,6 +2960,7 @@ type PkgSummary struct {
 			EndpointID        *string            `json:"endpointID,omitempty"`
 			EndpointPkgName   *string            `json:"endpointPkgName,omitempty"`
 			EndpointType      *string            `json:"endpointType,omitempty"`
+			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
 			Every             *string            `json:"every,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			MessageTemplate   *string            `json:"messageTemplate,omitempty"`
@@ -3007,26 +2979,29 @@ type PkgSummary struct {
 			} `json:"tagRules,omitempty"`
 		} `json:"notificationRules,omitempty"`
 		Tasks *[]struct {
-			Cron        *string `json:"cron,omitempty"`
-			Description *string `json:"description,omitempty"`
-			Every       *string `json:"every,omitempty"`
-			Id          *string `json:"id,omitempty"`
-			Name        *string `json:"name,omitempty"`
-			Offset      *string `json:"offset,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			Query       *string `json:"query,omitempty"`
-			Status      *string `json:"status,omitempty"`
+			Cron          *string           `json:"cron,omitempty"`
+			Description   *string           `json:"description,omitempty"`
+			EnvReferences *PkgEnvReferences `json:"envReferences,omitempty"`
+			Every         *string           `json:"every,omitempty"`
+			Id            *string           `json:"id,omitempty"`
+			Name          *string           `json:"name,omitempty"`
+			Offset        *string           `json:"offset,omitempty"`
+			PkgName       *string           `json:"pkgName,omitempty"`
+			Query         *string           `json:"query,omitempty"`
+			Status        *string           `json:"status,omitempty"`
 		} `json:"tasks,omitempty"`
 		TelegrafConfigs *[]struct {
 			// Embedded struct due to allOf(#/components/schemas/TelegrafRequest)
 			TelegrafRequest
 			// Embedded fields due to inline allOf schema
+			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
 			PkgName           *string            `json:"pkgName,omitempty"`
 		} `json:"telegrafConfigs,omitempty"`
 		Variables *[]struct {
 			Arguments         *VariableProperties `json:"arguments,omitempty"`
 			Description       *string             `json:"description,omitempty"`
+			EnvReferences     *PkgEnvReferences   `json:"envReferences,omitempty"`
 			Id                *string             `json:"id,omitempty"`
 			LabelAssociations *[]PkgSummaryLabel  `json:"labelAssociations,omitempty"`
 			Name              *string             `json:"name,omitempty"`
@@ -3038,12 +3013,15 @@ type PkgSummary struct {
 
 // PkgSummaryLabel defines model for PkgSummaryLabel.
 type PkgSummaryLabel struct {
-	Description     *string `json:"description,omitempty"`
-	Id              *string `json:"id,omitempty"`
-	Name            *string `json:"name,omitempty"`
-	OrgID           *string `json:"orgID,omitempty"`
-	PkgName         *string `json:"pkgName,omitempty"`
-	RetentionPeriod *string `json:"retentionPeriod,omitempty"`
+	EnvReferences *PkgEnvReferences `json:"envReferences,omitempty"`
+	Id            *string           `json:"id,omitempty"`
+	Name          *string           `json:"name,omitempty"`
+	OrgID         *string           `json:"orgID,omitempty"`
+	PkgName       *string           `json:"pkgName,omitempty"`
+	Properties    *struct {
+		Color       *string `json:"color,omitempty"`
+		Description *string `json:"description,omitempty"`
+	} `json:"properties,omitempty"`
 }
 
 // PostBucketRequest defines model for PostBucketRequest.
@@ -3292,7 +3270,6 @@ type Run struct {
 	FinishedAt *time.Time `json:"finishedAt,omitempty"`
 	Id         *string    `json:"id,omitempty"`
 	Links      *struct {
-		Logs  *string `json:"logs,omitempty"`
 		Retry *string `json:"retry,omitempty"`
 		Self  *string `json:"self,omitempty"`
 		Task  *string `json:"task,omitempty"`
@@ -3562,6 +3539,28 @@ type Sources struct {
 		Self *string `json:"self,omitempty"`
 	} `json:"links,omitempty"`
 	Sources *[]Source `json:"sources,omitempty"`
+}
+
+// Stack defines model for Stack.
+type Stack struct {
+	CreatedAt   *time.Time `json:"createdAt,omitempty"`
+	Description *string    `json:"description,omitempty"`
+	Id          *string    `json:"id,omitempty"`
+	Name        *string    `json:"name,omitempty"`
+	OrgID       *string    `json:"orgID,omitempty"`
+	Resources   *[]struct {
+		ApiVersion   *string `json:"apiVersion,omitempty"`
+		Associations *[]struct {
+			Kind    *TemplateKind `json:"kind,omitempty"`
+			PkgName *string       `json:"pkgName,omitempty"`
+		} `json:"associations,omitempty"`
+		Kind       *TemplateKind `json:"kind,omitempty"`
+		PkgName    *string       `json:"pkgName,omitempty"`
+		ResourceID *string       `json:"resourceID,omitempty"`
+	} `json:"resources,omitempty"`
+	Sources   *[]string  `json:"sources,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+	Urls      *[]string  `json:"urls,omitempty"`
 }
 
 // Statement defines model for Statement.
@@ -4172,6 +4171,9 @@ type Telegrafs struct {
 	Configurations *[]Telegraf `json:"configurations,omitempty"`
 }
 
+// TemplateKind defines model for TemplateKind.
+type TemplateKind string
+
 // TestStatement defines model for TestStatement.
 type TestStatement struct {
 
@@ -4243,7 +4245,6 @@ type UnsignedIntegerLiteral struct {
 type User struct {
 	Id    *string `json:"id,omitempty"`
 	Links *struct {
-		Logs *string `json:"logs,omitempty"`
 		Self *string `json:"self,omitempty"`
 	} `json:"links,omitempty"`
 	Name    string  `json:"name"`
@@ -4509,15 +4510,6 @@ type PostBucketsIDLabelsParams struct {
 
 // DeleteBucketsIDLabelsIDParams defines parameters for DeleteBucketsIDLabelsID.
 type DeleteBucketsIDLabelsIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetBucketsIDLogsParams defines parameters for GetBucketsIDLogs.
-type GetBucketsIDLogsParams struct {
-	Offset *Offset `json:"offset,omitempty"`
-	Limit  *Limit  `json:"limit,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -4797,15 +4789,6 @@ type PostDashboardsIDLabelsParams struct {
 
 // DeleteDashboardsIDLabelsIDParams defines parameters for DeleteDashboardsIDLabelsID.
 type DeleteDashboardsIDLabelsIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetDashboardsIDLogsParams defines parameters for GetDashboardsIDLogs.
-type GetDashboardsIDLogsParams struct {
-	Offset *Offset `json:"offset,omitempty"`
-	Limit  *Limit  `json:"limit,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5314,8 +5297,8 @@ type DeleteOrgsIDInviteIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// PostOrgsIDInviteIDResendParams defines parameters for PostOrgsIDInviteIDResend.
-type PostOrgsIDInviteIDResendParams struct {
+// PostOrgsIDInviteIDParams defines parameters for PostOrgsIDInviteID.
+type PostOrgsIDInviteIDParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5340,15 +5323,6 @@ type PostOrgsIDLabelsParams struct {
 
 // DeleteOrgsIDLabelsIDParams defines parameters for DeleteOrgsIDLabelsID.
 type DeleteOrgsIDLabelsIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetOrgsIDLogsParams defines parameters for GetOrgsIDLogs.
-type GetOrgsIDLogsParams struct {
-	Offset *Offset `json:"offset,omitempty"`
-	Limit  *Limit  `json:"limit,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5475,6 +5449,13 @@ type DeleteStackParams struct {
 
 	// The organization id of the user
 	OrgID string `json:"orgID"`
+}
+
+// UpdateStackJSONBody defines parameters for UpdateStack.
+type UpdateStackJSONBody struct {
+	Description *string   `json:"description,omitempty"`
+	Name        *string   `json:"name,omitempty"`
+	Urls        *[]string `json:"urls,omitempty"`
 }
 
 // ExportStackParams defines parameters for ExportStack.
@@ -6168,15 +6149,6 @@ type PatchUsersIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// GetUsersIDLogsParams defines parameters for GetUsersIDLogs.
-type GetUsersIDLogsParams struct {
-	Offset *Offset `json:"offset,omitempty"`
-	Limit  *Limit  `json:"limit,omitempty"`
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
 // PostUsersIDPasswordJSONBody defines parameters for PostUsersIDPassword.
 type PostUsersIDPasswordJSONBody PasswordResetBody
 
@@ -6451,6 +6423,9 @@ type ApplyPkgJSONRequestBody ApplyPkgJSONBody
 
 // CreateStackRequestBody defines body for CreateStack for application/json ContentType.
 type CreateStackJSONRequestBody CreateStackJSONBody
+
+// UpdateStackRequestBody defines body for UpdateStack for application/json ContentType.
+type UpdateStackJSONRequestBody UpdateStackJSONBody
 
 // PostQueryRequestBody defines body for PostQuery for application/json ContentType.
 type PostQueryJSONRequestBody PostQueryJSONBody

@@ -3126,36 +3126,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/dashboards/{dashboardID}/logs":
-    get:
-      operationId: GetDashboardsIDLogs
-      tags:
-        - Dashboards
-        - OperationLogs
-      summary: Retrieve operation logs for a dashboard
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: dashboardID
-          required: true
-          description: The dashboard ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the dashboard
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /query/ast:
     post:
       operationId: PostQueryAst
@@ -3962,36 +3932,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/buckets/{bucketID}/logs":
-    get:
-      operationId: GetBucketsIDLogs
-      tags:
-        - Buckets
-        - OperationLogs
-      summary: Retrieve operation logs for a bucket
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: bucketID
-          required: true
-          description: The bucket ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the bucket
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /orgs:
     get:
       operationId: GetOrgs
@@ -4560,7 +4500,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   "/orgs/{orgID}/invites/{inviteID}/resend":
     post:
-      operationId: PostOrgsIDInviteIDResend
+      operationId: PostOrgsIDInviteID
       tags:
         - Invites
         - Organizations
@@ -4678,36 +4618,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/logs":
-    get:
-      operationId: GetOrgsIDLogs
-      tags:
-        - Organizations
-        - OperationLogs
-      summary: Retrieve operation logs for an organization
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: orgID
-          required: true
-          description: The organization ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the organization
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /packages:
     post:
       operationId: CreatePkg
@@ -4810,50 +4720,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    orgID:
-                      type: string
-                    name:
-                      type: string
-                    description:
-                      type: string
-                    urls:
-                      type: array
-                      items:
-                        type: string
-                    createdAt:
-                      type: string
-                      format: date-time
-                      readOnly: true
-                    updatedAt:
-                      type: string
-                      format: date-time
-                      readOnly: true
-                    resources:
-                      type: object
-                      properties:
-                        apiVersion:
-                          type: string
-                        resourceID:
-                          type: string
-                        kind:
-                          type: string
-                        pkgName:
-                          type: string
-                        associations:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              kind:
-                                type: string
-                              pkgName:
-                                type: string
+                type: object
+                properties:
+                  stacks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Stack"
         default:
           description: Unexpected error
           content:
@@ -4864,9 +4736,9 @@ paths:
       operationId: CreateStack
       tags:
         - InfluxPackages
-      summary: Create a new Influx package
+      summary: Create a new stack
       requestBody:
-        description: Influx package to create.
+        description: Influx stack to create.
         required: true
         content:
           application/json:
@@ -4889,28 +4761,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  orgID:
-                    type: string
-                  name:
-                    type: string
-                  description:
-                    type: string
-                  urls:
-                    type: array
-                    items:
-                      type: string
-                  createdAt:
-                    type: string
-                    format: date-time
-                    readOnly: true
-                  updatedAt:
-                    type: string
-                    format: date-time
-                    readOnly: true
+                $ref: "#/components/schemas/Stack"
         default:
           description: Unexpected error
           content:
@@ -4918,6 +4769,72 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /packages/stacks/{stack_id}:
+    get:
+      operationId: ReadStack
+      tags:
+        - InfluxPackages
+      summary: Grab a stack by its ID
+      parameters:
+        - in: path
+          name: stack_id
+          required: true
+          schema:
+            type: string
+          description: The stack id
+      responses:
+        "200":
+          description: Read an influx stack by ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stack"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: UpdateStack
+      tags:
+        - InfluxPackages
+      summary: Update a an Influx Stack
+      parameters:
+        - in: path
+          name: stack_id
+          required: true
+          schema:
+            type: string
+          description: The stack id
+      requestBody:
+        description: Influx stack to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                urls:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Influx stack updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stack"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
       operationId: DeleteStack
       tags:
@@ -4929,7 +4846,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The stack id to be removed
+          description: The stack id
         - in: query
           name: orgID
           required: true
@@ -5894,36 +5811,6 @@ paths:
           description: Password successfully updated
         default:
           description: Unsuccessful authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/users/{userID}/logs":
-    get:
-      operationId: GetUsersIDLogs
-      tags:
-        - Users
-        - OperationLogs
-      summary: Retrieve operation logs for a user
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: userID
-          required: true
-          description: The user ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the user
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
           content:
             application/json:
               schema:
@@ -7574,7 +7461,6 @@ components:
           readOnly: true
           example:
             labels: "/api/v2/buckets/1/labels"
-            logs: "/api/v2/buckets/1/logs"
             members: "/api/v2/buckets/1/members"
             org: "/api/v2/orgs/2"
             owners: "/api/v2/buckets/1/owners"
@@ -7583,9 +7469,6 @@ components:
           properties:
             labels:
               description: URL to retrieve labels for this bucket
-              $ref: "#/components/schemas/Link"
-            logs:
-              description: URL to retrieve operation logs for this bucket
               $ref: "#/components/schemas/Link"
             members:
               description: URL to retrieve members that can read this bucket
@@ -7698,35 +7581,6 @@ components:
           description: A description of the event that occurred.
           type: string
           example: Halt and catch fire
-    OperationLog:
-      type: object
-      readOnly: true
-      properties:
-        description:
-          type: string
-          description: A description of the event that occurred.
-          example: Bucket Created
-        time:
-          type: string
-          description: Time event occurred, RFC3339Nano.
-          format: date-time
-        userID:
-          type: string
-          description: ID of the user who operated the event.
-        links:
-          type: object
-          properties:
-            user:
-              $ref: "#/components/schemas/Link"
-    OperationLogs:
-      type: object
-      properties:
-        logs:
-          type: array
-          items:
-            $ref: "#/components/schemas/OperationLog"
-        links:
-          $ref: "#/components/schemas/Links"
     Organization:
       properties:
         links:
@@ -7741,7 +7595,6 @@ components:
             buckets: "/api/v2/buckets?org=myorg"
             tasks: "/api/v2/tasks?org=myorg"
             dashboards: "/api/v2/dashboards?org=myorg"
-            logs: "/api/v2/orgs/1/logs"
           properties:
             self:
               $ref: "#/components/schemas/Link"
@@ -7758,8 +7611,6 @@ components:
             tasks:
               $ref: "#/components/schemas/Link"
             dashboards:
-              $ref: "#/components/schemas/Link"
-            logs:
               $ref: "#/components/schemas/Link"
         id:
           readOnly: true
@@ -7802,12 +7653,30 @@ components:
           type: string
         stackID:
           type: string
-        package:
-          $ref: "#/components/schemas/Pkg"
-        packages:
+        template:
+          type: object
+          properties:
+            contentType:
+              type: string
+            sources:
+              type: array
+              items:
+                type: string
+            package:
+              $ref: "#/components/schemas/Pkg"
+        templates:
           type: array
           items:
-            $ref: "#/components/schemas/Pkg"
+            type: object
+            properties:
+              contentType:
+                type: string
+              sources:
+                type: array
+                items:
+                  type: string
+              package:
+                $ref: "#/components/schemas/Pkg"
         secrets:
           type: object
           additionalProperties:
@@ -7822,18 +7691,51 @@ components:
               contentType:
                 type: string
             required: ["url"]
-    PkgCreateKind:
+        actions:
+          type: array
+          items:
+            oneOf:
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    enum: ["skipKind"]
+                  properties:
+                    type: object
+                    properties:
+                      kind:
+                        $ref: "#/components/schemas/TemplateKind"
+                    required: ["kind"]
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    enum: ["skipResource"]
+                  properties:
+                    type: object
+                    properties:
+                      kind:
+                        $ref: "#/components/schemas/TemplateKind"
+                      resourceTemplateName:
+                        type: string
+                    required: ["kind", "resourceTemplateName"]
+    TemplateKind:
       type: string
       enum:
-        - bucket
-        - check
-        - dashboard
-        - label
-        - notification_endpoint
-        - notification_rule
-        - task
-        - telegraf
-        - variable
+        - Bucket
+        - Check
+        - CheckDeadman
+        - CheckThreshold
+        - Dashboard
+        - Label
+        - NotificationEndpoint
+        - NotificationEndpointHTTP
+        - NotificationEndpointPagerDuty
+        - NotificationEndpointSlack
+        - NotificationRule
+        - Task
+        - Telegraf
+        - Variable
     PkgCreate:
       type: object
       properties:
@@ -7854,14 +7756,14 @@ components:
                   byResourceKind:
                     type: array
                     items:
-                      $ref: "#/components/schemas/PkgCreateKind"
+                      $ref: "#/components/schemas/TemplateKind"
         resources:
           type: object
           properties:
             id:
               type: string
             kind:
-              $ref: "#/components/schemas/PkgCreateKind"
+              $ref: "#/components/schemas/TemplateKind"
             name:
               type: string
           required: [id, kind]
@@ -7873,20 +7775,7 @@ components:
           apiVersion:
             type: string
           kind:
-            type: string
-            enum:
-              - Bucket
-              - CheckDeadman
-              - CheckThreshold
-              - Dashboard
-              - Label
-              - NotificationEndpointHTTP
-              - NotificationEndpointPagerDuty
-              - NotificationEndpointSlack
-              - NotificationRule
-              - Task
-              - Telegraf
-              - Variable
+            $ref: "#/components/schemas/TemplateKind"
           meta:
             type: object
             properties:
@@ -7894,9 +7783,31 @@ components:
                 type: string
           spec:
             type: object
+    PkgEnvReferences:
+      type: array
+      items:
+        type: object
+        properties:
+          resourceField:
+            type: string
+            description: Field the environment reference corresponds too
+          envRefKey:
+            type: string
+            description: Key identified as environment reference and is the key identified in the template
+          value:
+            type: string
+            description: Value provided to fulfill reference
+          defaultValue:
+            type: string
+            description: Default value that will be provided for the reference when no value is provided
+        required: [resourceField, envRefKey, defaultValue]
     PkgSummary:
       type: object
       properties:
+        sources:
+          type: array
+          items:
+            type: string
         stackID:
           type: string
         summary:
@@ -7923,6 +7834,8 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/PkgSummaryLabel"
+                  envReferences:
+                    $ref: "#/components/schemas/PkgEnvReferences"
             checks:
               type: array
               items:
@@ -7936,6 +7849,8 @@ components:
                         type: array
                         items:
                           $ref: "#/components/schemas/PkgSummaryLabel"
+                      envReferences:
+                        $ref: "#/components/schemas/PkgEnvReferences"
             labels:
               type: array
               items:
@@ -7963,6 +7878,8 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/PkgChart"
+                  envReferences:
+                    $ref: "#/components/schemas/PkgEnvReferences"
             labelMappings:
               type: array
               items:
@@ -8005,6 +7922,8 @@ components:
                         type: array
                         items:
                           $ref: "#/components/schemas/PkgSummaryLabel"
+                      envReferences:
+                        $ref: "#/components/schemas/PkgEnvReferences"
             notificationRules:
               type: array
               items:
@@ -8054,6 +7973,8 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/PkgSummaryLabel"
+                  envReferences:
+                    $ref: "#/components/schemas/PkgEnvReferences"
             tasks:
               type: array
               items:
@@ -8077,6 +7998,8 @@ components:
                     type: string
                   status:
                     type: string
+                  envReferences:
+                    $ref: "#/components/schemas/PkgEnvReferences"
             telegrafConfigs:
               type: array
               items:
@@ -8090,6 +8013,8 @@ components:
                         type: array
                         items:
                           $ref: "#/components/schemas/PkgSummaryLabel"
+                      envReferences:
+                        $ref: "#/components/schemas/PkgEnvReferences"
             variables:
               type: array
               items:
@@ -8111,6 +8036,8 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/PkgSummaryLabel"
+                  envReferences:
+                    $ref: "#/components/schemas/PkgEnvReferences"
         diff:
           type: object
           properties:
@@ -8444,7 +8371,7 @@ components:
             type: object
             properties:
               kind:
-                type: string
+                $ref: "#/components/schemas/TemplateKind"
               reason:
                 type: string
               fields:
@@ -8466,10 +8393,15 @@ components:
           type: string
         name:
           type: string
-        description:
-          type: string
-        retentionPeriod:
-          type: string
+        properties:
+          type: object
+          properties:
+            color:
+              type: string
+            description:
+              type: string
+        envReferences:
+          $ref: "#/components/schemas/PkgEnvReferences"
     PkgChart:
       type: object
       properties:
@@ -8483,6 +8415,55 @@ components:
           type: integer
         properties: # field name is properties
           $ref: "#/components/schemas/ViewProperties"
+    Stack:
+      type: object
+      properties:
+        id:
+          type: string
+        orgID:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        sources:
+          type: array
+          items:
+            type: string
+        resources:
+          type: array
+          items:
+            type: object
+            properties:
+              apiVersion:
+                type: string
+              resourceID:
+                type: string
+              kind:
+                $ref: "#/components/schemas/TemplateKind"
+              pkgName:
+                type: string
+              associations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    kind:
+                      $ref: "#/components/schemas/TemplateKind"
+                    pkgName:
+                      type: string
+        urls:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
     Runs:
       type: object
       properties:
@@ -8548,15 +8529,11 @@ components:
             self: "/api/v2/tasks/1/runs/1"
             task: "/api/v2/tasks/1"
             retry: "/api/v2/tasks/1/runs/1/retry"
-            logs: "/api/v2/tasks/1/runs/1/logs"
           properties:
             self:
               type: string
               format: uri
             task:
-              type: string
-              format: uri
-            logs:
               type: string
               format: uri
             retry:
@@ -8769,12 +8746,8 @@ components:
           readOnly: true
           example:
             self: "/api/v2/users/1"
-            logs: "/api/v2/users/1/logs"
           properties:
             self:
-              type: string
-              format: uri
-            logs:
               type: string
               format: uri
       required: [name]
@@ -10039,7 +10012,6 @@ components:
                 cells: "/api/v2/dashboards/1/cells"
                 owners: "/api/v2/dashboards/1/owners"
                 members: "/api/v2/dashboards/1/members"
-                logs: "/api/v2/dashboards/1/logs"
                 labels: "/api/v2/dashboards/1/labels"
                 org: "/api/v2/labels/1"
               properties:
@@ -10050,8 +10022,6 @@ components:
                 members:
                   $ref: "#/components/schemas/Link"
                 owners:
-                  $ref: "#/components/schemas/Link"
-                logs:
                   $ref: "#/components/schemas/Link"
                 labels:
                   $ref: "#/components/schemas/Link"
@@ -10086,7 +10056,6 @@ components:
                 cells: "/api/v2/dashboards/1/cells"
                 owners: "/api/v2/dashboards/1/owners"
                 members: "/api/v2/dashboards/1/members"
-                logs: "/api/v2/dashboards/1/logs"
                 labels: "/api/v2/dashboards/1/labels"
                 org: "/api/v2/labels/1"
               properties:
@@ -10097,8 +10066,6 @@ components:
                 members:
                   $ref: "#/components/schemas/Link"
                 owners:
-                  $ref: "#/components/schemas/Link"
-                logs:
                   $ref: "#/components/schemas/Link"
                 labels:
                   $ref: "#/components/schemas/Link"

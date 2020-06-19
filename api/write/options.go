@@ -25,6 +25,8 @@ type Options struct {
 	precision time.Duration
 	// Whether to use GZip compression in requests. Default false
 	useGZip bool
+	// Tags added to each point during writing. If a point already has a tag with the same key, it is left unchanged.
+	defaultTags map[string]string
 }
 
 // BatchSize returns size of batch
@@ -104,7 +106,23 @@ func (o *Options) SetUseGZip(useGZip bool) *Options {
 	return o
 }
 
+// AddDefaultTag adds a default tag. DefaultTags are added to each written point.
+// If a tag with the same key already exist it is overwritten.
+// If a point already defines such a tag, it is left unchanged.
+func (o *Options) AddDefaultTag(key, value string) *Options {
+	o.DefaultTags()[key] = value
+	return o
+}
+
+// DefaultTags returns set of default tags
+func (o *Options) DefaultTags() map[string]string {
+	if o.defaultTags == nil {
+		o.defaultTags = make(map[string]string)
+	}
+	return o.defaultTags
+}
+
 // DefaultOptions returns Options object with default values
 func DefaultOptions() *Options {
-	return &Options{batchSize: 5000, maxRetries: 3, retryInterval: 1000, flushInterval: 1000, precision: time.Nanosecond, useGZip: false, retryBufferLimit: 10000}
+	return &Options{batchSize: 5000, maxRetries: 3, retryInterval: 1000, flushInterval: 1000, precision: time.Nanosecond, useGZip: false, retryBufferLimit: 10000, defaultTags: make(map[string]string)}
 }

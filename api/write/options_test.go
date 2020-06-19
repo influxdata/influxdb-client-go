@@ -21,6 +21,7 @@ func TestDefaultOptions(t *testing.T) {
 	assert.Equal(t, uint(10000), opts.RetryBufferLimit())
 	assert.Equal(t, uint(1000), opts.RetryInterval())
 	assert.Equal(t, uint(3), opts.MaxRetries())
+	assert.Len(t, opts.DefaultTags(), 0)
 }
 
 func TestSettingsOptions(t *testing.T) {
@@ -31,7 +32,9 @@ func TestSettingsOptions(t *testing.T) {
 		SetPrecision(time.Millisecond).
 		SetRetryBufferLimit(5).
 		SetRetryInterval(5000).
-		SetMaxRetries(7)
+		SetMaxRetries(7).
+		AddDefaultTag("a", "1").
+		AddDefaultTag("b", "2")
 	assert.Equal(t, uint(5), opts.BatchSize())
 	assert.Equal(t, true, opts.UseGZip())
 	assert.Equal(t, uint(5000), opts.FlushInterval())
@@ -39,4 +42,5 @@ func TestSettingsOptions(t *testing.T) {
 	assert.Equal(t, uint(5), opts.RetryBufferLimit())
 	assert.Equal(t, uint(5000), opts.RetryInterval())
 	assert.Equal(t, uint(7), opts.MaxRetries())
+	assert.Len(t, opts.DefaultTags(), 2)
 }

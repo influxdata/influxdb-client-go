@@ -1,7 +1,9 @@
-package influxdb2
+package influxdb2_test
 
 import (
 	"context"
+	"crypto/tls"
+	influxdb2 "github.com/influxdata/influxdb-client-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"net/http"
@@ -10,6 +12,49 @@ import (
 	"testing"
 	"time"
 )
+
+func TestDefaultOptions(t *testing.T) {
+	opts := influxdb2.DefaultOptions()
+	assert.Equal(t, uint(5000), opts.BatchSize())
+	assert.Equal(t, false, opts.UseGZip())
+	assert.Equal(t, uint(1000), opts.FlushInterval())
+	assert.Equal(t, time.Nanosecond, opts.Precision())
+	assert.Equal(t, uint(10000), opts.RetryBufferLimit())
+	assert.Equal(t, uint(1000), opts.RetryInterval())
+	assert.Equal(t, uint(3), opts.MaxRetries())
+	assert.Equal(t, (*tls.Config)(nil), opts.TlsConfig())
+	assert.Equal(t, uint(20), opts.HttpRequestTimeout())
+	assert.Equal(t, uint(0), opts.LogLevel())
+}
+
+func TestSettingsOptions(t *testing.T) {
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: true,
+	}
+	opts := influxdb2.DefaultOptions().
+		SetBatchSize(5).
+		SetUseGZip(true).
+		SetFlushInterval(5000).
+		SetPrecision(time.Millisecond).
+		SetRetryBufferLimit(5).
+		SetRetryInterval(5000).
+		SetMaxRetries(7).
+		SetTlsConfig(tlsConfig).
+		SetHttpRequestTimeout(50).
+		SetLogLevel(3).
+		AddDefaultTag("t", "a")
+	assert.Equal(t, uint(5), opts.BatchSize())
+	assert.Equal(t, true, opts.UseGZip())
+	assert.Equal(t, uint(5000), opts.FlushInterval())
+	assert.Equal(t, time.Millisecond, opts.Precision())
+	assert.Equal(t, uint(5), opts.RetryBufferLimit())
+	assert.Equal(t, uint(5000), opts.RetryInterval())
+	assert.Equal(t, uint(7), opts.MaxRetries())
+	assert.Equal(t, tlsConfig, opts.TlsConfig())
+	assert.Equal(t, uint(50), opts.HttpRequestTimeout())
+	assert.Equal(t, uint(3), opts.LogLevel())
+	assert.Len(t, opts.WriteOptions().DefaultTags(), 1)
+}
 
 func TestTimeout(t *testing.T) {
 	response := `,result,table,_start,_stop,_time,_value,_field,_measurement,a,b,
@@ -32,14 +77,14 @@ func TestTimeout(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	client := NewClientWithOptions(server.URL, "a", DefaultOptions().SetHttpRequestTimeout(1))
+	client := influxdb2.NewClientWithOptions(server.URL, "a", influxdb2.DefaultOptions().SetHttpRequestTimeout(1))
 	queryApi := client.QueryApi("org")
 
 	_, err := queryApi.QueryRaw(context.Background(), "flux", nil)
 	require.NotNil(t, err)
 	assert.True(t, strings.Contains(err.Error(), "Client.Timeout exceeded"))
 
-	client = NewClientWithOptions(server.URL, "a", DefaultOptions().SetHttpRequestTimeout(5))
+	client = influxdb2.NewClientWithOptions(server.URL, "a", influxdb2.DefaultOptions().SetHttpRequestTimeout(5))
 	queryApi = client.QueryApi("org")
 
 	result, err := queryApi.QueryRaw(context.Background(), "flux", nil)

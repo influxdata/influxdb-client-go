@@ -148,6 +148,14 @@ func (o *Options) HttpOptions() *http.Options {
 	return o.httpOptions
 }
 
+// AddDefaultTag adds a default tag. DefaultTags are added to each written point.
+// If a tag with the same key already exist it is overwritten.
+// If a point already defines such a tag, it is left unchanged
+func (o *Options) AddDefaultTag(key, value string) *Options {
+	o.WriteOptions().AddDefaultTag(key, value)
+	return o
+}
+
 // DefaultOptions returns Options object with default values
 func DefaultOptions() *Options {
 	return &Options{logLevel: 0, writeOptions: write.DefaultOptions(), httpOptions: http.DefaultOptions()}

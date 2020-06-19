@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -150,6 +151,50 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) error {
 	return nil
 }
 
+type pointWithDefaultTags struct {
+	point       *write.Point
+	defaultTags map[string]string
+}
+
+// Name returns the name of measurement of a point.
+func (p *pointWithDefaultTags) Name() string {
+	return p.point.Name()
+}
+
+// Time is the timestamp of a Point.
+func (p *pointWithDefaultTags) Time() time.Time {
+	return p.point.Time()
+}
+
+// FieldList returns a slice containing the fields of a Point.
+func (p *pointWithDefaultTags) FieldList() []*lp.Field {
+	return p.point.FieldList()
+}
+
+func (p *pointWithDefaultTags) TagList() []*lp.Tag {
+	tags := make([]*lp.Tag, 0, len(p.point.TagList())+len(p.defaultTags))
+	tags = append(tags, p.point.TagList()...)
+	for k, v := range p.defaultTags {
+		if !existTag(p.point.TagList(), k) {
+			tags = append(tags, &lp.Tag{
+				Key:   k,
+				Value: v,
+			})
+		}
+	}
+	sort.Slice(tags, func(i, j int) bool { return tags[i].Key < tags[j].Key })
+	return tags
+}
+
+func existTag(tags []*lp.Tag, key string) bool {
+	for _, tag := range tags {
+		if key == tag.Key {
+			return true
+		}
+	}
+	return false
+}
+
 func (w *Service) EncodePoints(points ...*write.Point) (string, error) {
 	var buffer bytes.Buffer
 	e := lp.NewEncoder(&buffer)
@@ -157,12 +202,25 @@ func (w *Service) EncodePoints(points ...*write.Point) (string, error) {
 	e.FailOnFieldErr(true)
 	e.SetPrecision(w.writeOptions.Precision())
 	for _, point := range points {
-		_, err := e.Encode(point)
+		_, err := e.Encode(w.pointToEncode(point))
 		if err != nil {
 			return "", err
 		}
 	}
 	return buffer.String(), nil
+}
+
+func (w *Service) pointToEncode(point *write.Point) lp.Metric {
+	var m lp.Metric
+	if len(w.writeOptions.DefaultTags()) > 0 {
+		m = &pointWithDefaultTags{
+			point:       point,
+			defaultTags: w.writeOptions.DefaultTags(),
+		}
+	} else {
+		m = point
+	}
+	return m
 }
 
 func (w *Service) WriteUrl() (string, error) {

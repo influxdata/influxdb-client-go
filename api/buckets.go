@@ -57,10 +57,6 @@ type BucketsApi interface {
 	RemoveOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) error
 	// RemoveOwner removes a member with id memberId from a bucket with bucketId.
 	RemoveOwnerWithId(ctx context.Context, bucketId, memberId string) error
-	// GetLogs returns operation log entries for a bucket, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
-	GetLogs(ctx context.Context, bucket *domain.Bucket, pagingOptions ...PagingOption) (*[]domain.OperationLog, error)
-	//GetLogsWithId returns operation log entries for bucket with id bucketId, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
-	GetLogsWithId(ctx context.Context, bucketId string, pagingOptions ...PagingOption) (*[]domain.OperationLog, error)
 }
 
 type bucketsApiImpl struct {
@@ -297,26 +293,4 @@ func (b *bucketsApiImpl) RemoveOwnerWithId(ctx context.Context, bucketId, member
 		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
-}
-
-func (b *bucketsApiImpl) GetLogs(ctx context.Context, bucket *domain.Bucket, pagingOptions ...PagingOption) (*[]domain.OperationLog, error) {
-	return b.GetLogsWithId(ctx, *bucket.Id, pagingOptions...)
-}
-
-func (b *bucketsApiImpl) GetLogsWithId(ctx context.Context, bucketId string, pagingOptions ...PagingOption) (*[]domain.OperationLog, error) {
-	params := &domain.GetBucketsIDLogsParams{}
-	options := defaultPaging()
-	for _, opt := range pagingOptions {
-		opt(options)
-	}
-	params.Limit = &options.limit
-	params.Offset = &options.offset
-	response, err := b.apiClient.GetBucketsIDLogsWithResponse(ctx, bucketId, params)
-	if err != nil {
-		return nil, err
-	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return response.JSON200.Logs, nil
 }

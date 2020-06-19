@@ -554,12 +554,6 @@ func TestBuckets(t *testing.T) {
 	err = bucketsApi.RemoveOwnerWithId(ctx, "000000000000000", *userOwner.Id)
 	assert.NotNil(t, err)
 
-	// No logs returned https://github.com/influxdata/influxdb/issues/18048
-	//logs, err := bucketsApi.GetLogs(ctx, b)
-	//require.Nil(t, err, err)
-	//require.NotNil(t, logs)
-	//assert.Len(t, *logs, 0)
-
 	// Test members
 	userMember, err := client.UsersApi().CreateUserWithName(ctx, "bucket-member")
 	require.Nil(t, err, err)

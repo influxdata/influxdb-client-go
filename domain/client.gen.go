@@ -15,7 +15,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 )
@@ -87,9 +86,6 @@ type ClientInterface interface {
 
 	// DeleteBucketsIDLabelsID request
 	DeleteBucketsIDLabelsID(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*http.Response, error)
-
-	// GetBucketsIDLogs request
-	GetBucketsIDLogs(ctx context.Context, bucketID string, params *GetBucketsIDLogsParams) (*http.Response, error)
 
 	// GetBucketsIDMembers request
 	GetBucketsIDMembers(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*http.Response, error)
@@ -206,9 +202,6 @@ type ClientInterface interface {
 
 	// DeleteDashboardsIDLabelsID request
 	DeleteDashboardsIDLabelsID(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*http.Response, error)
-
-	// GetDashboardsIDLogs request
-	GetDashboardsIDLogs(ctx context.Context, dashboardID string, params *GetDashboardsIDLogsParams) (*http.Response, error)
 
 	// GetDashboardsIDMembers request
 	GetDashboardsIDMembers(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams) (*http.Response, error)
@@ -419,8 +412,8 @@ type ClientInterface interface {
 	// DeleteOrgsIDInviteID request
 	DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Response, error)
 
-	// PostOrgsIDInviteIDResend request
-	PostOrgsIDInviteIDResend(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*http.Response, error)
+	// PostOrgsIDInviteID request
+	PostOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Response, error)
 
 	// GetOrgsIDLabels request
 	GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error)
@@ -432,9 +425,6 @@ type ClientInterface interface {
 
 	// DeleteOrgsIDLabelsID request
 	DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Response, error)
-
-	// GetOrgsIDLogs request
-	GetOrgsIDLogs(ctx context.Context, orgID string, params *GetOrgsIDLogsParams) (*http.Response, error)
 
 	// GetOrgsIDMembers request
 	GetOrgsIDMembers(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*http.Response, error)
@@ -497,6 +487,14 @@ type ClientInterface interface {
 
 	// DeleteStack request
 	DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error)
+
+	// ReadStack request
+	ReadStack(ctx context.Context, stackId string) (*http.Response, error)
+
+	// UpdateStack request  with any body
+	UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error)
+
+	UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error)
 
 	// ExportStack request
 	ExportStack(ctx context.Context, stackId string, params *ExportStackParams) (*http.Response, error)
@@ -775,9 +773,6 @@ type ClientInterface interface {
 
 	PatchUsersID(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*http.Response, error)
 
-	// GetUsersIDLogs request
-	GetUsersIDLogs(ctx context.Context, userID string, params *GetUsersIDLogsParams) (*http.Response, error)
-
 	// PostUsersIDPassword request  with any body
 	PostUsersIDPasswordWithBody(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error)
 
@@ -986,15 +981,6 @@ func (c *Client) PostBucketsIDLabels(ctx context.Context, bucketID string, param
 
 func (c *Client) DeleteBucketsIDLabelsID(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*http.Response, error) {
 	req, err := NewDeleteBucketsIDLabelsIDRequest(c.service.ServerApiUrl(), bucketID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetBucketsIDLogs(ctx context.Context, bucketID string, params *GetBucketsIDLogsParams) (*http.Response, error) {
-	req, err := NewGetBucketsIDLogsRequest(c.service.ServerApiUrl(), bucketID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1382,15 +1368,6 @@ func (c *Client) PostDashboardsIDLabels(ctx context.Context, dashboardID string,
 
 func (c *Client) DeleteDashboardsIDLabelsID(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*http.Response, error) {
 	req, err := NewDeleteDashboardsIDLabelsIDRequest(c.service.ServerApiUrl(), dashboardID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetDashboardsIDLogs(ctx context.Context, dashboardID string, params *GetDashboardsIDLogsParams) (*http.Response, error) {
-	req, err := NewGetDashboardsIDLogsRequest(c.service.ServerApiUrl(), dashboardID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2091,8 +2068,8 @@ func (c *Client) DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteI
 	return c.service.DoHttpRequestWithResponse(req, nil)
 }
 
-func (c *Client) PostOrgsIDInviteIDResend(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*http.Response, error) {
-	req, err := NewPostOrgsIDInviteIDResendRequest(c.service.ServerApiUrl(), orgID, inviteID, params)
+func (c *Client) PostOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Response, error) {
+	req, err := NewPostOrgsIDInviteIDRequest(c.service.ServerApiUrl(), orgID, inviteID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2129,15 +2106,6 @@ func (c *Client) PostOrgsIDLabels(ctx context.Context, orgID string, params *Pos
 
 func (c *Client) DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Response, error) {
 	req, err := NewDeleteOrgsIDLabelsIDRequest(c.service.ServerApiUrl(), orgID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetOrgsIDLogs(ctx context.Context, orgID string, params *GetOrgsIDLogsParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDLogsRequest(c.service.ServerApiUrl(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2345,6 +2313,33 @@ func (c *Client) CreateStack(ctx context.Context, body CreateStackJSONRequestBod
 
 func (c *Client) DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error) {
 	req, err := NewDeleteStackRequest(c.service.ServerApiUrl(), stackId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) ReadStack(ctx context.Context, stackId string) (*http.Response, error) {
+	req, err := NewReadStackRequest(c.service.ServerApiUrl(), stackId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewUpdateStackRequestWithBody(c.service.ServerApiUrl(), stackId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHttpRequestWithResponse(req, nil)
+}
+
+func (c *Client) UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error) {
+	req, err := NewUpdateStackRequest(c.service.ServerApiUrl(), stackId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3254,15 +3249,6 @@ func (c *Client) PatchUsersIDWithBody(ctx context.Context, userID string, params
 
 func (c *Client) PatchUsersID(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*http.Response, error) {
 	req, err := NewPatchUsersIDRequest(c.service.ServerApiUrl(), userID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetUsersIDLogs(ctx context.Context, userID string, params *GetUsersIDLogsParams) (*http.Response, error) {
-	req, err := NewGetUsersIDLogsRequest(c.service.ServerApiUrl(), userID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -4210,87 +4196,6 @@ func NewDeleteBucketsIDLabelsIDRequest(server string, bucketID string, labelID s
 	}
 
 	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewGetBucketsIDLogsRequest generates requests for GetBucketsIDLogs
-func NewGetBucketsIDLogsRequest(server string, bucketID string, params *GetBucketsIDLogsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "bucketID", bucketID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryUrl, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/buckets/%s/logs", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryUrl, err = queryUrl.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryUrl.Query()
-
-	if params.Offset != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "offset", *params.Offset); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	if params.Limit != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "limit", *params.Limit); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	queryUrl.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5966,87 +5871,6 @@ func NewDeleteDashboardsIDLabelsIDRequest(server string, dashboardID string, lab
 	}
 
 	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewGetDashboardsIDLogsRequest generates requests for GetDashboardsIDLogs
-func NewGetDashboardsIDLogsRequest(server string, dashboardID string, params *GetDashboardsIDLogsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "dashboardID", dashboardID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryUrl, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/dashboards/%s/logs", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryUrl, err = queryUrl.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryUrl.Query()
-
-	if params.Offset != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "offset", *params.Offset); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	if params.Limit != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "limit", *params.Limit); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	queryUrl.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9142,8 +8966,8 @@ func NewDeleteOrgsIDInviteIDRequest(server string, orgID string, inviteID string
 	return req, nil
 }
 
-// NewPostOrgsIDInviteIDResendRequest generates requests for PostOrgsIDInviteIDResend
-func NewPostOrgsIDInviteIDResendRequest(server string, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*http.Request, error) {
+// NewPostOrgsIDInviteIDRequest generates requests for PostOrgsIDInviteID
+func NewPostOrgsIDInviteIDRequest(server string, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9330,87 +9154,6 @@ func NewDeleteOrgsIDLabelsIDRequest(server string, orgID string, labelID string,
 	}
 
 	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewGetOrgsIDLogsRequest generates requests for GetOrgsIDLogs
-func NewGetOrgsIDLogsRequest(server string, orgID string, params *GetOrgsIDLogsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryUrl, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/logs", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryUrl, err = queryUrl.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryUrl.Query()
-
-	if params.Offset != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "offset", *params.Offset); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	if params.Limit != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "limit", *params.Limit); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	queryUrl.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10232,6 +9975,86 @@ func NewDeleteStackRequest(server string, stackId string, params *DeleteStackPar
 		return nil, err
 	}
 
+	return req, nil
+}
+
+// NewReadStackRequest generates requests for ReadStack
+func NewReadStackRequest(server string, stackId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/packages/stacks/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateStackRequest calls the generic UpdateStack builder with application/json body
+func NewUpdateStackRequest(server string, stackId string, body UpdateStackJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateStackRequestWithBody(server, stackId, "application/json", bodyReader)
+}
+
+// NewUpdateStackRequestWithBody generates requests for UpdateStack with any type of body
+func NewUpdateStackRequestWithBody(server string, stackId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/packages/stacks/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -14301,87 +14124,6 @@ func NewPatchUsersIDRequestWithBody(server string, userID string, params *PatchU
 	return req, nil
 }
 
-// NewGetUsersIDLogsRequest generates requests for GetUsersIDLogs
-func NewGetUsersIDLogsRequest(server string, userID string, params *GetUsersIDLogsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "userID", userID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryUrl, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/users/%s/logs", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryUrl, err = queryUrl.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryUrl.Query()
-
-	if params.Offset != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "offset", *params.Offset); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	if params.Limit != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "limit", *params.Limit); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	queryUrl.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
 // NewPostUsersIDPasswordRequest calls the generic PostUsersIDPassword builder with application/json body
 func NewPostUsersIDPasswordRequest(server string, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -15398,29 +15140,6 @@ func (r deleteBucketsIDLabelsIDResponse) StatusCode() int {
 	return 0
 }
 
-type getBucketsIDLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *OperationLogs
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getBucketsIDLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getBucketsIDLogsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type getBucketsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -16114,29 +15833,6 @@ func (r deleteDashboardsIDLabelsIDResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r deleteDashboardsIDLabelsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type getDashboardsIDLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *OperationLogs
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getDashboardsIDLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsIDLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -17418,7 +17114,7 @@ func (r deleteOrgsIDInviteIDResponse) StatusCode() int {
 	return 0
 }
 
-type postOrgsIDInviteIDResendResponse struct {
+type postOrgsIDInviteIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Invite
@@ -17426,7 +17122,7 @@ type postOrgsIDInviteIDResendResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postOrgsIDInviteIDResendResponse) Status() string {
+func (r postOrgsIDInviteIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17434,7 +17130,7 @@ func (r postOrgsIDInviteIDResendResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDInviteIDResendResponse) StatusCode() int {
+func (r postOrgsIDInviteIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -17504,29 +17200,6 @@ func (r deleteOrgsIDLabelsIDResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r deleteOrgsIDLabelsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type getOrgsIDLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *OperationLogs
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getOrgsIDLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsIDLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -17834,24 +17507,8 @@ func (r applyPkgResponse) StatusCode() int {
 type listStacksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]struct {
-		CreatedAt   *time.Time `json:"createdAt,omitempty"`
-		Description *string    `json:"description,omitempty"`
-		Id          *string    `json:"id,omitempty"`
-		Name        *string    `json:"name,omitempty"`
-		OrgID       *string    `json:"orgID,omitempty"`
-		Resources   *struct {
-			ApiVersion   *string `json:"apiVersion,omitempty"`
-			Associations *[]struct {
-				Kind    *string `json:"kind,omitempty"`
-				PkgName *string `json:"pkgName,omitempty"`
-			} `json:"associations,omitempty"`
-			Kind       *string `json:"kind,omitempty"`
-			PkgName    *string `json:"pkgName,omitempty"`
-			ResourceID *string `json:"resourceID,omitempty"`
-		} `json:"resources,omitempty"`
-		UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-		Urls      *[]string  `json:"urls,omitempty"`
+	JSON200      *struct {
+		Stacks *[]Stack `json:"stacks,omitempty"`
 	}
 	JSONDefault *Error
 }
@@ -17875,16 +17532,8 @@ func (r listStacksResponse) StatusCode() int {
 type createStackResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *struct {
-		CreatedAt   *time.Time `json:"createdAt,omitempty"`
-		Description *string    `json:"description,omitempty"`
-		Id          *string    `json:"id,omitempty"`
-		Name        *string    `json:"name,omitempty"`
-		OrgID       *string    `json:"orgID,omitempty"`
-		UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
-		Urls        *[]string  `json:"urls,omitempty"`
-	}
-	JSONDefault *Error
+	JSON201      *Stack
+	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
@@ -17919,6 +17568,52 @@ func (r deleteStackResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r deleteStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type readStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r readStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r readStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type updateStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r updateStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r updateStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19642,29 +19337,6 @@ func (r patchUsersIDResponse) StatusCode() int {
 	return 0
 }
 
-type getUsersIDLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *OperationLogs
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getUsersIDLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getUsersIDLogsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type postUsersIDPasswordResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -20087,15 +19759,6 @@ func (c *ClientWithResponses) DeleteBucketsIDLabelsIDWithResponse(ctx context.Co
 	return ParseDeleteBucketsIDLabelsIDResponse(rsp)
 }
 
-// GetBucketsIDLogsWithResponse request returning *GetBucketsIDLogsResponse
-func (c *ClientWithResponses) GetBucketsIDLogsWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDLogsParams) (*getBucketsIDLogsResponse, error) {
-	rsp, err := c.GetBucketsIDLogs(ctx, bucketID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetBucketsIDLogsResponse(rsp)
-}
-
 // GetBucketsIDMembersWithResponse request returning *GetBucketsIDMembersResponse
 func (c *ClientWithResponses) GetBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*getBucketsIDMembersResponse, error) {
 	rsp, err := c.GetBucketsIDMembers(ctx, bucketID, params)
@@ -20468,15 +20131,6 @@ func (c *ClientWithResponses) DeleteDashboardsIDLabelsIDWithResponse(ctx context
 		return nil, err
 	}
 	return ParseDeleteDashboardsIDLabelsIDResponse(rsp)
-}
-
-// GetDashboardsIDLogsWithResponse request returning *GetDashboardsIDLogsResponse
-func (c *ClientWithResponses) GetDashboardsIDLogsWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDLogsParams) (*getDashboardsIDLogsResponse, error) {
-	rsp, err := c.GetDashboardsIDLogs(ctx, dashboardID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetDashboardsIDLogsResponse(rsp)
 }
 
 // GetDashboardsIDMembersWithResponse request returning *GetDashboardsIDMembersResponse
@@ -21150,13 +20804,13 @@ func (c *ClientWithResponses) DeleteOrgsIDInviteIDWithResponse(ctx context.Conte
 	return ParseDeleteOrgsIDInviteIDResponse(rsp)
 }
 
-// PostOrgsIDInviteIDResendWithResponse request returning *PostOrgsIDInviteIDResendResponse
-func (c *ClientWithResponses) PostOrgsIDInviteIDResendWithResponse(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDResendParams) (*postOrgsIDInviteIDResendResponse, error) {
-	rsp, err := c.PostOrgsIDInviteIDResend(ctx, orgID, inviteID, params)
+// PostOrgsIDInviteIDWithResponse request returning *PostOrgsIDInviteIDResponse
+func (c *ClientWithResponses) PostOrgsIDInviteIDWithResponse(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*postOrgsIDInviteIDResponse, error) {
+	rsp, err := c.PostOrgsIDInviteID(ctx, orgID, inviteID, params)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePostOrgsIDInviteIDResendResponse(rsp)
+	return ParsePostOrgsIDInviteIDResponse(rsp)
 }
 
 // GetOrgsIDLabelsWithResponse request returning *GetOrgsIDLabelsResponse
@@ -21192,15 +20846,6 @@ func (c *ClientWithResponses) DeleteOrgsIDLabelsIDWithResponse(ctx context.Conte
 		return nil, err
 	}
 	return ParseDeleteOrgsIDLabelsIDResponse(rsp)
-}
-
-// GetOrgsIDLogsWithResponse request returning *GetOrgsIDLogsResponse
-func (c *ClientWithResponses) GetOrgsIDLogsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDLogsParams) (*getOrgsIDLogsResponse, error) {
-	rsp, err := c.GetOrgsIDLogs(ctx, orgID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetOrgsIDLogsResponse(rsp)
 }
 
 // GetOrgsIDMembersWithResponse request returning *GetOrgsIDMembersResponse
@@ -21401,6 +21046,32 @@ func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stack
 		return nil, err
 	}
 	return ParseDeleteStackResponse(rsp)
+}
+
+// ReadStackWithResponse request returning *ReadStackResponse
+func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId string) (*readStackResponse, error) {
+	rsp, err := c.ReadStack(ctx, stackId)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReadStackResponse(rsp)
+}
+
+// UpdateStackWithBodyWithResponse request with arbitrary body returning *UpdateStackResponse
+func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader) (*updateStackResponse, error) {
+	rsp, err := c.UpdateStackWithBody(ctx, stackId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateStackResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*updateStackResponse, error) {
+	rsp, err := c.UpdateStack(ctx, stackId, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateStackResponse(rsp)
 }
 
 // ExportStackWithResponse request returning *ExportStackResponse
@@ -22286,15 +21957,6 @@ func (c *ClientWithResponses) PatchUsersIDWithResponse(ctx context.Context, user
 	return ParsePatchUsersIDResponse(rsp)
 }
 
-// GetUsersIDLogsWithResponse request returning *GetUsersIDLogsResponse
-func (c *ClientWithResponses) GetUsersIDLogsWithResponse(ctx context.Context, userID string, params *GetUsersIDLogsParams) (*getUsersIDLogsResponse, error) {
-	rsp, err := c.GetUsersIDLogs(ctx, userID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetUsersIDLogsResponse(rsp)
-}
-
 // PostUsersIDPasswordWithBodyWithResponse request with arbitrary body returning *PostUsersIDPasswordResponse
 func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*postUsersIDPasswordResponse, error) {
 	rsp, err := c.PostUsersIDPasswordWithBody(ctx, userID, params, contentType, body)
@@ -22883,39 +22545,6 @@ func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*deleteBucketsIDL
 			return nil, err
 		}
 		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetBucketsIDLogsResponse parses an HTTP response from a GetBucketsIDLogsWithResponse call
-func ParseGetBucketsIDLogsResponse(rsp *http.Response) (*getBucketsIDLogsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &getBucketsIDLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest OperationLogs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
@@ -23969,39 +23598,6 @@ func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*deleteDashboa
 			return nil, err
 		}
 		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetDashboardsIDLogsResponse parses an HTTP response from a GetDashboardsIDLogsWithResponse call
-func ParseGetDashboardsIDLogsResponse(rsp *http.Response) (*getDashboardsIDLogsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &getDashboardsIDLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest OperationLogs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
@@ -25900,15 +25496,15 @@ func ParseDeleteOrgsIDInviteIDResponse(rsp *http.Response) (*deleteOrgsIDInviteI
 	return response, nil
 }
 
-// ParsePostOrgsIDInviteIDResendResponse parses an HTTP response from a PostOrgsIDInviteIDResendWithResponse call
-func ParsePostOrgsIDInviteIDResendResponse(rsp *http.Response) (*postOrgsIDInviteIDResendResponse, error) {
+// ParsePostOrgsIDInviteIDResponse parses an HTTP response from a PostOrgsIDInviteIDWithResponse call
+func ParsePostOrgsIDInviteIDResponse(rsp *http.Response) (*postOrgsIDInviteIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postOrgsIDInviteIDResendResponse{
+	response := &postOrgsIDInviteIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26019,39 +25615,6 @@ func ParseDeleteOrgsIDLabelsIDResponse(rsp *http.Response) (*deleteOrgsIDLabelsI
 			return nil, err
 		}
 		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetOrgsIDLogsResponse parses an HTTP response from a GetOrgsIDLogsWithResponse call
-func ParseGetOrgsIDLogsResponse(rsp *http.Response) (*getOrgsIDLogsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &getOrgsIDLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest OperationLogs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
@@ -26502,24 +26065,8 @@ func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []struct {
-			CreatedAt   *time.Time `json:"createdAt,omitempty"`
-			Description *string    `json:"description,omitempty"`
-			Id          *string    `json:"id,omitempty"`
-			Name        *string    `json:"name,omitempty"`
-			OrgID       *string    `json:"orgID,omitempty"`
-			Resources   *struct {
-				ApiVersion   *string `json:"apiVersion,omitempty"`
-				Associations *[]struct {
-					Kind    *string `json:"kind,omitempty"`
-					PkgName *string `json:"pkgName,omitempty"`
-				} `json:"associations,omitempty"`
-				Kind       *string `json:"kind,omitempty"`
-				PkgName    *string `json:"pkgName,omitempty"`
-				ResourceID *string `json:"resourceID,omitempty"`
-			} `json:"resources,omitempty"`
-			UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-			Urls      *[]string  `json:"urls,omitempty"`
+		var dest struct {
+			Stacks *[]Stack `json:"stacks,omitempty"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26553,15 +26100,7 @@ func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest struct {
-			CreatedAt   *time.Time `json:"createdAt,omitempty"`
-			Description *string    `json:"description,omitempty"`
-			Id          *string    `json:"id,omitempty"`
-			Name        *string    `json:"name,omitempty"`
-			OrgID       *string    `json:"orgID,omitempty"`
-			UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
-			Urls        *[]string  `json:"urls,omitempty"`
-		}
+		var dest Stack
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -26593,6 +26132,72 @@ func ParseDeleteStackResponse(rsp *http.Response) (*deleteStackResponse, error) 
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReadStackResponse parses an HTTP response from a ReadStackWithResponse call
+func ParseReadStackResponse(rsp *http.Response) (*readStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &readStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Stack
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateStackResponse parses an HTTP response from a UpdateStackWithResponse call
+func ParseUpdateStackResponse(rsp *http.Response) (*updateStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &updateStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Stack
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -29010,39 +28615,6 @@ func ParsePatchUsersIDResponse(rsp *http.Response) (*patchUsersIDResponse, error
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest User
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetUsersIDLogsResponse parses an HTTP response from a GetUsersIDLogsWithResponse call
-func ParseGetUsersIDLogsResponse(rsp *http.Response) (*getUsersIDLogsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &getUsersIDLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest OperationLogs
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

@@ -75,6 +75,15 @@ func PointToLineProtocol(p *Point, precision time.Duration) string {
 func escapeKey(sb *strings.Builder, key string) {
 	for _, r := range key {
 		switch r {
+		case '\n':
+			sb.WriteString(`\\n`)
+			continue
+		case '\r':
+			sb.WriteString(`\\r`)
+			continue
+		case '\t':
+			sb.WriteString(`\\t`)
+			continue
 		case ' ', ',', '=':
 			sb.WriteString(`\`)
 		}

@@ -261,6 +261,17 @@ func TestPrecision(t *testing.T) {
 	assert.Equal(t, line, "test,id=10 float64=80.1234567 60\n")
 }
 
+func TestTagEscapingKeyAndValue(t *testing.T) {
+	p := NewPointWithMeasurement("h\n2\no\t_data")
+	p.AddTag("new\nline", "new\nline")
+	p.AddTag("carriage\rreturn", "carriage\rreturn")
+	p.AddTag("t\tab", "t\tab")
+	p.AddField("level", 2)
+
+	line := PointToLineProtocol(p, time.Nanosecond)
+	assert.Equal(t, "h\\\\n2\\\\no\\\\t_data,new\\\\nline=new\\\\nline,carriage\\\\rreturn=carriage\\\\rreturn,t\\\\tab=t\\\\tab level=2i\n", line)
+}
+
 var s string
 
 func BenchmarkPointEncoderSingle(b *testing.B) {

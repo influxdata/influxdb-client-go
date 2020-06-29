@@ -4,7 +4,10 @@
 
 package http
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Error represent error response from InfluxDBServer or http error
 type Error struct {
@@ -17,10 +20,14 @@ type Error struct {
 
 // Error fulfils error interface
 func (e *Error) Error() string {
-	if e.Err != nil {
+	switch {
+	case e.Err != nil:
 		return e.Err.Error()
+	case e.Code != "" && e.Message != "":
+		return fmt.Sprintf("%s: %s", e.Code, e.Message)
+	default:
+		return "Unexpected status code " + strconv.Itoa(e.StatusCode)
 	}
-	return fmt.Sprintf("%s: %s", e.Code, e.Message)
 }
 
 // NewError returns newly created Error initialised with nested error and default values

@@ -6,13 +6,14 @@ package influxdb2
 
 import (
 	"context"
-	http2 "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	http2 "github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUserAgent(t *testing.T) {
@@ -71,4 +72,35 @@ func TestServerErrorNonJSON(t *testing.T) {
 	require.NotNil(t, perror)
 	assert.Equal(t, "500 Internal Server Error", perror.Code)
 	assert.Equal(t, "internal server error", perror.Message)
+}
+
+func TestServerErrorInflux1_8(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Influxdb-Error", "bruh moment")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(404)
+		w.Write([]byte(`{"error": "bruh moment"}`))
+	}))
+
+	defer server.Close()
+	c := NewClient(server.URL, "x")
+	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	require.NotNil(t, err)
+	perror, ok := err.(*http2.Error)
+	require.True(t, ok)
+	require.NotNil(t, perror)
+	assert.Equal(t, "404 Not Found", perror.Code)
+	assert.Equal(t, "bruh moment", perror.Message)
+}
+
+func TestServerErrorEmptyBody(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(404)
+	}))
+
+	defer server.Close()
+	c := NewClient(server.URL, "x")
+	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	require.NotNil(t, err)
+	assert.Equal(t, "Unexpected status code 404", err.Error())
 }

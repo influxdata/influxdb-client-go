@@ -16,22 +16,22 @@ import (
 // ToLineProtocol creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
 // and write result to the string builder
 func PointToLineProtocolBuffer(p *Point, sb *strings.Builder, precision time.Duration) {
-	escapeKey(sb, p.Name())
+	escapeKey(sb, p.Name(), false)
 	sb.WriteRune(',')
 	for i, t := range p.TagList() {
 		if i > 0 {
 			sb.WriteString(",")
 		}
-		escapeKey(sb, t.Key)
+		escapeKey(sb, t.Key, true)
 		sb.WriteString("=")
-		escapeKey(sb, t.Value)
+		escapeKey(sb, t.Value, true)
 	}
 	sb.WriteString(" ")
 	for i, f := range p.FieldList() {
 		if i > 0 {
 			sb.WriteString(",")
 		}
-		escapeKey(sb, f.Key)
+		escapeKey(sb, f.Key, true)
 		sb.WriteString("=")
 		switch f.Value.(type) {
 		case string:
@@ -72,7 +72,7 @@ func PointToLineProtocol(p *Point, precision time.Duration) string {
 	return sb.String()
 }
 
-func escapeKey(sb *strings.Builder, key string) {
+func escapeKey(sb *strings.Builder, key string, escapeEqual bool) {
 	for _, r := range key {
 		switch r {
 		case '\n':
@@ -84,8 +84,12 @@ func escapeKey(sb *strings.Builder, key string) {
 		case '\t':
 			sb.WriteString(`\\t`)
 			continue
-		case ' ', ',', '=':
+		case ' ', ',':
 			sb.WriteString(`\`)
+		case '=':
+			if escapeEqual {
+				sb.WriteString(`\`)
+			}
 		}
 		sb.WriteRune(r)
 	}

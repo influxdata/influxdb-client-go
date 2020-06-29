@@ -2,6 +2,7 @@
 ### Features
 1. [#131](https://github.com/influxdata/influxdb-client-go/pull/131) Labels API
 1. [#136](https://github.com/influxdata/influxdb-client-go/pull/136) Possibility to specify default tags
+1. [#138](https://github.com/influxdata/influxdb-client-go/pull/138) Fix errors from InfluxDB 1.8 being empty
 
 ### Bug fixes 
 1. [#132](https://github.com/influxdata/influxdb-client-go/pull/132) Handle unsupported write type as string instead of generating panic

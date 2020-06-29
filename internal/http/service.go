@@ -147,18 +147,18 @@ func (s *serviceImpl) handleHttpError(r *http.Response) *Error {
 
 	perror := NewError(nil)
 	perror.StatusCode = r.StatusCode
+
 	if v := r.Header.Get("Retry-After"); v != "" {
 		r, err := strconv.ParseUint(v, 10, 32)
 		if err == nil {
 			perror.RetryAfter = uint(r)
 		}
 	}
+
 	// json encoded error
 	ctype, _, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
 	if ctype == "application/json" {
-		err := json.NewDecoder(r.Body).Decode(perror)
-		perror.Err = err
-		return perror
+		perror.Err = json.NewDecoder(r.Body).Decode(perror)
 	} else {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -178,7 +178,11 @@ func (s *serviceImpl) handleHttpError(r *http.Response) *Error {
 		case http.StatusServiceUnavailable:
 			perror.Code = "unavailable"
 			perror.Message = "service temporarily unavailable"
+		default:
+			perror.Code = r.Status
+			perror.Message = r.Header.Get("X-Influxdb-Error")
 		}
 	}
+
 	return perror
 }

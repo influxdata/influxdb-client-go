@@ -10,10 +10,10 @@ import (
 )
 
 // Log is the package-wide logger
-var Log Logger = &logger{}
+var Log Logger = &logLogger{}
 
+// Logger provides a filtered logging implementation.
 type Logger interface {
-	SetDebugLevel(debugLevel uint)
 	Debugf(format string, v ...interface{})
 	Debug(msg string)
 	Infof(format string, v ...interface{})
@@ -24,55 +24,38 @@ type Logger interface {
 	Error(msg string)
 }
 
-// logger provides filtered and categorized logging API.
-// It logs to standard logger, only errors by default
-type logger struct {
-	debugLevel uint
+// logLogger provides a default logging API implementation using log.
+// Handling of log levels is is done in the internal/log adapter
+type logLogger struct{}
+
+func (l *logLogger) Debugf(format string, v ...interface{}) {
+	log.Print("[D]! ", fmt.Sprintf(format, v...))
 }
 
-// SetDebugLevel to filter log messages. Each level mean to log all categories below
-// 0 errors , 1 - warning, 2 - info, 3 - debug
-func (l *logger) SetDebugLevel(debugLevel uint) {
-	l.debugLevel = debugLevel
+func (l *logLogger) Debug(msg string) {
+	log.Print("[D]! ", msg)
 }
 
-func (l *logger) Debugf(format string, v ...interface{}) {
-	if l.debugLevel > 2 {
-		log.Print("[D]! ", fmt.Sprintf(format, v...))
-	}
-}
-func (l *logger) Debug(msg string) {
-	if l.debugLevel > 2 {
-		log.Print("[D]! ", msg)
-	}
+func (l *logLogger) Infof(format string, v ...interface{}) {
+	log.Print("[I]! ", fmt.Sprintf(format, v...))
 }
 
-func (l *logger) Infof(format string, v ...interface{}) {
-	if l.debugLevel > 1 {
-		log.Print("[I]! ", fmt.Sprintf(format, v...))
-	}
-}
-func (l *logger) Info(msg string) {
-	if l.debugLevel > 1 {
-		log.Print("[I]! ", msg)
-	}
+func (l *logLogger) Info(msg string) {
+	log.Print("[I]! ", msg)
 }
 
-func (l *logger) Warnf(format string, v ...interface{}) {
-	if l.debugLevel > 0 {
-		log.Print("[W]! ", fmt.Sprintf(format, v...))
-	}
-}
-func (l *logger) Warn(msg string) {
-	if l.debugLevel > 0 {
-		log.Print("[W]! ", msg)
-	}
+func (l *logLogger) Warnf(format string, v ...interface{}) {
+	log.Print("[W]! ", fmt.Sprintf(format, v...))
 }
 
-func (l *logger) Errorf(format string, v ...interface{}) {
+func (l *logLogger) Warn(msg string) {
+	log.Print("[W]! ", msg)
+}
+
+func (l *logLogger) Errorf(format string, v ...interface{}) {
 	log.Print("[E]! ", fmt.Sprintf(format, v...))
 }
 
-func (l *logger) Error(msg string) {
+func (l *logLogger) Error(msg string) {
 	log.Print("[E]! ", msg)
 }

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go/api/log"
 	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
 	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
 )
 

@@ -17,9 +17,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/influxdata/influxdb-client-go/api/log"
 	"github.com/influxdata/influxdb-client-go/api/write"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/influxdata/influxdb-client-go/internal/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

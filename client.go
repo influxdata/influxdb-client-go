@@ -9,9 +9,10 @@ package influxdb2
 import (
 	"context"
 	"errors"
-	"github.com/influxdata/influxdb-client-go/api"
-	"github.com/influxdata/influxdb-client-go/internal/log"
 	"sync"
+
+	"github.com/influxdata/influxdb-client-go/api"
+	"github.com/influxdata/influxdb-client-go/api/log"
 
 	"github.com/influxdata/influxdb-client-go/domain"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"

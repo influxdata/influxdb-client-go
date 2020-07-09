@@ -272,6 +272,15 @@ func TestTagEscapingKeyAndValue(t *testing.T) {
 	assert.Equal(t, "h\\\\n2\\\\no\\\\t_data,new\\\\nline=new\\\\nline,carriage\\\\rreturn=carriage\\\\rreturn,t\\\\tab=t\\\\tab level=2i\n", line)
 }
 
+func TestEqualSignEscaping(t *testing.T) {
+	p := NewPointWithMeasurement("h=2o")
+	p.AddTag("l=ocation", "e=urope")
+	p.AddField("l=evel", 2)
+
+	line := PointToLineProtocol(p, time.Nanosecond)
+	assert.Equal(t, "h=2o,l\\=ocation=e\\=urope l\\=evel=2i\n", line)
+}
+
 var s string
 
 func BenchmarkPointEncoderSingle(b *testing.B) {

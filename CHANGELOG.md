@@ -1,3 +1,7 @@
+## 1.4.0 [in progress]
+### Bug fixes 
+1. [#152](https://github.com/influxdata/influxdb-client-go/pull/152) Allow connecting to server on a URL path
+
 ## 1.3.0 [2020-06-19]
 ### Features
 1. [#131](https://github.com/influxdata/influxdb-client-go/pull/131) Labels API

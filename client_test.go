@@ -87,7 +87,7 @@ func TestServerError429(t *testing.T) {
 
 func TestServerOnPath(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if "/proxy/0:0/influx/api/v2/write" == r.URL.Path {
+		if r.URL.Path == "/proxy/0:0/influx/api/v2/write" {
 			w.WriteHeader(http.StatusNoContent)
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)

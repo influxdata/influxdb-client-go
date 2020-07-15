@@ -9,12 +9,13 @@ package influxdb2
 import (
 	"context"
 	"errors"
-	"github.com/influxdata/influxdb-client-go/api"
-	"github.com/influxdata/influxdb-client-go/internal/log"
+	"strings"
 	"sync"
 
+	"github.com/influxdata/influxdb-client-go/api"
 	"github.com/influxdata/influxdb-client-go/domain"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
 )
 
 // Client provides API to communicate with InfluxDBServer.
@@ -85,7 +86,12 @@ func NewClient(serverUrl string, authToken string) Client {
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
 func NewClientWithOptions(serverUrl string, authToken string, options *Options) Client {
-	service := ihttp.NewService(serverUrl, "Token "+authToken, options.httpOptions)
+	normServerURL := serverUrl
+	if !strings.HasSuffix(normServerURL, "/") {
+		// For subsequent path parts concatenation, url has to end with '/'
+		normServerURL = serverUrl + "/"
+	}
+	service := ihttp.NewService(normServerURL, "Token "+authToken, options.httpOptions)
 	client := &clientImpl{
 		serverUrl:   serverUrl,
 		options:     options,

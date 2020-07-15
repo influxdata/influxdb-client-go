@@ -49,7 +49,7 @@ func NewService(serverUrl, authorization string, httpOptions *http2.Options) Ser
 	apiUrl, err := url.Parse(serverUrl)
 	serverApiUrl := serverUrl
 	if err == nil {
-		apiUrl, err = apiUrl.Parse("/api/v2/")
+		apiUrl, err = apiUrl.Parse("api/v2/")
 		if err == nil {
 			serverApiUrl = apiUrl.String()
 		}

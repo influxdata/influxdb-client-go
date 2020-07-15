@@ -132,19 +132,16 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) error {
 
 	if perror != nil {
 		if perror.StatusCode == http.StatusTooManyRequests || perror.StatusCode == http.StatusServiceUnavailable {
-			log.Log.Errorf("Write error: %s\nChecking retry\n", perror.Error())
+			log.Log.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
 			if perror.RetryAfter > 0 {
 				batch.retryInterval = perror.RetryAfter * 1000
 			} else {
 				batch.retryInterval = w.writeOptions.RetryInterval()
 			}
 			if batch.retries < w.writeOptions.MaxRetries() {
-				log.Log.Errorf("Write error: \nBatch kept for retrying\n")
 				if w.retryQueue.push(batch) {
 					log.Log.Warn("Retry buffer full, discarding oldest batch")
 				}
-			} else {
-				log.Log.Errorf("Write error: \nMax retrys, batch discarded\n")
 			}
 		} else {
 			log.Log.Errorf("Write error: %s\n", perror.Error())

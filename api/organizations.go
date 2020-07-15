@@ -6,6 +6,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
@@ -18,7 +19,7 @@ type OrganizationsApi interface {
 	// FindOrganizationById returns an organization found using orgId.
 	FindOrganizationById(ctx context.Context, orgId string) (*domain.Organization, error)
 	// FindOrganizationsByUserId returns organizations an user with userID belongs to.
-	FindOrganizationsByUserId(ctx context.Context, orgId string) (*[]domain.Organization, error)
+	FindOrganizationsByUserId(ctx context.Context, userID string) (*[]domain.Organization, error)
 	// CreateOrganization creates new organization.
 	CreateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error)
 	// CreateOrganizationWithName creates new organization with orgName and with status active.
@@ -98,19 +99,23 @@ func (o *organizationsApiImpl) FindOrganizationByName(ctx context.Context, orgNa
 	if response.JSONDefault != nil {
 		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
-	return &(*response.JSON200.Orgs)[0], nil
+	if response.JSON200.Orgs != nil && len(*response.JSON200.Orgs) > 0 {
+		return &(*response.JSON200.Orgs)[0], nil
+	} else {
+		return nil, fmt.Errorf("organization '%s' not found", orgName)
+	}
 }
 
 func (o *organizationsApiImpl) FindOrganizationById(ctx context.Context, orgId string) (*domain.Organization, error) {
-	params := &domain.GetOrgsParams{OrgID: &orgId}
-	response, err := o.apiClient.GetOrgsWithResponse(ctx, params)
+	params := &domain.GetOrgsIDParams{}
+	response, err := o.apiClient.GetOrgsIDWithResponse(ctx, orgId, params)
 	if err != nil {
 		return nil, err
 	}
 	if response.JSONDefault != nil {
 		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
-	return &(*response.JSON200.Orgs)[0], nil
+	return response.JSON200, nil
 }
 
 func (o *organizationsApiImpl) FindOrganizationsByUserId(ctx context.Context, userID string) (*[]domain.Organization, error) {
@@ -138,17 +143,9 @@ func (o *organizationsApiImpl) CreateOrganization(ctx context.Context, org *doma
 }
 
 func (o *organizationsApiImpl) CreateOrganizationWithName(ctx context.Context, orgName string) (*domain.Organization, error) {
-	params := &domain.PostOrgsParams{}
 	status := domain.OrganizationStatusActive
 	org := &domain.Organization{Name: orgName, Status: &status}
-	response, err := o.apiClient.PostOrgsWithResponse(ctx, params, domain.PostOrgsJSONRequestBody(*org))
-	if err != nil {
-		return nil, err
-	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return response.JSON201, nil
+	return o.CreateOrganization(ctx, org)
 }
 
 func (o *organizationsApiImpl) DeleteOrganization(ctx context.Context, org *domain.Organization) error {

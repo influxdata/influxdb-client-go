@@ -6,6 +6,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
@@ -103,7 +104,11 @@ func (b *bucketsApiImpl) FindBucketByName(ctx context.Context, bucketName string
 	if response.JSONDefault != nil {
 		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
-	return &(*response.JSON200.Buckets)[0], nil
+	if response.JSON200.Buckets != nil && len(*response.JSON200.Buckets) > 0 {
+		return &(*response.JSON200.Buckets)[0], nil
+	} else {
+		return nil, fmt.Errorf("bucket '%s' not found", bucketName)
+	}
 }
 
 func (b *bucketsApiImpl) FindBucketById(ctx context.Context, bucketId string) (*domain.Bucket, error) {

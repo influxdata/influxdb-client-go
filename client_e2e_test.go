@@ -221,129 +221,217 @@ func TestOrganizations(t *testing.T) {
 	usersApi := client.UsersApi()
 	orgName := "my-org-2"
 	orgDescription := "my-org 2 description"
+	ctx := context.Background()
+	invalidID := "aaaaaaaaaaaaaaaa"
 
-	orgList, err := orgsApi.GetOrganizations(context.Background())
+	orgList, err := orgsApi.GetOrganizations(ctx)
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 1)
 
-	org, err := orgsApi.CreateOrganizationWithName(context.Background(), orgName)
+	//test error
+	org, err := orgsApi.CreateOrganizationWithName(ctx, "")
+	assert.NotNil(t, err)
+	require.Nil(t, org)
+
+	org, err = orgsApi.CreateOrganizationWithName(ctx, orgName)
 	require.Nil(t, err)
 	require.NotNil(t, org)
 	assert.Equal(t, orgName, org.Name)
 
 	//test duplicit org
-	_, err = orgsApi.CreateOrganizationWithName(context.Background(), orgName)
+	_, err = orgsApi.CreateOrganizationWithName(ctx, orgName)
 	require.NotNil(t, err)
 
 	org.Description = &orgDescription
 
-	org, err = orgsApi.UpdateOrganization(context.Background(), org)
+	org, err = orgsApi.UpdateOrganization(ctx, org)
 	require.Nil(t, err)
 	require.NotNil(t, org)
 	assert.Equal(t, orgDescription, *org.Description)
 
-	orgList, err = orgsApi.GetOrganizations(context.Background())
+	orgList, err = orgsApi.GetOrganizations(ctx)
 
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 2)
 
-	members, err := orgsApi.GetMembers(context.Background(), org)
+	permission := &domain.Permission{
+		Action: domain.PermissionActionWrite,
+		Resource: domain.Resource{
+			Type: domain.ResourceTypeBuckets,
+		},
+	}
+	permissions := []domain.Permission{*permission}
+
+	//create authorization for new org
+	auth, err := client.AuthorizationsApi().CreateAuthorizationWithOrgId(context.Background(), *org.Id, permissions)
+	require.Nil(t, err)
+	require.NotNil(t, auth)
+
+	// create client with new auth token without permission
+	clientOrg2 := influxdb2.NewClient("http://localhost:9999", *auth.Token)
+
+	orgList, err = clientOrg2.OrganizationsApi().GetOrganizations(ctx)
+	require.Nil(t, err)
+	require.NotNil(t, orgList)
+	assert.Len(t, *orgList, 0)
+
+	org2, err := orgsApi.FindOrganizationByName(ctx, orgName)
+	require.Nil(t, err)
+	require.NotNil(t, org2)
+
+	//find unknown org
+	org2, err = orgsApi.FindOrganizationByName(ctx, "not-existetn-org")
+	assert.NotNil(t, err)
+	assert.Nil(t, org2)
+
+	//find org using token without org permission
+	org2, err = clientOrg2.OrganizationsApi().FindOrganizationByName(ctx, org.Name)
+	assert.NotNil(t, err)
+	assert.Nil(t, org2)
+
+	client.AuthorizationsApi().DeleteAuthorization(ctx, *auth.Id)
+
+	members, err := orgsApi.GetMembers(ctx, org)
 	require.Nil(t, err)
 	require.NotNil(t, members)
 	require.Len(t, *members, 0)
 
-	user, err := usersApi.CreateUserWithName(context.Background(), "user-01")
+	user, err := usersApi.CreateUserWithName(ctx, "user-01")
 	require.Nil(t, err)
 	require.NotNil(t, user)
 
-	member, err := orgsApi.AddMember(context.Background(), org, user)
+	member, err := orgsApi.AddMember(ctx, org, user)
 	require.Nil(t, err)
 	require.NotNil(t, member)
 	assert.Equal(t, *user.Id, *member.Id)
 	assert.Equal(t, user.Name, member.Name)
 
-	members, err = orgsApi.GetMembers(context.Background(), org)
+	// Add member with invalid id
+	member, err = orgsApi.AddMemberWithId(ctx, *org.Id, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, member)
+
+	members, err = orgsApi.GetMembers(ctx, org)
 	require.Nil(t, err)
 	require.NotNil(t, members)
 	require.Len(t, *members, 1)
 
-	org2, err := orgsApi.FindOrganizationById(context.Background(), *org.Id)
+	// get member with invalid id
+	members, err = orgsApi.GetMembersWithId(ctx, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, members)
+
+	org2, err = orgsApi.FindOrganizationById(ctx, *org.Id)
 	require.Nil(t, err)
 	require.NotNil(t, org2)
 	assert.Equal(t, org.Name, org2.Name)
 
-	orgs, err := orgsApi.FindOrganizationsByUserId(context.Background(), *user.Id)
+	// find invalid id
+	org2, err = orgsApi.FindOrganizationById(ctx, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, org2)
+
+	orgs, err := orgsApi.FindOrganizationsByUserId(ctx, *user.Id)
 	require.Nil(t, err)
 	require.NotNil(t, orgs)
 	require.Len(t, *orgs, 1)
 	assert.Equal(t, org.Name, (*orgs)[0].Name)
 
+	// look for not existent
+	orgs, err = orgsApi.FindOrganizationsByUserId(ctx, invalidID)
+	assert.Nil(t, err)
+	assert.NotNil(t, orgs)
+	assert.Len(t, *orgs, 0)
+
 	orgName2 := "my-org-3"
 
-	org2, err = orgsApi.CreateOrganizationWithName(context.Background(), orgName2)
+	org2, err = orgsApi.CreateOrganizationWithName(ctx, orgName2)
 	require.Nil(t, err)
 	require.NotNil(t, org2)
 	assert.Equal(t, orgName2, org2.Name)
 
-	orgList, err = orgsApi.GetOrganizations(context.Background())
+	orgList, err = orgsApi.GetOrganizations(ctx)
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 3)
 
-	owners, err := orgsApi.GetOwners(context.Background(), org2)
-	require.Nil(t, err)
-	require.NotNil(t, owners)
+	owners, err := orgsApi.GetOwners(ctx, org2)
+	assert.Nil(t, err)
+	assert.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	owner, err := orgsApi.AddOwner(context.Background(), org2, user)
+	//get owners with invalid id
+	owners, err = orgsApi.GetOwnersWithId(ctx, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, owners)
+
+	owner, err := orgsApi.AddOwner(ctx, org2, user)
 	require.Nil(t, err)
 	require.NotNil(t, owner)
 
-	owners, err = orgsApi.GetOwners(context.Background(), org2)
+	// add owner with invalid ID
+	owner, err = orgsApi.AddOwnerWithId(ctx, *org2.Id, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, owner)
+
+	owners, err = orgsApi.GetOwners(ctx, org2)
 	require.Nil(t, err)
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 2)
 
-	u, err := usersApi.FindUserByName(context.Background(), "my-user")
+	u, err := usersApi.FindUserByName(ctx, "my-user")
 	require.Nil(t, err)
 	require.NotNil(t, u)
 
-	err = orgsApi.RemoveOwner(context.Background(), org2, u)
+	err = orgsApi.RemoveOwner(ctx, org2, u)
 	require.Nil(t, err)
 
-	owners, err = orgsApi.GetOwners(context.Background(), org2)
+	// remove owner with invalid ID
+	err = orgsApi.RemoveOwnerWithId(ctx, invalidID, invalidID)
+	assert.NotNil(t, err)
+
+	owners, err = orgsApi.GetOwners(ctx, org2)
 	require.Nil(t, err)
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	orgs, err = orgsApi.FindOrganizationsByUserId(context.Background(), *user.Id)
+	orgs, err = orgsApi.FindOrganizationsByUserId(ctx, *user.Id)
 	require.Nil(t, err)
 	require.NotNil(t, orgs)
 	require.Len(t, *orgs, 2)
 
-	err = orgsApi.RemoveMember(context.Background(), org, user)
+	err = orgsApi.RemoveMember(ctx, org, user)
 	require.Nil(t, err)
 
-	members, err = orgsApi.GetMembers(context.Background(), org)
+	// remove invalid memberID
+	err = orgsApi.RemoveMemberWithId(ctx, invalidID, invalidID)
+	assert.NotNil(t, err)
+
+	members, err = orgsApi.GetMembers(ctx, org)
 	require.Nil(t, err)
 	require.NotNil(t, members)
 	require.Len(t, *members, 0)
 
-	err = orgsApi.DeleteOrganization(context.Background(), org)
+	err = orgsApi.DeleteOrganization(ctx, org)
 	require.Nil(t, err)
 
-	err = orgsApi.DeleteOrganization(context.Background(), org2)
-	require.Nil(t, err)
+	err = orgsApi.DeleteOrganization(ctx, org2)
+	assert.Nil(t, err)
 
-	orgList, err = orgsApi.GetOrganizations(context.Background())
+	// delete invalid org
+	err = orgsApi.DeleteOrganizationWithId(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	orgList, err = orgsApi.GetOrganizations(ctx)
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 1)
 
-	err = usersApi.DeleteUser(context.Background(), user)
+	err = usersApi.DeleteUser(ctx, user)
 	require.Nil(t, err)
+
 }
 
 func TestUsers(t *testing.T) {
@@ -476,10 +564,11 @@ func TestBuckets(t *testing.T) {
 	require.Nil(t, err, err)
 	require.NotNil(t, bucket)
 	assert.Equal(t, "my-bucket", bucket.Name)
-	// test find non-existing bucket, bug - returns system buckets
-	//bucket, err = bucketsApi.FindBucketByName(ctx, "not existing bucket")
-	//require.NotNil(t, err)
-	//require.Nil(t, bucket)
+
+	//test find non-existing bucket
+	bucket, err = bucketsApi.FindBucketByName(ctx, "not existing bucket")
+	assert.NotNil(t, err)
+	assert.Nil(t, bucket)
 
 	// create organizatiton for bucket
 	org, err := client.OrganizationsApi().CreateOrganizationWithName(ctx, "bucket-org")

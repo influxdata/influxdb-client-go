@@ -1,3 +1,6 @@
+## 1.4.0 [2020-06-19]
+1. [#154](https://github.com/influxdata/influxdb-client-go/pull/152) Use idiomatic go style for write channels (internal)
+
 ## 1.3.0 [2020-06-19]
 ### Features
 1. [#131](https://github.com/influxdata/influxdb-client-go/pull/131) Labels API

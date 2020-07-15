@@ -44,8 +44,8 @@ type writeApiImpl struct {
 	bufferCh     chan string
 	writeStop    chan struct{}
 	bufferStop   chan struct{}
-	doneCh       chan struct{}
 	bufferFlush  chan struct{}
+	doneCh       chan struct{}
 	bufferInfoCh chan writeBuffInfoReq
 	writeInfoCh  chan writeBuffInfoReq
 	writeOptions *write.Options
@@ -63,8 +63,8 @@ func NewWriteApiImpl(org string, bucket string, service http.Service, writeOptio
 		bufferCh:     make(chan string),
 		bufferStop:   make(chan struct{}),
 		writeStop:    make(chan struct{}),
-		doneCh:       make(chan struct{}),
 		bufferFlush:  make(chan struct{}),
+		doneCh:       make(chan struct{}),
 		bufferInfoCh: make(chan writeBuffInfoReq),
 		writeInfoCh:  make(chan writeBuffInfoReq),
 		writeOptions: writeOptions,

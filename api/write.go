@@ -6,12 +6,13 @@ package api
 
 import (
 	"context"
+	"strings"
+	"time"
+
 	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/log"
 	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
-	"strings"
-	"time"
 )
 
 // WriteApiBlocking is Write client interface with non-blocking methods for writing time series data asynchronously in batches into an InfluxDB server.
@@ -38,13 +39,13 @@ type writeApiImpl struct {
 	service     *iwrite.Service
 	writeBuffer []string
 
+	errCh        chan error
 	writeCh      chan *iwrite.Batch
 	bufferCh     chan string
-	writeStop    chan int
-	bufferStop   chan int
-	bufferFlush  chan int
-	doneCh       chan int
-	errCh        chan error
+	writeStop    chan struct{}
+	bufferStop   chan struct{}
+	bufferFlush  chan struct{}
+	doneCh       chan struct{}
 	bufferInfoCh chan writeBuffInfoReq
 	writeInfoCh  chan writeBuffInfoReq
 	writeOptions *write.Options
@@ -59,15 +60,16 @@ func NewWriteApiImpl(org string, bucket string, service http.Service, writeOptio
 		service:      iwrite.NewService(org, bucket, service, writeOptions),
 		writeBuffer:  make([]string, 0, writeOptions.BatchSize()+1),
 		writeCh:      make(chan *iwrite.Batch),
-		doneCh:       make(chan int),
 		bufferCh:     make(chan string),
-		bufferStop:   make(chan int),
-		writeStop:    make(chan int),
-		bufferFlush:  make(chan int),
+		bufferStop:   make(chan struct{}),
+		writeStop:    make(chan struct{}),
+		bufferFlush:  make(chan struct{}),
+		doneCh:       make(chan struct{}),
 		bufferInfoCh: make(chan writeBuffInfoReq),
 		writeInfoCh:  make(chan writeBuffInfoReq),
 		writeOptions: writeOptions,
 	}
+
 	go w.bufferProc()
 	go w.writeProc()
 
@@ -82,7 +84,7 @@ func (w *writeApiImpl) Errors() <-chan error {
 }
 
 func (w *writeApiImpl) Flush() {
-	w.bufferFlush <- 1
+	w.bufferFlush <- struct{}{}
 	w.waitForFlushing()
 }
 
@@ -133,7 +135,7 @@ x:
 		}
 	}
 	log.Log.Info("Buffer proc finished")
-	w.doneCh <- 1
+	w.doneCh <- struct{}{}
 }
 
 func (w *writeApiImpl) flushBuffer() {
@@ -168,32 +170,31 @@ x:
 		}
 	}
 	log.Log.Info("Write proc finished")
-	w.doneCh <- 1
+	w.doneCh <- struct{}{}
 }
 
 func (w *writeApiImpl) Close() {
 	if w.writeCh != nil {
 		// Flush outstanding metrics
 		w.Flush()
-		w.bufferStop <- 1
-		//wait for buffer proc
-		<-w.doneCh
+
+		// stop and wait for buffer proc
 		close(w.bufferStop)
+		<-w.doneCh
+
 		close(w.bufferFlush)
 		close(w.bufferCh)
-		w.writeStop <- 1
-		//wait for the write proc
-		<-w.doneCh
-		close(w.writeCh)
+
+		// stop and wait for write proc
 		close(w.writeStop)
+		<-w.doneCh
+
+		close(w.writeCh)
 		close(w.writeInfoCh)
 		close(w.bufferInfoCh)
-		w.bufferInfoCh = nil
-		w.writeInfoCh = nil
 		w.writeCh = nil
-		w.writeStop = nil
-		w.bufferFlush = nil
-		w.bufferStop = nil
+
+		// close errors if open
 		if w.errCh != nil {
 			close(w.errCh)
 			w.errCh = nil

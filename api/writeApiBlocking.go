@@ -6,14 +6,15 @@ package api
 
 import (
 	"context"
+	"strings"
+
 	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/http"
 	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
-	"strings"
 )
 
-// WriteApiBlocking offers blocking methods for writing time series data synchronously into an InfluxDB server.
-type WriteApiBlocking interface {
+// WriteAPIBlocking offers blocking methods for writing time series data synchronously into an InfluxDB server.
+type WriteAPIBlocking interface {
 	// WriteRecord writes line protocol record(s) into bucket.
 	// WriteRecord writes without implicit batching. Batch is created from given number of records
 	// Non-blocking alternative is available in the WriteApi interface
@@ -24,23 +25,23 @@ type WriteApiBlocking interface {
 	WritePoint(ctx context.Context, point ...*write.Point) error
 }
 
-// writeApiBlockingImpl implements WriteApiBlocking interface
-type writeApiBlockingImpl struct {
+// writeAPIBlocking implements WriteApiBlocking interface
+type writeAPIBlocking struct {
 	service      *iwrite.Service
 	writeOptions *write.Options
 }
 
-// creates writeApiBlockingImpl for org and bucket with underlying client
-func NewWriteApiBlockingImpl(org string, bucket string, service http.Service, writeOptions *write.Options) *writeApiBlockingImpl {
-	return &writeApiBlockingImpl{service: iwrite.NewService(org, bucket, service, writeOptions), writeOptions: writeOptions}
+// creates writeAPIBlocking for org and bucket with underlying client
+func NewWriteAPIBlocking(org string, bucket string, service http.Service, writeOptions *write.Options) *writeAPIBlocking {
+	return &writeAPIBlocking{service: iwrite.NewService(org, bucket, service, writeOptions), writeOptions: writeOptions}
 }
 
-func (w *writeApiBlockingImpl) write(ctx context.Context, line string) error {
+func (w *writeAPIBlocking) write(ctx context.Context, line string) error {
 	err := w.service.HandleWrite(ctx, iwrite.NewBatch(line, w.writeOptions.RetryInterval()))
 	return err
 }
 
-func (w *writeApiBlockingImpl) WriteRecord(ctx context.Context, line ...string) error {
+func (w *writeAPIBlocking) WriteRecord(ctx context.Context, line ...string) error {
 	if len(line) > 0 {
 		var sb strings.Builder
 		for _, line := range line {
@@ -55,7 +56,7 @@ func (w *writeApiBlockingImpl) WriteRecord(ctx context.Context, line ...string) 
 	return nil
 }
 
-func (w *writeApiBlockingImpl) WritePoint(ctx context.Context, point ...*write.Point) error {
+func (w *writeAPIBlocking) WritePoint(ctx context.Context, point ...*write.Point) error {
 	line, err := w.service.EncodePoints(point...)
 	if err != nil {
 		return err

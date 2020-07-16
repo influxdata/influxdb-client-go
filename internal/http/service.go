@@ -2,6 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
+// Package http provides http related servicing  stuff
 package http
 
 import (
@@ -19,98 +20,100 @@ import (
 	http2 "github.com/influxdata/influxdb-client-go/api/http"
 )
 
-// Http operation callbacks
+// RequestCallback defines function called after a request is created before any call
 type RequestCallback func(req *http.Request)
+
+// ResponseCallback defines function called after a successful response was received
 type ResponseCallback func(resp *http.Response) error
 
 // Service handles HTTP operations with taking care of mandatory request headers
 type Service interface {
 	PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
 	GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
-	DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
-	DoHttpRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error)
+	DoHTTPRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	DoHTTPRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error)
 	SetAuthorization(authorization string)
 	Authorization() string
-	HttpClient() *http.Client
-	ServerApiUrl() string
-	ServerUrl() string
+	HTTPClient() *http.Client
+	ServerAPIURL() string
+	ServerURL() string
 }
 
-// serviceImpl implements Service interface
-type serviceImpl struct {
-	serverApiUrl  string
-	serverUrl     string
+// service implements Service interface
+type service struct {
+	serverAPIURL  string
+	serverURL     string
 	authorization string
 	client        *http.Client
 }
 
 // NewService creates instance of http Service with given parameters
-func NewService(serverUrl, authorization string, httpOptions *http2.Options) Service {
-	apiUrl, err := url.Parse(serverUrl)
-	serverApiUrl := serverUrl
+func NewService(serverURL, authorization string, httpOptions *http2.Options) Service {
+	apiURL, err := url.Parse(serverURL)
+	serverAPIURL := serverURL
 	if err == nil {
-		apiUrl, err = apiUrl.Parse("api/v2/")
+		apiURL, err = apiURL.Parse("api/v2/")
 		if err == nil {
-			serverApiUrl = apiUrl.String()
+			serverAPIURL = apiURL.String()
 		}
 	}
-	return &serviceImpl{
-		serverApiUrl:  serverApiUrl,
-		serverUrl:     serverUrl,
+	return &service{
+		serverAPIURL:  serverAPIURL,
+		serverURL:     serverURL,
 		authorization: authorization,
 		client: &http.Client{
-			Timeout: time.Second * time.Duration(httpOptions.HttpRequestTimeout()),
+			Timeout: time.Second * time.Duration(httpOptions.HTTPRequestTimeout()),
 			Transport: &http.Transport{
 				DialContext: (&net.Dialer{
 					Timeout: 5 * time.Second,
 				}).DialContext,
 				TLSHandshakeTimeout: 5 * time.Second,
-				TLSClientConfig:     httpOptions.TlsConfig(),
+				TLSClientConfig:     httpOptions.TLSConfig(),
 			},
 		},
 	}
 }
 
-func (s *serviceImpl) ServerApiUrl() string {
-	return s.serverApiUrl
+func (s *service) ServerAPIURL() string {
+	return s.serverAPIURL
 }
 
-func (s *serviceImpl) ServerUrl() string {
-	return s.serverUrl
+func (s *service) ServerURL() string {
+	return s.serverURL
 }
 
-func (s *serviceImpl) SetAuthorization(authorization string) {
+func (s *service) SetAuthorization(authorization string) {
 	s.authorization = authorization
 }
 
-func (s *serviceImpl) Authorization() string {
+func (s *service) Authorization() string {
 	return s.authorization
 }
 
-func (s *serviceImpl) HttpClient() *http.Client {
+func (s *service) HTTPClient() *http.Client {
 	return s.client
 }
 
-func (s *serviceImpl) PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	return s.doHttpRequestWithUrl(ctx, http.MethodPost, url, body, requestCallback, responseCallback)
+func (s *service) PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+	return s.doHTTPRequestWithURL(ctx, http.MethodPost, url, body, requestCallback, responseCallback)
 }
 
-func (s *serviceImpl) doHttpRequestWithUrl(ctx context.Context, method, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+func (s *service) doHTTPRequestWithURL(ctx context.Context, method, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
 	req, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return NewError(err)
 	}
-	return s.DoHttpRequest(req, requestCallback, responseCallback)
+	return s.DoHTTPRequest(req, requestCallback, responseCallback)
 }
 
-func (s *serviceImpl) DoHttpRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	resp, err := s.DoHttpRequestWithResponse(req, requestCallback)
+func (s *service) DoHTTPRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+	resp, err := s.DoHTTPRequestWithResponse(req, requestCallback)
 	if err != nil {
 		return NewError(err)
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return s.handleHttpError(resp)
+		return s.handleHTTPError(resp)
 	}
 	if responseCallback != nil {
 		err := responseCallback(resp)
@@ -121,7 +124,7 @@ func (s *serviceImpl) DoHttpRequest(req *http.Request, requestCallback RequestCa
 	return nil
 }
 
-func (s *serviceImpl) DoHttpRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error) {
+func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error) {
 	req.Header.Set("Authorization", s.authorization)
 	req.Header.Set("User-Agent", UserAgent)
 	if requestCallback != nil {
@@ -130,11 +133,11 @@ func (s *serviceImpl) DoHttpRequestWithResponse(req *http.Request, requestCallba
 	return s.client.Do(req)
 }
 
-func (s *serviceImpl) GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	return s.doHttpRequestWithUrl(ctx, http.MethodGet, url, nil, requestCallback, responseCallback)
+func (s *service) GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+	return s.doHTTPRequestWithURL(ctx, http.MethodGet, url, nil, requestCallback, responseCallback)
 }
 
-func (s *serviceImpl) handleHttpError(r *http.Response) *Error {
+func (s *service) handleHTTPError(r *http.Response) *Error {
 	// successful status code range
 	if r.StatusCode >= 200 && r.StatusCode < 300 {
 		return nil

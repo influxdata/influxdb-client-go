@@ -36,66 +36,102 @@ type Client interface {
 	Close()
 	// Options returns the options associated with client
 	Options() *Options
-	// ServerUrl returns the url of the server url client talks to
+	// ServerURL returns the url of the server url client talks to
+	ServerURL() string
+	// ServerURL returns the url of the server url client talks to
+	// Deprecated: Use ServerURL instead.
 	ServerUrl() string
+	// WriteAPI returns the asynchronous, non-blocking, Write client
+	WriteAPI(org, bucket string) api.WriteAPI
 	// WriteApi returns the asynchronous, non-blocking, Write client
+	// Deprecated: Use WriteAPI instead
 	WriteApi(org, bucket string) api.WriteApi
-	// WriteApi returns the synchronous, blocking, Write client
+	// WriteAPIBlocking returns the synchronous, blocking, Write client
+	WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking
+	// WriteApi returns the synchronous, blocking, Write client.
+	// Deprecated: Use WriteAPIBlocking instead.
 	WriteApiBlocking(org, bucket string) api.WriteApiBlocking
+	// QueryAPI returns Query client
+	QueryAPI(org string) api.QueryAPI
 	// QueryApi returns Query client
+	// Deprecated: Use QueryAPI instead.
 	QueryApi(org string) api.QueryApi
-	// AuthorizationsApi returns Authorizations API client
+	// AuthorizationsAPI returns Authorizations API client.
+	AuthorizationsAPI() api.AuthorizationsAPI
+	// AuthorizationsApi returns Authorizations API client.
+	// Deprecated: Use AuthorizationsAPI instead.
 	AuthorizationsApi() api.AuthorizationsApi
-	// OrganizationsApi returns Organizations API client
+	// OrganizationsAPI returns Organizations API client
+	OrganizationsAPI() api.OrganizationsAPI
+	// OrganizationsApi returns Organizations API client.
+	// Deprecated: Use OrganizationsAPI instead.
 	OrganizationsApi() api.OrganizationsApi
-	// UsersApi returns Users API client
+	// UsersAPI returns Users API client.
+	UsersAPI() api.UsersAPI
+	// UsersApi returns Users API client.
+	// Deprecated: Use UsersAPI instead.
 	UsersApi() api.UsersApi
-	// DeleteApi returns Delete API client
+	// DeleteAPI returns Delete API client
+	DeleteAPI() api.DeleteAPI
+	// DeleteApi returns Delete API client.
+	// Deprecated: Use DeleteAPI instead.
 	DeleteApi() api.DeleteApi
-	// BucketsApi returns Buckets API client
+	// BucketsAPI returns Buckets API client
+	BucketsAPI() api.BucketsAPI
+	// BucketsApi returns Buckets API client.
+	// Deprecated: Use BucketsAPI instead.
 	BucketsApi() api.BucketsApi
-	// LabelsApi returns Labels API client
+	// LabelsAPI returns Labels API client
+	LabelsAPI() api.LabelsAPI
+	// LabelsApi returns Labels API client;
+	// Deprecated: Use LabelsAPI instead.
 	LabelsApi() api.LabelsApi
 }
 
 // clientImpl implements Client interface
 type clientImpl struct {
-	serverUrl   string
+	serverURL   string
 	options     *Options
-	writeApis   []api.WriteApi
+	writeAPIs   []api.WriteAPI
 	lock        sync.Mutex
 	httpService ihttp.Service
 	apiClient   *domain.ClientWithResponses
+	authAPI     api.AuthorizationsAPI
 	authApi     api.AuthorizationsApi
+	orgAPI      api.OrganizationsAPI
 	orgApi      api.OrganizationsApi
 	usersApi    api.UsersApi
+	usersAPI    api.UsersAPI
+	deleteAPI   api.DeleteAPI
 	deleteApi   api.DeleteApi
+	bucketsAPI  api.BucketsAPI
 	bucketsApi  api.BucketsApi
 	labelsApi   api.LabelsApi
+	labelsAPI   api.LabelsAPI
 }
 
-// NewClient creates Client for connecting to given serverUrl with provided authentication token, with the default options.
+// NewClient creates Client for connecting to given serverURL with provided authentication token, with the default options.
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
 func NewClient(serverUrl string, authToken string) Client {
 	return NewClientWithOptions(serverUrl, authToken, DefaultOptions())
 }
 
-// NewClientWithOptions creates Client for connecting to given serverUrl with provided authentication token
+// NewClientWithOptions creates Client for connecting to given serverURL with provided authentication token
 // and configured with custom Options
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
-func NewClientWithOptions(serverUrl string, authToken string, options *Options) Client {
-	normServerURL := serverUrl
+func NewClientWithOptions(serverURL string, authToken string, options *Options) Client {
+	normServerURL := serverURL
 	if !strings.HasSuffix(normServerURL, "/") {
 		// For subsequent path parts concatenation, url has to end with '/'
-		normServerURL = serverUrl + "/"
+		normServerURL = serverURL + "/"
 	}
 	service := ihttp.NewService(normServerURL, "Token "+authToken, options.httpOptions)
 	client := &clientImpl{
-		serverUrl:   serverUrl,
+		serverURL:   serverURL,
 		options:     options,
-		writeApis:   make([]api.WriteApi, 0, 5),
+		writeAPIs:   make([]api.WriteAPI, 0, 5),
 		httpService: service,
 		apiClient:   domain.NewClientWithResponses(service),
 	}
@@ -106,8 +142,12 @@ func (c *clientImpl) Options() *Options {
 	return c.options
 }
 
+func (c *clientImpl) ServerURL() string {
+	return c.serverURL
+}
+
 func (c *clientImpl) ServerUrl() string {
-	return c.serverUrl
+	return c.serverURL
 }
 
 func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
@@ -165,33 +205,61 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 }
 
 func (c *clientImpl) WriteApi(org, bucket string) api.WriteApi {
-	w := api.NewWriteApiImpl(org, bucket, c.httpService, c.options.writeOptions)
-	c.writeApis = append(c.writeApis, w)
-	return w
+	return c.WriteAPI(org, bucket)
 }
 
+func (c *clientImpl) WriteAPI(org, bucket string) api.WriteAPI {
+	w := api.NewWriteAPI(org, bucket, c.httpService, c.options.writeOptions)
+	c.writeAPIs = append(c.writeAPIs, w)
+	return w
+}
 func (c *clientImpl) WriteApiBlocking(org, bucket string) api.WriteApiBlocking {
-	w := api.NewWriteApiBlockingImpl(org, bucket, c.httpService, c.options.writeOptions)
+	return c.WriteAPIBlocking(org, bucket)
+}
+
+func (c *clientImpl) WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking {
+	w := api.NewWriteAPIBlocking(org, bucket, c.httpService, c.options.writeOptions)
 	return w
 }
 
 func (c *clientImpl) Close() {
-	for _, w := range c.writeApis {
+	for _, w := range c.writeAPIs {
 		w.Close()
 	}
 }
 
+func (c *clientImpl) QueryAPI(org string) api.QueryAPI {
+	return api.NewQueryAPI(org, c.httpService)
+}
 func (c *clientImpl) QueryApi(org string) api.QueryApi {
-	return api.NewQueryApi(org, c.httpService)
+	return c.QueryAPI(org)
+}
+
+func (c *clientImpl) AuthorizationsAPI() api.AuthorizationsAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.authAPI == nil {
+		c.authAPI = api.NewAuthorizationsAPI(c.apiClient)
+	}
+	return c.authAPI
 }
 
 func (c *clientImpl) AuthorizationsApi() api.AuthorizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.authApi == nil {
-		c.authApi = api.NewAuthorizationApi(c.apiClient)
+		c.authApi = api.NewAuthorizationsApi(c.apiClient)
 	}
 	return c.authApi
+}
+
+func (c *clientImpl) OrganizationsAPI() api.OrganizationsAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.orgAPI == nil {
+		c.orgAPI = api.NewOrganizationsAPI(c.apiClient)
+	}
+	return c.orgAPI
 }
 
 func (c *clientImpl) OrganizationsApi() api.OrganizationsApi {
@@ -203,6 +271,15 @@ func (c *clientImpl) OrganizationsApi() api.OrganizationsApi {
 	return c.orgApi
 }
 
+func (c *clientImpl) UsersAPI() api.UsersAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.usersAPI == nil {
+		c.usersAPI = api.NewUsersAPI(c.apiClient)
+	}
+	return c.usersAPI
+}
+
 func (c *clientImpl) UsersApi() api.UsersApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -210,6 +287,15 @@ func (c *clientImpl) UsersApi() api.UsersApi {
 		c.usersApi = api.NewUsersApi(c.apiClient)
 	}
 	return c.usersApi
+}
+
+func (c *clientImpl) DeleteAPI() api.DeleteAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.deleteAPI == nil {
+		c.deleteAPI = api.NewDeleteAPI(c.apiClient)
+	}
+	return c.deleteAPI
 }
 
 func (c *clientImpl) DeleteApi() api.DeleteApi {
@@ -221,6 +307,15 @@ func (c *clientImpl) DeleteApi() api.DeleteApi {
 	return c.deleteApi
 }
 
+func (c *clientImpl) BucketsAPI() api.BucketsAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.bucketsAPI == nil {
+		c.bucketsAPI = api.NewBucketsAPI(c.apiClient)
+	}
+	return c.bucketsAPI
+}
+
 func (c *clientImpl) BucketsApi() api.BucketsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -228,6 +323,15 @@ func (c *clientImpl) BucketsApi() api.BucketsApi {
 		c.bucketsApi = api.NewBucketsApi(c.apiClient)
 	}
 	return c.bucketsApi
+}
+
+func (c *clientImpl) LabelsAPI() api.LabelsAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.labelsAPI == nil {
+		c.labelsAPI = api.NewLabelsAPI(c.apiClient)
+	}
+	return c.labelsAPI
 }
 
 func (c *clientImpl) LabelsApi() api.LabelsApi {

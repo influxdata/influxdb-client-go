@@ -9,39 +9,43 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
-// AuthorizationsApi provides methods for organizing Authorization in a InfluxDB server
-type AuthorizationsApi interface {
+// AuthorizationsAPI provides methods for organizing Authorization in a InfluxDB server
+type AuthorizationsAPI interface {
 	// GetAuthorizations returns all authorizations
 	GetAuthorizations(ctx context.Context) (*[]domain.Authorization, error)
 	// FindAuthorizationsByUserName returns all authorizations for given userName
 	FindAuthorizationsByUserName(ctx context.Context, userName string) (*[]domain.Authorization, error)
-	// FindAuthorizationsByUserId returns all authorizations for given userID
-	FindAuthorizationsByUserId(ctx context.Context, userId string) (*[]domain.Authorization, error)
+	// FindAuthorizationsByUserID returns all authorizations for given userID
+	FindAuthorizationsByUserID(ctx context.Context, userID string) (*[]domain.Authorization, error)
 	// FindAuthorizationsByOrgName returns all authorizations for given organization name
 	FindAuthorizationsByOrgName(ctx context.Context, orgName string) (*[]domain.Authorization, error)
-	// FindAuthorizationsByUserId returns all authorizations for given organization id
-	FindAuthorizationsByOrgId(ctx context.Context, orgId string) (*[]domain.Authorization, error)
+	// FindAuthorizationsByOrgID returns all authorizations for given organization id
+	FindAuthorizationsByOrgID(ctx context.Context, orgID string) (*[]domain.Authorization, error)
 	// CreateAuthorization creates new authorization
 	CreateAuthorization(ctx context.Context, authorization *domain.Authorization) (*domain.Authorization, error)
-	// CreateAuthorizationWithOrgId creates new authorization with given permissions scoped to given orgId
-	CreateAuthorizationWithOrgId(ctx context.Context, orgId string, permissions []domain.Permission) (*domain.Authorization, error)
-	// UpdateAuthorizationStatus updates status of authorization with authId
-	UpdateAuthorizationStatus(ctx context.Context, authId string, status domain.AuthorizationUpdateRequestStatus) (*domain.Authorization, error)
-	// DeleteAuthorization deletes authorization with authId
-	DeleteAuthorization(ctx context.Context, authId string) error
+	// CreateAuthorizationWithOrgID creates new authorization with given permissions scoped to given orgID
+	CreateAuthorizationWithOrgID(ctx context.Context, orgID string, permissions []domain.Permission) (*domain.Authorization, error)
+	// UpdateAuthorizationStatus updates status of authorization
+	UpdateAuthorizationStatus(ctx context.Context, authorization *domain.Authorization, status domain.AuthorizationUpdateRequestStatus) (*domain.Authorization, error)
+	// UpdateAuthorizationStatusWithID updates status of authorization with authID
+	UpdateAuthorizationStatusWithID(ctx context.Context, authID string, status domain.AuthorizationUpdateRequestStatus) (*domain.Authorization, error)
+	// DeleteAuthorization deletes authorization
+	DeleteAuthorization(ctx context.Context, authorization *domain.Authorization) error
+	// DeleteAuthorization deletes authorization with authID
+	DeleteAuthorizationWithID(ctx context.Context, authID string) error
 }
 
-type authorizationsApiImpl struct {
+type authorizationsAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
-func NewAuthorizationApi(apiClient *domain.ClientWithResponses) AuthorizationsApi {
-	return &authorizationsApiImpl{
+func NewAuthorizationsAPI(apiClient *domain.ClientWithResponses) AuthorizationsAPI {
+	return &authorizationsAPI{
 		apiClient: apiClient,
 	}
 }
 
-func (a *authorizationsApiImpl) GetAuthorizations(ctx context.Context) (*[]domain.Authorization, error) {
+func (a *authorizationsAPI) GetAuthorizations(ctx context.Context) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{}
 	auths, err := a.listAuthorizations(ctx, authQuery)
 	if err != nil {
@@ -50,7 +54,7 @@ func (a *authorizationsApiImpl) GetAuthorizations(ctx context.Context) (*[]domai
 	return auths.Authorizations, nil
 }
 
-func (a *authorizationsApiImpl) FindAuthorizationsByUserName(ctx context.Context, userName string) (*[]domain.Authorization, error) {
+func (a *authorizationsAPI) FindAuthorizationsByUserName(ctx context.Context, userName string) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{User: &userName}
 	auths, err := a.listAuthorizations(ctx, authQuery)
 	if err != nil {
@@ -59,8 +63,8 @@ func (a *authorizationsApiImpl) FindAuthorizationsByUserName(ctx context.Context
 	return auths.Authorizations, nil
 }
 
-func (a *authorizationsApiImpl) FindAuthorizationsByUserId(ctx context.Context, userId string) (*[]domain.Authorization, error) {
-	authQuery := &domain.GetAuthorizationsParams{UserID: &userId}
+func (a *authorizationsAPI) FindAuthorizationsByUserID(ctx context.Context, userID string) (*[]domain.Authorization, error) {
+	authQuery := &domain.GetAuthorizationsParams{UserID: &userID}
 	auths, err := a.listAuthorizations(ctx, authQuery)
 	if err != nil {
 		return nil, err
@@ -68,7 +72,7 @@ func (a *authorizationsApiImpl) FindAuthorizationsByUserId(ctx context.Context, 
 	return auths.Authorizations, nil
 }
 
-func (a *authorizationsApiImpl) FindAuthorizationsByOrgName(ctx context.Context, orgName string) (*[]domain.Authorization, error) {
+func (a *authorizationsAPI) FindAuthorizationsByOrgName(ctx context.Context, orgName string) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{Org: &orgName}
 	auths, err := a.listAuthorizations(ctx, authQuery)
 	if err != nil {
@@ -77,8 +81,8 @@ func (a *authorizationsApiImpl) FindAuthorizationsByOrgName(ctx context.Context,
 	return auths.Authorizations, nil
 }
 
-func (a *authorizationsApiImpl) FindAuthorizationsByOrgId(ctx context.Context, orgId string) (*[]domain.Authorization, error) {
-	authQuery := &domain.GetAuthorizationsParams{OrgID: &orgId}
+func (a *authorizationsAPI) FindAuthorizationsByOrgID(ctx context.Context, orgID string) (*[]domain.Authorization, error) {
+	authQuery := &domain.GetAuthorizationsParams{OrgID: &orgID}
 	auths, err := a.listAuthorizations(ctx, authQuery)
 	if err != nil {
 		return nil, err
@@ -86,7 +90,7 @@ func (a *authorizationsApiImpl) FindAuthorizationsByOrgId(ctx context.Context, o
 	return auths.Authorizations, nil
 }
 
-func (a *authorizationsApiImpl) listAuthorizations(ctx context.Context, query *domain.GetAuthorizationsParams) (*domain.Authorizations, error) {
+func (a *authorizationsAPI) listAuthorizations(ctx context.Context, query *domain.GetAuthorizationsParams) (*domain.Authorizations, error) {
 	if query == nil {
 		query = &domain.GetAuthorizationsParams{}
 	}
@@ -100,7 +104,7 @@ func (a *authorizationsApiImpl) listAuthorizations(ctx context.Context, query *d
 	return response.JSON200, nil
 }
 
-func (a *authorizationsApiImpl) CreateAuthorization(ctx context.Context, authorization *domain.Authorization) (*domain.Authorization, error) {
+func (a *authorizationsAPI) CreateAuthorization(ctx context.Context, authorization *domain.Authorization) (*domain.Authorization, error) {
 	params := &domain.PostAuthorizationsParams{}
 	response, err := a.apiClient.PostAuthorizationsWithResponse(ctx, params, domain.PostAuthorizationsJSONRequestBody(*authorization))
 	if err != nil {
@@ -115,20 +119,20 @@ func (a *authorizationsApiImpl) CreateAuthorization(ctx context.Context, authori
 	return response.JSON201, nil
 }
 
-func (a *authorizationsApiImpl) CreateAuthorizationWithOrgId(ctx context.Context, orgId string, permissions []domain.Permission) (*domain.Authorization, error) {
+func (a *authorizationsAPI) CreateAuthorizationWithOrgID(ctx context.Context, orgID string, permissions []domain.Permission) (*domain.Authorization, error) {
 	status := domain.AuthorizationUpdateRequestStatusActive
 	auth := &domain.Authorization{
 		AuthorizationUpdateRequest: domain.AuthorizationUpdateRequest{Status: &status},
-		OrgID:                      &orgId,
+		OrgID:                      &orgID,
 		Permissions:                &permissions,
 	}
 	return a.CreateAuthorization(ctx, auth)
 }
 
-func (a *authorizationsApiImpl) UpdateAuthorizationStatus(ctx context.Context, authId string, status domain.AuthorizationUpdateRequestStatus) (*domain.Authorization, error) {
+func (a *authorizationsAPI) UpdateAuthorizationStatusWithID(ctx context.Context, authID string, status domain.AuthorizationUpdateRequestStatus) (*domain.Authorization, error) {
 	params := &domain.PatchAuthorizationsIDParams{}
 	body := &domain.PatchAuthorizationsIDJSONRequestBody{Status: &status}
-	response, err := a.apiClient.PatchAuthorizationsIDWithResponse(ctx, authId, params, *body)
+	response, err := a.apiClient.PatchAuthorizationsIDWithResponse(ctx, authID, params, *body)
 	if err != nil {
 		return nil, err
 	}
@@ -138,9 +142,17 @@ func (a *authorizationsApiImpl) UpdateAuthorizationStatus(ctx context.Context, a
 	return response.JSON200, nil
 }
 
-func (a *authorizationsApiImpl) DeleteAuthorization(ctx context.Context, authId string) error {
+func (a *authorizationsAPI) UpdateAuthorizationStatus(ctx context.Context, authorization *domain.Authorization, status domain.AuthorizationUpdateRequestStatus) (*domain.Authorization, error) {
+	return a.UpdateAuthorizationStatusWithID(ctx, *authorization.Id, status)
+}
+
+func (a *authorizationsAPI) DeleteAuthorization(ctx context.Context, authorization *domain.Authorization) error {
+	return a.DeleteAuthorizationWithID(ctx, *authorization.Id)
+}
+
+func (a *authorizationsAPI) DeleteAuthorizationWithID(ctx context.Context, authID string) error {
 	params := &domain.DeleteAuthorizationsIDParams{}
-	response, err := a.apiClient.DeleteAuthorizationsIDWithResponse(ctx, authId, params)
+	response, err := a.apiClient.DeleteAuthorizationsIDWithResponse(ctx, authID, params)
 	if err != nil {
 		return err
 	}

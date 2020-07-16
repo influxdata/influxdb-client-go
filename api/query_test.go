@@ -508,9 +508,9 @@ func TestQueryRawResult(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	queryApi := NewQueryApi("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
+	queryAPI := NewQueryAPI("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
 
-	result, err := queryApi.QueryRaw(context.Background(), "flux", nil)
+	result, err := queryAPI.QueryRaw(context.Background(), "flux", nil)
 	require.Nil(t, err)
 	require.NotNil(t, result)
 	assert.Equal(t, csvTable, result)
@@ -903,14 +903,14 @@ func TestFluxError(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	queryApi := NewQueryApi("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
+	queryAPI := NewQueryAPI("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
 
-	result, err := queryApi.QueryRaw(context.Background(), "errored flux", nil)
+	result, err := queryAPI.QueryRaw(context.Background(), "errored flux", nil)
 	assert.Equal(t, "", result)
 	require.NotNil(t, err)
 	assert.Equal(t, "invalid: compilation failed: loc 4:17-4:86: expected an operator between two expressions", err.Error())
 
-	tableRes, err := queryApi.Query(context.Background(), "errored flux")
+	tableRes, err := queryAPI.Query(context.Background(), "errored flux")
 	assert.Nil(t, tableRes)
 	require.NotNil(t, err)
 	assert.Equal(t, "invalid: compilation failed: loc 4:17-4:86: expected an operator between two expressions", err.Error())

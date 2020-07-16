@@ -2,6 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
+// Package log provides internal logging infrastructure
 package log
 
 import (

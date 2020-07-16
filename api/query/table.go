@@ -2,6 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
+// Package query defined types for representing flux query result
 package query
 
 import (
@@ -58,8 +59,8 @@ func (f *FluxTableMetadata) AddColumn(column *FluxColumn) *FluxTableMetadata {
 	return f
 }
 
-// Column returns flux table column by index
-// Returns nil if index is out of the bounds
+// Column returns flux table column by index.
+// Returns nil if index is out of the bounds.
 func (f *FluxTableMetadata) Column(index int) *FluxColumn {
 	if len(f.columns) == 0 || index < 0 || index >= len(f.columns) {
 		return nil
@@ -80,12 +81,12 @@ func (f *FluxTableMetadata) String() string {
 	return buffer.String()
 }
 
-// newFluxColumn creates FluxColumn for position
+// NewFluxColumn creates FluxColumn for position
 func NewFluxColumn(index int) *FluxColumn {
 	return &FluxColumn{index: index}
 }
 
-// newFluxColumn creates FluxColumn
+// NewFluxColumnFull creates FluxColumn
 func NewFluxColumnFull(dataType string, defaultValue string, name string, group bool, index int) *FluxColumn {
 	return &FluxColumn{index: index, name: name, dataType: dataType, group: group, defaultValue: defaultValue}
 }
@@ -140,7 +141,7 @@ func (f *FluxColumn) String() string {
 	return fmt.Sprintf("{%d: name: %s, datatype: %s, defaultValue: %s, group: %v}", f.index, f.name, f.dataType, f.defaultValue, f.group)
 }
 
-// newFluxRecord returns new record for the table with values
+// NewFluxRecord returns new record for the table with values
 func NewFluxRecord(table int, values map[string]interface{}) *FluxRecord {
 	return &FluxRecord{table: table, values: values}
 }
@@ -160,7 +161,7 @@ func (r *FluxRecord) Stop() time.Time {
 	return r.ValueByKey("_stop").(time.Time)
 }
 
-// Start returns the time of the record
+// Time returns the time of the record
 func (r *FluxRecord) Time() time.Time {
 	return r.ValueByKey("_time").(time.Time)
 }

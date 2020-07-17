@@ -121,7 +121,7 @@ and change what is needed:
 client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token", 
     influxdb2.DefaultOptions().
         SetUseGZip(true).
-        SetTlsConfig(&tls.Config{
+        SetTLSConfig(&tls.Config{
             InsecureSkipVerify: true,
         }))
 ```

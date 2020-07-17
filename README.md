@@ -29,7 +29,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
         - [Data Point](https://github.com/influxdata/influxdb-client-go/blob/master/point.go)
-        - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/writeApiBlocking.go) ways
+        - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/writeAPIBlocking.go) ways
         - [How to writes](#writes)  
     - InfluxDB 2 API
         - setup, ready, health
@@ -65,30 +65,30 @@ func main() {
     // create new client with default option for server url authenticate by token
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // user blocking write client for writes to desired bucket
-    writeApi := client.WriteApiBlocking("my-org", "my-bucket")
+    writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
     // create point using full params constructor 
     p := influxdb2.NewPoint("stat",
         map[string]string{"unit": "temperature"},
         map[string]interface{}{"avg": 24.5, "max": 45},
         time.Now())
     // write point immediately 
-    writeApi.WritePoint(context.Background(), p)
+    writeAPI.WritePoint(context.Background(), p)
     // create point using fluent style
     p = influxdb2.NewPointWithMeasurement("stat").
         AddTag("unit", "temperature").
         AddField("avg", 23.2).
         AddField("max", 45).
         SetTime(time.Now())
-    writeApi.WritePoint(context.Background(), p)
+    writeAPI.WritePoint(context.Background(), p)
     
     // Or write directly line protocol
     line := fmt.Sprintf("stat,unit=temperature avg=%f,max=%f", 23.5, 45.0)
-    writeApi.WriteRecord(context.Background(), line)
+    writeAPI.WriteRecord(context.Background(), line)
 
     // get query client
-    queryApi := client.QueryApi("my-org")
+    queryAPI := client.QueryAPI("my-org")
     // get parser flux query result
-    result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+    result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
     if err == nil {
         // Use Next() to iterate over query result lines
         for result.Next() {
@@ -155,7 +155,7 @@ func main() {
     client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token",
         influxdb2.DefaultOptions().SetBatchSize(20))
     // Get non-blocking write client
-    writeApi := client.WriteApi("my-org","my-bucket")
+    writeAPI := client.WriteAPI("my-org","my-bucket")
     // write some points
     for i := 0; i <100; i++ {
         // create point
@@ -175,10 +175,10 @@ func main() {
             },
             time.Now())
         // write asynchronously
-        writeApi.WritePoint(p)
+        writeAPI.WritePoint(p)
     }
     // Force all unwritten data to be sent
-    writeApi.Flush()
+    writeAPI.Flush()
     // Ensures background processes finishes
     client.Close()
 }
@@ -203,9 +203,9 @@ func main() {
     // Create client
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get non-blocking write client
-    writeApi := client.WriteApi("my-org", "my-bucket")
+    writeAPI := client.WriteAPI("my-org", "my-bucket")
     // Get errors channel
-    errorsCh := writeApi.Errors()
+    errorsCh := writeAPI.Errors()
     // Create go proc for reading and logging errors
     go func() {
         for err := range errorsCh {
@@ -226,10 +226,10 @@ func main() {
             AddField("mem_free", rand.Uint64()).
             SetTime(time.Now())
         // write asynchronously
-        writeApi.WritePoint(p)
+        writeAPI.WritePoint(p)
     }
     // Force all unwritten data to be sent
-    writeApi.Flush()
+    writeAPI.Flush()
     // Ensures background processes finishes
     client.Close()
 }
@@ -253,7 +253,7 @@ func main() {
     // Create client
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get blocking write client
-    writeApi := client.WriteApiBlocking("my-org","my-bucket")
+    writeAPI := client.WriteAPIBlocking("my-org","my-bucket")
     // write some points
     for i := 0; i <100; i++ {
         // create data point
@@ -273,7 +273,7 @@ func main() {
             },
             time.Now())
         // write synchronously
-        err := writeApi.WritePoint(context.Background(), p)
+        err := writeAPI.WritePoint(context.Background(), p)
         if err != nil {
             panic(err)
         }
@@ -303,9 +303,9 @@ func main() {
     // Create client
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get query client
-    queryApi := client.QueryApi("my-org")
+    queryAPI := client.QueryAPI("my-org")
     // get QueryTableResult
-    result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+    result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
     if err == nil {
         // Iterate over query response
         for result.Next() {
@@ -345,10 +345,10 @@ func main() {
     // Create client
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get query client
-    queryApi := client.QueryApi("my-org")
+    queryAPI := client.QueryAPI("my-org")
     // Query and get complete result as a string
     // Use default dialect
-    result, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, influxdb2.DefaultDialect())
+    result, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, influxdb2.DefaultDialect())
     if err == nil {
         fmt.Println("QueryResult:")
         fmt.Println(result)
@@ -373,8 +373,8 @@ func main() {
   
   | API | Endpoint | Description |
   |:----------|:----------|:----------|
-  | [WriteApi](write.go) (also [WriteApiBlocking](writeApiBlocking.go))| [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
-  | [QueryApi](query.go) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false)
+  | [WriteAPI](write.go) (also [WriteAPIBlocking](writeAPIBlocking.go))| [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
+  | [QueryAPI](query.go) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false)
   | [Health()](client.go#L55) | [/health](https://docs.influxdata.com/influxdb/latest/tools/api/#health-http-endpoint) | Check the health of your InfluxDB instance |    
 
   
@@ -399,22 +399,22 @@ func main() {
     // Get the blocking write client
     // Supply a string in the form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
     // Org name is not used
-    writeApi := client.WriteApiBlocking("", "test/autogen")
+    writeAPI := client.WriteAPIBlocking("", "test/autogen")
     // create point using full params constructor
     p := influxdb2.NewPoint("stat",
         map[string]string{"unit": "temperature"},
         map[string]interface{}{"avg": 24.5, "max": 45},
         time.Now())
     // Write data
-    err := writeApi.WritePoint(context.Background(), p)
+    err := writeAPI.WritePoint(context.Background(), p)
     if err != nil {
         fmt.Printf("Write error: %s\n", err.Error())
     }
 
     // Get query client. Org name is not used
-    queryApi := client.QueryApi("")
+    queryAPI := client.QueryAPI("")
     // Supply string in a form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
-    result, err := queryApi.Query(context.Background(), `from(bucket:"test")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+    result, err := queryAPI.Query(context.Background(), `from(bucket:"test")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
     if err == nil {
         for result.Next() {
             if result.TableChanged() {

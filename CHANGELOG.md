@@ -1,10 +1,11 @@
-## 1.4.0 [in progress]
-### Breaking change
+## 1.5.0 [In progress]
+
+## 1.4.0 [2020-07-17]
+### Breaking changes
 1. [#156](https://github.com/influxdata/influxdb-client-go/pull/156) Fixing Go naming and code style violations: 
 - Introducing new *API interfaces with proper name of types, methods and arguments. 
 - This also affects the `Client` interface and the `Options` type. 
 - Affected types and methods have been deprecated and they will be removed in the next release. 
-
 
 ### Bug fixes 
 1. [#152](https://github.com/influxdata/influxdb-client-go/pull/152) Allow connecting to server on a URL path

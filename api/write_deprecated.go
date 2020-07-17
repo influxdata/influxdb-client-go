@@ -6,6 +6,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/api/write"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release.
+
 // WriteApi is Write client interface with non-blocking methods for writing time series data asynchronously in batches into an InfluxDB server.
 // Deprecated: Use WriteAPI instead.
 type WriteApi interface {

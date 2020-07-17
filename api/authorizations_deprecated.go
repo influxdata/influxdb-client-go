@@ -9,6 +9,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release
+
 // AuthorizationsApi provides methods for organizing Authorization in a InfluxDB server
 // Deprecated: Use AuthorizationsAPI instead
 type AuthorizationsApi interface {
@@ -36,6 +38,7 @@ type authorizationsApiImpl struct {
 	authorizationsAPI AuthorizationsAPI
 }
 
+// NewAuthorizationsApi creates instance of AuthorizationsApi
 // Deprecated: Use NewAuthorizationsAPI instead.
 func NewAuthorizationsApi(apiClient *domain.ClientWithResponses) AuthorizationsApi {
 	return &authorizationsApiImpl{

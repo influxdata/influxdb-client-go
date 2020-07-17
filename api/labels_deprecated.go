@@ -9,6 +9,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release.
+
 // LabelsApi provides methods for managing labels in a InfluxDB server.
 // Deprecated: Use LabelsAPI instead.
 type LabelsApi interface {
@@ -43,6 +45,7 @@ type labelsApiImpl struct {
 	labelsAPI LabelsAPI
 }
 
+// NewLabelsApi creates instance of LabelsApi
 // Deprecated: use NewLabelsAPI instead.
 func NewLabelsApi(apiClient *domain.ClientWithResponses) LabelsApi {
 	return &labelsApiImpl{

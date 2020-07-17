@@ -9,6 +9,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release.
+
 // OrganizationsApi provides methods for managing Organizations in a InfluxDB server.
 // Deprecated: Use OrganizationsAPI instead.
 type OrganizationsApi interface {
@@ -72,6 +74,7 @@ type organizationsApiImpl struct {
 	organizationsAPI OrganizationsAPI
 }
 
+// NewOrganizationsApi creates instance of OrganizationsApi
 // Deprecated: use NewOrganizationsAPI instead.
 func NewOrganizationsApi(apiClient *domain.ClientWithResponses) OrganizationsApi {
 	return &organizationsApiImpl{

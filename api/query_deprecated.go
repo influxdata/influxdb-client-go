@@ -5,6 +5,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release.
+
 // QueryApi provides methods for performing synchronously flux query against InfluxDB server.
 // Deprecated: Use QueryAPI instead.
 type QueryApi interface {

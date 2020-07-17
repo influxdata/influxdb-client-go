@@ -31,7 +31,7 @@ type writeAPIBlocking struct {
 	writeOptions *write.Options
 }
 
-// creates writeAPIBlocking for org and bucket with underlying client
+// NewWriteAPIBlocking creates new WriteAPIBlocking instance for org and bucket with underlying client
 func NewWriteAPIBlocking(org string, bucket string, service http.Service, writeOptions *write.Options) *writeAPIBlocking {
 	return &writeAPIBlocking{service: iwrite.NewService(org, bucket, service, writeOptions), writeOptions: writeOptions}
 }

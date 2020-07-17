@@ -9,6 +9,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release.
+
 // UsersApi provides methods for managing users in a InfluxDB server.
 // Deprecated: use UsersAPI instead.
 type UsersApi interface {
@@ -42,6 +44,7 @@ type usersApiImpl struct {
 	usersAPI UsersAPI
 }
 
+// NewUsersApi creates instance of UsersApi
 // Deprecated: use NewUsersAPI instead.
 func NewUsersApi(apiClient *domain.ClientWithResponses) UsersApi {
 	return &usersApiImpl{

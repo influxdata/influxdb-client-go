@@ -78,16 +78,16 @@ func TestTimeoutDeprecated(t *testing.T) {
 	}))
 	defer server.Close()
 	client := influxdb2.NewClientWithOptions(server.URL, "a", influxdb2.DefaultOptions().SetHttpRequestTimeout(1))
-	queryApi := client.QueryApi("org")
+	queryAPI := client.QueryApi("org")
 
-	_, err := queryApi.QueryRaw(context.Background(), "flux", nil)
+	_, err := queryAPI.QueryRaw(context.Background(), "flux", nil)
 	require.NotNil(t, err)
 	assert.True(t, strings.Contains(err.Error(), "Client.Timeout exceeded"))
 
 	client = influxdb2.NewClientWithOptions(server.URL, "a", influxdb2.DefaultOptions().SetHttpRequestTimeout(5))
-	queryApi = client.QueryApi("org")
+	queryAPI = client.QueryApi("org")
 
-	result, err := queryApi.QueryRaw(context.Background(), "flux", nil)
+	result, err := queryAPI.QueryRaw(context.Background(), "flux", nil)
 	require.Nil(t, err)
 	assert.Equal(t, response, result)
 }

@@ -97,24 +97,30 @@ type clientImpl struct {
 	httpService ihttp.Service
 	apiClient   *domain.ClientWithResponses
 	authAPI     api.AuthorizationsAPI
-	authApi     api.AuthorizationsApi
-	orgAPI      api.OrganizationsAPI
-	orgApi      api.OrganizationsApi
-	usersApi    api.UsersApi
-	usersAPI    api.UsersAPI
-	deleteAPI   api.DeleteAPI
-	deleteApi   api.DeleteApi
-	bucketsAPI  api.BucketsAPI
-	bucketsApi  api.BucketsApi
-	labelsApi   api.LabelsApi
-	labelsAPI   api.LabelsAPI
+	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
+	authApi api.AuthorizationsApi
+	orgAPI  api.OrganizationsAPI
+	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
+	orgApi api.OrganizationsApi
+	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
+	usersApi  api.UsersApi
+	usersAPI  api.UsersAPI
+	deleteAPI api.DeleteAPI
+	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
+	deleteApi  api.DeleteApi
+	bucketsAPI api.BucketsAPI
+	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
+	bucketsApi api.BucketsApi
+	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
+	labelsApi api.LabelsApi
+	labelsAPI api.LabelsAPI
 }
 
 // NewClient creates Client for connecting to given serverURL with provided authentication token, with the default options.
 // Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
 // In such case Setup will set authentication token
-func NewClient(serverUrl string, authToken string) Client {
-	return NewClientWithOptions(serverUrl, authToken, DefaultOptions())
+func NewClient(serverURL string, authToken string) Client {
+	return NewClientWithOptions(serverURL, authToken, DefaultOptions())
 }
 
 // NewClientWithOptions creates Client for connecting to given serverURL with provided authentication token
@@ -146,6 +152,7 @@ func (c *clientImpl) ServerURL() string {
 	return c.serverURL
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) ServerUrl() string {
 	return c.serverURL
 }
@@ -204,6 +211,7 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 	return response.JSON200, nil
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) WriteApi(org, bucket string) api.WriteApi {
 	return c.WriteAPI(org, bucket)
 }
@@ -213,6 +221,8 @@ func (c *clientImpl) WriteAPI(org, bucket string) api.WriteAPI {
 	c.writeAPIs = append(c.writeAPIs, w)
 	return w
 }
+
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) WriteApiBlocking(org, bucket string) api.WriteApiBlocking {
 	return c.WriteAPIBlocking(org, bucket)
 }
@@ -231,6 +241,8 @@ func (c *clientImpl) Close() {
 func (c *clientImpl) QueryAPI(org string) api.QueryAPI {
 	return api.NewQueryAPI(org, c.httpService)
 }
+
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) QueryApi(org string) api.QueryApi {
 	return c.QueryAPI(org)
 }
@@ -244,6 +256,7 @@ func (c *clientImpl) AuthorizationsAPI() api.AuthorizationsAPI {
 	return c.authAPI
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) AuthorizationsApi() api.AuthorizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -262,6 +275,7 @@ func (c *clientImpl) OrganizationsAPI() api.OrganizationsAPI {
 	return c.orgAPI
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) OrganizationsApi() api.OrganizationsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -280,6 +294,7 @@ func (c *clientImpl) UsersAPI() api.UsersAPI {
 	return c.usersAPI
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) UsersApi() api.UsersApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -298,6 +313,7 @@ func (c *clientImpl) DeleteAPI() api.DeleteAPI {
 	return c.deleteAPI
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) DeleteApi() api.DeleteApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -316,6 +332,7 @@ func (c *clientImpl) BucketsAPI() api.BucketsAPI {
 	return c.bucketsAPI
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) BucketsApi() api.BucketsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -334,6 +351,7 @@ func (c *clientImpl) LabelsAPI() api.LabelsAPI {
 	return c.labelsAPI
 }
 
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (c *clientImpl) LabelsApi() api.LabelsApi {
 	c.lock.Lock()
 	defer c.lock.Unlock()

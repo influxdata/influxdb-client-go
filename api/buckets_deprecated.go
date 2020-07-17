@@ -9,6 +9,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
+//lint:file-ignore ST1003 This is deprecated API to be removed in next release.
+
 // BucketsApi provides methods for managing Buckets in a InfluxDB server.
 // Deprecated: Use BucketsAPI instead.
 type BucketsApi interface {
@@ -64,6 +66,7 @@ type bucketsApiImpl struct {
 	bucketsAPI BucketsAPI
 }
 
+// NewBucketsApi creates instance of BucketsApi
 // Deprecated: Use NewBucketsAPI instead
 func NewBucketsApi(apiClient *domain.ClientWithResponses) BucketsApi {
 	return &bucketsApiImpl{

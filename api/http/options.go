@@ -24,6 +24,7 @@ func (o *Options) TLSConfig() *tls.Config {
 
 // TlsConfig returns TlsConfig
 // Deprecated: Use TLSConfig instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (o *Options) TlsConfig() *tls.Config {
 	return o.TLSConfig()
 }
@@ -36,6 +37,7 @@ func (o *Options) SetTLSConfig(tlsConfig *tls.Config) *Options {
 
 // SetTlsConfig sets TLS configuration for secure connection
 // Deprecated: Use SetTLSConfig  instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (o *Options) SetTlsConfig(tlsConfig *tls.Config) *Options {
 	return o.SetTLSConfig(tlsConfig)
 }
@@ -47,6 +49,7 @@ func (o *Options) HTTPRequestTimeout() uint {
 
 // HttpRequestTimeout returns HTTP request timeout.
 // Deprecated: Use HTTPRequestTimeout instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (o *Options) HttpRequestTimeout() uint {
 	return o.HTTPRequestTimeout()
 }
@@ -59,6 +62,7 @@ func (o *Options) SetHTTPRequestTimeout(httpRequestTimeout uint) *Options {
 
 // SetHttpRequestTimeout sets HTTP request timeout in sec.
 // Deprecated: Use SetHTTPRequestTimeout instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (o *Options) SetHttpRequestTimeout(httpRequestTimeout uint) *Options {
 	return o.SetHTTPRequestTimeout(httpRequestTimeout)
 }

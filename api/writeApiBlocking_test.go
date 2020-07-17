@@ -19,13 +19,13 @@ import (
 
 func TestWritePoint(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
-	writeApi := NewWriteApiBlockingImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	points := genPoints(10)
-	err := writeApi.WritePoint(context.Background(), points...)
+	err := writeAPI.WritePoint(context.Background(), points...)
 	require.Nil(t, err)
 	require.Len(t, service.lines, 10)
 	for i, p := range points {
-		line := write.PointToLineProtocol(p, writeApi.writeOptions.Precision())
+		line := write.PointToLineProtocol(p, writeAPI.writeOptions.Precision())
 		//cut off last \n char
 		line = line[:len(line)-1]
 		assert.Equal(t, service.lines[i], line)
@@ -34,9 +34,9 @@ func TestWritePoint(t *testing.T) {
 
 func TestWriteRecord(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
-	writeApi := NewWriteApiBlockingImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	lines := genRecords(10)
-	err := writeApi.WriteRecord(context.Background(), lines...)
+	err := writeAPI.WriteRecord(context.Background(), lines...)
 	require.Nil(t, err)
 	require.Len(t, service.lines, 10)
 	for i, l := range lines {
@@ -44,19 +44,19 @@ func TestWriteRecord(t *testing.T) {
 	}
 	service.Close()
 
-	err = writeApi.WriteRecord(context.Background())
+	err = writeAPI.WriteRecord(context.Background())
 	require.Nil(t, err)
 	require.Len(t, service.lines, 0)
 
 	service.replyError = &http.Error{Code: "invalid", Message: "data"}
-	err = writeApi.WriteRecord(context.Background(), lines...)
+	err = writeAPI.WriteRecord(context.Background(), lines...)
 	require.NotNil(t, err)
 	require.Equal(t, "invalid: data", err.Error())
 }
 
 func TestWriteContextCancel(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
-	writeApi := NewWriteApiBlockingImpl("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	lines := genRecords(10)
 	ctx, cancel := context.WithCancel(context.Background())
 	var err error
@@ -64,7 +64,7 @@ func TestWriteContextCancel(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		time.Sleep(time.Second)
-		err = writeApi.WriteRecord(ctx, lines...)
+		err = writeAPI.WriteRecord(ctx, lines...)
 		wg.Done()
 	}()
 	cancel()

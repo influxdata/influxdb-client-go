@@ -11,19 +11,19 @@ import (
 	"testing"
 )
 
-func TestDefaultOptions(t *testing.T) {
+func TestDefaultOptionsDeprecated(t *testing.T) {
 	opts := http.DefaultOptions()
-	assert.Equal(t, (*tls.Config)(nil), opts.TLSConfig())
-	assert.Equal(t, uint(20), opts.HTTPRequestTimeout())
+	assert.Equal(t, (*tls.Config)(nil), opts.TlsConfig())
+	assert.Equal(t, uint(20), opts.HttpRequestTimeout())
 }
 
-func TestOptionsSetting(t *testing.T) {
+func TestOptionsSettingDeprecated(t *testing.T) {
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: true,
 	}
 	opts := http.DefaultOptions().
-		SetTLSConfig(tlsConfig).
-		SetHTTPRequestTimeout(50)
-	assert.Equal(t, tlsConfig, opts.TLSConfig())
-	assert.Equal(t, uint(50), opts.HTTPRequestTimeout())
+		SetTlsConfig(tlsConfig).
+		SetHttpRequestTimeout(50)
+	assert.Equal(t, tlsConfig, opts.TlsConfig())
+	assert.Equal(t, uint(50), opts.HttpRequestTimeout())
 }

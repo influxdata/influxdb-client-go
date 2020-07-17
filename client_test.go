@@ -35,10 +35,10 @@ func TestUrls(t *testing.T) {
 		t.Run(url.serverURL, func(t *testing.T) {
 			c := NewClient(url.serverURL, "x")
 			ci := c.(*clientImpl)
-			assert.Equal(t, url.serverURL, ci.serverUrl)
-			assert.Equal(t, url.serverAPIURL, ci.httpService.ServerApiUrl())
+			assert.Equal(t, url.serverURL, ci.serverURL)
+			assert.Equal(t, url.serverAPIURL, ci.httpService.ServerAPIURL())
 			ws := iwrite.NewService("org", "bucket", ci.httpService, c.Options().WriteOptions())
-			wu, err := ws.WriteUrl()
+			wu, err := ws.WriteURL()
 			require.Nil(t, err)
 			assert.Equal(t, url.writeURLPrefix+"?bucket=bucket&org=org&precision=ns", wu)
 		})

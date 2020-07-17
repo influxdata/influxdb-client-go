@@ -10,71 +10,71 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
-// BucketsApi provides methods for managing Buckets in a InfluxDB server.
-type BucketsApi interface {
+// BucketsAPI provides methods for managing Buckets in a InfluxDB server.
+type BucketsAPI interface {
 	// GetBuckets returns all buckets, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
 	GetBuckets(ctx context.Context, pagingOptions ...PagingOption) (*[]domain.Bucket, error)
 	// FindBucketByName returns a bucket found using bucketName.
 	FindBucketByName(ctx context.Context, bucketName string) (*domain.Bucket, error)
-	// FindBucketById returns a bucket found using bucketId.
-	FindBucketById(ctx context.Context, bucketId string) (*domain.Bucket, error)
-	// FindBucketsByOrgId returns buckets belonging to the organization with Id orgId, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
-	FindBucketsByOrgId(ctx context.Context, orgId string, pagingOptions ...PagingOption) (*[]domain.Bucket, error)
+	// FindBucketByID returns a bucket found using bucketID.
+	FindBucketByID(ctx context.Context, bucketID string) (*domain.Bucket, error)
+	// FindBucketsByOrgID returns buckets belonging to the organization with ID orgID, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
+	FindBucketsByOrgID(ctx context.Context, orgID string, pagingOptions ...PagingOption) (*[]domain.Bucket, error)
 	// FindBucketsByOrgName returns buckets belonging to the organization with name orgName, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
 	FindBucketsByOrgName(ctx context.Context, orgName string, pagingOptions ...PagingOption) (*[]domain.Bucket, error)
 	// CreateBucket creates a new bucket.
 	CreateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error)
 	// CreateBucketWithName creates a new bucket with bucketName in organization org, with retention specified in rules. Empty rules means infinite retention.
 	CreateBucketWithName(ctx context.Context, org *domain.Organization, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error)
-	// CreateBucketWithNameWithId creates a new bucket with bucketName in organization with orgId, with retention specified in rules. Empty rules means infinite retention.
-	CreateBucketWithNameWithId(ctx context.Context, orgId, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error)
+	// CreateBucketWithNameWithID creates a new bucket with bucketName in organization with orgID, with retention specified in rules. Empty rules means infinite retention.
+	CreateBucketWithNameWithID(ctx context.Context, orgID, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error)
 	// UpdateBucket updates a bucket.
 	UpdateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error)
 	// DeleteBucket deletes a bucket.
 	DeleteBucket(ctx context.Context, bucket *domain.Bucket) error
-	// DeleteBucketWithId deletes a bucket with bucketId.
-	DeleteBucketWithId(ctx context.Context, bucketId string) error
+	// DeleteBucketWithID deletes a bucket with bucketID.
+	DeleteBucketWithID(ctx context.Context, bucketID string) error
 	// GetMembers returns members of a bucket.
 	GetMembers(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceMember, error)
-	// GetMembersWithId returns members of a bucket with bucketId.
-	GetMembersWithId(ctx context.Context, bucketId string) (*[]domain.ResourceMember, error)
+	// GetMembersWithID returns members of a bucket with bucketID.
+	GetMembersWithID(ctx context.Context, bucketID string) (*[]domain.ResourceMember, error)
 	// AddMember adds a member to a bucket.
 	AddMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceMember, error)
-	// AddMember adds a member with id memberId to a bucket with bucketId.
-	AddMemberWithId(ctx context.Context, bucketId, memberId string) (*domain.ResourceMember, error)
+	// AddMember adds a member with id memberID to a bucket with bucketID.
+	AddMemberWithID(ctx context.Context, bucketID, memberID string) (*domain.ResourceMember, error)
 	// RemoveMember removes a member from a bucket.
 	RemoveMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) error
-	// RemoveMember removes a member with id memberId from a bucket with bucketId.
-	RemoveMemberWithId(ctx context.Context, bucketId, memberId string) error
+	// RemoveMember removes a member with id memberID from a bucket with bucketID.
+	RemoveMemberWithID(ctx context.Context, bucketID, memberID string) error
 	// GetOwners returns owners of a bucket.
 	GetOwners(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceOwner, error)
-	// GetOwnersWithId returns owners of a bucket with bucketId.
-	GetOwnersWithId(ctx context.Context, bucketId string) (*[]domain.ResourceOwner, error)
+	// GetOwnersWithID returns owners of a bucket with bucketID.
+	GetOwnersWithID(ctx context.Context, bucketID string) (*[]domain.ResourceOwner, error)
 	// AddOwner adds an owner to a bucket.
 	AddOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceOwner, error)
-	// AddOwner adds an owner with id memberId to a bucket with bucketId.
-	AddOwnerWithId(ctx context.Context, bucketId, memberId string) (*domain.ResourceOwner, error)
+	// AddOwner adds an owner with id memberID to a bucket with bucketID.
+	AddOwnerWithID(ctx context.Context, bucketID, memberID string) (*domain.ResourceOwner, error)
 	// RemoveOwner removes an owner from a bucket.
 	RemoveOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) error
-	// RemoveOwner removes a member with id memberId from a bucket with bucketId.
-	RemoveOwnerWithId(ctx context.Context, bucketId, memberId string) error
+	// RemoveOwner removes a member with id memberID from a bucket with bucketID.
+	RemoveOwnerWithID(ctx context.Context, bucketID, memberID string) error
 }
 
-type bucketsApiImpl struct {
+type bucketsAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
-func NewBucketsApi(apiClient *domain.ClientWithResponses) BucketsApi {
-	return &bucketsApiImpl{
+func NewBucketsAPI(apiClient *domain.ClientWithResponses) BucketsAPI {
+	return &bucketsAPI{
 		apiClient: apiClient,
 	}
 }
 
-func (b *bucketsApiImpl) GetBuckets(ctx context.Context, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
+func (b *bucketsAPI) GetBuckets(ctx context.Context, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
 	return b.getBuckets(ctx, nil, pagingOptions...)
 }
 
-func (b *bucketsApiImpl) getBuckets(ctx context.Context, params *domain.GetBucketsParams, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
+func (b *bucketsAPI) getBuckets(ctx context.Context, params *domain.GetBucketsParams, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
 	if params == nil {
 		params = &domain.GetBucketsParams{}
 	}
@@ -95,7 +95,7 @@ func (b *bucketsApiImpl) getBuckets(ctx context.Context, params *domain.GetBucke
 	return response.JSON200.Buckets, nil
 }
 
-func (b *bucketsApiImpl) FindBucketByName(ctx context.Context, bucketName string) (*domain.Bucket, error) {
+func (b *bucketsAPI) FindBucketByName(ctx context.Context, bucketName string) (*domain.Bucket, error) {
 	params := &domain.GetBucketsParams{Name: &bucketName}
 	response, err := b.apiClient.GetBucketsWithResponse(ctx, params)
 	if err != nil {
@@ -111,9 +111,9 @@ func (b *bucketsApiImpl) FindBucketByName(ctx context.Context, bucketName string
 	}
 }
 
-func (b *bucketsApiImpl) FindBucketById(ctx context.Context, bucketId string) (*domain.Bucket, error) {
+func (b *bucketsAPI) FindBucketByID(ctx context.Context, bucketID string) (*domain.Bucket, error) {
 	params := &domain.GetBucketsIDParams{}
-	response, err := b.apiClient.GetBucketsIDWithResponse(ctx, bucketId, params)
+	response, err := b.apiClient.GetBucketsIDWithResponse(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -123,17 +123,17 @@ func (b *bucketsApiImpl) FindBucketById(ctx context.Context, bucketId string) (*
 	return response.JSON200, nil
 }
 
-func (b *bucketsApiImpl) FindBucketsByOrgId(ctx context.Context, orgId string, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
-	params := &domain.GetBucketsParams{OrgID: &orgId}
+func (b *bucketsAPI) FindBucketsByOrgID(ctx context.Context, orgID string, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
+	params := &domain.GetBucketsParams{OrgID: &orgID}
 	return b.getBuckets(ctx, params, pagingOptions...)
 }
 
-func (b *bucketsApiImpl) FindBucketsByOrgName(ctx context.Context, orgName string, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
+func (b *bucketsAPI) FindBucketsByOrgName(ctx context.Context, orgName string, pagingOptions ...PagingOption) (*[]domain.Bucket, error) {
 	params := &domain.GetBucketsParams{Org: &orgName}
 	return b.getBuckets(ctx, params, pagingOptions...)
 }
 
-func (b *bucketsApiImpl) CreateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
+func (b *bucketsAPI) CreateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
 	params := &domain.PostBucketsParams{}
 	bucketReq := &domain.PostBucketRequest{
 		Description:    bucket.Description,
@@ -152,9 +152,9 @@ func (b *bucketsApiImpl) CreateBucket(ctx context.Context, bucket *domain.Bucket
 	return response.JSON201, nil
 }
 
-func (b *bucketsApiImpl) CreateBucketWithNameWithId(ctx context.Context, orgId, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
+func (b *bucketsAPI) CreateBucketWithNameWithID(ctx context.Context, orgID, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
 	params := &domain.PostBucketsParams{}
-	bucket := &domain.PostBucketRequest{Name: bucketName, OrgID: &orgId, RetentionRules: rules}
+	bucket := &domain.PostBucketRequest{Name: bucketName, OrgID: &orgID, RetentionRules: rules}
 	response, err := b.apiClient.PostBucketsWithResponse(ctx, params, domain.PostBucketsJSONRequestBody(*bucket))
 	if err != nil {
 		return nil, err
@@ -167,17 +167,17 @@ func (b *bucketsApiImpl) CreateBucketWithNameWithId(ctx context.Context, orgId, 
 	}
 	return response.JSON201, nil
 }
-func (b *bucketsApiImpl) CreateBucketWithName(ctx context.Context, org *domain.Organization, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
-	return b.CreateBucketWithNameWithId(ctx, *org.Id, bucketName, rules...)
+func (b *bucketsAPI) CreateBucketWithName(ctx context.Context, org *domain.Organization, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
+	return b.CreateBucketWithNameWithID(ctx, *org.Id, bucketName, rules...)
 }
 
-func (b *bucketsApiImpl) DeleteBucket(ctx context.Context, bucket *domain.Bucket) error {
-	return b.DeleteBucketWithId(ctx, *bucket.Id)
+func (b *bucketsAPI) DeleteBucket(ctx context.Context, bucket *domain.Bucket) error {
+	return b.DeleteBucketWithID(ctx, *bucket.Id)
 }
 
-func (b *bucketsApiImpl) DeleteBucketWithId(ctx context.Context, bucketId string) error {
+func (b *bucketsAPI) DeleteBucketWithID(ctx context.Context, bucketID string) error {
 	params := &domain.DeleteBucketsIDParams{}
-	response, err := b.apiClient.DeleteBucketsIDWithResponse(ctx, bucketId, params)
+	response, err := b.apiClient.DeleteBucketsIDWithResponse(ctx, bucketID, params)
 	if err != nil {
 		return err
 	}
@@ -190,7 +190,7 @@ func (b *bucketsApiImpl) DeleteBucketWithId(ctx context.Context, bucketId string
 	return nil
 }
 
-func (b *bucketsApiImpl) UpdateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
+func (b *bucketsAPI) UpdateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
 	params := &domain.PatchBucketsIDParams{}
 	response, err := b.apiClient.PatchBucketsIDWithResponse(ctx, *bucket.Id, params, domain.PatchBucketsIDJSONRequestBody(*bucket))
 	if err != nil {
@@ -202,13 +202,13 @@ func (b *bucketsApiImpl) UpdateBucket(ctx context.Context, bucket *domain.Bucket
 	return response.JSON200, nil
 }
 
-func (b *bucketsApiImpl) GetMembers(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceMember, error) {
-	return b.GetMembersWithId(ctx, *bucket.Id)
+func (b *bucketsAPI) GetMembers(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceMember, error) {
+	return b.GetMembersWithID(ctx, *bucket.Id)
 }
 
-func (b *bucketsApiImpl) GetMembersWithId(ctx context.Context, bucketId string) (*[]domain.ResourceMember, error) {
+func (b *bucketsAPI) GetMembersWithID(ctx context.Context, bucketID string) (*[]domain.ResourceMember, error) {
 	params := &domain.GetBucketsIDMembersParams{}
-	response, err := b.apiClient.GetBucketsIDMembersWithResponse(ctx, bucketId, params)
+	response, err := b.apiClient.GetBucketsIDMembersWithResponse(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -218,14 +218,14 @@ func (b *bucketsApiImpl) GetMembersWithId(ctx context.Context, bucketId string) 
 	return response.JSON200.Users, nil
 }
 
-func (b *bucketsApiImpl) AddMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceMember, error) {
-	return b.AddMemberWithId(ctx, *bucket.Id, *user.Id)
+func (b *bucketsAPI) AddMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceMember, error) {
+	return b.AddMemberWithID(ctx, *bucket.Id, *user.Id)
 }
 
-func (b *bucketsApiImpl) AddMemberWithId(ctx context.Context, bucketId, memberId string) (*domain.ResourceMember, error) {
+func (b *bucketsAPI) AddMemberWithID(ctx context.Context, bucketID, memberID string) (*domain.ResourceMember, error) {
 	params := &domain.PostBucketsIDMembersParams{}
-	body := &domain.PostBucketsIDMembersJSONRequestBody{Id: memberId}
-	response, err := b.apiClient.PostBucketsIDMembersWithResponse(ctx, bucketId, params, *body)
+	body := &domain.PostBucketsIDMembersJSONRequestBody{Id: memberID}
+	response, err := b.apiClient.PostBucketsIDMembersWithResponse(ctx, bucketID, params, *body)
 	if err != nil {
 		return nil, err
 	}
@@ -235,13 +235,13 @@ func (b *bucketsApiImpl) AddMemberWithId(ctx context.Context, bucketId, memberId
 	return response.JSON201, nil
 }
 
-func (b *bucketsApiImpl) RemoveMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) error {
-	return b.RemoveMemberWithId(ctx, *bucket.Id, *user.Id)
+func (b *bucketsAPI) RemoveMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) error {
+	return b.RemoveMemberWithID(ctx, *bucket.Id, *user.Id)
 }
 
-func (b *bucketsApiImpl) RemoveMemberWithId(ctx context.Context, bucketId, memberId string) error {
+func (b *bucketsAPI) RemoveMemberWithID(ctx context.Context, bucketID, memberID string) error {
 	params := &domain.DeleteBucketsIDMembersIDParams{}
-	response, err := b.apiClient.DeleteBucketsIDMembersIDWithResponse(ctx, bucketId, memberId, params)
+	response, err := b.apiClient.DeleteBucketsIDMembersIDWithResponse(ctx, bucketID, memberID, params)
 	if err != nil {
 		return err
 	}
@@ -251,13 +251,13 @@ func (b *bucketsApiImpl) RemoveMemberWithId(ctx context.Context, bucketId, membe
 	return nil
 }
 
-func (b *bucketsApiImpl) GetOwners(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceOwner, error) {
-	return b.GetOwnersWithId(ctx, *bucket.Id)
+func (b *bucketsAPI) GetOwners(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceOwner, error) {
+	return b.GetOwnersWithID(ctx, *bucket.Id)
 }
 
-func (b *bucketsApiImpl) GetOwnersWithId(ctx context.Context, bucketId string) (*[]domain.ResourceOwner, error) {
+func (b *bucketsAPI) GetOwnersWithID(ctx context.Context, bucketID string) (*[]domain.ResourceOwner, error) {
 	params := &domain.GetBucketsIDOwnersParams{}
-	response, err := b.apiClient.GetBucketsIDOwnersWithResponse(ctx, bucketId, params)
+	response, err := b.apiClient.GetBucketsIDOwnersWithResponse(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -267,14 +267,14 @@ func (b *bucketsApiImpl) GetOwnersWithId(ctx context.Context, bucketId string) (
 	return response.JSON200.Users, nil
 }
 
-func (b *bucketsApiImpl) AddOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceOwner, error) {
-	return b.AddOwnerWithId(ctx, *bucket.Id, *user.Id)
+func (b *bucketsAPI) AddOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceOwner, error) {
+	return b.AddOwnerWithID(ctx, *bucket.Id, *user.Id)
 }
 
-func (b *bucketsApiImpl) AddOwnerWithId(ctx context.Context, bucketId, ownerId string) (*domain.ResourceOwner, error) {
+func (b *bucketsAPI) AddOwnerWithID(ctx context.Context, bucketID, memberID string) (*domain.ResourceOwner, error) {
 	params := &domain.PostBucketsIDOwnersParams{}
-	body := &domain.PostBucketsIDOwnersJSONRequestBody{Id: ownerId}
-	response, err := b.apiClient.PostBucketsIDOwnersWithResponse(ctx, bucketId, params, *body)
+	body := &domain.PostBucketsIDOwnersJSONRequestBody{Id: memberID}
+	response, err := b.apiClient.PostBucketsIDOwnersWithResponse(ctx, bucketID, params, *body)
 	if err != nil {
 		return nil, err
 	}
@@ -284,13 +284,13 @@ func (b *bucketsApiImpl) AddOwnerWithId(ctx context.Context, bucketId, ownerId s
 	return response.JSON201, nil
 }
 
-func (b *bucketsApiImpl) RemoveOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) error {
-	return b.RemoveOwnerWithId(ctx, *bucket.Id, *user.Id)
+func (b *bucketsAPI) RemoveOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) error {
+	return b.RemoveOwnerWithID(ctx, *bucket.Id, *user.Id)
 }
 
-func (b *bucketsApiImpl) RemoveOwnerWithId(ctx context.Context, bucketId, memberId string) error {
+func (b *bucketsAPI) RemoveOwnerWithID(ctx context.Context, bucketID, memberID string) error {
 	params := &domain.DeleteBucketsIDOwnersIDParams{}
-	response, err := b.apiClient.DeleteBucketsIDOwnersIDWithResponse(ctx, bucketId, memberId, params)
+	response, err := b.apiClient.DeleteBucketsIDOwnersIDWithResponse(ctx, bucketID, memberID, params)
 	if err != nil {
 		return err
 	}

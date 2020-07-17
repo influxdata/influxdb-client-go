@@ -11,21 +11,21 @@ import (
 	"time"
 )
 
-func ExampleBucketsApi() {
+func ExampleBucketsAPI() {
 	// Create influxdb client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 
 	ctx := context.Background()
-	// Get Organizations API client
-	bucketsApi := client.BucketsApi()
+	// Get Buckets API client
+	bucketsAPI := client.BucketsAPI()
 
 	// Get organization that will own new bucket
-	org, err := client.OrganizationsApi().FindOrganizationByName(ctx, "my-org")
+	org, err := client.OrganizationsAPI().FindOrganizationByName(ctx, "my-org")
 	if err != nil {
 		panic(err)
 	}
 	// Create  a bucket with 1 day retention policy
-	bucket, err := bucketsApi.CreateBucketWithName(ctx, org, "bucket-sensors", domain.RetentionRule{EverySeconds: 3600 * 24})
+	bucket, err := bucketsAPI.CreateBucketWithName(ctx, org, "bucket-sensors", domain.RetentionRule{EverySeconds: 3600 * 24})
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +33,7 @@ func ExampleBucketsApi() {
 	// Update description of the bucket
 	desc := "Bucket for sensor data"
 	bucket.Description = &desc
-	bucket, err = bucketsApi.UpdateBucket(ctx, bucket)
+	bucket, err = bucketsAPI.UpdateBucket(ctx, bucket)
 	if err != nil {
 		panic(err)
 	}
@@ -42,11 +42,11 @@ func ExampleBucketsApi() {
 	client.Close()
 }
 
-func ExampleWriteApiBlocking() {
+func ExampleWriteAPIBlocking() {
 	// Create client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 	// Get blocking write client
-	writeApi := client.WriteApiBlocking("my-org", "my-bucket")
+	writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
 	// write some points
 	for i := 0; i < 100; i++ {
 		// create data point
@@ -66,7 +66,7 @@ func ExampleWriteApiBlocking() {
 			},
 			time.Now())
 		// write synchronously
-		err := writeApi.WritePoint(context.Background(), p)
+		err := writeAPI.WritePoint(context.Background(), p)
 		if err != nil {
 			panic(err)
 		}
@@ -75,11 +75,11 @@ func ExampleWriteApiBlocking() {
 	client.Close()
 }
 
-func ExampleWriteApi() {
+func ExampleWriteAPI() {
 	// Create client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 	// Get non-blocking write client
-	writeApi := client.WriteApi("my-org", "my-bucket")
+	writeAPI := client.WriteAPI("my-org", "my-bucket")
 	// write some points
 	for i := 0; i < 100; i++ {
 		// create point
@@ -99,21 +99,21 @@ func ExampleWriteApi() {
 			},
 			time.Now())
 		// write asynchronously
-		writeApi.WritePoint(p)
+		writeAPI.WritePoint(p)
 	}
 	// Force all unwritten data to be sent
-	writeApi.Flush()
+	writeAPI.Flush()
 	// Ensures background processes finishes
 	client.Close()
 }
 
-func ExampleWriteApi_errors() {
+func ExampleWriteAPI_errors() {
 	// Create client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 	// Get non-blocking write client
-	writeApi := client.WriteApi("my-org", "my-bucket")
+	writeAPI := client.WriteAPI("my-org", "my-bucket")
 	// Get errors channel
-	errorsCh := writeApi.Errors()
+	errorsCh := writeAPI.Errors()
 	// Create go proc for reading and logging errors
 	go func() {
 		for err := range errorsCh {
@@ -134,21 +134,21 @@ func ExampleWriteApi_errors() {
 			AddField("mem_free", rand.Uint64()).
 			SetTime(time.Now())
 		// write asynchronously
-		writeApi.WritePoint(p)
+		writeAPI.WritePoint(p)
 	}
 	// Force all unwritten data to be sent
-	writeApi.Flush()
+	writeAPI.Flush()
 	// Ensures background processes finishes
 	client.Close()
 }
 
-func ExampleQueryApi_query() {
+func ExampleQueryAPI_query() {
 	// Create client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 	// Get query client
-	queryApi := client.QueryApi("my-org")
+	queryAPI := client.QueryAPI("my-org")
 	// get QueryTableResult
-	result, err := queryApi.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+	result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
 	if err == nil {
 		// Iterate over query response
 		for result.Next() {
@@ -170,14 +170,14 @@ func ExampleQueryApi_query() {
 	client.Close()
 }
 
-func ExampleQueryApi_queryRaw() {
+func ExampleQueryAPI_queryRaw() {
 	// Create client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 	// Get query client
-	queryApi := client.QueryApi("my-org")
+	queryAPI := client.QueryAPI("my-org")
 	// Query and get complete result as a string
 	// Use default dialect
-	result, err := queryApi.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, api.DefaultDialect())
+	result, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, api.DefaultDialect())
 	if err == nil {
 		fmt.Println("QueryResult:")
 		fmt.Println(result)
@@ -188,15 +188,15 @@ func ExampleQueryApi_queryRaw() {
 	client.Close()
 }
 
-func ExampleOrganizationsApi() {
+func ExampleOrganizationsAPI() {
 	// Create influxdb client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 
 	// Get Organizations API client
-	orgApi := client.OrganizationsApi()
+	orgAPI := client.OrganizationsAPI()
 
 	// Create new organization
-	org, err := orgApi.CreateOrganizationWithName(context.Background(), "org-2")
+	org, err := orgAPI.CreateOrganizationWithName(context.Background(), "org-2")
 	if err != nil {
 		panic(err)
 	}
@@ -204,31 +204,31 @@ func ExampleOrganizationsApi() {
 	orgDescription := "My second org "
 	org.Description = &orgDescription
 
-	org, err = orgApi.UpdateOrganization(context.Background(), org)
+	org, err = orgAPI.UpdateOrganization(context.Background(), org)
 	if err != nil {
 		panic(err)
 	}
 
 	// Find user to set owner
-	user, err := client.UsersApi().FindUserByName(context.Background(), "user-01")
+	user, err := client.UsersAPI().FindUserByName(context.Background(), "user-01")
 	if err != nil {
 		panic(err)
 	}
 
 	// Add another owner (first owner is the one who create organization
-	_, err = orgApi.AddOwner(context.Background(), org, user)
+	_, err = orgAPI.AddOwner(context.Background(), org, user)
 	if err != nil {
 		panic(err)
 	}
 
 	// Create new user to add to org
-	newUser, err := client.UsersApi().CreateUserWithName(context.Background(), "user-02")
+	newUser, err := client.UsersAPI().CreateUserWithName(context.Background(), "user-02")
 	if err != nil {
 		panic(err)
 	}
 
 	// Add new user to organization
-	_, err = orgApi.AddMember(context.Background(), org, newUser)
+	_, err = orgAPI.AddMember(context.Background(), org, newUser)
 	if err != nil {
 		panic(err)
 	}
@@ -236,18 +236,18 @@ func ExampleOrganizationsApi() {
 	client.Close()
 }
 
-func ExampleAuthorizationsApi() {
+func ExampleAuthorizationsAPI() {
 	// Create influxdb client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 
 	// Find user to grant permission
-	user, err := client.UsersApi().FindUserByName(context.Background(), "user-01")
+	user, err := client.UsersAPI().FindUserByName(context.Background(), "user-01")
 	if err != nil {
 		panic(err)
 	}
 
 	// Find organization
-	org, err := client.OrganizationsApi().FindOrganizationByName(context.Background(), "my-org")
+	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
 	if err != nil {
 		panic(err)
 	}
@@ -280,7 +280,7 @@ func ExampleAuthorizationsApi() {
 	}
 
 	// grant permission and create token
-	authCreated, err := client.AuthorizationsApi().CreateAuthorization(context.Background(), auth)
+	authCreated, err := client.AuthorizationsAPI().CreateAuthorization(context.Background(), auth)
 	if err != nil {
 		panic(err)
 	}
@@ -290,33 +290,33 @@ func ExampleAuthorizationsApi() {
 	client.Close()
 }
 
-func ExampleUsersApi() {
+func ExampleUsersAPI() {
 	// Create influxdb client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 
 	// Find organization
-	org, err := client.OrganizationsApi().FindOrganizationByName(context.Background(), "my-org")
+	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
 	if err != nil {
 		panic(err)
 	}
 
 	// Get users API client
-	usersApi := client.UsersApi()
+	usersAPI := client.UsersAPI()
 
 	// Create new user
-	user, err := usersApi.CreateUserWithName(context.Background(), "user-01")
+	user, err := usersAPI.CreateUserWithName(context.Background(), "user-01")
 	if err != nil {
 		panic(err)
 	}
 
 	// Set user password
-	err = usersApi.UpdateUserPassword(context.Background(), user, "pass-at-least-8-chars")
+	err = usersAPI.UpdateUserPassword(context.Background(), user, "pass-at-least-8-chars")
 	if err != nil {
 		panic(err)
 	}
 
 	// Add user to organization
-	_, err = client.OrganizationsApi().AddMember(context.Background(), org, user)
+	_, err = client.OrganizationsAPI().AddMember(context.Background(), org, user)
 	if err != nil {
 		panic(err)
 	}
@@ -324,44 +324,44 @@ func ExampleUsersApi() {
 	client.Close()
 }
 
-func ExampleLabelsApi() {
+func ExampleLabelsAPI() {
 	// Create influxdb client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 
 	ctx := context.Background()
 	// Get Labels API client
-	labelsApi := client.LabelsApi()
+	labelsAPI := client.LabelsAPI()
 	// Get Organizations API client
-	orgsApi := client.OrganizationsApi()
+	orgsAPI := client.OrganizationsAPI()
 
 	// Get organization that will own label
-	myorg, err := orgsApi.FindOrganizationByName(ctx, "my-org")
+	myorg, err := orgsAPI.FindOrganizationByName(ctx, "my-org")
 	if err != nil {
 		panic(err)
 	}
 
 	labelName := "Active State"
 	props := map[string]string{"color": "33ffdd", "description": "Marks org active"}
-	label, err := labelsApi.CreateLabelWithName(ctx, myorg, labelName, props)
+	label, err := labelsAPI.CreateLabelWithName(ctx, myorg, labelName, props)
 	if err != nil {
 		panic(err)
 	}
 
 	// Get organization that will have the label
-	org, err := orgsApi.FindOrganizationByName(ctx, "IT")
+	org, err := orgsAPI.FindOrganizationByName(ctx, "IT")
 	if err != nil {
 		panic(err)
 	}
 
 	// Add label to org
-	_, err = orgsApi.AddLabel(ctx, org, label)
+	_, err = orgsAPI.AddLabel(ctx, org, label)
 	if err != nil {
 		panic(err)
 	}
 
 	// Change color property
 	label.Properties.AdditionalProperties = map[string]string{"color": "ff1122"}
-	label, err = labelsApi.UpdateLabel(ctx, label)
+	label, err = labelsAPI.UpdateLabel(ctx, label)
 	if err != nil {
 		panic(err)
 	}

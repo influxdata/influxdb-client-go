@@ -818,2593 +818,2593 @@ type ClientInterface interface {
 }
 
 func (c *Client) GetRoutes(ctx context.Context, params *GetRoutesParams) (*http.Response, error) {
-	req, err := NewGetRoutesRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetRoutesRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetAuthorizations(ctx context.Context, params *GetAuthorizationsParams) (*http.Response, error) {
-	req, err := NewGetAuthorizationsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetAuthorizationsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostAuthorizationsWithBody(ctx context.Context, params *PostAuthorizationsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostAuthorizationsRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostAuthorizationsRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostAuthorizations(ctx context.Context, params *PostAuthorizationsParams, body PostAuthorizationsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostAuthorizationsRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostAuthorizationsRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteAuthorizationsID(ctx context.Context, authID string, params *DeleteAuthorizationsIDParams) (*http.Response, error) {
-	req, err := NewDeleteAuthorizationsIDRequest(c.service.ServerApiUrl(), authID, params)
+	req, err := NewDeleteAuthorizationsIDRequest(c.service.ServerAPIURL(), authID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetAuthorizationsID(ctx context.Context, authID string, params *GetAuthorizationsIDParams) (*http.Response, error) {
-	req, err := NewGetAuthorizationsIDRequest(c.service.ServerApiUrl(), authID, params)
+	req, err := NewGetAuthorizationsIDRequest(c.service.ServerAPIURL(), authID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchAuthorizationsIDWithBody(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchAuthorizationsIDRequestWithBody(c.service.ServerApiUrl(), authID, params, contentType, body)
+	req, err := NewPatchAuthorizationsIDRequestWithBody(c.service.ServerAPIURL(), authID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchAuthorizationsID(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchAuthorizationsIDRequest(c.service.ServerApiUrl(), authID, params, body)
+	req, err := NewPatchAuthorizationsIDRequest(c.service.ServerAPIURL(), authID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBuckets(ctx context.Context, params *GetBucketsParams) (*http.Response, error) {
-	req, err := NewGetBucketsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetBucketsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsWithBody(ctx context.Context, params *PostBucketsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostBucketsRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostBucketsRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBuckets(ctx context.Context, params *PostBucketsParams, body PostBucketsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostBucketsRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostBucketsRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsID(ctx context.Context, bucketID string, params *DeleteBucketsIDParams) (*http.Response, error) {
-	req, err := NewDeleteBucketsIDRequest(c.service.ServerApiUrl(), bucketID, params)
+	req, err := NewDeleteBucketsIDRequest(c.service.ServerAPIURL(), bucketID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsID(ctx context.Context, bucketID string, params *GetBucketsIDParams) (*http.Response, error) {
-	req, err := NewGetBucketsIDRequest(c.service.ServerApiUrl(), bucketID, params)
+	req, err := NewGetBucketsIDRequest(c.service.ServerAPIURL(), bucketID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchBucketsIDWithBody(ctx context.Context, bucketID string, params *PatchBucketsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchBucketsIDRequestWithBody(c.service.ServerApiUrl(), bucketID, params, contentType, body)
+	req, err := NewPatchBucketsIDRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchBucketsID(ctx context.Context, bucketID string, params *PatchBucketsIDParams, body PatchBucketsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchBucketsIDRequest(c.service.ServerApiUrl(), bucketID, params, body)
+	req, err := NewPatchBucketsIDRequest(c.service.ServerAPIURL(), bucketID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDLabels(ctx context.Context, bucketID string, params *GetBucketsIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetBucketsIDLabelsRequest(c.service.ServerApiUrl(), bucketID, params)
+	req, err := NewGetBucketsIDLabelsRequest(c.service.ServerAPIURL(), bucketID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDLabelsWithBody(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostBucketsIDLabelsRequestWithBody(c.service.ServerApiUrl(), bucketID, params, contentType, body)
+	req, err := NewPostBucketsIDLabelsRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDLabels(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, body PostBucketsIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostBucketsIDLabelsRequest(c.service.ServerApiUrl(), bucketID, params, body)
+	req, err := NewPostBucketsIDLabelsRequest(c.service.ServerAPIURL(), bucketID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsIDLabelsID(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteBucketsIDLabelsIDRequest(c.service.ServerApiUrl(), bucketID, labelID, params)
+	req, err := NewDeleteBucketsIDLabelsIDRequest(c.service.ServerAPIURL(), bucketID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDMembers(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*http.Response, error) {
-	req, err := NewGetBucketsIDMembersRequest(c.service.ServerApiUrl(), bucketID, params)
+	req, err := NewGetBucketsIDMembersRequest(c.service.ServerAPIURL(), bucketID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDMembersWithBody(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostBucketsIDMembersRequestWithBody(c.service.ServerApiUrl(), bucketID, params, contentType, body)
+	req, err := NewPostBucketsIDMembersRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDMembers(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, body PostBucketsIDMembersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostBucketsIDMembersRequest(c.service.ServerApiUrl(), bucketID, params, body)
+	req, err := NewPostBucketsIDMembersRequest(c.service.ServerAPIURL(), bucketID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsIDMembersID(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDMembersIDParams) (*http.Response, error) {
-	req, err := NewDeleteBucketsIDMembersIDRequest(c.service.ServerApiUrl(), bucketID, userID, params)
+	req, err := NewDeleteBucketsIDMembersIDRequest(c.service.ServerAPIURL(), bucketID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetBucketsIDOwners(ctx context.Context, bucketID string, params *GetBucketsIDOwnersParams) (*http.Response, error) {
-	req, err := NewGetBucketsIDOwnersRequest(c.service.ServerApiUrl(), bucketID, params)
+	req, err := NewGetBucketsIDOwnersRequest(c.service.ServerAPIURL(), bucketID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDOwnersWithBody(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostBucketsIDOwnersRequestWithBody(c.service.ServerApiUrl(), bucketID, params, contentType, body)
+	req, err := NewPostBucketsIDOwnersRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostBucketsIDOwners(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, body PostBucketsIDOwnersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostBucketsIDOwnersRequest(c.service.ServerApiUrl(), bucketID, params, body)
+	req, err := NewPostBucketsIDOwnersRequest(c.service.ServerAPIURL(), bucketID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteBucketsIDOwnersID(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDOwnersIDParams) (*http.Response, error) {
-	req, err := NewDeleteBucketsIDOwnersIDRequest(c.service.ServerApiUrl(), bucketID, userID, params)
+	req, err := NewDeleteBucketsIDOwnersIDRequest(c.service.ServerAPIURL(), bucketID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecks(ctx context.Context, params *GetChecksParams) (*http.Response, error) {
-	req, err := NewGetChecksRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetChecksRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateCheckWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreateCheckRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewCreateCheckRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateCheck(ctx context.Context, body CreateCheckJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreateCheckRequest(c.service.ServerApiUrl(), body)
+	req, err := NewCreateCheckRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteChecksID(ctx context.Context, checkID string, params *DeleteChecksIDParams) (*http.Response, error) {
-	req, err := NewDeleteChecksIDRequest(c.service.ServerApiUrl(), checkID, params)
+	req, err := NewDeleteChecksIDRequest(c.service.ServerAPIURL(), checkID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecksID(ctx context.Context, checkID string, params *GetChecksIDParams) (*http.Response, error) {
-	req, err := NewGetChecksIDRequest(c.service.ServerApiUrl(), checkID, params)
+	req, err := NewGetChecksIDRequest(c.service.ServerAPIURL(), checkID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchChecksIDWithBody(ctx context.Context, checkID string, params *PatchChecksIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchChecksIDRequestWithBody(c.service.ServerApiUrl(), checkID, params, contentType, body)
+	req, err := NewPatchChecksIDRequestWithBody(c.service.ServerAPIURL(), checkID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchChecksID(ctx context.Context, checkID string, params *PatchChecksIDParams, body PatchChecksIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchChecksIDRequest(c.service.ServerApiUrl(), checkID, params, body)
+	req, err := NewPatchChecksIDRequest(c.service.ServerAPIURL(), checkID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutChecksIDWithBody(ctx context.Context, checkID string, params *PutChecksIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutChecksIDRequestWithBody(c.service.ServerApiUrl(), checkID, params, contentType, body)
+	req, err := NewPutChecksIDRequestWithBody(c.service.ServerAPIURL(), checkID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutChecksID(ctx context.Context, checkID string, params *PutChecksIDParams, body PutChecksIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutChecksIDRequest(c.service.ServerApiUrl(), checkID, params, body)
+	req, err := NewPutChecksIDRequest(c.service.ServerAPIURL(), checkID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecksIDLabels(ctx context.Context, checkID string, params *GetChecksIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetChecksIDLabelsRequest(c.service.ServerApiUrl(), checkID, params)
+	req, err := NewGetChecksIDLabelsRequest(c.service.ServerAPIURL(), checkID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostChecksIDLabelsWithBody(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostChecksIDLabelsRequestWithBody(c.service.ServerApiUrl(), checkID, params, contentType, body)
+	req, err := NewPostChecksIDLabelsRequestWithBody(c.service.ServerAPIURL(), checkID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostChecksIDLabels(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, body PostChecksIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostChecksIDLabelsRequest(c.service.ServerApiUrl(), checkID, params, body)
+	req, err := NewPostChecksIDLabelsRequest(c.service.ServerAPIURL(), checkID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteChecksIDLabelsID(ctx context.Context, checkID string, labelID string, params *DeleteChecksIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteChecksIDLabelsIDRequest(c.service.ServerApiUrl(), checkID, labelID, params)
+	req, err := NewDeleteChecksIDLabelsIDRequest(c.service.ServerAPIURL(), checkID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetChecksIDQuery(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*http.Response, error) {
-	req, err := NewGetChecksIDQueryRequest(c.service.ServerApiUrl(), checkID, params)
+	req, err := NewGetChecksIDQueryRequest(c.service.ServerAPIURL(), checkID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboards(ctx context.Context, params *GetDashboardsParams) (*http.Response, error) {
-	req, err := NewGetDashboardsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetDashboardsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsWithBody(ctx context.Context, params *PostDashboardsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDashboardsRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostDashboardsRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboards(ctx context.Context, params *PostDashboardsParams, body PostDashboardsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDashboardsRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostDashboardsRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsID(ctx context.Context, dashboardID string, params *DeleteDashboardsIDParams) (*http.Response, error) {
-	req, err := NewDeleteDashboardsIDRequest(c.service.ServerApiUrl(), dashboardID, params)
+	req, err := NewDeleteDashboardsIDRequest(c.service.ServerAPIURL(), dashboardID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsID(ctx context.Context, dashboardID string, params *GetDashboardsIDParams) (*http.Response, error) {
-	req, err := NewGetDashboardsIDRequest(c.service.ServerApiUrl(), dashboardID, params)
+	req, err := NewGetDashboardsIDRequest(c.service.ServerAPIURL(), dashboardID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDWithBody(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchDashboardsIDRequestWithBody(c.service.ServerApiUrl(), dashboardID, params, contentType, body)
+	req, err := NewPatchDashboardsIDRequestWithBody(c.service.ServerAPIURL(), dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsID(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, body PatchDashboardsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchDashboardsIDRequest(c.service.ServerApiUrl(), dashboardID, params, body)
+	req, err := NewPatchDashboardsIDRequest(c.service.ServerAPIURL(), dashboardID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDCellsWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDashboardsIDCellsRequestWithBody(c.service.ServerApiUrl(), dashboardID, params, contentType, body)
+	req, err := NewPostDashboardsIDCellsRequestWithBody(c.service.ServerAPIURL(), dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDCells(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, body PostDashboardsIDCellsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDashboardsIDCellsRequest(c.service.ServerApiUrl(), dashboardID, params, body)
+	req, err := NewPostDashboardsIDCellsRequest(c.service.ServerAPIURL(), dashboardID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDashboardsIDCellsWithBody(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutDashboardsIDCellsRequestWithBody(c.service.ServerApiUrl(), dashboardID, params, contentType, body)
+	req, err := NewPutDashboardsIDCellsRequestWithBody(c.service.ServerAPIURL(), dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDashboardsIDCells(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, body PutDashboardsIDCellsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutDashboardsIDCellsRequest(c.service.ServerApiUrl(), dashboardID, params, body)
+	req, err := NewPutDashboardsIDCellsRequest(c.service.ServerAPIURL(), dashboardID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDCellsID(ctx context.Context, dashboardID string, cellID string, params *DeleteDashboardsIDCellsIDParams) (*http.Response, error) {
-	req, err := NewDeleteDashboardsIDCellsIDRequest(c.service.ServerApiUrl(), dashboardID, cellID, params)
+	req, err := NewDeleteDashboardsIDCellsIDRequest(c.service.ServerAPIURL(), dashboardID, cellID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsIDWithBody(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchDashboardsIDCellsIDRequestWithBody(c.service.ServerApiUrl(), dashboardID, cellID, params, contentType, body)
+	req, err := NewPatchDashboardsIDCellsIDRequestWithBody(c.service.ServerAPIURL(), dashboardID, cellID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsID(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, body PatchDashboardsIDCellsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchDashboardsIDCellsIDRequest(c.service.ServerApiUrl(), dashboardID, cellID, params, body)
+	req, err := NewPatchDashboardsIDCellsIDRequest(c.service.ServerAPIURL(), dashboardID, cellID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDCellsIDView(ctx context.Context, dashboardID string, cellID string, params *GetDashboardsIDCellsIDViewParams) (*http.Response, error) {
-	req, err := NewGetDashboardsIDCellsIDViewRequest(c.service.ServerApiUrl(), dashboardID, cellID, params)
+	req, err := NewGetDashboardsIDCellsIDViewRequest(c.service.ServerAPIURL(), dashboardID, cellID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsIDViewWithBody(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchDashboardsIDCellsIDViewRequestWithBody(c.service.ServerApiUrl(), dashboardID, cellID, params, contentType, body)
+	req, err := NewPatchDashboardsIDCellsIDViewRequestWithBody(c.service.ServerAPIURL(), dashboardID, cellID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDashboardsIDCellsIDView(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, body PatchDashboardsIDCellsIDViewJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchDashboardsIDCellsIDViewRequest(c.service.ServerApiUrl(), dashboardID, cellID, params, body)
+	req, err := NewPatchDashboardsIDCellsIDViewRequest(c.service.ServerAPIURL(), dashboardID, cellID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDLabels(ctx context.Context, dashboardID string, params *GetDashboardsIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetDashboardsIDLabelsRequest(c.service.ServerApiUrl(), dashboardID, params)
+	req, err := NewGetDashboardsIDLabelsRequest(c.service.ServerAPIURL(), dashboardID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDLabelsWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDashboardsIDLabelsRequestWithBody(c.service.ServerApiUrl(), dashboardID, params, contentType, body)
+	req, err := NewPostDashboardsIDLabelsRequestWithBody(c.service.ServerAPIURL(), dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDLabels(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, body PostDashboardsIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDashboardsIDLabelsRequest(c.service.ServerApiUrl(), dashboardID, params, body)
+	req, err := NewPostDashboardsIDLabelsRequest(c.service.ServerAPIURL(), dashboardID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDLabelsID(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteDashboardsIDLabelsIDRequest(c.service.ServerApiUrl(), dashboardID, labelID, params)
+	req, err := NewDeleteDashboardsIDLabelsIDRequest(c.service.ServerAPIURL(), dashboardID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDMembers(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams) (*http.Response, error) {
-	req, err := NewGetDashboardsIDMembersRequest(c.service.ServerApiUrl(), dashboardID, params)
+	req, err := NewGetDashboardsIDMembersRequest(c.service.ServerAPIURL(), dashboardID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDMembersWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDashboardsIDMembersRequestWithBody(c.service.ServerApiUrl(), dashboardID, params, contentType, body)
+	req, err := NewPostDashboardsIDMembersRequestWithBody(c.service.ServerAPIURL(), dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDMembers(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, body PostDashboardsIDMembersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDashboardsIDMembersRequest(c.service.ServerApiUrl(), dashboardID, params, body)
+	req, err := NewPostDashboardsIDMembersRequest(c.service.ServerAPIURL(), dashboardID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDMembersID(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDMembersIDParams) (*http.Response, error) {
-	req, err := NewDeleteDashboardsIDMembersIDRequest(c.service.ServerApiUrl(), dashboardID, userID, params)
+	req, err := NewDeleteDashboardsIDMembersIDRequest(c.service.ServerAPIURL(), dashboardID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDashboardsIDOwners(ctx context.Context, dashboardID string, params *GetDashboardsIDOwnersParams) (*http.Response, error) {
-	req, err := NewGetDashboardsIDOwnersRequest(c.service.ServerApiUrl(), dashboardID, params)
+	req, err := NewGetDashboardsIDOwnersRequest(c.service.ServerAPIURL(), dashboardID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDOwnersWithBody(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDashboardsIDOwnersRequestWithBody(c.service.ServerApiUrl(), dashboardID, params, contentType, body)
+	req, err := NewPostDashboardsIDOwnersRequestWithBody(c.service.ServerAPIURL(), dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDashboardsIDOwners(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, body PostDashboardsIDOwnersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDashboardsIDOwnersRequest(c.service.ServerApiUrl(), dashboardID, params, body)
+	req, err := NewPostDashboardsIDOwnersRequest(c.service.ServerAPIURL(), dashboardID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDashboardsIDOwnersID(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams) (*http.Response, error) {
-	req, err := NewDeleteDashboardsIDOwnersIDRequest(c.service.ServerApiUrl(), dashboardID, userID, params)
+	req, err := NewDeleteDashboardsIDOwnersIDRequest(c.service.ServerAPIURL(), dashboardID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDBRPs(ctx context.Context, params *GetDBRPsParams) (*http.Response, error) {
-	req, err := NewGetDBRPsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetDBRPsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDBRPWithBody(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDBRPRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostDBRPRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDBRP(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDBRPRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostDBRPRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDBRPID(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*http.Response, error) {
-	req, err := NewDeleteDBRPIDRequest(c.service.ServerApiUrl(), dbrpID, params)
+	req, err := NewDeleteDBRPIDRequest(c.service.ServerAPIURL(), dbrpID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDBRPsID(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*http.Response, error) {
-	req, err := NewGetDBRPsIDRequest(c.service.ServerApiUrl(), dbrpID, params)
+	req, err := NewGetDBRPsIDRequest(c.service.ServerAPIURL(), dbrpID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDBRPIDWithBody(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchDBRPIDRequestWithBody(c.service.ServerApiUrl(), dbrpID, params, contentType, body)
+	req, err := NewPatchDBRPIDRequestWithBody(c.service.ServerAPIURL(), dbrpID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchDBRPID(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchDBRPIDRequest(c.service.ServerApiUrl(), dbrpID, params, body)
+	req, err := NewPatchDBRPIDRequest(c.service.ServerAPIURL(), dbrpID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDeleteWithBody(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDeleteRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostDeleteRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDelete(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDeleteRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostDeleteRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDocumentsTemplates(ctx context.Context, params *GetDocumentsTemplatesParams) (*http.Response, error) {
-	req, err := NewGetDocumentsTemplatesRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetDocumentsTemplatesRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplatesWithBody(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostDocumentsTemplatesRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplates(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostDocumentsTemplatesRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDocumentsTemplatesID(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*http.Response, error) {
-	req, err := NewDeleteDocumentsTemplatesIDRequest(c.service.ServerApiUrl(), templateID, params)
+	req, err := NewDeleteDocumentsTemplatesIDRequest(c.service.ServerAPIURL(), templateID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDocumentsTemplatesID(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*http.Response, error) {
-	req, err := NewGetDocumentsTemplatesIDRequest(c.service.ServerApiUrl(), templateID, params)
+	req, err := NewGetDocumentsTemplatesIDRequest(c.service.ServerAPIURL(), templateID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDocumentsTemplatesIDWithBody(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutDocumentsTemplatesIDRequestWithBody(c.service.ServerApiUrl(), templateID, params, contentType, body)
+	req, err := NewPutDocumentsTemplatesIDRequestWithBody(c.service.ServerAPIURL(), templateID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutDocumentsTemplatesID(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutDocumentsTemplatesIDRequest(c.service.ServerApiUrl(), templateID, params, body)
+	req, err := NewPutDocumentsTemplatesIDRequest(c.service.ServerAPIURL(), templateID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetDocumentsTemplatesIDLabelsRequest(c.service.ServerApiUrl(), templateID, params)
+	req, err := NewGetDocumentsTemplatesIDLabelsRequest(c.service.ServerAPIURL(), templateID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplatesIDLabelsWithBody(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesIDLabelsRequestWithBody(c.service.ServerApiUrl(), templateID, params, contentType, body)
+	req, err := NewPostDocumentsTemplatesIDLabelsRequestWithBody(c.service.ServerAPIURL(), templateID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesIDLabelsRequest(c.service.ServerApiUrl(), templateID, params, body)
+	req, err := NewPostDocumentsTemplatesIDLabelsRequest(c.service.ServerAPIURL(), templateID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteDocumentsTemplatesIDLabelsIDRequest(c.service.ServerApiUrl(), templateID, labelID, params)
+	req, err := NewDeleteDocumentsTemplatesIDLabelsIDRequest(c.service.ServerAPIURL(), templateID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetFlags(ctx context.Context, params *GetFlagsParams) (*http.Response, error) {
-	req, err := NewGetFlagsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetFlagsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetHealth(ctx context.Context, params *GetHealthParams) (*http.Response, error) {
-	req, err := NewGetHealthRequest(c.service.ServerUrl(), params)
+	req, err := NewGetHealthRequest(c.service.ServerURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetLabels(ctx context.Context, params *GetLabelsParams) (*http.Response, error) {
-	req, err := NewGetLabelsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetLabelsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostLabelsWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostLabelsRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewPostLabelsRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostLabels(ctx context.Context, body PostLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostLabelsRequest(c.service.ServerApiUrl(), body)
+	req, err := NewPostLabelsRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteLabelsID(ctx context.Context, labelID string, params *DeleteLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteLabelsIDRequest(c.service.ServerApiUrl(), labelID, params)
+	req, err := NewDeleteLabelsIDRequest(c.service.ServerAPIURL(), labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetLabelsID(ctx context.Context, labelID string, params *GetLabelsIDParams) (*http.Response, error) {
-	req, err := NewGetLabelsIDRequest(c.service.ServerApiUrl(), labelID, params)
+	req, err := NewGetLabelsIDRequest(c.service.ServerAPIURL(), labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchLabelsIDWithBody(ctx context.Context, labelID string, params *PatchLabelsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchLabelsIDRequestWithBody(c.service.ServerApiUrl(), labelID, params, contentType, body)
+	req, err := NewPatchLabelsIDRequestWithBody(c.service.ServerAPIURL(), labelID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchLabelsID(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchLabelsIDRequest(c.service.ServerApiUrl(), labelID, params, body)
+	req, err := NewPatchLabelsIDRequest(c.service.ServerAPIURL(), labelID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetMe(ctx context.Context, params *GetMeParams) (*http.Response, error) {
-	req, err := NewGetMeRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetMeRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutMePasswordWithBody(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutMePasswordRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPutMePasswordRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutMePassword(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutMePasswordRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPutMePasswordRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationEndpoints(ctx context.Context, params *GetNotificationEndpointsParams) (*http.Response, error) {
-	req, err := NewGetNotificationEndpointsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetNotificationEndpointsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationEndpointWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreateNotificationEndpointRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewCreateNotificationEndpointRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationEndpoint(ctx context.Context, body CreateNotificationEndpointJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreateNotificationEndpointRequest(c.service.ServerApiUrl(), body)
+	req, err := NewCreateNotificationEndpointRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationEndpointsID(ctx context.Context, endpointID string, params *DeleteNotificationEndpointsIDParams) (*http.Response, error) {
-	req, err := NewDeleteNotificationEndpointsIDRequest(c.service.ServerApiUrl(), endpointID, params)
+	req, err := NewDeleteNotificationEndpointsIDRequest(c.service.ServerAPIURL(), endpointID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationEndpointsID(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDParams) (*http.Response, error) {
-	req, err := NewGetNotificationEndpointsIDRequest(c.service.ServerApiUrl(), endpointID, params)
+	req, err := NewGetNotificationEndpointsIDRequest(c.service.ServerAPIURL(), endpointID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationEndpointsIDWithBody(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchNotificationEndpointsIDRequestWithBody(c.service.ServerApiUrl(), endpointID, params, contentType, body)
+	req, err := NewPatchNotificationEndpointsIDRequestWithBody(c.service.ServerAPIURL(), endpointID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationEndpointsID(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, body PatchNotificationEndpointsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchNotificationEndpointsIDRequest(c.service.ServerApiUrl(), endpointID, params, body)
+	req, err := NewPatchNotificationEndpointsIDRequest(c.service.ServerAPIURL(), endpointID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationEndpointsIDWithBody(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutNotificationEndpointsIDRequestWithBody(c.service.ServerApiUrl(), endpointID, params, contentType, body)
+	req, err := NewPutNotificationEndpointsIDRequestWithBody(c.service.ServerAPIURL(), endpointID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationEndpointsID(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, body PutNotificationEndpointsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutNotificationEndpointsIDRequest(c.service.ServerApiUrl(), endpointID, params, body)
+	req, err := NewPutNotificationEndpointsIDRequest(c.service.ServerAPIURL(), endpointID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationEndpointsIDLabels(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetNotificationEndpointsIDLabelsRequest(c.service.ServerApiUrl(), endpointID, params)
+	req, err := NewGetNotificationEndpointsIDLabelsRequest(c.service.ServerAPIURL(), endpointID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationEndpointIDLabelsWithBody(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostNotificationEndpointIDLabelsRequestWithBody(c.service.ServerApiUrl(), endpointID, params, contentType, body)
+	req, err := NewPostNotificationEndpointIDLabelsRequestWithBody(c.service.ServerAPIURL(), endpointID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationEndpointIDLabels(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, body PostNotificationEndpointIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostNotificationEndpointIDLabelsRequest(c.service.ServerApiUrl(), endpointID, params, body)
+	req, err := NewPostNotificationEndpointIDLabelsRequest(c.service.ServerAPIURL(), endpointID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationEndpointsIDLabelsID(ctx context.Context, endpointID string, labelID string, params *DeleteNotificationEndpointsIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteNotificationEndpointsIDLabelsIDRequest(c.service.ServerApiUrl(), endpointID, labelID, params)
+	req, err := NewDeleteNotificationEndpointsIDLabelsIDRequest(c.service.ServerAPIURL(), endpointID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRules(ctx context.Context, params *GetNotificationRulesParams) (*http.Response, error) {
-	req, err := NewGetNotificationRulesRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetNotificationRulesRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationRuleWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreateNotificationRuleRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewCreateNotificationRuleRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateNotificationRule(ctx context.Context, body CreateNotificationRuleJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreateNotificationRuleRequest(c.service.ServerApiUrl(), body)
+	req, err := NewCreateNotificationRuleRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationRulesID(ctx context.Context, ruleID string, params *DeleteNotificationRulesIDParams) (*http.Response, error) {
-	req, err := NewDeleteNotificationRulesIDRequest(c.service.ServerApiUrl(), ruleID, params)
+	req, err := NewDeleteNotificationRulesIDRequest(c.service.ServerAPIURL(), ruleID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRulesID(ctx context.Context, ruleID string, params *GetNotificationRulesIDParams) (*http.Response, error) {
-	req, err := NewGetNotificationRulesIDRequest(c.service.ServerApiUrl(), ruleID, params)
+	req, err := NewGetNotificationRulesIDRequest(c.service.ServerAPIURL(), ruleID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationRulesIDWithBody(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchNotificationRulesIDRequestWithBody(c.service.ServerApiUrl(), ruleID, params, contentType, body)
+	req, err := NewPatchNotificationRulesIDRequestWithBody(c.service.ServerAPIURL(), ruleID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchNotificationRulesID(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, body PatchNotificationRulesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchNotificationRulesIDRequest(c.service.ServerApiUrl(), ruleID, params, body)
+	req, err := NewPatchNotificationRulesIDRequest(c.service.ServerAPIURL(), ruleID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationRulesIDWithBody(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutNotificationRulesIDRequestWithBody(c.service.ServerApiUrl(), ruleID, params, contentType, body)
+	req, err := NewPutNotificationRulesIDRequestWithBody(c.service.ServerAPIURL(), ruleID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutNotificationRulesID(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, body PutNotificationRulesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutNotificationRulesIDRequest(c.service.ServerApiUrl(), ruleID, params, body)
+	req, err := NewPutNotificationRulesIDRequest(c.service.ServerAPIURL(), ruleID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRulesIDLabels(ctx context.Context, ruleID string, params *GetNotificationRulesIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetNotificationRulesIDLabelsRequest(c.service.ServerApiUrl(), ruleID, params)
+	req, err := NewGetNotificationRulesIDLabelsRequest(c.service.ServerAPIURL(), ruleID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationRuleIDLabelsWithBody(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostNotificationRuleIDLabelsRequestWithBody(c.service.ServerApiUrl(), ruleID, params, contentType, body)
+	req, err := NewPostNotificationRuleIDLabelsRequestWithBody(c.service.ServerAPIURL(), ruleID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostNotificationRuleIDLabels(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, body PostNotificationRuleIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostNotificationRuleIDLabelsRequest(c.service.ServerApiUrl(), ruleID, params, body)
+	req, err := NewPostNotificationRuleIDLabelsRequest(c.service.ServerAPIURL(), ruleID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteNotificationRulesIDLabelsID(ctx context.Context, ruleID string, labelID string, params *DeleteNotificationRulesIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteNotificationRulesIDLabelsIDRequest(c.service.ServerApiUrl(), ruleID, labelID, params)
+	req, err := NewDeleteNotificationRulesIDLabelsIDRequest(c.service.ServerAPIURL(), ruleID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetNotificationRulesIDQuery(ctx context.Context, ruleID string, params *GetNotificationRulesIDQueryParams) (*http.Response, error) {
-	req, err := NewGetNotificationRulesIDQueryRequest(c.service.ServerApiUrl(), ruleID, params)
+	req, err := NewGetNotificationRulesIDQueryRequest(c.service.ServerAPIURL(), ruleID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgs(ctx context.Context, params *GetOrgsParams) (*http.Response, error) {
-	req, err := NewGetOrgsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetOrgsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsWithBody(ctx context.Context, params *PostOrgsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostOrgsRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgs(ctx context.Context, params *PostOrgsParams, body PostOrgsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostOrgsRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsID(ctx context.Context, orgID string, params *DeleteOrgsIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewDeleteOrgsIDRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsID(ctx context.Context, orgID string, params *GetOrgsIDParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewGetOrgsIDRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsIDWithBody(ctx context.Context, orgID string, params *PatchOrgsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchOrgsIDRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPatchOrgsIDRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsID(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchOrgsIDRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPatchOrgsIDRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDInvitesWithBody(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDInvitesRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPostOrgsIDInvitesRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDInvites(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDInvitesRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPostOrgsIDInvitesRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDInviteIDRequest(c.service.ServerApiUrl(), orgID, inviteID, params)
+	req, err := NewDeleteOrgsIDInviteIDRequest(c.service.ServerAPIURL(), orgID, inviteID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Response, error) {
-	req, err := NewPostOrgsIDInviteIDRequest(c.service.ServerApiUrl(), orgID, inviteID, params)
+	req, err := NewPostOrgsIDInviteIDRequest(c.service.ServerAPIURL(), orgID, inviteID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDLabelsRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewGetOrgsIDLabelsRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDLabelsWithBody(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDLabelsRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPostOrgsIDLabelsRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDLabels(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, body PostOrgsIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDLabelsRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPostOrgsIDLabelsRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDLabelsIDRequest(c.service.ServerApiUrl(), orgID, labelID, params)
+	req, err := NewDeleteOrgsIDLabelsIDRequest(c.service.ServerAPIURL(), orgID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDMembers(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDMembersRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewGetOrgsIDMembersRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDMembersWithBody(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDMembersRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPostOrgsIDMembersRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDMembers(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, body PostOrgsIDMembersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDMembersRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPostOrgsIDMembersRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDMembersID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDMembersIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDMembersIDRequest(c.service.ServerApiUrl(), orgID, userID, params)
+	req, err := NewDeleteOrgsIDMembersIDRequest(c.service.ServerAPIURL(), orgID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDOwners(ctx context.Context, orgID string, params *GetOrgsIDOwnersParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDOwnersRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewGetOrgsIDOwnersRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDOwnersWithBody(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDOwnersRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPostOrgsIDOwnersRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDOwners(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, body PostOrgsIDOwnersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDOwnersRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPostOrgsIDOwnersRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDOwnersID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDOwnersIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDOwnersIDRequest(c.service.ServerApiUrl(), orgID, userID, params)
+	req, err := NewDeleteOrgsIDOwnersIDRequest(c.service.ServerAPIURL(), orgID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetOrgsIDSecrets(ctx context.Context, orgID string, params *GetOrgsIDSecretsParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDSecretsRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewGetOrgsIDSecretsRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsIDSecretsWithBody(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchOrgsIDSecretsRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPatchOrgsIDSecretsRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchOrgsIDSecrets(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, body PatchOrgsIDSecretsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchOrgsIDSecretsRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPatchOrgsIDSecretsRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDSecretsWithBody(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDSecretsRequestWithBody(c.service.ServerApiUrl(), orgID, params, contentType, body)
+	req, err := NewPostOrgsIDSecretsRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDSecretsRequest(c.service.ServerApiUrl(), orgID, params, body)
+	req, err := NewPostOrgsIDSecretsRequest(c.service.ServerAPIURL(), orgID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetCloudUsers(ctx context.Context, orgID string, params *GetCloudUsersParams) (*http.Response, error) {
-	req, err := NewGetCloudUsersRequest(c.service.ServerApiUrl(), orgID, params)
+	req, err := NewGetCloudUsersRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteOrgsIDCloudUserID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDCloudUserIDRequest(c.service.ServerApiUrl(), orgID, userID, params)
+	req, err := NewDeleteOrgsIDCloudUserIDRequest(c.service.ServerAPIURL(), orgID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreatePkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreatePkgRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewCreatePkgRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreatePkg(ctx context.Context, body CreatePkgJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreatePkgRequest(c.service.ServerApiUrl(), body)
+	req, err := NewCreatePkgRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) ApplyPkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewApplyPkgRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewApplyPkgRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*http.Response, error) {
-	req, err := NewApplyPkgRequest(c.service.ServerApiUrl(), body)
+	req, err := NewApplyPkgRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error) {
-	req, err := NewListStacksRequest(c.service.ServerApiUrl(), params)
+	req, err := NewListStacksRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreateStackRequestWithBody(c.service.ServerApiUrl(), contentType, body)
+	req, err := NewCreateStackRequestWithBody(c.service.ServerAPIURL(), contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreateStackRequest(c.service.ServerApiUrl(), body)
+	req, err := NewCreateStackRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error) {
-	req, err := NewDeleteStackRequest(c.service.ServerApiUrl(), stackId, params)
+	req, err := NewDeleteStackRequest(c.service.ServerAPIURL(), stackId, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) ReadStack(ctx context.Context, stackId string) (*http.Response, error) {
-	req, err := NewReadStackRequest(c.service.ServerApiUrl(), stackId)
+	req, err := NewReadStackRequest(c.service.ServerAPIURL(), stackId)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewUpdateStackRequestWithBody(c.service.ServerApiUrl(), stackId, contentType, body)
+	req, err := NewUpdateStackRequestWithBody(c.service.ServerAPIURL(), stackId, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error) {
-	req, err := NewUpdateStackRequest(c.service.ServerApiUrl(), stackId, body)
+	req, err := NewUpdateStackRequest(c.service.ServerAPIURL(), stackId, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) ExportStack(ctx context.Context, stackId string, params *ExportStackParams) (*http.Response, error) {
-	req, err := NewExportStackRequest(c.service.ServerApiUrl(), stackId, params)
+	req, err := NewExportStackRequest(c.service.ServerAPIURL(), stackId, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryWithBody(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostQueryRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostQueryRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQuery(ctx context.Context, params *PostQueryParams, body PostQueryJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostQueryRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostQueryRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAnalyzeWithBody(ctx context.Context, params *PostQueryAnalyzeParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostQueryAnalyzeRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostQueryAnalyzeRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAnalyze(ctx context.Context, params *PostQueryAnalyzeParams, body PostQueryAnalyzeJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostQueryAnalyzeRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostQueryAnalyzeRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAstWithBody(ctx context.Context, params *PostQueryAstParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostQueryAstRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostQueryAstRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostQueryAst(ctx context.Context, params *PostQueryAstParams, body PostQueryAstJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostQueryAstRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostQueryAstRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetQuerySuggestions(ctx context.Context, params *GetQuerySuggestionsParams) (*http.Response, error) {
-	req, err := NewGetQuerySuggestionsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetQuerySuggestionsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetQuerySuggestionsName(ctx context.Context, name string, params *GetQuerySuggestionsNameParams) (*http.Response, error) {
-	req, err := NewGetQuerySuggestionsNameRequest(c.service.ServerApiUrl(), name, params)
+	req, err := NewGetQuerySuggestionsNameRequest(c.service.ServerAPIURL(), name, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error) {
-	req, err := NewGetReadyRequest(c.service.ServerUrl(), params)
+	req, err := NewGetReadyRequest(c.service.ServerURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapers(ctx context.Context, params *GetScrapersParams) (*http.Response, error) {
-	req, err := NewGetScrapersRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetScrapersRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersWithBody(ctx context.Context, params *PostScrapersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostScrapersRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostScrapersRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapers(ctx context.Context, params *PostScrapersParams, body PostScrapersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostScrapersRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostScrapersRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersID(ctx context.Context, scraperTargetID string, params *DeleteScrapersIDParams) (*http.Response, error) {
-	req, err := NewDeleteScrapersIDRequest(c.service.ServerApiUrl(), scraperTargetID, params)
+	req, err := NewDeleteScrapersIDRequest(c.service.ServerAPIURL(), scraperTargetID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersID(ctx context.Context, scraperTargetID string, params *GetScrapersIDParams) (*http.Response, error) {
-	req, err := NewGetScrapersIDRequest(c.service.ServerApiUrl(), scraperTargetID, params)
+	req, err := NewGetScrapersIDRequest(c.service.ServerAPIURL(), scraperTargetID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersIDWithBody(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchScrapersIDRequestWithBody(c.service.ServerApiUrl(), scraperTargetID, params, contentType, body)
+	req, err := NewPatchScrapersIDRequestWithBody(c.service.ServerAPIURL(), scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersID(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, body PatchScrapersIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchScrapersIDRequest(c.service.ServerApiUrl(), scraperTargetID, params, body)
+	req, err := NewPatchScrapersIDRequest(c.service.ServerAPIURL(), scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersIDLabels(ctx context.Context, scraperTargetID string, params *GetScrapersIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetScrapersIDLabelsRequest(c.service.ServerApiUrl(), scraperTargetID, params)
+	req, err := NewGetScrapersIDLabelsRequest(c.service.ServerAPIURL(), scraperTargetID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDLabelsWithBody(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostScrapersIDLabelsRequestWithBody(c.service.ServerApiUrl(), scraperTargetID, params, contentType, body)
+	req, err := NewPostScrapersIDLabelsRequestWithBody(c.service.ServerAPIURL(), scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDLabels(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, body PostScrapersIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostScrapersIDLabelsRequest(c.service.ServerApiUrl(), scraperTargetID, params, body)
+	req, err := NewPostScrapersIDLabelsRequest(c.service.ServerAPIURL(), scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersIDLabelsID(ctx context.Context, scraperTargetID string, labelID string, params *DeleteScrapersIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteScrapersIDLabelsIDRequest(c.service.ServerApiUrl(), scraperTargetID, labelID, params)
+	req, err := NewDeleteScrapersIDLabelsIDRequest(c.service.ServerAPIURL(), scraperTargetID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersIDLabelsIDWithBody(ctx context.Context, scraperTargetID string, labelID string, params *PatchScrapersIDLabelsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchScrapersIDLabelsIDRequestWithBody(c.service.ServerApiUrl(), scraperTargetID, labelID, params, contentType, body)
+	req, err := NewPatchScrapersIDLabelsIDRequestWithBody(c.service.ServerAPIURL(), scraperTargetID, labelID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchScrapersIDLabelsID(ctx context.Context, scraperTargetID string, labelID string, params *PatchScrapersIDLabelsIDParams, body PatchScrapersIDLabelsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchScrapersIDLabelsIDRequest(c.service.ServerApiUrl(), scraperTargetID, labelID, params, body)
+	req, err := NewPatchScrapersIDLabelsIDRequest(c.service.ServerAPIURL(), scraperTargetID, labelID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersIDMembers(ctx context.Context, scraperTargetID string, params *GetScrapersIDMembersParams) (*http.Response, error) {
-	req, err := NewGetScrapersIDMembersRequest(c.service.ServerApiUrl(), scraperTargetID, params)
+	req, err := NewGetScrapersIDMembersRequest(c.service.ServerAPIURL(), scraperTargetID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDMembersWithBody(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostScrapersIDMembersRequestWithBody(c.service.ServerApiUrl(), scraperTargetID, params, contentType, body)
+	req, err := NewPostScrapersIDMembersRequestWithBody(c.service.ServerAPIURL(), scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDMembers(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, body PostScrapersIDMembersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostScrapersIDMembersRequest(c.service.ServerApiUrl(), scraperTargetID, params, body)
+	req, err := NewPostScrapersIDMembersRequest(c.service.ServerAPIURL(), scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersIDMembersID(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDMembersIDParams) (*http.Response, error) {
-	req, err := NewDeleteScrapersIDMembersIDRequest(c.service.ServerApiUrl(), scraperTargetID, userID, params)
+	req, err := NewDeleteScrapersIDMembersIDRequest(c.service.ServerAPIURL(), scraperTargetID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetScrapersIDOwners(ctx context.Context, scraperTargetID string, params *GetScrapersIDOwnersParams) (*http.Response, error) {
-	req, err := NewGetScrapersIDOwnersRequest(c.service.ServerApiUrl(), scraperTargetID, params)
+	req, err := NewGetScrapersIDOwnersRequest(c.service.ServerAPIURL(), scraperTargetID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDOwnersWithBody(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostScrapersIDOwnersRequestWithBody(c.service.ServerApiUrl(), scraperTargetID, params, contentType, body)
+	req, err := NewPostScrapersIDOwnersRequestWithBody(c.service.ServerAPIURL(), scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostScrapersIDOwners(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, body PostScrapersIDOwnersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostScrapersIDOwnersRequest(c.service.ServerApiUrl(), scraperTargetID, params, body)
+	req, err := NewPostScrapersIDOwnersRequest(c.service.ServerAPIURL(), scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteScrapersIDOwnersID(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDOwnersIDParams) (*http.Response, error) {
-	req, err := NewDeleteScrapersIDOwnersIDRequest(c.service.ServerApiUrl(), scraperTargetID, userID, params)
+	req, err := NewDeleteScrapersIDOwnersIDRequest(c.service.ServerAPIURL(), scraperTargetID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSetup(ctx context.Context, params *GetSetupParams) (*http.Response, error) {
-	req, err := NewGetSetupRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetSetupRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSetupWithBody(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostSetupRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostSetupRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSetup(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostSetupRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostSetupRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSetupUserWithBody(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostSetupUserRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostSetupUserRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSetupUser(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostSetupUserRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostSetupUserRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSignin(ctx context.Context, params *PostSigninParams) (*http.Response, error) {
-	req, err := NewPostSigninRequest(c.service.ServerApiUrl(), params)
+	req, err := NewPostSigninRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSignout(ctx context.Context, params *PostSignoutParams) (*http.Response, error) {
-	req, err := NewPostSignoutRequest(c.service.ServerApiUrl(), params)
+	req, err := NewPostSignoutRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSources(ctx context.Context, params *GetSourcesParams) (*http.Response, error) {
-	req, err := NewGetSourcesRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetSourcesRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSourcesWithBody(ctx context.Context, params *PostSourcesParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostSourcesRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostSourcesRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostSources(ctx context.Context, params *PostSourcesParams, body PostSourcesJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostSourcesRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostSourcesRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteSourcesID(ctx context.Context, sourceID string, params *DeleteSourcesIDParams) (*http.Response, error) {
-	req, err := NewDeleteSourcesIDRequest(c.service.ServerApiUrl(), sourceID, params)
+	req, err := NewDeleteSourcesIDRequest(c.service.ServerAPIURL(), sourceID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSourcesID(ctx context.Context, sourceID string, params *GetSourcesIDParams) (*http.Response, error) {
-	req, err := NewGetSourcesIDRequest(c.service.ServerApiUrl(), sourceID, params)
+	req, err := NewGetSourcesIDRequest(c.service.ServerAPIURL(), sourceID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchSourcesIDWithBody(ctx context.Context, sourceID string, params *PatchSourcesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchSourcesIDRequestWithBody(c.service.ServerApiUrl(), sourceID, params, contentType, body)
+	req, err := NewPatchSourcesIDRequestWithBody(c.service.ServerAPIURL(), sourceID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchSourcesID(ctx context.Context, sourceID string, params *PatchSourcesIDParams, body PatchSourcesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchSourcesIDRequest(c.service.ServerApiUrl(), sourceID, params, body)
+	req, err := NewPatchSourcesIDRequest(c.service.ServerAPIURL(), sourceID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSourcesIDBuckets(ctx context.Context, sourceID string, params *GetSourcesIDBucketsParams) (*http.Response, error) {
-	req, err := NewGetSourcesIDBucketsRequest(c.service.ServerApiUrl(), sourceID, params)
+	req, err := NewGetSourcesIDBucketsRequest(c.service.ServerAPIURL(), sourceID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetSourcesIDHealth(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*http.Response, error) {
-	req, err := NewGetSourcesIDHealthRequest(c.service.ServerApiUrl(), sourceID, params)
+	req, err := NewGetSourcesIDHealthRequest(c.service.ServerAPIURL(), sourceID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasks(ctx context.Context, params *GetTasksParams) (*http.Response, error) {
-	req, err := NewGetTasksRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetTasksRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksWithBody(ctx context.Context, params *PostTasksParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTasksRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostTasksRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasks(ctx context.Context, params *PostTasksParams, body PostTasksJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTasksRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostTasksRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksID(ctx context.Context, taskID string, params *DeleteTasksIDParams) (*http.Response, error) {
-	req, err := NewDeleteTasksIDRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewDeleteTasksIDRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksID(ctx context.Context, taskID string, params *GetTasksIDParams) (*http.Response, error) {
-	req, err := NewGetTasksIDRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewGetTasksIDRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchTasksIDWithBody(ctx context.Context, taskID string, params *PatchTasksIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchTasksIDRequestWithBody(c.service.ServerApiUrl(), taskID, params, contentType, body)
+	req, err := NewPatchTasksIDRequestWithBody(c.service.ServerAPIURL(), taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchTasksID(ctx context.Context, taskID string, params *PatchTasksIDParams, body PatchTasksIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchTasksIDRequest(c.service.ServerApiUrl(), taskID, params, body)
+	req, err := NewPatchTasksIDRequest(c.service.ServerAPIURL(), taskID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDLabels(ctx context.Context, taskID string, params *GetTasksIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetTasksIDLabelsRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewGetTasksIDLabelsRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDLabelsWithBody(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTasksIDLabelsRequestWithBody(c.service.ServerApiUrl(), taskID, params, contentType, body)
+	req, err := NewPostTasksIDLabelsRequestWithBody(c.service.ServerAPIURL(), taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDLabels(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, body PostTasksIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTasksIDLabelsRequest(c.service.ServerApiUrl(), taskID, params, body)
+	req, err := NewPostTasksIDLabelsRequest(c.service.ServerAPIURL(), taskID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDLabelsID(ctx context.Context, taskID string, labelID string, params *DeleteTasksIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteTasksIDLabelsIDRequest(c.service.ServerApiUrl(), taskID, labelID, params)
+	req, err := NewDeleteTasksIDLabelsIDRequest(c.service.ServerAPIURL(), taskID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDLogs(ctx context.Context, taskID string, params *GetTasksIDLogsParams) (*http.Response, error) {
-	req, err := NewGetTasksIDLogsRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewGetTasksIDLogsRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDMembers(ctx context.Context, taskID string, params *GetTasksIDMembersParams) (*http.Response, error) {
-	req, err := NewGetTasksIDMembersRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewGetTasksIDMembersRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDMembersWithBody(ctx context.Context, taskID string, params *PostTasksIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTasksIDMembersRequestWithBody(c.service.ServerApiUrl(), taskID, params, contentType, body)
+	req, err := NewPostTasksIDMembersRequestWithBody(c.service.ServerAPIURL(), taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDMembers(ctx context.Context, taskID string, params *PostTasksIDMembersParams, body PostTasksIDMembersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTasksIDMembersRequest(c.service.ServerApiUrl(), taskID, params, body)
+	req, err := NewPostTasksIDMembersRequest(c.service.ServerAPIURL(), taskID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDMembersID(ctx context.Context, taskID string, userID string, params *DeleteTasksIDMembersIDParams) (*http.Response, error) {
-	req, err := NewDeleteTasksIDMembersIDRequest(c.service.ServerApiUrl(), taskID, userID, params)
+	req, err := NewDeleteTasksIDMembersIDRequest(c.service.ServerAPIURL(), taskID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDOwners(ctx context.Context, taskID string, params *GetTasksIDOwnersParams) (*http.Response, error) {
-	req, err := NewGetTasksIDOwnersRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewGetTasksIDOwnersRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDOwnersWithBody(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTasksIDOwnersRequestWithBody(c.service.ServerApiUrl(), taskID, params, contentType, body)
+	req, err := NewPostTasksIDOwnersRequestWithBody(c.service.ServerAPIURL(), taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDOwners(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, body PostTasksIDOwnersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTasksIDOwnersRequest(c.service.ServerApiUrl(), taskID, params, body)
+	req, err := NewPostTasksIDOwnersRequest(c.service.ServerAPIURL(), taskID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDOwnersID(ctx context.Context, taskID string, userID string, params *DeleteTasksIDOwnersIDParams) (*http.Response, error) {
-	req, err := NewDeleteTasksIDOwnersIDRequest(c.service.ServerApiUrl(), taskID, userID, params)
+	req, err := NewDeleteTasksIDOwnersIDRequest(c.service.ServerAPIURL(), taskID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDRuns(ctx context.Context, taskID string, params *GetTasksIDRunsParams) (*http.Response, error) {
-	req, err := NewGetTasksIDRunsRequest(c.service.ServerApiUrl(), taskID, params)
+	req, err := NewGetTasksIDRunsRequest(c.service.ServerAPIURL(), taskID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDRunsWithBody(ctx context.Context, taskID string, params *PostTasksIDRunsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTasksIDRunsRequestWithBody(c.service.ServerApiUrl(), taskID, params, contentType, body)
+	req, err := NewPostTasksIDRunsRequestWithBody(c.service.ServerAPIURL(), taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDRuns(ctx context.Context, taskID string, params *PostTasksIDRunsParams, body PostTasksIDRunsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTasksIDRunsRequest(c.service.ServerApiUrl(), taskID, params, body)
+	req, err := NewPostTasksIDRunsRequest(c.service.ServerAPIURL(), taskID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTasksIDRunsID(ctx context.Context, taskID string, runID string, params *DeleteTasksIDRunsIDParams) (*http.Response, error) {
-	req, err := NewDeleteTasksIDRunsIDRequest(c.service.ServerApiUrl(), taskID, runID, params)
+	req, err := NewDeleteTasksIDRunsIDRequest(c.service.ServerAPIURL(), taskID, runID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDRunsID(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDParams) (*http.Response, error) {
-	req, err := NewGetTasksIDRunsIDRequest(c.service.ServerApiUrl(), taskID, runID, params)
+	req, err := NewGetTasksIDRunsIDRequest(c.service.ServerAPIURL(), taskID, runID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTasksIDRunsIDLogs(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*http.Response, error) {
-	req, err := NewGetTasksIDRunsIDLogsRequest(c.service.ServerApiUrl(), taskID, runID, params)
+	req, err := NewGetTasksIDRunsIDLogsRequest(c.service.ServerAPIURL(), taskID, runID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTasksIDRunsIDRetry(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*http.Response, error) {
-	req, err := NewPostTasksIDRunsIDRetryRequest(c.service.ServerApiUrl(), taskID, runID, params)
+	req, err := NewPostTasksIDRunsIDRetryRequest(c.service.ServerAPIURL(), taskID, runID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafPlugins(ctx context.Context, params *GetTelegrafPluginsParams) (*http.Response, error) {
-	req, err := NewGetTelegrafPluginsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetTelegrafPluginsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafs(ctx context.Context, params *GetTelegrafsParams) (*http.Response, error) {
-	req, err := NewGetTelegrafsRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetTelegrafsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsWithBody(ctx context.Context, params *PostTelegrafsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTelegrafsRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostTelegrafsRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafs(ctx context.Context, params *PostTelegrafsParams, body PostTelegrafsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTelegrafsRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostTelegrafsRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsID(ctx context.Context, telegrafID string, params *DeleteTelegrafsIDParams) (*http.Response, error) {
-	req, err := NewDeleteTelegrafsIDRequest(c.service.ServerApiUrl(), telegrafID, params)
+	req, err := NewDeleteTelegrafsIDRequest(c.service.ServerAPIURL(), telegrafID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsID(ctx context.Context, telegrafID string, params *GetTelegrafsIDParams) (*http.Response, error) {
-	req, err := NewGetTelegrafsIDRequest(c.service.ServerApiUrl(), telegrafID, params)
+	req, err := NewGetTelegrafsIDRequest(c.service.ServerAPIURL(), telegrafID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutTelegrafsIDWithBody(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutTelegrafsIDRequestWithBody(c.service.ServerApiUrl(), telegrafID, params, contentType, body)
+	req, err := NewPutTelegrafsIDRequestWithBody(c.service.ServerAPIURL(), telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutTelegrafsID(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, body PutTelegrafsIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutTelegrafsIDRequest(c.service.ServerApiUrl(), telegrafID, params, body)
+	req, err := NewPutTelegrafsIDRequest(c.service.ServerAPIURL(), telegrafID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsIDLabels(ctx context.Context, telegrafID string, params *GetTelegrafsIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetTelegrafsIDLabelsRequest(c.service.ServerApiUrl(), telegrafID, params)
+	req, err := NewGetTelegrafsIDLabelsRequest(c.service.ServerAPIURL(), telegrafID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDLabelsWithBody(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTelegrafsIDLabelsRequestWithBody(c.service.ServerApiUrl(), telegrafID, params, contentType, body)
+	req, err := NewPostTelegrafsIDLabelsRequestWithBody(c.service.ServerAPIURL(), telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDLabels(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, body PostTelegrafsIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTelegrafsIDLabelsRequest(c.service.ServerApiUrl(), telegrafID, params, body)
+	req, err := NewPostTelegrafsIDLabelsRequest(c.service.ServerAPIURL(), telegrafID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsIDLabelsID(ctx context.Context, telegrafID string, labelID string, params *DeleteTelegrafsIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteTelegrafsIDLabelsIDRequest(c.service.ServerApiUrl(), telegrafID, labelID, params)
+	req, err := NewDeleteTelegrafsIDLabelsIDRequest(c.service.ServerAPIURL(), telegrafID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsIDMembers(ctx context.Context, telegrafID string, params *GetTelegrafsIDMembersParams) (*http.Response, error) {
-	req, err := NewGetTelegrafsIDMembersRequest(c.service.ServerApiUrl(), telegrafID, params)
+	req, err := NewGetTelegrafsIDMembersRequest(c.service.ServerAPIURL(), telegrafID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDMembersWithBody(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTelegrafsIDMembersRequestWithBody(c.service.ServerApiUrl(), telegrafID, params, contentType, body)
+	req, err := NewPostTelegrafsIDMembersRequestWithBody(c.service.ServerAPIURL(), telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDMembers(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, body PostTelegrafsIDMembersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTelegrafsIDMembersRequest(c.service.ServerApiUrl(), telegrafID, params, body)
+	req, err := NewPostTelegrafsIDMembersRequest(c.service.ServerAPIURL(), telegrafID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsIDMembersID(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDMembersIDParams) (*http.Response, error) {
-	req, err := NewDeleteTelegrafsIDMembersIDRequest(c.service.ServerApiUrl(), telegrafID, userID, params)
+	req, err := NewDeleteTelegrafsIDMembersIDRequest(c.service.ServerAPIURL(), telegrafID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetTelegrafsIDOwners(ctx context.Context, telegrafID string, params *GetTelegrafsIDOwnersParams) (*http.Response, error) {
-	req, err := NewGetTelegrafsIDOwnersRequest(c.service.ServerApiUrl(), telegrafID, params)
+	req, err := NewGetTelegrafsIDOwnersRequest(c.service.ServerAPIURL(), telegrafID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDOwnersWithBody(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostTelegrafsIDOwnersRequestWithBody(c.service.ServerApiUrl(), telegrafID, params, contentType, body)
+	req, err := NewPostTelegrafsIDOwnersRequestWithBody(c.service.ServerAPIURL(), telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostTelegrafsIDOwners(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, body PostTelegrafsIDOwnersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostTelegrafsIDOwnersRequest(c.service.ServerApiUrl(), telegrafID, params, body)
+	req, err := NewPostTelegrafsIDOwnersRequest(c.service.ServerAPIURL(), telegrafID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteTelegrafsIDOwnersID(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*http.Response, error) {
-	req, err := NewDeleteTelegrafsIDOwnersIDRequest(c.service.ServerApiUrl(), telegrafID, userID, params)
+	req, err := NewDeleteTelegrafsIDOwnersIDRequest(c.service.ServerAPIURL(), telegrafID, userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetUsers(ctx context.Context, params *GetUsersParams) (*http.Response, error) {
-	req, err := NewGetUsersRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetUsersRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsersWithBody(ctx context.Context, params *PostUsersParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostUsersRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostUsersRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsers(ctx context.Context, params *PostUsersParams, body PostUsersJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostUsersRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostUsersRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteUsersID(ctx context.Context, userID string, params *DeleteUsersIDParams) (*http.Response, error) {
-	req, err := NewDeleteUsersIDRequest(c.service.ServerApiUrl(), userID, params)
+	req, err := NewDeleteUsersIDRequest(c.service.ServerAPIURL(), userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetUsersID(ctx context.Context, userID string, params *GetUsersIDParams) (*http.Response, error) {
-	req, err := NewGetUsersIDRequest(c.service.ServerApiUrl(), userID, params)
+	req, err := NewGetUsersIDRequest(c.service.ServerAPIURL(), userID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchUsersIDWithBody(ctx context.Context, userID string, params *PatchUsersIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchUsersIDRequestWithBody(c.service.ServerApiUrl(), userID, params, contentType, body)
+	req, err := NewPatchUsersIDRequestWithBody(c.service.ServerAPIURL(), userID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchUsersID(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchUsersIDRequest(c.service.ServerApiUrl(), userID, params, body)
+	req, err := NewPatchUsersIDRequest(c.service.ServerAPIURL(), userID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsersIDPasswordWithBody(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostUsersIDPasswordRequestWithBody(c.service.ServerApiUrl(), userID, params, contentType, body)
+	req, err := NewPostUsersIDPasswordRequestWithBody(c.service.ServerAPIURL(), userID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostUsersIDPassword(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostUsersIDPasswordRequest(c.service.ServerApiUrl(), userID, params, body)
+	req, err := NewPostUsersIDPasswordRequest(c.service.ServerAPIURL(), userID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetVariables(ctx context.Context, params *GetVariablesParams) (*http.Response, error) {
-	req, err := NewGetVariablesRequest(c.service.ServerApiUrl(), params)
+	req, err := NewGetVariablesRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariablesWithBody(ctx context.Context, params *PostVariablesParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostVariablesRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostVariablesRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariables(ctx context.Context, params *PostVariablesParams, body PostVariablesJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostVariablesRequest(c.service.ServerApiUrl(), params, body)
+	req, err := NewPostVariablesRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteVariablesID(ctx context.Context, variableID string, params *DeleteVariablesIDParams) (*http.Response, error) {
-	req, err := NewDeleteVariablesIDRequest(c.service.ServerApiUrl(), variableID, params)
+	req, err := NewDeleteVariablesIDRequest(c.service.ServerAPIURL(), variableID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetVariablesID(ctx context.Context, variableID string, params *GetVariablesIDParams) (*http.Response, error) {
-	req, err := NewGetVariablesIDRequest(c.service.ServerApiUrl(), variableID, params)
+	req, err := NewGetVariablesIDRequest(c.service.ServerAPIURL(), variableID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchVariablesIDWithBody(ctx context.Context, variableID string, params *PatchVariablesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPatchVariablesIDRequestWithBody(c.service.ServerApiUrl(), variableID, params, contentType, body)
+	req, err := NewPatchVariablesIDRequestWithBody(c.service.ServerAPIURL(), variableID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PatchVariablesID(ctx context.Context, variableID string, params *PatchVariablesIDParams, body PatchVariablesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPatchVariablesIDRequest(c.service.ServerApiUrl(), variableID, params, body)
+	req, err := NewPatchVariablesIDRequest(c.service.ServerAPIURL(), variableID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutVariablesIDWithBody(ctx context.Context, variableID string, params *PutVariablesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutVariablesIDRequestWithBody(c.service.ServerApiUrl(), variableID, params, contentType, body)
+	req, err := NewPutVariablesIDRequestWithBody(c.service.ServerAPIURL(), variableID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PutVariablesID(ctx context.Context, variableID string, params *PutVariablesIDParams, body PutVariablesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutVariablesIDRequest(c.service.ServerApiUrl(), variableID, params, body)
+	req, err := NewPutVariablesIDRequest(c.service.ServerAPIURL(), variableID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) GetVariablesIDLabels(ctx context.Context, variableID string, params *GetVariablesIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetVariablesIDLabelsRequest(c.service.ServerApiUrl(), variableID, params)
+	req, err := NewGetVariablesIDLabelsRequest(c.service.ServerAPIURL(), variableID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariablesIDLabelsWithBody(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostVariablesIDLabelsRequestWithBody(c.service.ServerApiUrl(), variableID, params, contentType, body)
+	req, err := NewPostVariablesIDLabelsRequestWithBody(c.service.ServerAPIURL(), variableID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostVariablesIDLabels(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, body PostVariablesIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostVariablesIDLabelsRequest(c.service.ServerApiUrl(), variableID, params, body)
+	req, err := NewPostVariablesIDLabelsRequest(c.service.ServerAPIURL(), variableID, params, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) DeleteVariablesIDLabelsID(ctx context.Context, variableID string, labelID string, params *DeleteVariablesIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteVariablesIDLabelsIDRequest(c.service.ServerApiUrl(), variableID, labelID, params)
+	req, err := NewDeleteVariablesIDLabelsIDRequest(c.service.ServerAPIURL(), variableID, labelID, params)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 func (c *Client) PostWriteWithBody(ctx context.Context, params *PostWriteParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostWriteRequestWithBody(c.service.ServerApiUrl(), params, contentType, body)
+	req, err := NewPostWriteRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
 	req = req.WithContext(ctx)
-	return c.service.DoHttpRequestWithResponse(req, nil)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
 // NewGetRoutesRequest generates requests for GetRoutes
 func NewGetRoutesRequest(server string, params *GetRoutesParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3414,12 +3414,12 @@ func NewGetRoutesRequest(server string, params *GetRoutesParams) (*http.Request,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -3442,7 +3442,7 @@ func NewGetRoutesRequest(server string, params *GetRoutesParams) (*http.Request,
 func NewGetAuthorizationsRequest(server string, params *GetAuthorizationsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3452,12 +3452,12 @@ func NewGetAuthorizationsRequest(server string, params *GetAuthorizationsParams)
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.UserID != nil {
 
@@ -3523,9 +3523,9 @@ func NewGetAuthorizationsRequest(server string, params *GetAuthorizationsParams)
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -3559,7 +3559,7 @@ func NewPostAuthorizationsRequest(server string, params *PostAuthorizationsParam
 func NewPostAuthorizationsRequestWithBody(server string, params *PostAuthorizationsParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3569,12 +3569,12 @@ func NewPostAuthorizationsRequestWithBody(server string, params *PostAuthorizati
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -3605,7 +3605,7 @@ func NewDeleteAuthorizationsIDRequest(server string, authID string, params *Dele
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3615,12 +3615,12 @@ func NewDeleteAuthorizationsIDRequest(server string, authID string, params *Dele
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -3650,7 +3650,7 @@ func NewGetAuthorizationsIDRequest(server string, authID string, params *GetAuth
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3660,12 +3660,12 @@ func NewGetAuthorizationsIDRequest(server string, authID string, params *GetAuth
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -3706,7 +3706,7 @@ func NewPatchAuthorizationsIDRequestWithBody(server string, authID string, param
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3716,12 +3716,12 @@ func NewPatchAuthorizationsIDRequestWithBody(server string, authID string, param
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -3745,7 +3745,7 @@ func NewPatchAuthorizationsIDRequestWithBody(server string, authID string, param
 func NewGetBucketsRequest(server string, params *GetBucketsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3755,12 +3755,12 @@ func NewGetBucketsRequest(server string, params *GetBucketsParams) (*http.Reques
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Offset != nil {
 
@@ -3842,9 +3842,9 @@ func NewGetBucketsRequest(server string, params *GetBucketsParams) (*http.Reques
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -3878,7 +3878,7 @@ func NewPostBucketsRequest(server string, params *PostBucketsParams, body PostBu
 func NewPostBucketsRequestWithBody(server string, params *PostBucketsParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3888,12 +3888,12 @@ func NewPostBucketsRequestWithBody(server string, params *PostBucketsParams, con
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -3924,7 +3924,7 @@ func NewDeleteBucketsIDRequest(server string, bucketID string, params *DeleteBuc
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3934,12 +3934,12 @@ func NewDeleteBucketsIDRequest(server string, bucketID string, params *DeleteBuc
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -3969,7 +3969,7 @@ func NewGetBucketsIDRequest(server string, bucketID string, params *GetBucketsID
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -3979,12 +3979,12 @@ func NewGetBucketsIDRequest(server string, bucketID string, params *GetBucketsID
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4025,7 +4025,7 @@ func NewPatchBucketsIDRequestWithBody(server string, bucketID string, params *Pa
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4035,12 +4035,12 @@ func NewPatchBucketsIDRequestWithBody(server string, bucketID string, params *Pa
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4071,7 +4071,7 @@ func NewGetBucketsIDLabelsRequest(server string, bucketID string, params *GetBuc
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4081,12 +4081,12 @@ func NewGetBucketsIDLabelsRequest(server string, bucketID string, params *GetBuc
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4127,7 +4127,7 @@ func NewPostBucketsIDLabelsRequestWithBody(server string, bucketID string, param
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4137,12 +4137,12 @@ func NewPostBucketsIDLabelsRequestWithBody(server string, bucketID string, param
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4180,7 +4180,7 @@ func NewDeleteBucketsIDLabelsIDRequest(server string, bucketID string, labelID s
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4190,12 +4190,12 @@ func NewDeleteBucketsIDLabelsIDRequest(server string, bucketID string, labelID s
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4225,7 +4225,7 @@ func NewGetBucketsIDMembersRequest(server string, bucketID string, params *GetBu
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4235,12 +4235,12 @@ func NewGetBucketsIDMembersRequest(server string, bucketID string, params *GetBu
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4281,7 +4281,7 @@ func NewPostBucketsIDMembersRequestWithBody(server string, bucketID string, para
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4291,12 +4291,12 @@ func NewPostBucketsIDMembersRequestWithBody(server string, bucketID string, para
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4334,7 +4334,7 @@ func NewDeleteBucketsIDMembersIDRequest(server string, bucketID string, userID s
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4344,12 +4344,12 @@ func NewDeleteBucketsIDMembersIDRequest(server string, bucketID string, userID s
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4379,7 +4379,7 @@ func NewGetBucketsIDOwnersRequest(server string, bucketID string, params *GetBuc
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4389,12 +4389,12 @@ func NewGetBucketsIDOwnersRequest(server string, bucketID string, params *GetBuc
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4435,7 +4435,7 @@ func NewPostBucketsIDOwnersRequestWithBody(server string, bucketID string, param
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4445,12 +4445,12 @@ func NewPostBucketsIDOwnersRequestWithBody(server string, bucketID string, param
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4488,7 +4488,7 @@ func NewDeleteBucketsIDOwnersIDRequest(server string, bucketID string, userID st
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4498,12 +4498,12 @@ func NewDeleteBucketsIDOwnersIDRequest(server string, bucketID string, userID st
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4526,7 +4526,7 @@ func NewDeleteBucketsIDOwnersIDRequest(server string, bucketID string, userID st
 func NewGetChecksRequest(server string, params *GetChecksParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4536,12 +4536,12 @@ func NewGetChecksRequest(server string, params *GetChecksParams) (*http.Request,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Offset != nil {
 
@@ -4587,9 +4587,9 @@ func NewGetChecksRequest(server string, params *GetChecksParams) (*http.Request,
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4623,7 +4623,7 @@ func NewCreateCheckRequest(server string, body CreateCheckJSONRequestBody) (*htt
 func NewCreateCheckRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4633,12 +4633,12 @@ func NewCreateCheckRequestWithBody(server string, contentType string, body io.Re
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4658,7 +4658,7 @@ func NewDeleteChecksIDRequest(server string, checkID string, params *DeleteCheck
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4668,12 +4668,12 @@ func NewDeleteChecksIDRequest(server string, checkID string, params *DeleteCheck
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4703,7 +4703,7 @@ func NewGetChecksIDRequest(server string, checkID string, params *GetChecksIDPar
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4713,12 +4713,12 @@ func NewGetChecksIDRequest(server string, checkID string, params *GetChecksIDPar
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4759,7 +4759,7 @@ func NewPatchChecksIDRequestWithBody(server string, checkID string, params *Patc
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4769,12 +4769,12 @@ func NewPatchChecksIDRequestWithBody(server string, checkID string, params *Patc
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4816,7 +4816,7 @@ func NewPutChecksIDRequestWithBody(server string, checkID string, params *PutChe
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4826,12 +4826,12 @@ func NewPutChecksIDRequestWithBody(server string, checkID string, params *PutChe
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4862,7 +4862,7 @@ func NewGetChecksIDLabelsRequest(server string, checkID string, params *GetCheck
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4872,12 +4872,12 @@ func NewGetChecksIDLabelsRequest(server string, checkID string, params *GetCheck
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4918,7 +4918,7 @@ func NewPostChecksIDLabelsRequestWithBody(server string, checkID string, params 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4928,12 +4928,12 @@ func NewPostChecksIDLabelsRequestWithBody(server string, checkID string, params 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -4971,7 +4971,7 @@ func NewDeleteChecksIDLabelsIDRequest(server string, checkID string, labelID str
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -4981,12 +4981,12 @@ func NewDeleteChecksIDLabelsIDRequest(server string, checkID string, labelID str
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5016,7 +5016,7 @@ func NewGetChecksIDQueryRequest(server string, checkID string, params *GetChecks
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5026,12 +5026,12 @@ func NewGetChecksIDQueryRequest(server string, checkID string, params *GetChecks
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5054,7 +5054,7 @@ func NewGetChecksIDQueryRequest(server string, checkID string, params *GetChecks
 func NewGetDashboardsRequest(server string, params *GetDashboardsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5064,12 +5064,12 @@ func NewGetDashboardsRequest(server string, params *GetDashboardsParams) (*http.
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Owner != nil {
 
@@ -5151,9 +5151,9 @@ func NewGetDashboardsRequest(server string, params *GetDashboardsParams) (*http.
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5187,7 +5187,7 @@ func NewPostDashboardsRequest(server string, params *PostDashboardsParams, body 
 func NewPostDashboardsRequestWithBody(server string, params *PostDashboardsParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5197,12 +5197,12 @@ func NewPostDashboardsRequestWithBody(server string, params *PostDashboardsParam
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5233,7 +5233,7 @@ func NewDeleteDashboardsIDRequest(server string, dashboardID string, params *Del
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5243,12 +5243,12 @@ func NewDeleteDashboardsIDRequest(server string, dashboardID string, params *Del
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5278,7 +5278,7 @@ func NewGetDashboardsIDRequest(server string, dashboardID string, params *GetDas
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5288,12 +5288,12 @@ func NewGetDashboardsIDRequest(server string, dashboardID string, params *GetDas
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Include != nil {
 
@@ -5311,9 +5311,9 @@ func NewGetDashboardsIDRequest(server string, dashboardID string, params *GetDas
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5354,7 +5354,7 @@ func NewPatchDashboardsIDRequestWithBody(server string, dashboardID string, para
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5364,12 +5364,12 @@ func NewPatchDashboardsIDRequestWithBody(server string, dashboardID string, para
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5411,7 +5411,7 @@ func NewPostDashboardsIDCellsRequestWithBody(server string, dashboardID string, 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5421,12 +5421,12 @@ func NewPostDashboardsIDCellsRequestWithBody(server string, dashboardID string, 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5468,7 +5468,7 @@ func NewPutDashboardsIDCellsRequestWithBody(server string, dashboardID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5478,12 +5478,12 @@ func NewPutDashboardsIDCellsRequestWithBody(server string, dashboardID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5521,7 +5521,7 @@ func NewDeleteDashboardsIDCellsIDRequest(server string, dashboardID string, cell
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5531,12 +5531,12 @@ func NewDeleteDashboardsIDCellsIDRequest(server string, dashboardID string, cell
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5584,7 +5584,7 @@ func NewPatchDashboardsIDCellsIDRequestWithBody(server string, dashboardID strin
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5594,12 +5594,12 @@ func NewPatchDashboardsIDCellsIDRequestWithBody(server string, dashboardID strin
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5637,7 +5637,7 @@ func NewGetDashboardsIDCellsIDViewRequest(server string, dashboardID string, cel
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5647,12 +5647,12 @@ func NewGetDashboardsIDCellsIDViewRequest(server string, dashboardID string, cel
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5700,7 +5700,7 @@ func NewPatchDashboardsIDCellsIDViewRequestWithBody(server string, dashboardID s
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5710,12 +5710,12 @@ func NewPatchDashboardsIDCellsIDViewRequestWithBody(server string, dashboardID s
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5746,7 +5746,7 @@ func NewGetDashboardsIDLabelsRequest(server string, dashboardID string, params *
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5756,12 +5756,12 @@ func NewGetDashboardsIDLabelsRequest(server string, dashboardID string, params *
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5802,7 +5802,7 @@ func NewPostDashboardsIDLabelsRequestWithBody(server string, dashboardID string,
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5812,12 +5812,12 @@ func NewPostDashboardsIDLabelsRequestWithBody(server string, dashboardID string,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5855,7 +5855,7 @@ func NewDeleteDashboardsIDLabelsIDRequest(server string, dashboardID string, lab
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5865,12 +5865,12 @@ func NewDeleteDashboardsIDLabelsIDRequest(server string, dashboardID string, lab
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5900,7 +5900,7 @@ func NewGetDashboardsIDMembersRequest(server string, dashboardID string, params 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5910,12 +5910,12 @@ func NewGetDashboardsIDMembersRequest(server string, dashboardID string, params 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5956,7 +5956,7 @@ func NewPostDashboardsIDMembersRequestWithBody(server string, dashboardID string
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -5966,12 +5966,12 @@ func NewPostDashboardsIDMembersRequestWithBody(server string, dashboardID string
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6009,7 +6009,7 @@ func NewDeleteDashboardsIDMembersIDRequest(server string, dashboardID string, us
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6019,12 +6019,12 @@ func NewDeleteDashboardsIDMembersIDRequest(server string, dashboardID string, us
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6054,7 +6054,7 @@ func NewGetDashboardsIDOwnersRequest(server string, dashboardID string, params *
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6064,12 +6064,12 @@ func NewGetDashboardsIDOwnersRequest(server string, dashboardID string, params *
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6110,7 +6110,7 @@ func NewPostDashboardsIDOwnersRequestWithBody(server string, dashboardID string,
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6120,12 +6120,12 @@ func NewPostDashboardsIDOwnersRequestWithBody(server string, dashboardID string,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6163,7 +6163,7 @@ func NewDeleteDashboardsIDOwnersIDRequest(server string, dashboardID string, use
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6173,12 +6173,12 @@ func NewDeleteDashboardsIDOwnersIDRequest(server string, dashboardID string, use
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6201,7 +6201,7 @@ func NewDeleteDashboardsIDOwnersIDRequest(server string, dashboardID string, use
 func NewGetDBRPsRequest(server string, params *GetDBRPsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6211,12 +6211,12 @@ func NewGetDBRPsRequest(server string, params *GetDBRPsParams) (*http.Request, e
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -6310,9 +6310,9 @@ func NewGetDBRPsRequest(server string, params *GetDBRPsParams) (*http.Request, e
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6346,7 +6346,7 @@ func NewPostDBRPRequest(server string, params *PostDBRPParams, body PostDBRPJSON
 func NewPostDBRPRequestWithBody(server string, params *PostDBRPParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6356,12 +6356,12 @@ func NewPostDBRPRequestWithBody(server string, params *PostDBRPParams, contentTy
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6392,7 +6392,7 @@ func NewDeleteDBRPIDRequest(server string, dbrpID string, params *DeleteDBRPIDPa
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6402,12 +6402,12 @@ func NewDeleteDBRPIDRequest(server string, dbrpID string, params *DeleteDBRPIDPa
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -6421,9 +6421,9 @@ func NewDeleteDBRPIDRequest(server string, dbrpID string, params *DeleteDBRPIDPa
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6453,7 +6453,7 @@ func NewGetDBRPsIDRequest(server string, dbrpID string, params *GetDBRPsIDParams
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6463,12 +6463,12 @@ func NewGetDBRPsIDRequest(server string, dbrpID string, params *GetDBRPsIDParams
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -6482,9 +6482,9 @@ func NewGetDBRPsIDRequest(server string, dbrpID string, params *GetDBRPsIDParams
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6525,7 +6525,7 @@ func NewPatchDBRPIDRequestWithBody(server string, dbrpID string, params *PatchDB
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6535,12 +6535,12 @@ func NewPatchDBRPIDRequestWithBody(server string, dbrpID string, params *PatchDB
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -6554,9 +6554,9 @@ func NewPatchDBRPIDRequestWithBody(server string, dbrpID string, params *PatchDB
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6591,7 +6591,7 @@ func NewPostDeleteRequest(server string, params *PostDeleteParams, body PostDele
 func NewPostDeleteRequestWithBody(server string, params *PostDeleteParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6601,12 +6601,12 @@ func NewPostDeleteRequestWithBody(server string, params *PostDeleteParams, conte
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -6672,9 +6672,9 @@ func NewPostDeleteRequestWithBody(server string, params *PostDeleteParams, conte
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6698,7 +6698,7 @@ func NewPostDeleteRequestWithBody(server string, params *PostDeleteParams, conte
 func NewGetDocumentsTemplatesRequest(server string, params *GetDocumentsTemplatesParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6708,12 +6708,12 @@ func NewGetDocumentsTemplatesRequest(server string, params *GetDocumentsTemplate
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -6747,9 +6747,9 @@ func NewGetDocumentsTemplatesRequest(server string, params *GetDocumentsTemplate
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6783,7 +6783,7 @@ func NewPostDocumentsTemplatesRequest(server string, params *PostDocumentsTempla
 func NewPostDocumentsTemplatesRequestWithBody(server string, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6793,12 +6793,12 @@ func NewPostDocumentsTemplatesRequestWithBody(server string, params *PostDocumen
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6829,7 +6829,7 @@ func NewDeleteDocumentsTemplatesIDRequest(server string, templateID string, para
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6839,12 +6839,12 @@ func NewDeleteDocumentsTemplatesIDRequest(server string, templateID string, para
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6874,7 +6874,7 @@ func NewGetDocumentsTemplatesIDRequest(server string, templateID string, params 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6884,12 +6884,12 @@ func NewGetDocumentsTemplatesIDRequest(server string, templateID string, params 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6930,7 +6930,7 @@ func NewPutDocumentsTemplatesIDRequestWithBody(server string, templateID string,
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6940,12 +6940,12 @@ func NewPutDocumentsTemplatesIDRequestWithBody(server string, templateID string,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -6976,7 +6976,7 @@ func NewGetDocumentsTemplatesIDLabelsRequest(server string, templateID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -6986,12 +6986,12 @@ func NewGetDocumentsTemplatesIDLabelsRequest(server string, templateID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7032,7 +7032,7 @@ func NewPostDocumentsTemplatesIDLabelsRequestWithBody(server string, templateID 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7042,12 +7042,12 @@ func NewPostDocumentsTemplatesIDLabelsRequestWithBody(server string, templateID 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7085,7 +7085,7 @@ func NewDeleteDocumentsTemplatesIDLabelsIDRequest(server string, templateID stri
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7095,12 +7095,12 @@ func NewDeleteDocumentsTemplatesIDLabelsIDRequest(server string, templateID stri
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7123,7 +7123,7 @@ func NewDeleteDocumentsTemplatesIDLabelsIDRequest(server string, templateID stri
 func NewGetFlagsRequest(server string, params *GetFlagsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7133,12 +7133,12 @@ func NewGetFlagsRequest(server string, params *GetFlagsParams) (*http.Request, e
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7161,7 +7161,7 @@ func NewGetFlagsRequest(server string, params *GetFlagsParams) (*http.Request, e
 func NewGetHealthRequest(server string, params *GetHealthParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7171,12 +7171,12 @@ func NewGetHealthRequest(server string, params *GetHealthParams) (*http.Request,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7199,7 +7199,7 @@ func NewGetHealthRequest(server string, params *GetHealthParams) (*http.Request,
 func NewGetLabelsRequest(server string, params *GetLabelsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7209,12 +7209,12 @@ func NewGetLabelsRequest(server string, params *GetLabelsParams) (*http.Request,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.OrgID != nil {
 
@@ -7232,9 +7232,9 @@ func NewGetLabelsRequest(server string, params *GetLabelsParams) (*http.Request,
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7268,7 +7268,7 @@ func NewPostLabelsRequest(server string, body PostLabelsJSONRequestBody) (*http.
 func NewPostLabelsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7278,12 +7278,12 @@ func NewPostLabelsRequestWithBody(server string, contentType string, body io.Rea
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7303,7 +7303,7 @@ func NewDeleteLabelsIDRequest(server string, labelID string, params *DeleteLabel
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7313,12 +7313,12 @@ func NewDeleteLabelsIDRequest(server string, labelID string, params *DeleteLabel
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7348,7 +7348,7 @@ func NewGetLabelsIDRequest(server string, labelID string, params *GetLabelsIDPar
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7358,12 +7358,12 @@ func NewGetLabelsIDRequest(server string, labelID string, params *GetLabelsIDPar
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7404,7 +7404,7 @@ func NewPatchLabelsIDRequestWithBody(server string, labelID string, params *Patc
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7414,12 +7414,12 @@ func NewPatchLabelsIDRequestWithBody(server string, labelID string, params *Patc
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7443,7 +7443,7 @@ func NewPatchLabelsIDRequestWithBody(server string, labelID string, params *Patc
 func NewGetMeRequest(server string, params *GetMeParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7453,12 +7453,12 @@ func NewGetMeRequest(server string, params *GetMeParams) (*http.Request, error) 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7492,7 +7492,7 @@ func NewPutMePasswordRequest(server string, params *PutMePasswordParams, body Pu
 func NewPutMePasswordRequestWithBody(server string, params *PutMePasswordParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7502,12 +7502,12 @@ func NewPutMePasswordRequestWithBody(server string, params *PutMePasswordParams,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7531,7 +7531,7 @@ func NewPutMePasswordRequestWithBody(server string, params *PutMePasswordParams,
 func NewGetNotificationEndpointsRequest(server string, params *GetNotificationEndpointsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7541,12 +7541,12 @@ func NewGetNotificationEndpointsRequest(server string, params *GetNotificationEn
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Offset != nil {
 
@@ -7592,9 +7592,9 @@ func NewGetNotificationEndpointsRequest(server string, params *GetNotificationEn
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7628,7 +7628,7 @@ func NewCreateNotificationEndpointRequest(server string, body CreateNotification
 func NewCreateNotificationEndpointRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7638,12 +7638,12 @@ func NewCreateNotificationEndpointRequestWithBody(server string, contentType str
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7663,7 +7663,7 @@ func NewDeleteNotificationEndpointsIDRequest(server string, endpointID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7673,12 +7673,12 @@ func NewDeleteNotificationEndpointsIDRequest(server string, endpointID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7708,7 +7708,7 @@ func NewGetNotificationEndpointsIDRequest(server string, endpointID string, para
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7718,12 +7718,12 @@ func NewGetNotificationEndpointsIDRequest(server string, endpointID string, para
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7764,7 +7764,7 @@ func NewPatchNotificationEndpointsIDRequestWithBody(server string, endpointID st
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7774,12 +7774,12 @@ func NewPatchNotificationEndpointsIDRequestWithBody(server string, endpointID st
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7821,7 +7821,7 @@ func NewPutNotificationEndpointsIDRequestWithBody(server string, endpointID stri
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7831,12 +7831,12 @@ func NewPutNotificationEndpointsIDRequestWithBody(server string, endpointID stri
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7867,7 +7867,7 @@ func NewGetNotificationEndpointsIDLabelsRequest(server string, endpointID string
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7877,12 +7877,12 @@ func NewGetNotificationEndpointsIDLabelsRequest(server string, endpointID string
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -7923,7 +7923,7 @@ func NewPostNotificationEndpointIDLabelsRequestWithBody(server string, endpointI
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7933,12 +7933,12 @@ func NewPostNotificationEndpointIDLabelsRequestWithBody(server string, endpointI
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -7976,7 +7976,7 @@ func NewDeleteNotificationEndpointsIDLabelsIDRequest(server string, endpointID s
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -7986,12 +7986,12 @@ func NewDeleteNotificationEndpointsIDLabelsIDRequest(server string, endpointID s
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8014,7 +8014,7 @@ func NewDeleteNotificationEndpointsIDLabelsIDRequest(server string, endpointID s
 func NewGetNotificationRulesRequest(server string, params *GetNotificationRulesParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8024,12 +8024,12 @@ func NewGetNotificationRulesRequest(server string, params *GetNotificationRulesP
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Offset != nil {
 
@@ -8107,9 +8107,9 @@ func NewGetNotificationRulesRequest(server string, params *GetNotificationRulesP
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8143,7 +8143,7 @@ func NewCreateNotificationRuleRequest(server string, body CreateNotificationRule
 func NewCreateNotificationRuleRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8153,12 +8153,12 @@ func NewCreateNotificationRuleRequestWithBody(server string, contentType string,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8178,7 +8178,7 @@ func NewDeleteNotificationRulesIDRequest(server string, ruleID string, params *D
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8188,12 +8188,12 @@ func NewDeleteNotificationRulesIDRequest(server string, ruleID string, params *D
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8223,7 +8223,7 @@ func NewGetNotificationRulesIDRequest(server string, ruleID string, params *GetN
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8233,12 +8233,12 @@ func NewGetNotificationRulesIDRequest(server string, ruleID string, params *GetN
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8279,7 +8279,7 @@ func NewPatchNotificationRulesIDRequestWithBody(server string, ruleID string, pa
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8289,12 +8289,12 @@ func NewPatchNotificationRulesIDRequestWithBody(server string, ruleID string, pa
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8336,7 +8336,7 @@ func NewPutNotificationRulesIDRequestWithBody(server string, ruleID string, para
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8346,12 +8346,12 @@ func NewPutNotificationRulesIDRequestWithBody(server string, ruleID string, para
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8382,7 +8382,7 @@ func NewGetNotificationRulesIDLabelsRequest(server string, ruleID string, params
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8392,12 +8392,12 @@ func NewGetNotificationRulesIDLabelsRequest(server string, ruleID string, params
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8438,7 +8438,7 @@ func NewPostNotificationRuleIDLabelsRequestWithBody(server string, ruleID string
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8448,12 +8448,12 @@ func NewPostNotificationRuleIDLabelsRequestWithBody(server string, ruleID string
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8491,7 +8491,7 @@ func NewDeleteNotificationRulesIDLabelsIDRequest(server string, ruleID string, l
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8501,12 +8501,12 @@ func NewDeleteNotificationRulesIDLabelsIDRequest(server string, ruleID string, l
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8536,7 +8536,7 @@ func NewGetNotificationRulesIDQueryRequest(server string, ruleID string, params 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8546,12 +8546,12 @@ func NewGetNotificationRulesIDQueryRequest(server string, ruleID string, params 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8574,7 +8574,7 @@ func NewGetNotificationRulesIDQueryRequest(server string, ruleID string, params 
 func NewGetOrgsRequest(server string, params *GetOrgsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8584,12 +8584,12 @@ func NewGetOrgsRequest(server string, params *GetOrgsParams) (*http.Request, err
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -8639,9 +8639,9 @@ func NewGetOrgsRequest(server string, params *GetOrgsParams) (*http.Request, err
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8675,7 +8675,7 @@ func NewPostOrgsRequest(server string, params *PostOrgsParams, body PostOrgsJSON
 func NewPostOrgsRequestWithBody(server string, params *PostOrgsParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8685,12 +8685,12 @@ func NewPostOrgsRequestWithBody(server string, params *PostOrgsParams, contentTy
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8721,7 +8721,7 @@ func NewDeleteOrgsIDRequest(server string, orgID string, params *DeleteOrgsIDPar
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8731,12 +8731,12 @@ func NewDeleteOrgsIDRequest(server string, orgID string, params *DeleteOrgsIDPar
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8766,7 +8766,7 @@ func NewGetOrgsIDRequest(server string, orgID string, params *GetOrgsIDParams) (
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8776,12 +8776,12 @@ func NewGetOrgsIDRequest(server string, orgID string, params *GetOrgsIDParams) (
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8822,7 +8822,7 @@ func NewPatchOrgsIDRequestWithBody(server string, orgID string, params *PatchOrg
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8832,12 +8832,12 @@ func NewPatchOrgsIDRequestWithBody(server string, orgID string, params *PatchOrg
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8879,7 +8879,7 @@ func NewPostOrgsIDInvitesRequestWithBody(server string, orgID string, params *Po
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8889,12 +8889,12 @@ func NewPostOrgsIDInvitesRequestWithBody(server string, orgID string, params *Po
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8932,7 +8932,7 @@ func NewDeleteOrgsIDInviteIDRequest(server string, orgID string, inviteID string
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8942,12 +8942,12 @@ func NewDeleteOrgsIDInviteIDRequest(server string, orgID string, inviteID string
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8984,7 +8984,7 @@ func NewPostOrgsIDInviteIDRequest(server string, orgID string, inviteID string, 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -8994,12 +8994,12 @@ func NewPostOrgsIDInviteIDRequest(server string, orgID string, inviteID string, 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), nil)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9029,7 +9029,7 @@ func NewGetOrgsIDLabelsRequest(server string, orgID string, params *GetOrgsIDLab
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9039,12 +9039,12 @@ func NewGetOrgsIDLabelsRequest(server string, orgID string, params *GetOrgsIDLab
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9085,7 +9085,7 @@ func NewPostOrgsIDLabelsRequestWithBody(server string, orgID string, params *Pos
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9095,12 +9095,12 @@ func NewPostOrgsIDLabelsRequestWithBody(server string, orgID string, params *Pos
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9138,7 +9138,7 @@ func NewDeleteOrgsIDLabelsIDRequest(server string, orgID string, labelID string,
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9148,12 +9148,12 @@ func NewDeleteOrgsIDLabelsIDRequest(server string, orgID string, labelID string,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9183,7 +9183,7 @@ func NewGetOrgsIDMembersRequest(server string, orgID string, params *GetOrgsIDMe
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9193,12 +9193,12 @@ func NewGetOrgsIDMembersRequest(server string, orgID string, params *GetOrgsIDMe
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9239,7 +9239,7 @@ func NewPostOrgsIDMembersRequestWithBody(server string, orgID string, params *Po
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9249,12 +9249,12 @@ func NewPostOrgsIDMembersRequestWithBody(server string, orgID string, params *Po
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9292,7 +9292,7 @@ func NewDeleteOrgsIDMembersIDRequest(server string, orgID string, userID string,
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9302,12 +9302,12 @@ func NewDeleteOrgsIDMembersIDRequest(server string, orgID string, userID string,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9337,7 +9337,7 @@ func NewGetOrgsIDOwnersRequest(server string, orgID string, params *GetOrgsIDOwn
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9347,12 +9347,12 @@ func NewGetOrgsIDOwnersRequest(server string, orgID string, params *GetOrgsIDOwn
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9393,7 +9393,7 @@ func NewPostOrgsIDOwnersRequestWithBody(server string, orgID string, params *Pos
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9403,12 +9403,12 @@ func NewPostOrgsIDOwnersRequestWithBody(server string, orgID string, params *Pos
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9446,7 +9446,7 @@ func NewDeleteOrgsIDOwnersIDRequest(server string, orgID string, userID string, 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9456,12 +9456,12 @@ func NewDeleteOrgsIDOwnersIDRequest(server string, orgID string, userID string, 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9491,7 +9491,7 @@ func NewGetOrgsIDSecretsRequest(server string, orgID string, params *GetOrgsIDSe
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9501,12 +9501,12 @@ func NewGetOrgsIDSecretsRequest(server string, orgID string, params *GetOrgsIDSe
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9547,7 +9547,7 @@ func NewPatchOrgsIDSecretsRequestWithBody(server string, orgID string, params *P
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9557,12 +9557,12 @@ func NewPatchOrgsIDSecretsRequestWithBody(server string, orgID string, params *P
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9604,7 +9604,7 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9614,12 +9614,12 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9650,7 +9650,7 @@ func NewGetCloudUsersRequest(server string, orgID string, params *GetCloudUsersP
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9660,12 +9660,12 @@ func NewGetCloudUsersRequest(server string, orgID string, params *GetCloudUsersP
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9702,7 +9702,7 @@ func NewDeleteOrgsIDCloudUserIDRequest(server string, orgID string, userID strin
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9712,12 +9712,12 @@ func NewDeleteOrgsIDCloudUserIDRequest(server string, orgID string, userID strin
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9751,7 +9751,7 @@ func NewCreatePkgRequest(server string, body CreatePkgJSONRequestBody) (*http.Re
 func NewCreatePkgRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9761,12 +9761,12 @@ func NewCreatePkgRequestWithBody(server string, contentType string, body io.Read
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9790,7 +9790,7 @@ func NewApplyPkgRequest(server string, body ApplyPkgJSONRequestBody) (*http.Requ
 func NewApplyPkgRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9800,12 +9800,12 @@ func NewApplyPkgRequestWithBody(server string, contentType string, body io.Reade
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9818,7 +9818,7 @@ func NewApplyPkgRequestWithBody(server string, contentType string, body io.Reade
 func NewListStacksRequest(server string, params *ListStacksParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9828,12 +9828,12 @@ func NewListStacksRequest(server string, params *ListStacksParams) (*http.Reques
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -9879,9 +9879,9 @@ func NewListStacksRequest(server string, params *ListStacksParams) (*http.Reques
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9904,7 +9904,7 @@ func NewCreateStackRequest(server string, body CreateStackJSONRequestBody) (*htt
 func NewCreateStackRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9914,12 +9914,12 @@ func NewCreateStackRequestWithBody(server string, contentType string, body io.Re
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9939,7 +9939,7 @@ func NewDeleteStackRequest(server string, stackId string, params *DeleteStackPar
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9949,12 +9949,12 @@ func NewDeleteStackRequest(server string, stackId string, params *DeleteStackPar
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -9968,9 +9968,9 @@ func NewDeleteStackRequest(server string, stackId string, params *DeleteStackPar
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -9989,7 +9989,7 @@ func NewReadStackRequest(server string, stackId string) (*http.Request, error) {
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -9999,12 +9999,12 @@ func NewReadStackRequest(server string, stackId string) (*http.Request, error) {
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10034,7 +10034,7 @@ func NewUpdateStackRequestWithBody(server string, stackId string, contentType st
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10044,12 +10044,12 @@ func NewUpdateStackRequestWithBody(server string, stackId string, contentType st
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10069,7 +10069,7 @@ func NewExportStackRequest(server string, stackId string, params *ExportStackPar
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10079,12 +10079,12 @@ func NewExportStackRequest(server string, stackId string, params *ExportStackPar
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
 		return nil, err
@@ -10098,9 +10098,9 @@ func NewExportStackRequest(server string, stackId string, params *ExportStackPar
 		}
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10123,7 +10123,7 @@ func NewPostQueryRequest(server string, params *PostQueryParams, body PostQueryJ
 func NewPostQueryRequestWithBody(server string, params *PostQueryParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10133,12 +10133,12 @@ func NewPostQueryRequestWithBody(server string, params *PostQueryParams, content
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -10172,9 +10172,9 @@ func NewPostQueryRequestWithBody(server string, params *PostQueryParams, content
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10231,7 +10231,7 @@ func NewPostQueryAnalyzeRequest(server string, params *PostQueryAnalyzeParams, b
 func NewPostQueryAnalyzeRequestWithBody(server string, params *PostQueryAnalyzeParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10241,12 +10241,12 @@ func NewPostQueryAnalyzeRequestWithBody(server string, params *PostQueryAnalyzeP
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10292,7 +10292,7 @@ func NewPostQueryAstRequest(server string, params *PostQueryAstParams, body Post
 func NewPostQueryAstRequestWithBody(server string, params *PostQueryAstParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10302,12 +10302,12 @@ func NewPostQueryAstRequestWithBody(server string, params *PostQueryAstParams, c
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10342,7 +10342,7 @@ func NewPostQueryAstRequestWithBody(server string, params *PostQueryAstParams, c
 func NewGetQuerySuggestionsRequest(server string, params *GetQuerySuggestionsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10352,12 +10352,12 @@ func NewGetQuerySuggestionsRequest(server string, params *GetQuerySuggestionsPar
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10387,7 +10387,7 @@ func NewGetQuerySuggestionsNameRequest(server string, name string, params *GetQu
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10397,12 +10397,12 @@ func NewGetQuerySuggestionsNameRequest(server string, name string, params *GetQu
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10425,7 +10425,7 @@ func NewGetQuerySuggestionsNameRequest(server string, name string, params *GetQu
 func NewGetReadyRequest(server string, params *GetReadyParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10435,12 +10435,12 @@ func NewGetReadyRequest(server string, params *GetReadyParams) (*http.Request, e
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10463,7 +10463,7 @@ func NewGetReadyRequest(server string, params *GetReadyParams) (*http.Request, e
 func NewGetScrapersRequest(server string, params *GetScrapersParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10473,12 +10473,12 @@ func NewGetScrapersRequest(server string, params *GetScrapersParams) (*http.Requ
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Name != nil {
 
@@ -10544,9 +10544,9 @@ func NewGetScrapersRequest(server string, params *GetScrapersParams) (*http.Requ
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10580,7 +10580,7 @@ func NewPostScrapersRequest(server string, params *PostScrapersParams, body Post
 func NewPostScrapersRequestWithBody(server string, params *PostScrapersParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10590,12 +10590,12 @@ func NewPostScrapersRequestWithBody(server string, params *PostScrapersParams, c
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10626,7 +10626,7 @@ func NewDeleteScrapersIDRequest(server string, scraperTargetID string, params *D
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10636,12 +10636,12 @@ func NewDeleteScrapersIDRequest(server string, scraperTargetID string, params *D
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10671,7 +10671,7 @@ func NewGetScrapersIDRequest(server string, scraperTargetID string, params *GetS
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10681,12 +10681,12 @@ func NewGetScrapersIDRequest(server string, scraperTargetID string, params *GetS
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10727,7 +10727,7 @@ func NewPatchScrapersIDRequestWithBody(server string, scraperTargetID string, pa
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10737,12 +10737,12 @@ func NewPatchScrapersIDRequestWithBody(server string, scraperTargetID string, pa
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10773,7 +10773,7 @@ func NewGetScrapersIDLabelsRequest(server string, scraperTargetID string, params
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10783,12 +10783,12 @@ func NewGetScrapersIDLabelsRequest(server string, scraperTargetID string, params
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10829,7 +10829,7 @@ func NewPostScrapersIDLabelsRequestWithBody(server string, scraperTargetID strin
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10839,12 +10839,12 @@ func NewPostScrapersIDLabelsRequestWithBody(server string, scraperTargetID strin
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10882,7 +10882,7 @@ func NewDeleteScrapersIDLabelsIDRequest(server string, scraperTargetID string, l
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10892,12 +10892,12 @@ func NewDeleteScrapersIDLabelsIDRequest(server string, scraperTargetID string, l
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10945,7 +10945,7 @@ func NewPatchScrapersIDLabelsIDRequestWithBody(server string, scraperTargetID st
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -10955,12 +10955,12 @@ func NewPatchScrapersIDLabelsIDRequestWithBody(server string, scraperTargetID st
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -10991,7 +10991,7 @@ func NewGetScrapersIDMembersRequest(server string, scraperTargetID string, param
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11001,12 +11001,12 @@ func NewGetScrapersIDMembersRequest(server string, scraperTargetID string, param
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11047,7 +11047,7 @@ func NewPostScrapersIDMembersRequestWithBody(server string, scraperTargetID stri
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11057,12 +11057,12 @@ func NewPostScrapersIDMembersRequestWithBody(server string, scraperTargetID stri
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11100,7 +11100,7 @@ func NewDeleteScrapersIDMembersIDRequest(server string, scraperTargetID string, 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11110,12 +11110,12 @@ func NewDeleteScrapersIDMembersIDRequest(server string, scraperTargetID string, 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11145,7 +11145,7 @@ func NewGetScrapersIDOwnersRequest(server string, scraperTargetID string, params
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11155,12 +11155,12 @@ func NewGetScrapersIDOwnersRequest(server string, scraperTargetID string, params
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11201,7 +11201,7 @@ func NewPostScrapersIDOwnersRequestWithBody(server string, scraperTargetID strin
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11211,12 +11211,12 @@ func NewPostScrapersIDOwnersRequestWithBody(server string, scraperTargetID strin
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11254,7 +11254,7 @@ func NewDeleteScrapersIDOwnersIDRequest(server string, scraperTargetID string, u
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11264,12 +11264,12 @@ func NewDeleteScrapersIDOwnersIDRequest(server string, scraperTargetID string, u
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11292,7 +11292,7 @@ func NewDeleteScrapersIDOwnersIDRequest(server string, scraperTargetID string, u
 func NewGetSetupRequest(server string, params *GetSetupParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11302,12 +11302,12 @@ func NewGetSetupRequest(server string, params *GetSetupParams) (*http.Request, e
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11341,7 +11341,7 @@ func NewPostSetupRequest(server string, params *PostSetupParams, body PostSetupJ
 func NewPostSetupRequestWithBody(server string, params *PostSetupParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11351,12 +11351,12 @@ func NewPostSetupRequestWithBody(server string, params *PostSetupParams, content
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11391,7 +11391,7 @@ func NewPostSetupUserRequest(server string, params *PostSetupUserParams, body Po
 func NewPostSetupUserRequestWithBody(server string, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11401,12 +11401,12 @@ func NewPostSetupUserRequestWithBody(server string, params *PostSetupUserParams,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11430,7 +11430,7 @@ func NewPostSetupUserRequestWithBody(server string, params *PostSetupUserParams,
 func NewPostSigninRequest(server string, params *PostSigninParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11440,12 +11440,12 @@ func NewPostSigninRequest(server string, params *PostSigninParams) (*http.Reques
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), nil)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11468,7 +11468,7 @@ func NewPostSigninRequest(server string, params *PostSigninParams) (*http.Reques
 func NewPostSignoutRequest(server string, params *PostSignoutParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11478,12 +11478,12 @@ func NewPostSignoutRequest(server string, params *PostSignoutParams) (*http.Requ
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), nil)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11506,7 +11506,7 @@ func NewPostSignoutRequest(server string, params *PostSignoutParams) (*http.Requ
 func NewGetSourcesRequest(server string, params *GetSourcesParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11516,12 +11516,12 @@ func NewGetSourcesRequest(server string, params *GetSourcesParams) (*http.Reques
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -11539,9 +11539,9 @@ func NewGetSourcesRequest(server string, params *GetSourcesParams) (*http.Reques
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11575,7 +11575,7 @@ func NewPostSourcesRequest(server string, params *PostSourcesParams, body PostSo
 func NewPostSourcesRequestWithBody(server string, params *PostSourcesParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11585,12 +11585,12 @@ func NewPostSourcesRequestWithBody(server string, params *PostSourcesParams, con
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11621,7 +11621,7 @@ func NewDeleteSourcesIDRequest(server string, sourceID string, params *DeleteSou
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11631,12 +11631,12 @@ func NewDeleteSourcesIDRequest(server string, sourceID string, params *DeleteSou
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11666,7 +11666,7 @@ func NewGetSourcesIDRequest(server string, sourceID string, params *GetSourcesID
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11676,12 +11676,12 @@ func NewGetSourcesIDRequest(server string, sourceID string, params *GetSourcesID
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11722,7 +11722,7 @@ func NewPatchSourcesIDRequestWithBody(server string, sourceID string, params *Pa
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11732,12 +11732,12 @@ func NewPatchSourcesIDRequestWithBody(server string, sourceID string, params *Pa
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11768,7 +11768,7 @@ func NewGetSourcesIDBucketsRequest(server string, sourceID string, params *GetSo
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11778,12 +11778,12 @@ func NewGetSourcesIDBucketsRequest(server string, sourceID string, params *GetSo
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -11801,9 +11801,9 @@ func NewGetSourcesIDBucketsRequest(server string, sourceID string, params *GetSo
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11833,7 +11833,7 @@ func NewGetSourcesIDHealthRequest(server string, sourceID string, params *GetSou
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11843,12 +11843,12 @@ func NewGetSourcesIDHealthRequest(server string, sourceID string, params *GetSou
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -11871,7 +11871,7 @@ func NewGetSourcesIDHealthRequest(server string, sourceID string, params *GetSou
 func NewGetTasksRequest(server string, params *GetTasksParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -11881,12 +11881,12 @@ func NewGetTasksRequest(server string, params *GetTasksParams) (*http.Request, e
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Name != nil {
 
@@ -12000,9 +12000,9 @@ func NewGetTasksRequest(server string, params *GetTasksParams) (*http.Request, e
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12036,7 +12036,7 @@ func NewPostTasksRequest(server string, params *PostTasksParams, body PostTasksJ
 func NewPostTasksRequestWithBody(server string, params *PostTasksParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12046,12 +12046,12 @@ func NewPostTasksRequestWithBody(server string, params *PostTasksParams, content
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -12082,7 +12082,7 @@ func NewDeleteTasksIDRequest(server string, taskID string, params *DeleteTasksID
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12092,12 +12092,12 @@ func NewDeleteTasksIDRequest(server string, taskID string, params *DeleteTasksID
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12127,7 +12127,7 @@ func NewGetTasksIDRequest(server string, taskID string, params *GetTasksIDParams
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12137,12 +12137,12 @@ func NewGetTasksIDRequest(server string, taskID string, params *GetTasksIDParams
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12183,7 +12183,7 @@ func NewPatchTasksIDRequestWithBody(server string, taskID string, params *PatchT
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12193,12 +12193,12 @@ func NewPatchTasksIDRequestWithBody(server string, taskID string, params *PatchT
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -12229,7 +12229,7 @@ func NewGetTasksIDLabelsRequest(server string, taskID string, params *GetTasksID
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12239,12 +12239,12 @@ func NewGetTasksIDLabelsRequest(server string, taskID string, params *GetTasksID
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12285,7 +12285,7 @@ func NewPostTasksIDLabelsRequestWithBody(server string, taskID string, params *P
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12295,12 +12295,12 @@ func NewPostTasksIDLabelsRequestWithBody(server string, taskID string, params *P
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -12338,7 +12338,7 @@ func NewDeleteTasksIDLabelsIDRequest(server string, taskID string, labelID strin
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12348,12 +12348,12 @@ func NewDeleteTasksIDLabelsIDRequest(server string, taskID string, labelID strin
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12383,7 +12383,7 @@ func NewGetTasksIDLogsRequest(server string, taskID string, params *GetTasksIDLo
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12393,12 +12393,12 @@ func NewGetTasksIDLogsRequest(server string, taskID string, params *GetTasksIDLo
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12428,7 +12428,7 @@ func NewGetTasksIDMembersRequest(server string, taskID string, params *GetTasksI
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12438,12 +12438,12 @@ func NewGetTasksIDMembersRequest(server string, taskID string, params *GetTasksI
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12484,7 +12484,7 @@ func NewPostTasksIDMembersRequestWithBody(server string, taskID string, params *
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12494,12 +12494,12 @@ func NewPostTasksIDMembersRequestWithBody(server string, taskID string, params *
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -12537,7 +12537,7 @@ func NewDeleteTasksIDMembersIDRequest(server string, taskID string, userID strin
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12547,12 +12547,12 @@ func NewDeleteTasksIDMembersIDRequest(server string, taskID string, userID strin
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12582,7 +12582,7 @@ func NewGetTasksIDOwnersRequest(server string, taskID string, params *GetTasksID
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12592,12 +12592,12 @@ func NewGetTasksIDOwnersRequest(server string, taskID string, params *GetTasksID
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12638,7 +12638,7 @@ func NewPostTasksIDOwnersRequestWithBody(server string, taskID string, params *P
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12648,12 +12648,12 @@ func NewPostTasksIDOwnersRequestWithBody(server string, taskID string, params *P
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -12691,7 +12691,7 @@ func NewDeleteTasksIDOwnersIDRequest(server string, taskID string, userID string
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12701,12 +12701,12 @@ func NewDeleteTasksIDOwnersIDRequest(server string, taskID string, userID string
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12736,7 +12736,7 @@ func NewGetTasksIDRunsRequest(server string, taskID string, params *GetTasksIDRu
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12746,12 +12746,12 @@ func NewGetTasksIDRunsRequest(server string, taskID string, params *GetTasksIDRu
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.After != nil {
 
@@ -12817,9 +12817,9 @@ func NewGetTasksIDRunsRequest(server string, taskID string, params *GetTasksIDRu
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12860,7 +12860,7 @@ func NewPostTasksIDRunsRequestWithBody(server string, taskID string, params *Pos
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12870,12 +12870,12 @@ func NewPostTasksIDRunsRequestWithBody(server string, taskID string, params *Pos
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -12913,7 +12913,7 @@ func NewDeleteTasksIDRunsIDRequest(server string, taskID string, runID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12923,12 +12923,12 @@ func NewDeleteTasksIDRunsIDRequest(server string, taskID string, runID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12965,7 +12965,7 @@ func NewGetTasksIDRunsIDRequest(server string, taskID string, runID string, para
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -12975,12 +12975,12 @@ func NewGetTasksIDRunsIDRequest(server string, taskID string, runID string, para
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13017,7 +13017,7 @@ func NewGetTasksIDRunsIDLogsRequest(server string, taskID string, runID string, 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13027,12 +13027,12 @@ func NewGetTasksIDRunsIDLogsRequest(server string, taskID string, runID string, 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13069,7 +13069,7 @@ func NewPostTasksIDRunsIDRetryRequest(server string, taskID string, runID string
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13079,12 +13079,12 @@ func NewPostTasksIDRunsIDRetryRequest(server string, taskID string, runID string
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), nil)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13107,7 +13107,7 @@ func NewPostTasksIDRunsIDRetryRequest(server string, taskID string, runID string
 func NewGetTelegrafPluginsRequest(server string, params *GetTelegrafPluginsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13117,12 +13117,12 @@ func NewGetTelegrafPluginsRequest(server string, params *GetTelegrafPluginsParam
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Type != nil {
 
@@ -13140,9 +13140,9 @@ func NewGetTelegrafPluginsRequest(server string, params *GetTelegrafPluginsParam
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13165,7 +13165,7 @@ func NewGetTelegrafPluginsRequest(server string, params *GetTelegrafPluginsParam
 func NewGetTelegrafsRequest(server string, params *GetTelegrafsParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13175,12 +13175,12 @@ func NewGetTelegrafsRequest(server string, params *GetTelegrafsParams) (*http.Re
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.OrgID != nil {
 
@@ -13198,9 +13198,9 @@ func NewGetTelegrafsRequest(server string, params *GetTelegrafsParams) (*http.Re
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13234,7 +13234,7 @@ func NewPostTelegrafsRequest(server string, params *PostTelegrafsParams, body Po
 func NewPostTelegrafsRequestWithBody(server string, params *PostTelegrafsParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13244,12 +13244,12 @@ func NewPostTelegrafsRequestWithBody(server string, params *PostTelegrafsParams,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13280,7 +13280,7 @@ func NewDeleteTelegrafsIDRequest(server string, telegrafID string, params *Delet
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13290,12 +13290,12 @@ func NewDeleteTelegrafsIDRequest(server string, telegrafID string, params *Delet
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13325,7 +13325,7 @@ func NewGetTelegrafsIDRequest(server string, telegrafID string, params *GetTeleg
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13335,12 +13335,12 @@ func NewGetTelegrafsIDRequest(server string, telegrafID string, params *GetTeleg
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13392,7 +13392,7 @@ func NewPutTelegrafsIDRequestWithBody(server string, telegrafID string, params *
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13402,12 +13402,12 @@ func NewPutTelegrafsIDRequestWithBody(server string, telegrafID string, params *
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13438,7 +13438,7 @@ func NewGetTelegrafsIDLabelsRequest(server string, telegrafID string, params *Ge
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13448,12 +13448,12 @@ func NewGetTelegrafsIDLabelsRequest(server string, telegrafID string, params *Ge
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13494,7 +13494,7 @@ func NewPostTelegrafsIDLabelsRequestWithBody(server string, telegrafID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13504,12 +13504,12 @@ func NewPostTelegrafsIDLabelsRequestWithBody(server string, telegrafID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13547,7 +13547,7 @@ func NewDeleteTelegrafsIDLabelsIDRequest(server string, telegrafID string, label
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13557,12 +13557,12 @@ func NewDeleteTelegrafsIDLabelsIDRequest(server string, telegrafID string, label
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13592,7 +13592,7 @@ func NewGetTelegrafsIDMembersRequest(server string, telegrafID string, params *G
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13602,12 +13602,12 @@ func NewGetTelegrafsIDMembersRequest(server string, telegrafID string, params *G
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13648,7 +13648,7 @@ func NewPostTelegrafsIDMembersRequestWithBody(server string, telegrafID string, 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13658,12 +13658,12 @@ func NewPostTelegrafsIDMembersRequestWithBody(server string, telegrafID string, 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13701,7 +13701,7 @@ func NewDeleteTelegrafsIDMembersIDRequest(server string, telegrafID string, user
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13711,12 +13711,12 @@ func NewDeleteTelegrafsIDMembersIDRequest(server string, telegrafID string, user
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13746,7 +13746,7 @@ func NewGetTelegrafsIDOwnersRequest(server string, telegrafID string, params *Ge
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13756,12 +13756,12 @@ func NewGetTelegrafsIDOwnersRequest(server string, telegrafID string, params *Ge
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13802,7 +13802,7 @@ func NewPostTelegrafsIDOwnersRequestWithBody(server string, telegrafID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13812,12 +13812,12 @@ func NewPostTelegrafsIDOwnersRequestWithBody(server string, telegrafID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13855,7 +13855,7 @@ func NewDeleteTelegrafsIDOwnersIDRequest(server string, telegrafID string, userI
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13865,12 +13865,12 @@ func NewDeleteTelegrafsIDOwnersIDRequest(server string, telegrafID string, userI
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13893,7 +13893,7 @@ func NewDeleteTelegrafsIDOwnersIDRequest(server string, telegrafID string, userI
 func NewGetUsersRequest(server string, params *GetUsersParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13903,12 +13903,12 @@ func NewGetUsersRequest(server string, params *GetUsersParams) (*http.Request, e
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -13942,7 +13942,7 @@ func NewPostUsersRequest(server string, params *PostUsersParams, body PostUsersJ
 func NewPostUsersRequestWithBody(server string, params *PostUsersParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13952,12 +13952,12 @@ func NewPostUsersRequestWithBody(server string, params *PostUsersParams, content
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13988,7 +13988,7 @@ func NewDeleteUsersIDRequest(server string, userID string, params *DeleteUsersID
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -13998,12 +13998,12 @@ func NewDeleteUsersIDRequest(server string, userID string, params *DeleteUsersID
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14033,7 +14033,7 @@ func NewGetUsersIDRequest(server string, userID string, params *GetUsersIDParams
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14043,12 +14043,12 @@ func NewGetUsersIDRequest(server string, userID string, params *GetUsersIDParams
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14089,7 +14089,7 @@ func NewPatchUsersIDRequestWithBody(server string, userID string, params *PatchU
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14099,12 +14099,12 @@ func NewPatchUsersIDRequestWithBody(server string, userID string, params *PatchU
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14146,7 +14146,7 @@ func NewPostUsersIDPasswordRequestWithBody(server string, userID string, params 
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14156,12 +14156,12 @@ func NewPostUsersIDPasswordRequestWithBody(server string, userID string, params 
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14185,7 +14185,7 @@ func NewPostUsersIDPasswordRequestWithBody(server string, userID string, params 
 func NewGetVariablesRequest(server string, params *GetVariablesParams) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14195,12 +14195,12 @@ func NewGetVariablesRequest(server string, params *GetVariablesParams) (*http.Re
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if params.Org != nil {
 
@@ -14234,9 +14234,9 @@ func NewGetVariablesRequest(server string, params *GetVariablesParams) (*http.Re
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14270,7 +14270,7 @@ func NewPostVariablesRequest(server string, params *PostVariablesParams, body Po
 func NewPostVariablesRequestWithBody(server string, params *PostVariablesParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14280,12 +14280,12 @@ func NewPostVariablesRequestWithBody(server string, params *PostVariablesParams,
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14316,7 +14316,7 @@ func NewDeleteVariablesIDRequest(server string, variableID string, params *Delet
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14326,12 +14326,12 @@ func NewDeleteVariablesIDRequest(server string, variableID string, params *Delet
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14361,7 +14361,7 @@ func NewGetVariablesIDRequest(server string, variableID string, params *GetVaria
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14371,12 +14371,12 @@ func NewGetVariablesIDRequest(server string, variableID string, params *GetVaria
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14417,7 +14417,7 @@ func NewPatchVariablesIDRequestWithBody(server string, variableID string, params
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14427,12 +14427,12 @@ func NewPatchVariablesIDRequestWithBody(server string, variableID string, params
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", queryUrl.String(), body)
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14474,7 +14474,7 @@ func NewPutVariablesIDRequestWithBody(server string, variableID string, params *
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14484,12 +14484,12 @@ func NewPutVariablesIDRequestWithBody(server string, variableID string, params *
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryUrl.String(), body)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14520,7 +14520,7 @@ func NewGetVariablesIDLabelsRequest(server string, variableID string, params *Ge
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14530,12 +14530,12 @@ func NewGetVariablesIDLabelsRequest(server string, variableID string, params *Ge
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14576,7 +14576,7 @@ func NewPostVariablesIDLabelsRequestWithBody(server string, variableID string, p
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14586,12 +14586,12 @@ func NewPostVariablesIDLabelsRequestWithBody(server string, variableID string, p
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14629,7 +14629,7 @@ func NewDeleteVariablesIDLabelsIDRequest(server string, variableID string, label
 		return nil, err
 	}
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14639,12 +14639,12 @@ func NewDeleteVariablesIDLabelsIDRequest(server string, variableID string, label
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("DELETE", queryUrl.String(), nil)
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -14667,7 +14667,7 @@ func NewDeleteVariablesIDLabelsIDRequest(server string, variableID string, label
 func NewPostWriteRequestWithBody(server string, params *PostWriteParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
-	queryUrl, err := url.Parse(server)
+	queryURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
@@ -14677,12 +14677,12 @@ func NewPostWriteRequestWithBody(server string, params *PostWriteParams, content
 		basePath = basePath[1:]
 	}
 
-	queryUrl, err = queryUrl.Parse(basePath)
+	queryURL, err = queryURL.Parse(basePath)
 	if err != nil {
 		return nil, err
 	}
 
-	queryValues := queryUrl.Query()
+	queryValues := queryURL.Query()
 
 	if queryFrag, err := runtime.StyleParam("form", true, "org", params.Org); err != nil {
 		return nil, err
@@ -14740,9 +14740,9 @@ func NewPostWriteRequestWithBody(server string, params *PostWriteParams, content
 
 	}
 
-	queryUrl.RawQuery = queryValues.Encode()
+	queryURL.RawQuery = queryValues.Encode()
 
-	req, err := http.NewRequest("POST", queryUrl.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}

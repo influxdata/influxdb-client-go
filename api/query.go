@@ -40,42 +40,42 @@ const (
 	timeDatatypeRFCNano  = "dateTime:RFC3339Nano"
 )
 
-// QueryApi provides methods for performing synchronously flux query against InfluxDB server
-type QueryApi interface {
+// QueryAPI provides methods for performing synchronously flux query against InfluxDB server.
+type QueryAPI interface {
 	// QueryRaw executes flux query on the InfluxDB server and returns complete query result as a string with table annotations according to dialect
 	QueryRaw(ctx context.Context, query string, dialect *domain.Dialect) (string, error)
 	// Query executes flux query on the InfluxDB server and returns QueryTableResult which parses streamed response into structures representing flux table parts
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
 }
 
-func NewQueryApi(org string, service ihttp.Service) QueryApi {
-	return &queryApiImpl{
+func NewQueryAPI(org string, service ihttp.Service) QueryAPI {
+	return &queryAPI{
 		org:         org,
 		httpService: service,
 	}
 }
 
-// queryApiImpl implements QueryApi interface
-type queryApiImpl struct {
+// queryAPI implements QueryApi interface
+type queryAPI struct {
 	org         string
 	httpService ihttp.Service
 	url         string
 	lock        sync.Mutex
 }
 
-func (q *queryApiImpl) QueryRaw(ctx context.Context, query string, dialect *domain.Dialect) (string, error) {
-	queryUrl, err := q.queryUrl()
+func (q *queryAPI) QueryRaw(ctx context.Context, query string, dialect *domain.Dialect) (string, error) {
+	queryURL, err := q.queryURL()
 	if err != nil {
 		return "", err
 	}
 	queryType := domain.QueryTypeFlux
 	qr := domain.Query{Query: query, Type: &queryType, Dialect: dialect}
-	qrJson, err := json.Marshal(qr)
+	qrJSON, err := json.Marshal(qr)
 	if err != nil {
 		return "", err
 	}
 	var body string
-	perror := q.httpService.PostRequest(ctx, queryUrl, bytes.NewReader(qrJson), func(req *http.Request) {
+	perror := q.httpService.PostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept-Encoding", "gzip")
 	},
@@ -111,19 +111,19 @@ func DefaultDialect() *domain.Dialect {
 	}
 }
 
-func (q *queryApiImpl) Query(ctx context.Context, query string) (*QueryTableResult, error) {
+func (q *queryAPI) Query(ctx context.Context, query string) (*QueryTableResult, error) {
 	var queryResult *QueryTableResult
-	queryUrl, err := q.queryUrl()
+	queryURL, err := q.queryURL()
 	if err != nil {
 		return nil, err
 	}
 	queryType := domain.QueryTypeFlux
 	qr := domain.Query{Query: query, Type: &queryType, Dialect: DefaultDialect()}
-	qrJson, err := json.Marshal(qr)
+	qrJSON, err := json.Marshal(qr)
 	if err != nil {
 		return nil, err
 	}
-	perror := q.httpService.PostRequest(ctx, queryUrl, bytes.NewReader(qrJson), func(req *http.Request) {
+	perror := q.httpService.PostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept-Encoding", "gzip")
 	},
@@ -145,9 +145,9 @@ func (q *queryApiImpl) Query(ctx context.Context, query string) (*QueryTableResu
 	return queryResult, nil
 }
 
-func (q *queryApiImpl) queryUrl() (string, error) {
+func (q *queryAPI) queryURL() (string, error) {
 	if q.url == "" {
-		u, err := url.Parse(q.httpService.ServerApiUrl())
+		u, err := url.Parse(q.httpService.ServerAPIURL())
 		if err != nil {
 			return "", err
 		}

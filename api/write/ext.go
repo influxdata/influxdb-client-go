@@ -13,7 +13,7 @@ import (
 
 // Point extension methods for test
 
-// ToLineProtocol creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
+// PointToLineProtocolBuffer creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
 // and write result to the string builder
 func PointToLineProtocolBuffer(p *Point, sb *strings.Builder, precision time.Duration) {
 	escapeKey(sb, p.Name(), false)
@@ -64,7 +64,7 @@ func PointToLineProtocolBuffer(p *Point, sb *strings.Builder, precision time.Dur
 	sb.WriteString("\n")
 }
 
-// ToLineProtocol creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
+// PointToLineProtocol creates InfluxDB line protocol string from the Point, converting associated timestamp according to precision
 func PointToLineProtocol(p *Point, precision time.Duration) string {
 	var sb strings.Builder
 	sb.Grow(1024)

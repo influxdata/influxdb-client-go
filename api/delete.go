@@ -10,30 +10,31 @@ import (
 	"time"
 )
 
-// DeleteApi provides methods for deleting time series data from buckets.
+// DeleteAPI provides methods for deleting time series data from buckets.
 // Deleted series are selected by the time range specified by start and stop arguments and optional predicate string which contains condition for selecting data for deletion, such as:
-// tag1="value1" and (tag2="value2" and tag3!="value3"). Empty predicate string means all data from the given time range will be deleted. See https://v2.docs.influxdata.com/v2.0/reference/syntax/delete-predicate/
+// 		tag1="value1" and (tag2="value2" and tag3!="value3")
+// Empty predicate string means all data from the given time range will be deleted. See https://v2.docs.influxdata.com/v2.0/reference/syntax/delete-predicate/
 // for more info about predicate syntax.
-type DeleteApi interface {
+type DeleteAPI interface {
 	// Delete deletes series selected by by the time range specified by start and stop arguments and optional predicate string from the bucket bucket belonging to the organization org.
 	Delete(ctx context.Context, org *domain.Organization, bucket *domain.Bucket, start, stop time.Time, predicate string) error
-	// Delete deletes series selected by by the time range specified by start and stop arguments and optional predicate string from the bucket with Id bucketId belonging to the organization with Id orgId.
-	DeleteWithId(ctx context.Context, orgId, bucketId string, start, stop time.Time, predicate string) error
+	// Delete deletes series selected by by the time range specified by start and stop arguments and optional predicate string from the bucket with ID bucketID belonging to the organization with ID orgID.
+	DeleteWithID(ctx context.Context, orgID, bucketID string, start, stop time.Time, predicate string) error
 	// Delete deletes series selected by by the time range specified by start and stop arguments and optional predicate string from the bucket with name bucketName belonging to the organization with name orgName.
 	DeleteWithName(ctx context.Context, orgName, bucketName string, start, stop time.Time, predicate string) error
 }
 
-type deleteApiImpl struct {
+type deleteAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
-func NewDeleteApi(apiClient *domain.ClientWithResponses) DeleteApi {
-	return &deleteApiImpl{
+func NewDeleteAPI(apiClient *domain.ClientWithResponses) DeleteAPI {
+	return &deleteAPI{
 		apiClient: apiClient,
 	}
 }
 
-func (d *deleteApiImpl) delete(ctx context.Context, params *domain.PostDeleteParams, conditions *domain.DeletePredicateRequest) error {
+func (d *deleteAPI) delete(ctx context.Context, params *domain.PostDeleteParams, conditions *domain.DeletePredicateRequest) error {
 	resp, err := d.apiClient.PostDeleteWithResponse(ctx, params, domain.PostDeleteJSONRequestBody(*conditions))
 	if err != nil {
 		return err
@@ -53,7 +54,7 @@ func (d *deleteApiImpl) delete(ctx context.Context, params *domain.PostDeletePar
 	return nil
 }
 
-func (d *deleteApiImpl) Delete(ctx context.Context, org *domain.Organization, bucket *domain.Bucket, start, stop time.Time, predicate string) error {
+func (d *deleteAPI) Delete(ctx context.Context, org *domain.Organization, bucket *domain.Bucket, start, stop time.Time, predicate string) error {
 	params := &domain.PostDeleteParams{
 		OrgID:    org.Id,
 		BucketID: bucket.Id,
@@ -66,10 +67,10 @@ func (d *deleteApiImpl) Delete(ctx context.Context, org *domain.Organization, bu
 	return d.delete(ctx, params, conditions)
 }
 
-func (d *deleteApiImpl) DeleteWithId(ctx context.Context, orgId, bucketId string, start, stop time.Time, predicate string) error {
+func (d *deleteAPI) DeleteWithID(ctx context.Context, orgID, bucketID string, start, stop time.Time, predicate string) error {
 	params := &domain.PostDeleteParams{
-		OrgID:    &orgId,
-		BucketID: &bucketId,
+		OrgID:    &orgID,
+		BucketID: &bucketID,
 	}
 	conditions := &domain.DeletePredicateRequest{
 		Predicate: &predicate,
@@ -79,7 +80,7 @@ func (d *deleteApiImpl) DeleteWithId(ctx context.Context, orgId, bucketId string
 	return d.delete(ctx, params, conditions)
 }
 
-func (d *deleteApiImpl) DeleteWithName(ctx context.Context, orgName, bucketName string, start, stop time.Time, predicate string) error {
+func (d *deleteAPI) DeleteWithName(ctx context.Context, orgName, bucketName string, start, stop time.Time, predicate string) error {
 	params := &domain.PostDeleteParams{
 		Org:    &orgName,
 		Bucket: &bucketName,

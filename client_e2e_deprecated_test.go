@@ -8,7 +8,6 @@ package influxdb2_test
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"github.com/influxdata/influxdb-client-go/api/write"
 	"strconv"
@@ -23,38 +22,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var authToken string
-
-func init() {
-	flag.StringVar(&authToken, "token", "", "authentication token")
-}
-
-func TestReady(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", "")
-
-	ok, err := client.Ready(context.Background())
+func TestSetup(t *testing.T) {
+	client := influxdb2.NewClientWithOptions("http://localhost:9999", "", influxdb2.DefaultOptions().SetLogLevel(2))
+	response, err := client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
 	if err != nil {
 		t.Error(err)
 	}
-	if !ok {
-		t.Fail()
-	}
+	require.NotNil(t, response)
+	authToken = *response.Auth.Token
+	fmt.Println("Token:" + authToken)
+
+	_, err = client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
+	require.NotNil(t, err)
+	assert.Equal(t, "conflict: onboarding has already been completed", err.Error())
 }
 
-func TestHealth(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", "")
-
-	health, err := client.Health(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
-	require.NotNil(t, health)
-	assert.Equal(t, domain.HealthCheckStatusPass, health.Status)
-}
-
-func TestWrite(t *testing.T) {
+func TestWriteDeprecated(t *testing.T) {
 	client := influxdb2.NewClientWithOptions("http://localhost:9999", authToken, influxdb2.DefaultOptions().SetLogLevel(3))
-	writeAPI := client.WriteAPI("my-org", "my-bucket")
+	writeAPI := client.WriteApi("my-org", "my-bucket")
 	errCh := writeAPI.Errors()
 	errorsCount := 0
 	go func() {
@@ -81,7 +66,7 @@ func TestWrite(t *testing.T) {
 		timestamp = timestamp.Add(time.Nanosecond)
 	}
 
-	err := client.WriteAPIBlocking("my-org", "my-bucket").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("test").
+	err := client.WriteApiBlocking("my-org", "my-bucket").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("test").
 		AddTag("a", "3").AddField("i", 20).AddField("f", 4.4))
 	assert.Nil(t, err)
 
@@ -90,10 +75,10 @@ func TestWrite(t *testing.T) {
 
 }
 
-func TestQueryRaw(t *testing.T) {
+func TestQueryRawDeprecated(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
-	queryAPI := client.QueryAPI("my-org")
+	queryAPI := client.QueryApi("my-org")
 	res, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
 	if err != nil {
 		t.Error(err)
@@ -103,16 +88,18 @@ func TestQueryRaw(t *testing.T) {
 	}
 }
 
-func TestQuery(t *testing.T) {
+func TestQueryDeprecated(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
-	queryAPI := client.QueryAPI("my-org")
+	queryAPI := client.QueryApi("my-org")
 	fmt.Println("QueryResult")
 	result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "test")`)
 	if err != nil {
 		t.Error(err)
 	} else {
+		rows := 0
 		for result.Next() {
+			rows++
 			if result.TableChanged() {
 				fmt.Printf("table: %s\n", result.TableMetadata().String())
 			}
@@ -121,20 +108,21 @@ func TestQuery(t *testing.T) {
 		if result.Err() != nil {
 			t.Error(result.Err())
 		}
+		assert.Equal(t, 42, rows)
 	}
 
 }
 
-func TestAuthorizationsAPI(t *testing.T) {
+func TestAuthorizationsApi(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
-	authAPI := client.AuthorizationsAPI()
+	authAPI := client.AuthorizationsApi()
 	listRes, err := authAPI.GetAuthorizations(context.Background())
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 1)
 
 	orgName := "my-org"
-	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), orgName)
+	org, err := client.OrganizationsApi().FindOrganizationByName(context.Background(), orgName)
 	require.Nil(t, err)
 	require.NotNil(t, org)
 	assert.Equal(t, orgName, org.Name)
@@ -147,7 +135,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	}
 	permissions := []domain.Permission{*permission}
 
-	auth, err := authAPI.CreateAuthorizationWithOrgID(context.Background(), *org.Id, permissions)
+	auth, err := authAPI.CreateAuthorizationWithOrgId(context.Background(), *org.Id, permissions)
 	require.Nil(t, err)
 	require.NotNil(t, auth)
 	assert.Equal(t, domain.AuthorizationUpdateRequestStatusActive, *auth.Status, *auth.Status)
@@ -162,7 +150,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
 
-	listRes, err = authAPI.FindAuthorizationsByOrgID(context.Background(), *org.Id)
+	listRes, err = authAPI.FindAuthorizationsByOrgId(context.Background(), *org.Id)
 	require.Nil(t, err)
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
@@ -177,7 +165,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	require.NotNil(t, err)
 	//assert.Len(t, *listRes, 0)
 
-	auth, err = authAPI.UpdateAuthorizationStatus(context.Background(), auth, domain.AuthorizationUpdateRequestStatusInactive)
+	auth, err = authAPI.UpdateAuthorizationStatus(context.Background(), *auth.Id, domain.AuthorizationUpdateRequestStatusInactive)
 	require.Nil(t, err)
 	require.NotNil(t, auth)
 	assert.Equal(t, domain.AuthorizationUpdateRequestStatusInactive, *auth.Status, *auth.Status)
@@ -187,7 +175,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
 
-	err = authAPI.DeleteAuthorization(context.Background(), auth)
+	err = authAPI.DeleteAuthorization(context.Background(), *auth.Id)
 	require.Nil(t, err)
 
 	listRes, err = authAPI.GetAuthorizations(context.Background())
@@ -197,10 +185,10 @@ func TestAuthorizationsAPI(t *testing.T) {
 
 }
 
-func TestOrganizationsAPI(t *testing.T) {
+func TestOrganizations(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
-	orgsAPI := client.OrganizationsAPI()
-	usersAPI := client.UsersAPI()
+	orgsAPI := client.OrganizationsApi()
+	usersAPI := client.UsersApi()
 	orgName := "my-org-2"
 	orgDescription := "my-org 2 description"
 	ctx := context.Background()
@@ -247,14 +235,14 @@ func TestOrganizationsAPI(t *testing.T) {
 	permissions := []domain.Permission{*permission}
 
 	//create authorization for new org
-	auth, err := client.AuthorizationsAPI().CreateAuthorizationWithOrgID(context.Background(), *org.Id, permissions)
+	auth, err := client.AuthorizationsApi().CreateAuthorizationWithOrgId(context.Background(), *org.Id, permissions)
 	require.Nil(t, err)
 	require.NotNil(t, auth)
 
 	// create client with new auth token without permission
 	clientOrg2 := influxdb2.NewClient("http://localhost:9999", *auth.Token)
 
-	orgList, err = clientOrg2.OrganizationsAPI().GetOrganizations(ctx)
+	orgList, err = clientOrg2.OrganizationsApi().GetOrganizations(ctx)
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
 	assert.Len(t, *orgList, 0)
@@ -269,12 +257,11 @@ func TestOrganizationsAPI(t *testing.T) {
 	assert.Nil(t, org2)
 
 	//find org using token without org permission
-	org2, err = clientOrg2.OrganizationsAPI().FindOrganizationByName(ctx, org.Name)
+	org2, err = clientOrg2.OrganizationsApi().FindOrganizationByName(ctx, org.Name)
 	assert.NotNil(t, err)
 	assert.Nil(t, org2)
 
-	err = client.AuthorizationsAPI().DeleteAuthorization(ctx, auth)
-	require.Nil(t, err)
+	client.AuthorizationsApi().DeleteAuthorization(ctx, *auth.Id)
 
 	members, err := orgsAPI.GetMembers(ctx, org)
 	require.Nil(t, err)
@@ -292,7 +279,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	assert.Equal(t, user.Name, member.Name)
 
 	// Add member with invalid id
-	member, err = orgsAPI.AddMemberWithID(ctx, *org.Id, invalidID)
+	member, err = orgsAPI.AddMemberWithId(ctx, *org.Id, invalidID)
 	assert.NotNil(t, err)
 	assert.Nil(t, member)
 
@@ -302,28 +289,28 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.Len(t, *members, 1)
 
 	// get member with invalid id
-	members, err = orgsAPI.GetMembersWithID(ctx, invalidID)
+	members, err = orgsAPI.GetMembersWithId(ctx, invalidID)
 	assert.NotNil(t, err)
 	assert.Nil(t, members)
 
-	org2, err = orgsAPI.FindOrganizationByID(ctx, *org.Id)
+	org2, err = orgsAPI.FindOrganizationById(ctx, *org.Id)
 	require.Nil(t, err)
 	require.NotNil(t, org2)
 	assert.Equal(t, org.Name, org2.Name)
 
 	// find invalid id
-	org2, err = orgsAPI.FindOrganizationByID(ctx, invalidID)
+	org2, err = orgsAPI.FindOrganizationById(ctx, invalidID)
 	assert.NotNil(t, err)
 	assert.Nil(t, org2)
 
-	orgs, err := orgsAPI.FindOrganizationsByUserID(ctx, *user.Id)
+	orgs, err := orgsAPI.FindOrganizationsByUserId(ctx, *user.Id)
 	require.Nil(t, err)
 	require.NotNil(t, orgs)
 	require.Len(t, *orgs, 1)
 	assert.Equal(t, org.Name, (*orgs)[0].Name)
 
 	// look for not existent
-	orgs, err = orgsAPI.FindOrganizationsByUserID(ctx, invalidID)
+	orgs, err = orgsAPI.FindOrganizationsByUserId(ctx, invalidID)
 	assert.Nil(t, err)
 	assert.NotNil(t, orgs)
 	assert.Len(t, *orgs, 0)
@@ -346,7 +333,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	assert.Len(t, *owners, 1)
 
 	//get owners with invalid id
-	owners, err = orgsAPI.GetOwnersWithID(ctx, invalidID)
+	owners, err = orgsAPI.GetOwnersWithId(ctx, invalidID)
 	assert.NotNil(t, err)
 	assert.Nil(t, owners)
 
@@ -355,7 +342,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.NotNil(t, owner)
 
 	// add owner with invalid ID
-	owner, err = orgsAPI.AddOwnerWithID(ctx, *org2.Id, invalidID)
+	owner, err = orgsAPI.AddOwnerWithId(ctx, *org2.Id, invalidID)
 	assert.NotNil(t, err)
 	assert.Nil(t, owner)
 
@@ -372,7 +359,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.Nil(t, err)
 
 	// remove owner with invalid ID
-	err = orgsAPI.RemoveOwnerWithID(ctx, invalidID, invalidID)
+	err = orgsAPI.RemoveOwnerWithId(ctx, invalidID, invalidID)
 	assert.NotNil(t, err)
 
 	owners, err = orgsAPI.GetOwners(ctx, org2)
@@ -380,7 +367,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	orgs, err = orgsAPI.FindOrganizationsByUserID(ctx, *user.Id)
+	orgs, err = orgsAPI.FindOrganizationsByUserId(ctx, *user.Id)
 	require.Nil(t, err)
 	require.NotNil(t, orgs)
 	require.Len(t, *orgs, 2)
@@ -389,7 +376,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.Nil(t, err)
 
 	// remove invalid memberID
-	err = orgsAPI.RemoveMemberWithID(ctx, invalidID, invalidID)
+	err = orgsAPI.RemoveMemberWithId(ctx, invalidID, invalidID)
 	assert.NotNil(t, err)
 
 	members, err = orgsAPI.GetMembers(ctx, org)
@@ -404,7 +391,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	assert.Nil(t, err)
 
 	// delete invalid org
-	err = orgsAPI.DeleteOrganizationWithID(ctx, invalidID)
+	err = orgsAPI.DeleteOrganizationWithId(ctx, invalidID)
 	assert.NotNil(t, err)
 
 	orgList, err = orgsAPI.GetOrganizations(ctx)
@@ -417,14 +404,14 @@ func TestOrganizationsAPI(t *testing.T) {
 
 }
 
-func TestUsersAPI(t *testing.T) {
+func TestUsers(t *testing.T) {
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
-	usersAPI := client.UsersAPI()
+	usersAPI := client.UsersApi()
 
 	me, err := usersAPI.Me(context.Background())
-	require.Nil(t, err)
-	require.NotNil(t, me)
+	assert.Nil(t, err)
+	assert.NotNil(t, me)
 
 	users, err := usersAPI.GetUsers(context.Background())
 	require.Nil(t, err)
@@ -447,7 +434,7 @@ func TestUsersAPI(t *testing.T) {
 	require.NotNil(t, user)
 	assert.Equal(t, status, *user.Status)
 
-	user, err = usersAPI.FindUserByID(context.Background(), *user.Id)
+	user, err = usersAPI.FindUserById(context.Background(), *user.Id)
 	require.Nil(t, err)
 	require.NotNil(t, user)
 
@@ -463,11 +450,11 @@ func TestUsersAPI(t *testing.T) {
 	assert.Len(t, *users, 1)
 }
 
-func TestDeleteAPI(t *testing.T) {
+func TestDelete(t *testing.T) {
 	ctx := context.Background()
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
-	writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
-	queryAPI := client.QueryAPI("my-org")
+	writeAPI := client.WriteApiBlocking("my-org", "my-bucket")
+	queryAPI := client.QueryApi("my-org")
 	tmStart := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
 	writeF := func(start time.Time, count int64) time.Time {
 		tm := start
@@ -500,13 +487,13 @@ func TestDeleteAPI(t *testing.T) {
 	}
 	tmEnd := writeF(tmStart, 100)
 	assert.Equal(t, int64(100), countF(tmStart, tmEnd))
-	deleteAPI := client.DeleteAPI()
+	deleteAPI := client.DeleteApi()
 
-	org, err := client.OrganizationsAPI().FindOrganizationByName(ctx, "my-org")
+	org, err := client.OrganizationsApi().FindOrganizationByName(ctx, "my-org")
 	require.Nil(t, err, err)
 	require.NotNil(t, org)
 
-	bucket, err := client.BucketsAPI().FindBucketByName(ctx, "my-bucket")
+	bucket, err := client.BucketsApi().FindBucketByName(ctx, "my-bucket")
 	require.Nil(t, err, err)
 	require.NotNil(t, bucket)
 
@@ -517,7 +504,7 @@ func TestDeleteAPI(t *testing.T) {
 	tmEnd = writeF(tmStart, 100)
 	assert.Equal(t, int64(100), countF(tmStart, tmEnd))
 
-	err = deleteAPI.DeleteWithID(ctx, *org.Id, *bucket.Id, tmStart, tmEnd, "a=1")
+	err = deleteAPI.DeleteWithId(ctx, *org.Id, *bucket.Id, tmStart, tmEnd, "a=1")
 	require.Nil(t, err, err)
 	assert.Equal(t, int64(50), countF(tmStart, tmEnd))
 
@@ -534,11 +521,11 @@ func TestDeleteAPI(t *testing.T) {
 	assert.True(t, strings.Contains(err.Error(), "not found"))
 }
 
-func TestBucketsAPI(t *testing.T) {
+func TestBuckets(t *testing.T) {
 	ctx := context.Background()
 	client := influxdb2.NewClient("http://localhost:9999", authToken)
 
-	bucketsAPI := client.BucketsAPI()
+	bucketsAPI := client.BucketsApi()
 
 	buckets, err := bucketsAPI.GetBuckets(ctx)
 	require.Nil(t, err, err)
@@ -558,7 +545,7 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Nil(t, bucket)
 
 	// create organizatiton for bucket
-	org, err := client.OrganizationsAPI().CreateOrganizationWithName(ctx, "bucket-org")
+	org, err := client.OrganizationsApi().CreateOrganizationWithName(ctx, "bucket-org")
 	require.Nil(t, err)
 	require.NotNil(t, org)
 
@@ -587,7 +574,7 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Len(t, b.RetentionRules, 1)
 
 	// Test owners
-	userOwner, err := client.UsersAPI().CreateUserWithName(ctx, "bucket-owner")
+	userOwner, err := client.UsersApi().CreateUserWithName(ctx, "bucket-owner")
 	require.Nil(t, err, err)
 	require.NotNil(t, userOwner)
 
@@ -606,7 +593,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	err = bucketsAPI.RemoveOwnerWithID(ctx, *b.Id, *(&(*owners)[0]).Id)
+	err = bucketsAPI.RemoveOwnerWithId(ctx, *b.Id, *(&(*owners)[0]).Id)
 	require.Nil(t, err, err)
 
 	owners, err = bucketsAPI.GetOwners(ctx, b)
@@ -615,23 +602,23 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Len(t, *owners, 0)
 
 	//test failures
-	_, err = bucketsAPI.AddOwnerWithID(ctx, "000000000000000", *userOwner.Id)
+	_, err = bucketsAPI.AddOwnerWithId(ctx, "000000000000000", *userOwner.Id)
 	assert.NotNil(t, err)
 
-	_, err = bucketsAPI.AddOwnerWithID(ctx, *b.Id, "000000000000000")
+	_, err = bucketsAPI.AddOwnerWithId(ctx, *b.Id, "000000000000000")
 	assert.NotNil(t, err)
 
-	_, err = bucketsAPI.GetOwnersWithID(ctx, "000000000000000")
+	_, err = bucketsAPI.GetOwnersWithId(ctx, "000000000000000")
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.RemoveOwnerWithID(ctx, *b.Id, "000000000000000")
+	err = bucketsAPI.RemoveOwnerWithId(ctx, *b.Id, "000000000000000")
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.RemoveOwnerWithID(ctx, "000000000000000", *userOwner.Id)
+	err = bucketsAPI.RemoveOwnerWithId(ctx, "000000000000000", *userOwner.Id)
 	assert.NotNil(t, err)
 
 	// Test members
-	userMember, err := client.UsersAPI().CreateUserWithName(ctx, "bucket-member")
+	userMember, err := client.UsersApi().CreateUserWithName(ctx, "bucket-member")
 	require.Nil(t, err, err)
 	require.NotNil(t, userMember)
 
@@ -650,7 +637,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, members)
 	assert.Len(t, *members, 1)
 
-	err = bucketsAPI.RemoveMemberWithID(ctx, *b.Id, *(&(*members)[0]).Id)
+	err = bucketsAPI.RemoveMemberWithId(ctx, *b.Id, *(&(*members)[0]).Id)
 	require.Nil(t, err, err)
 
 	members, err = bucketsAPI.GetMembers(ctx, b)
@@ -659,32 +646,32 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Len(t, *members, 0)
 
 	//test failures
-	_, err = bucketsAPI.AddMemberWithID(ctx, "000000000000000", *userMember.Id)
+	_, err = bucketsAPI.AddMemberWithId(ctx, "000000000000000", *userMember.Id)
 	assert.NotNil(t, err)
 
-	_, err = bucketsAPI.AddMemberWithID(ctx, *b.Id, "000000000000000")
+	_, err = bucketsAPI.AddMemberWithId(ctx, *b.Id, "000000000000000")
 	assert.NotNil(t, err)
 
-	_, err = bucketsAPI.GetMembersWithID(ctx, "000000000000000")
+	_, err = bucketsAPI.GetMembersWithId(ctx, "000000000000000")
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.RemoveMemberWithID(ctx, *b.Id, "000000000000000")
+	err = bucketsAPI.RemoveMemberWithId(ctx, *b.Id, "000000000000000")
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.RemoveMemberWithID(ctx, "000000000000000", *userMember.Id)
+	err = bucketsAPI.RemoveMemberWithId(ctx, "000000000000000", *userMember.Id)
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
+	err = bucketsAPI.DeleteBucketWithId(ctx, *b.Id)
 	assert.Nil(t, err, err)
 
-	err = client.UsersAPI().DeleteUser(ctx, userOwner)
+	err = client.UsersApi().DeleteUser(ctx, userOwner)
 	assert.Nil(t, err, err)
 
-	err = client.UsersAPI().DeleteUser(ctx, userMember)
+	err = client.UsersApi().DeleteUser(ctx, userMember)
 	assert.Nil(t, err, err)
 
 	//test failures
-	_, err = bucketsAPI.FindBucketByID(ctx, *b.Id)
+	_, err = bucketsAPI.FindBucketById(ctx, *b.Id)
 	assert.NotNil(t, err)
 
 	_, err = bucketsAPI.UpdateBucket(ctx, b)
@@ -715,13 +702,13 @@ func TestBucketsAPI(t *testing.T) {
 	assert.NotNil(t, err)
 
 	// fail org not found
-	_, err = bucketsAPI.CreateBucketWithNameWithID(ctx, *b.Id, b.Name)
+	_, err = bucketsAPI.CreateBucketWithNameWithId(ctx, *b.Id, b.Name)
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
+	err = bucketsAPI.DeleteBucketWithId(ctx, *b.Id)
 	assert.Nil(t, err, err)
 
-	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
+	err = bucketsAPI.DeleteBucketWithId(ctx, *b.Id)
 	assert.NotNil(t, err)
 
 	// create new buckets inside org
@@ -750,7 +737,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, buckets)
 	assert.Len(t, *buckets, 30+bucketsNum)
 	// test filtering buckets by org id
-	buckets, err = bucketsAPI.FindBucketsByOrgID(ctx, *org.Id, api.PagingWithLimit(100))
+	buckets, err = bucketsAPI.FindBucketsByOrgId(ctx, *org.Id, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
 	assert.Len(t, *buckets, 30+2)
@@ -772,7 +759,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, buckets)
 	assert.Len(t, *buckets, 2)
 
-	err = client.OrganizationsAPI().DeleteOrganization(ctx, org)
+	err = client.OrganizationsApi().DeleteOrganization(ctx, org)
 	assert.Nil(t, err, err)
 
 	// should fail with org not found
@@ -780,10 +767,10 @@ func TestBucketsAPI(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestLabelsAPI(t *testing.T) {
+func TestLabels(t *testing.T) {
 	client := influxdb2.NewClientWithOptions("http://localhost:9999", authToken, influxdb2.DefaultOptions().SetLogLevel(3))
-	labelsAPI := client.LabelsAPI()
-	orgAPI := client.OrganizationsAPI()
+	labelsAPI := client.LabelsApi()
+	orgAPI := client.OrganizationsApi()
 
 	ctx := context.Background()
 
@@ -813,12 +800,12 @@ func TestLabelsAPI(t *testing.T) {
 	assert.Equal(t, labelName, *label2.Name)
 	assert.Nil(t, label2.Properties)
 
-	label2, err = labelsAPI.FindLabelByID(ctx, *label.Id)
+	label2, err = labelsAPI.FindLabelById(ctx, *label.Id)
 	require.Nil(t, err, err)
 	require.NotNil(t, label2)
 	assert.Equal(t, labelName, *label2.Name)
 
-	label2, err = labelsAPI.FindLabelByID(ctx, "000000000000000")
+	label2, err = labelsAPI.FindLabelById(ctx, "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, label2)
 
@@ -841,12 +828,12 @@ func TestLabelsAPI(t *testing.T) {
 	require.NotNil(t, labels)
 	assert.Len(t, *labels, 1)
 
-	labels, err = labelsAPI.FindLabelsByOrgID(ctx, *myorg.Id)
+	labels, err = labelsAPI.FindLabelsByOrgId(ctx, *myorg.Id)
 	require.Nil(t, err, err)
 	require.NotNil(t, labels)
 	assert.Len(t, *labels, 1)
 
-	labels, err = labelsAPI.FindLabelsByOrgID(ctx, "000000000000000")
+	labels, err = labelsAPI.FindLabelsByOrgId(ctx, "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, labels)
 
@@ -886,23 +873,23 @@ func TestLabelsAPI(t *testing.T) {
 	require.NotNil(t, labels)
 	assert.Len(t, *labels, 0)
 
-	labels, err = orgAPI.GetLabelsWithID(ctx, "000000000000000")
+	labels, err = orgAPI.GetLabelsWithId(ctx, "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, labels)
 
-	label2, err = orgAPI.AddLabelWithID(ctx, *org.Id, "000000000000000")
+	label2, err = orgAPI.AddLabelWithId(ctx, *org.Id, "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, label2)
 
-	label2, err = orgAPI.AddLabelWithID(ctx, "000000000000000", "000000000000000")
+	label2, err = orgAPI.AddLabelWithId(ctx, "000000000000000", "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, label2)
 
-	err = orgAPI.RemoveLabelWithID(ctx, *org.Id, "000000000000000")
+	err = orgAPI.RemoveLabelWithId(ctx, *org.Id, "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, label2)
 
-	err = orgAPI.RemoveLabelWithID(ctx, "000000000000000", "000000000000000")
+	err = orgAPI.RemoveLabelWithId(ctx, "000000000000000", "000000000000000")
 	require.NotNil(t, err, err)
 	require.Nil(t, label2)
 

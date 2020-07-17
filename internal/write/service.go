@@ -2,6 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
+// Package write provides service and its stuff
 package write
 
 import (
@@ -104,7 +105,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 }
 
 func (w *Service) WriteBatch(ctx context.Context, batch *Batch) error {
-	wUrl, err := w.WriteUrl()
+	wURL, err := w.WriteURL()
 	if err != nil {
 		log.Log.Errorf("%s\n", err.Error())
 		return err
@@ -119,7 +120,7 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) error {
 		}
 	}
 	w.lastWriteAttempt = time.Now()
-	perror := w.httpService.PostRequest(ctx, wUrl, body, func(req *http.Request) {
+	perror := w.httpService.PostRequest(ctx, wURL, body, func(req *http.Request) {
 		if w.writeOptions.UseGZip() {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
@@ -223,9 +224,9 @@ func (w *Service) pointToEncode(point *write.Point) lp.Metric {
 	return m
 }
 
-func (w *Service) WriteUrl() (string, error) {
+func (w *Service) WriteURL() (string, error) {
 	if w.url == "" {
-		u, err := url.Parse(w.httpService.ServerApiUrl())
+		u, err := url.Parse(w.httpService.ServerAPIURL())
 		if err != nil {
 			return "", err
 		}

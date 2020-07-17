@@ -2,6 +2,7 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
+// Package gzip provides GZip related functionality
 package gzip
 
 import (

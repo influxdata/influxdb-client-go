@@ -2,6 +2,8 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
+// Package examples contains fake client with the same interface as real client to overcome import-cycle problem
+// to allow real E2E examples for apis in this package
 package examples
 
 import (
@@ -10,10 +12,7 @@ import (
 	"github.com/influxdata/influxdb-client-go/domain"
 )
 
-// This file contains fake client with the same interface as real client to overcome import-cycle problem
-// to allow real E2E examples for apis in this package
-
-// Fake options to satisfy Client itnerface
+// Options is fake options to satisfy Client interface
 type Options struct {
 }
 
@@ -42,7 +41,7 @@ func (c *fakeClient) Options() *Options {
 	return nil
 }
 
-func (c *fakeClient) ServerUrl() string {
+func (c *fakeClient) ServerURL() string {
 	return ""
 }
 
@@ -58,41 +57,41 @@ func (c *fakeClient) Health(_ context.Context) (*domain.HealthCheck, error) {
 	return nil, nil
 }
 
-func (c *fakeClient) WriteApi(_, _ string) api.WriteApi {
+func (c *fakeClient) WriteAPI(_, _ string) api.WriteAPI {
 	return nil
 }
 
-func (c *fakeClient) WriteApiBlocking(_, _ string) api.WriteApiBlocking {
+func (c *fakeClient) WriteAPIBlocking(_, _ string) api.WriteAPIBlocking {
 	return nil
 }
 
 func (c *fakeClient) Close() {
 }
 
-func (c *fakeClient) QueryApi(_ string) api.QueryApi {
+func (c *fakeClient) QueryAPI(_ string) api.QueryAPI {
 	return nil
 }
 
-func (c *fakeClient) AuthorizationsApi() api.AuthorizationsApi {
+func (c *fakeClient) AuthorizationsAPI() api.AuthorizationsAPI {
 	return nil
 }
 
-func (c *fakeClient) OrganizationsApi() api.OrganizationsApi {
+func (c *fakeClient) OrganizationsAPI() api.OrganizationsAPI {
 	return nil
 }
 
-func (c *fakeClient) UsersApi() api.UsersApi {
+func (c *fakeClient) UsersAPI() api.UsersAPI {
 	return nil
 }
 
-func (c *fakeClient) DeleteApi() api.DeleteApi {
+func (c *fakeClient) DeleteAPI() api.DeleteAPI {
 	return nil
 }
 
-func (c *fakeClient) BucketsApi() api.BucketsApi {
+func (c *fakeClient) BucketsAPI() api.BucketsAPI {
 	return nil
 }
 
-func (c *fakeClient) LabelsApi() api.LabelsApi {
+func (c *fakeClient) LabelsAPI() api.LabelsAPI {
 	return nil
 }

@@ -110,26 +110,54 @@ func (o *Options) SetUseGZip(useGZip bool) *Options {
 	return o
 }
 
-// TlsConfig returns TlsConfig
-func (o *Options) TlsConfig() *tls.Config {
-	return o.HttpOptions().TlsConfig()
+// TLSConfig returns TLS config
+func (o *Options) TLSConfig() *tls.Config {
+	return o.HTTPOptions().TLSConfig()
 }
 
-// SetTlsConfig sets TLS configuration for secure connection
-func (o *Options) SetTlsConfig(tlsConfig *tls.Config) *Options {
-	o.HttpOptions().SetTlsConfig(tlsConfig)
+// TlsConfig returns TLS config.
+// Deprecated: Use TLSConfig instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
+func (o *Options) TlsConfig() *tls.Config {
+	return o.TLSConfig()
+}
+
+// SetTLSConfig sets TLS configuration for secure connection
+func (o *Options) SetTLSConfig(tlsConfig *tls.Config) *Options {
+	o.HTTPOptions().SetTLSConfig(tlsConfig)
 	return o
 }
 
-// HttpRequestTimeout returns HTTP request timeout
+// SetTlsConfig sets TLS configuration for secure connection.
+// Deprecated: Use SetTLSConfig instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
+func (o *Options) SetTlsConfig(tlsConfig *tls.Config) *Options {
+	return o.SetTLSConfig(tlsConfig)
+}
+
+// HTTPRequestTimeout returns HTTP request timeout
+func (o *Options) HTTPRequestTimeout() uint {
+	return o.HTTPOptions().HTTPRequestTimeout()
+}
+
+// HttpRequestTimeout returns HTTP request timeout.
+// Deprecated: Use HTTPRequestTimeout instead.
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (o *Options) HttpRequestTimeout() uint {
-	return o.HttpOptions().HttpRequestTimeout()
+	return o.HTTPRequestTimeout()
+}
+
+// SetHTTPRequestTimeout sets HTTP request timeout in sec
+func (o *Options) SetHTTPRequestTimeout(httpRequestTimeout uint) *Options {
+	o.HTTPOptions().SetHTTPRequestTimeout(httpRequestTimeout)
+	return o
 }
 
 // SetHttpRequestTimeout sets HTTP request timeout in sec
+// Deprecated: Use SetHTTPRequestTimeout instead
+//lint:ignore ST1003 Deprecated method to be removed in the next release
 func (o *Options) SetHttpRequestTimeout(httpRequestTimeout uint) *Options {
-	o.HttpOptions().SetHttpRequestTimeout(httpRequestTimeout)
-	return o
+	return o.SetHTTPRequestTimeout(httpRequestTimeout)
 }
 
 // WriteOptions returns write related options
@@ -140,12 +168,19 @@ func (o *Options) WriteOptions() *write.Options {
 	return o.writeOptions
 }
 
-// HttpOptions returns http related options
-func (o *Options) HttpOptions() *http.Options {
+// HTTPOptions returns HTTP related options
+func (o *Options) HTTPOptions() *http.Options {
 	if o.httpOptions == nil {
 		o.httpOptions = http.DefaultOptions()
 	}
 	return o.httpOptions
+}
+
+// HttpOptions returns http related options
+// Deprecated: Use HTTPOptions instead
+//lint:ignore ST1003 Deprecated method to be removed in the next release
+func (o *Options) HttpOptions() *http.Options {
+	return o.HTTPOptions()
 }
 
 // AddDefaultTag adds a default tag. DefaultTags are added to each written point.

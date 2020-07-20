@@ -11,6 +11,6 @@ _Briefly describe your proposed changes:_
 - [ ] CHANGELOG.md updated
 - [ ] Rebased/mergeable
 - [ ] A test has been added if appropriate
-- [ ] `go test -v ./...` completes successfully
+- [ ] Tests pass
 - [ ] Commit messages are in [semantic format](https://seesparkbox.com/foundry/semantic_commit_messages)
 - [ ] Sign [CLA](https://influxdata.com/community/cla/) (if not already signed)

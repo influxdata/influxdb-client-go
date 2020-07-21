@@ -37,11 +37,16 @@ jobs:
           name: "Create a temp directory for artifacts"
           command: |
             mkdir -p /tmp/artifacts
+            mkdir -p /tmp/test-results
       - run:
           command: |
-            go test -v -race  ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/...' -tags e2e
+            gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/...' -tags e2e ./...
             bash <(curl -s https://codecov.io/bash)
-            go tool cover -html=coverage.txt -o coverage.html
-            mv coverage.html /tmp/artifacts
+            go tool cover -html=coverage.txt -o /tmp/artifacts/coverage.html
       - store_artifacts:
           path: /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+      - store_test_results:
+          path: /tmp/test-results

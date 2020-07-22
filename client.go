@@ -142,6 +142,7 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		apiClient:   domain.NewClientWithResponses(service),
 	}
 	log.Log.SetDebugLevel(client.Options().LogLevel())
+	log.Log.Infof("Using URL '%s', token '%s'", serverURL, authToken)
 	return client
 }
 func (c *clientImpl) Options() *Options {

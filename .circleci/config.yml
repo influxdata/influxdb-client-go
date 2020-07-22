@@ -1,17 +1,15 @@
 # Golang CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
-version: 2
+version: 2.1
 jobs:
   build:
-    docker:
-      # specify the version
-      - image: circleci/golang:1.13.0
-        environment:
-          ENV: CI
-          GO111MODULE: "on"
-      - image: quay.io/influxdb/influxdb:2.0.0-beta
-
+    machine: true
+    environment:
+      ENV: CI
+      GO111MODULE: "on"
+      INFLUXDB2_URL: "http://localhost:9999"
+      INFLUXDB2_ONBOARDING_URL: "http://localhost:9990"
     steps:
       - checkout
 #      - run:
@@ -30,17 +28,24 @@ jobs:
 #              echo modules are not tidy, please run 'go fmt ./...'
 #              exit 1
 #            fi
-      - run: go get -v -t -d ./...
-      - run: go vet ./...
-      - run: go get honnef.co/go/tools/cmd/staticcheck  && staticcheck --checks="all" --tags e2e ./...
       - run:
           name: "Create a temp directory for artifacts"
           command: |
             mkdir -p /tmp/artifacts
             mkdir -p /tmp/test-results
+      - run: sudo rm -rf /usr/local/go
+      - run: wget https://golang.org/dl/go1.13.14.linux-amd64.tar.gz -O /tmp/go.tgz
+      - run: sudo tar -C /usr/local -xzf /tmp/go.tgz
+      - run: go version
+      - run: go get -v -t -d ./...
+      - run: go vet  ./...
+      - run: go get honnef.co/go/tools/cmd/staticcheck  && staticcheck --checks='all' --tags e2e ./...
+      - run:
+          name: "Start InfluxDB service"
+          command: ./scripts/influxdb-restart.sh
       - run:
           command: |
-            gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/...' -tags e2e ./...
+            go get gotest.tools/gotestsum && gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/...' -tags e2e ./...
             bash <(curl -s https://codecov.io/bash)
             go tool cover -html=coverage.txt -o /tmp/artifacts/coverage.html
       - store_artifacts:

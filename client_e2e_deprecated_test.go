@@ -22,23 +22,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSetup(t *testing.T) {
-	client := influxdb2.NewClientWithOptions("http://localhost:9999", "", influxdb2.DefaultOptions().SetLogLevel(2))
-	response, err := client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
-	if err != nil {
-		t.Error(err)
-	}
-	require.NotNil(t, response)
-	authToken = *response.Auth.Token
-	fmt.Println("Token:" + authToken)
-
-	_, err = client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
-	require.NotNil(t, err)
-	assert.Equal(t, "conflict: onboarding has already been completed", err.Error())
-}
-
 func TestWriteDeprecated(t *testing.T) {
-	client := influxdb2.NewClientWithOptions("http://localhost:9999", authToken, influxdb2.DefaultOptions().SetLogLevel(3))
+	client := influxdb2.NewClientWithOptions(serverURL, authToken, influxdb2.DefaultOptions().SetLogLevel(3))
 	writeAPI := client.WriteApi("my-org", "my-bucket")
 	errCh := writeAPI.Errors()
 	errorsCount := 0
@@ -76,7 +61,7 @@ func TestWriteDeprecated(t *testing.T) {
 }
 
 func TestQueryRawDeprecated(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 
 	queryAPI := client.QueryApi("my-org")
 	res, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
@@ -89,7 +74,7 @@ func TestQueryRawDeprecated(t *testing.T) {
 }
 
 func TestQueryDeprecated(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 
 	queryAPI := client.QueryApi("my-org")
 	fmt.Println("QueryResult")
@@ -114,7 +99,7 @@ func TestQueryDeprecated(t *testing.T) {
 }
 
 func TestAuthorizationsApi(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 	authAPI := client.AuthorizationsApi()
 	listRes, err := authAPI.GetAuthorizations(context.Background())
 	require.Nil(t, err)
@@ -186,7 +171,7 @@ func TestAuthorizationsApi(t *testing.T) {
 }
 
 func TestOrganizations(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 	orgsAPI := client.OrganizationsApi()
 	usersAPI := client.UsersApi()
 	orgName := "my-org-2"
@@ -240,7 +225,7 @@ func TestOrganizations(t *testing.T) {
 	require.NotNil(t, auth)
 
 	// create client with new auth token without permission
-	clientOrg2 := influxdb2.NewClient("http://localhost:9999", *auth.Token)
+	clientOrg2 := influxdb2.NewClient(serverURL, *auth.Token)
 
 	orgList, err = clientOrg2.OrganizationsApi().GetOrganizations(ctx)
 	require.Nil(t, err)
@@ -405,7 +390,7 @@ func TestOrganizations(t *testing.T) {
 }
 
 func TestUsers(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 
 	usersAPI := client.UsersApi()
 
@@ -452,7 +437,7 @@ func TestUsers(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	ctx := context.Background()
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 	writeAPI := client.WriteApiBlocking("my-org", "my-bucket")
 	queryAPI := client.QueryApi("my-org")
 	tmStart := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -523,7 +508,7 @@ func TestDelete(t *testing.T) {
 
 func TestBuckets(t *testing.T) {
 	ctx := context.Background()
-	client := influxdb2.NewClient("http://localhost:9999", authToken)
+	client := influxdb2.NewClient(serverURL, authToken)
 
 	bucketsAPI := client.BucketsApi()
 
@@ -768,7 +753,7 @@ func TestBuckets(t *testing.T) {
 }
 
 func TestLabels(t *testing.T) {
-	client := influxdb2.NewClientWithOptions("http://localhost:9999", authToken, influxdb2.DefaultOptions().SetLogLevel(3))
+	client := influxdb2.NewClientWithOptions(serverURL, authToken, influxdb2.DefaultOptions().SetLogLevel(3))
 	labelsAPI := client.LabelsApi()
 	orgAPI := client.OrganizationsApi()
 

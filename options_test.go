@@ -3,14 +3,15 @@ package influxdb2_test
 import (
 	"context"
 	"crypto/tls"
-	influxdb2 "github.com/influxdata/influxdb-client-go"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDefaultOptions(t *testing.T) {
@@ -52,8 +53,18 @@ func TestSettingsOptions(t *testing.T) {
 	assert.Equal(t, uint(7), opts.MaxRetries())
 	assert.Equal(t, tlsConfig, opts.TLSConfig())
 	assert.Equal(t, uint(50), opts.HTTPRequestTimeout())
+	if client := opts.HTTPClient(); assert.NotNil(t, client) {
+		assert.Equal(t, 50*time.Second, client.Timeout)
+		assert.Equal(t, tlsConfig, client.Transport.(*http.Transport).TLSClientConfig)
+	}
 	assert.Equal(t, uint(3), opts.LogLevel())
 	assert.Len(t, opts.WriteOptions().DefaultTags(), 1)
+
+	client := &http.Client{
+		Transport: &http.Transport{},
+	}
+	opts.SetHTTPClient(client)
+	assert.Equal(t, client, opts.HTTPClient())
 }
 
 func TestTimeout(t *testing.T) {

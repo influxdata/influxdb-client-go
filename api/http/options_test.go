@@ -6,9 +6,12 @@ package http_test
 
 import (
 	"crypto/tls"
+	nethttp "net/http"
+	"testing"
+	"time"
+
 	"github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestDefaultOptions(t *testing.T) {
@@ -26,4 +29,15 @@ func TestOptionsSetting(t *testing.T) {
 		SetHTTPRequestTimeout(50)
 	assert.Equal(t, tlsConfig, opts.TLSConfig())
 	assert.Equal(t, uint(50), opts.HTTPRequestTimeout())
+	if client := opts.HTTPClient(); assert.NotNil(t, client) {
+		assert.Equal(t, 50*time.Second, client.Timeout)
+		assert.Equal(t, tlsConfig, client.Transport.(*nethttp.Transport).TLSClientConfig)
+	}
+
+	client := &nethttp.Client{
+		Transport: &nethttp.Transport{},
+	}
+	opts = http.DefaultOptions()
+	opts.SetHTTPClient(client)
+	assert.Equal(t, client, opts.HTTPClient())
 }

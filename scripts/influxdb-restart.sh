@@ -26,6 +26,10 @@ set -e
 DEFAULT_DOCKER_REGISTRY="quay.io/influxdb/"
 DOCKER_REGISTRY="${DOCKER_REGISTRY:-$DEFAULT_DOCKER_REGISTRY}"
 
+DEFAULT_INFLUXDB_VERSION="1.8.1"
+INFLUXDB_VERSION="${INFLUXDB_VERSION:-$DEFAULT_INFLUXDB_VERSION}"
+INFLUXDB_IMAGE=influxdb:${INFLUXDB_VERSION}-alpine
+
 DEFAULT_INFLUXDB_V2_REPOSITORY="influxdb"
 DEFAULT_INFLUXDB_V2_VERSION="2.0.0-beta"
 INFLUXDB_V2_REPOSITORY="${INFLUXDB_V2_REPOSITORY:-$DEFAULT_INFLUXDB_V2_REPOSITORY}"
@@ -34,6 +38,8 @@ INFLUXDB_V2_IMAGE=${DOCKER_REGISTRY}${INFLUXDB_V2_REPOSITORY}:${INFLUXDB_V2_VERS
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
+docker kill influxdb || true
+docker rm influxdb || true
 docker kill influxdb_v2 || true
 docker rm influxdb_v2 || true
 docker kill influxdb_v2_onboarding || true
@@ -41,6 +47,31 @@ docker rm influxdb_v2_onboarding || true
 docker network rm influx_network || true
 docker network create -d bridge influx_network --subnet 192.168.0.0/24 --gateway 192.168.0.1
 
+
+echo
+echo "Restarting InfluxDB [${INFLUXDB_IMAGE}] ..."
+echo
+
+#
+# InfluxDB 1.8
+#
+
+docker pull ${INFLUXDB_IMAGE} || true
+docker run \
+       --detach \
+       --name influxdb \
+       --network influx_network \
+       --publish 8086:8086 \
+       --publish 8089:8089/udp \
+       --volume ${SCRIPT_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf \
+       ${INFLUXDB_IMAGE}
+
+echo "Wait to start InfluxDB"
+wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/ping
+echo
+echo "Post with create dabase"
+echo
+curl -X POST localhost:8086/query --data-urlencode "q=create database mydb"
 #
 # InfluxDB 2.0
 #

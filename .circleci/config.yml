@@ -9,6 +9,7 @@ jobs:
       ENV: CI
       GO111MODULE: "on"
       INFLUXDB2_URL: "http://localhost:9999"
+      INFLUXDB_URL: "http://localhost:8086"
       INFLUXDB2_ONBOARDING_URL: "http://localhost:9990"
     steps:
       - checkout

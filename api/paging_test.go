@@ -20,4 +20,12 @@ func TestPaging(t *testing.T) {
 	assert.Equal(t, domain.Limit(100), paging.limit)
 	assert.Equal(t, domain.Offset(10), paging.offset)
 	assert.Equal(t, "name", paging.sortBy)
+
+	paging = &Paging{}
+	PagingWithLimit(0)(paging)
+	assert.Equal(t, domain.Limit(1), paging.limit)
+
+	paging = &Paging{}
+	PagingWithLimit(1000)(paging)
+	assert.Equal(t, domain.Limit(100), paging.limit)
 }

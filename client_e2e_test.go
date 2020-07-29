@@ -23,6 +23,7 @@ import (
 
 var authToken string
 var serverURL string
+var serverV1URL string
 var onboardingURL string
 
 func getEnvValue(key, defVal string) string {
@@ -36,6 +37,7 @@ func getEnvValue(key, defVal string) string {
 func init() {
 	authToken = getEnvValue("INFLUXDB2_TOKEN", "my-token")
 	serverURL = getEnvValue("INFLUXDB2_URL", "http://localhost:9999")
+	serverV1URL = getEnvValue("INFLUXDB_URL", "http://localhost:8086")
 	onboardingURL = getEnvValue("INFLUXDB2_ONBOARDING_URL", "http://localhost:9990")
 }
 
@@ -151,6 +153,97 @@ func TestQuery(t *testing.T) {
 		if result.Err() != nil {
 			t.Error(result.Err())
 		}
+	}
+
+}
+
+func TestHealthV1Compatibility(t *testing.T) {
+	client := influxdb2.NewClient(serverV1URL, "")
+
+	health, err := client.Health(context.Background())
+	if err != nil {
+		t.Error(err)
+	}
+	require.NotNil(t, health)
+	assert.Equal(t, domain.HealthCheckStatusPass, health.Status)
+}
+
+func TestWriteV1Compatibility(t *testing.T) {
+	client := influxdb2.NewClientWithOptions(serverV1URL, "", influxdb2.DefaultOptions().SetLogLevel(3))
+	writeAPI := client.WriteAPI("", "mydb/autogen")
+	errCh := writeAPI.Errors()
+	errorsCount := 0
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		for err := range errCh {
+			errorsCount++
+			fmt.Println("Error proc: write error: ", err.Error())
+		}
+		wg.Done()
+	}()
+	timestamp := time.Now()
+	for i, f := 0, 3.3; i < 10; i++ {
+		writeAPI.WriteRecord(fmt.Sprintf("testv1,a=%d,b=local f=%.2f,i=%di %d", i%2, f, i, timestamp.UnixNano()))
+		//writeAPI.Flush()
+		f += 3.3
+		timestamp = timestamp.Add(time.Nanosecond)
+	}
+
+	for i, f := int64(10), 33.0; i < 20; i++ {
+		p := influxdb2.NewPoint("testv1",
+			map[string]string{"a": strconv.FormatInt(i%2, 10), "b": "static"},
+			map[string]interface{}{"f": f, "i": i},
+			timestamp)
+		writeAPI.WritePoint(p)
+		f += 3.3
+		timestamp = timestamp.Add(time.Nanosecond)
+	}
+
+	err := client.WriteAPIBlocking("", "mydb/autogen").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("testv1").
+		AddTag("a", "3").AddField("i", 20).AddField("f", 4.4))
+	assert.Nil(t, err)
+
+	client.Close()
+	wg.Wait()
+	assert.Equal(t, 0, errorsCount)
+
+}
+
+func TestQueryRawV1Compatibility(t *testing.T) {
+	client := influxdb2.NewClient(serverV1URL, "")
+
+	queryAPI := client.QueryAPI("")
+	res, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"mydb/autogen")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "testv1")`, influxdb2.DefaultDialect())
+	if err != nil {
+		t.Error(err)
+	} else {
+		fmt.Println("QueryResult:")
+		fmt.Println(res)
+	}
+}
+
+func TestQueryV1Compatibility(t *testing.T) {
+	client := influxdb2.NewClient(serverV1URL, "")
+
+	queryAPI := client.QueryAPI("")
+	fmt.Println("QueryResult")
+	result, err := queryAPI.Query(context.Background(), `from(bucket:"mydb/autogen")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "testv1")`)
+	if err != nil {
+		t.Error(err)
+	} else {
+		rows := 0
+		for result.Next() {
+			rows++
+			if result.TableChanged() {
+				fmt.Printf("table: %s\n", result.TableMetadata().String())
+			}
+			fmt.Printf("row: %sv\n", result.Record().String())
+		}
+		if result.Err() != nil {
+			t.Error(result.Err())
+		}
+		assert.Equal(t, 42, rows)
 	}
 
 }

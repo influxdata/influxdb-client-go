@@ -11,11 +11,9 @@ import (
 	"io"
 	"io/ioutil"
 	"mime"
-	"net"
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 
 	http2 "github.com/influxdata/influxdb-client-go/api/http"
 )
@@ -61,16 +59,7 @@ func NewService(serverURL, authorization string, httpOptions *http2.Options) Ser
 		serverAPIURL:  serverAPIURL,
 		serverURL:     serverURL,
 		authorization: authorization,
-		client: &http.Client{
-			Timeout: time.Second * time.Duration(httpOptions.HTTPRequestTimeout()),
-			Transport: &http.Transport{
-				DialContext: (&net.Dialer{
-					Timeout: 5 * time.Second,
-				}).DialContext,
-				TLSHandshakeTimeout: 5 * time.Second,
-				TLSClientConfig:     httpOptions.TLSConfig(),
-			},
-		},
+		client: httpOptions.HTTPClient(),
 	}
 }
 

@@ -6,9 +6,11 @@ package influxdb2
 
 import (
 	"crypto/tls"
+	nethttp "net/http"
+	"time"
+
 	"github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	"time"
 )
 
 // Options holds configuration properties for communicating with InfluxDB server
@@ -108,6 +110,24 @@ func (o *Options) UseGZip() bool {
 func (o *Options) SetUseGZip(useGZip bool) *Options {
 	o.WriteOptions().SetUseGZip(useGZip)
 	return o
+}
+
+// HTTPClient returns the http.Client that is configured to be used
+// for HTTP requests. It will return the one that has been set using
+// SetHTTPClient or it will construct a default client using the
+// other configured options.
+func (o *Options) HTTPClient() *nethttp.Client {
+	return o.httpOptions.HTTPClient()
+}
+
+// SetHTTPClient will configure the http.Client that is used
+// for HTTP requests. If set to nil, an HTTPClient will be
+// generated.
+//
+// Setting the HTTPClient will cause the other HTTP options
+// to be ignored.
+func (o *Options) SetHTTPClient(c *nethttp.Client) {
+	o.httpOptions.SetHTTPClient(c)
 }
 
 // TLSConfig returns TLS config

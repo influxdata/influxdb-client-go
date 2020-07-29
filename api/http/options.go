@@ -7,14 +7,49 @@ package http
 
 import (
 	"crypto/tls"
+	"net"
+	"net/http"
+	"time"
 )
 
 // Options holds http configuration properties for communicating with InfluxDB server
 type Options struct {
+	// HTTP client. Default is http.DefaultClient.
+	httpClient *http.Client
 	// TLS configuration for secure connection. Default nil
 	tlsConfig *tls.Config
 	// HTTP request timeout in sec. Default 20
 	httpRequestTimeout uint
+}
+
+// HTTPClient returns the http.Client that is configured to be used
+// for HTTP requests. It will return the one that has been set using
+// SetHTTPClient or it will construct a default client using the
+// other configured options.
+func (o *Options) HTTPClient() *http.Client {
+	if o.httpClient == nil {
+		o.httpClient = &http.Client{
+			Timeout: time.Second * time.Duration(o.HTTPRequestTimeout()),
+			Transport: &http.Transport{
+				DialContext: (&net.Dialer{
+					Timeout: 5 * time.Second,
+				}).DialContext,
+				TLSHandshakeTimeout: 5 * time.Second,
+				TLSClientConfig:     o.TLSConfig(),
+			},
+		}
+	}
+	return o.httpClient
+}
+
+// SetHTTPClient will configure the http.Client that is used
+// for HTTP requests. If set to nil, an HTTPClient will be
+// generated.
+//
+// Setting the HTTPClient will cause the other HTTP options
+// to be ignored.
+func (o *Options) SetHTTPClient(c *http.Client) {
+	o.httpClient = c
 }
 
 // TLSConfig returns tls.Config

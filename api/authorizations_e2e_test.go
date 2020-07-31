@@ -79,6 +79,15 @@ func TestAuthorizationsAPI(t *testing.T) {
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 2)
 
+	user, err := client.UsersAPI().FindUserByName(context.Background(), "my-user")
+	require.Nil(t, err)
+	require.NotNil(t, user)
+
+	listRes, err = authAPI.FindAuthorizationsByUserID(context.Background(), *user.Id)
+	require.Nil(t, err)
+	require.NotNil(t, listRes)
+	assert.Len(t, *listRes, 2)
+
 	listRes, err = authAPI.FindAuthorizationsByOrgName(context.Background(), "not-existent-org")
 	require.Nil(t, listRes)
 	require.NotNil(t, err)
@@ -102,4 +111,83 @@ func TestAuthorizationsAPI(t *testing.T) {
 	require.NotNil(t, listRes)
 	assert.Len(t, *listRes, 1)
 
+}
+
+func TestAuthorizationsAPI_Failing(t *testing.T) {
+	client := influxdb2.NewClient(serverURL, authToken)
+	authAPI := client.AuthorizationsAPI()
+	invalidID := "xcv"
+	notExistentID := "100000000000000"
+
+	listRes, err := authAPI.FindAuthorizationsByUserName(context.Background(), "invalid-user")
+	assert.NotNil(t, err)
+	assert.Nil(t, listRes)
+
+	listRes, err = authAPI.FindAuthorizationsByUserID(context.Background(), invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, listRes)
+
+	listRes, err = authAPI.FindAuthorizationsByOrgID(context.Background(), notExistentID)
+	assert.NotNil(t, err)
+	assert.Nil(t, listRes)
+
+	listRes, err = authAPI.FindAuthorizationsByOrgName(context.Background(), "not-existing-org")
+	assert.NotNil(t, err)
+	assert.Nil(t, listRes)
+
+	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
+	require.Nil(t, err)
+	require.NotNil(t, org)
+
+	auth, err := authAPI.CreateAuthorizationWithOrgID(context.Background(), *org.Id, nil)
+	assert.NotNil(t, err)
+	assert.Nil(t, auth)
+
+	permission := &domain.Permission{
+		Action: domain.PermissionActionWrite,
+		Resource: domain.Resource{
+			Type: domain.ResourceTypeBuckets,
+		},
+	}
+	permissions := []domain.Permission{*permission}
+
+	auth, err = authAPI.CreateAuthorizationWithOrgID(context.Background(), notExistentID, permissions)
+	assert.NotNil(t, err)
+	assert.Nil(t, auth)
+
+	auth, err = authAPI.UpdateAuthorizationStatusWithID(context.Background(), notExistentID, domain.AuthorizationUpdateRequestStatusInactive)
+	assert.NotNil(t, err)
+	assert.Nil(t, auth)
+
+	err = authAPI.DeleteAuthorizationWithID(context.Background(), notExistentID)
+	assert.NotNil(t, err)
+}
+
+func TestAuthorizationsAPI_requestFailing(t *testing.T) {
+
+	client := influxdb2.NewClientWithOptions("htp://localhost:9910", authToken, influxdb2.DefaultOptions().SetHTTPRequestTimeout(1))
+	authAPI := client.AuthorizationsAPI()
+
+	listRes, err := authAPI.GetAuthorizations(context.Background())
+	assert.NotNil(t, err)
+	assert.Nil(t, listRes)
+
+	permission := &domain.Permission{
+		Action: domain.PermissionActionWrite,
+		Resource: domain.Resource{
+			Type: domain.ResourceTypeBuckets,
+		},
+	}
+	permissions := []domain.Permission{*permission}
+
+	auth, err := authAPI.CreateAuthorizationWithOrgID(context.Background(), "1000000000000000000", permissions)
+	assert.NotNil(t, err)
+	assert.Nil(t, auth)
+
+	auth, err = authAPI.UpdateAuthorizationStatusWithID(context.Background(), "1000000000000000000", domain.AuthorizationUpdateRequestStatusInactive)
+	assert.NotNil(t, err)
+	assert.Nil(t, auth)
+
+	err = authAPI.DeleteAuthorizationWithID(context.Background(), "1000000000000000000")
+	assert.NotNil(t, err)
 }

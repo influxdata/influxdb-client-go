@@ -47,53 +47,30 @@ func NewAuthorizationsAPI(apiClient *domain.ClientWithResponses) AuthorizationsA
 
 func (a *authorizationsAPI) GetAuthorizations(ctx context.Context) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{}
-	auths, err := a.listAuthorizations(ctx, authQuery)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Authorizations, nil
+	return a.listAuthorizations(ctx, authQuery)
 }
 
 func (a *authorizationsAPI) FindAuthorizationsByUserName(ctx context.Context, userName string) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{User: &userName}
-	auths, err := a.listAuthorizations(ctx, authQuery)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Authorizations, nil
+	return a.listAuthorizations(ctx, authQuery)
 }
 
 func (a *authorizationsAPI) FindAuthorizationsByUserID(ctx context.Context, userID string) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{UserID: &userID}
-	auths, err := a.listAuthorizations(ctx, authQuery)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Authorizations, nil
+	return a.listAuthorizations(ctx, authQuery)
 }
 
 func (a *authorizationsAPI) FindAuthorizationsByOrgName(ctx context.Context, orgName string) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{Org: &orgName}
-	auths, err := a.listAuthorizations(ctx, authQuery)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Authorizations, nil
+	return a.listAuthorizations(ctx, authQuery)
 }
 
 func (a *authorizationsAPI) FindAuthorizationsByOrgID(ctx context.Context, orgID string) (*[]domain.Authorization, error) {
 	authQuery := &domain.GetAuthorizationsParams{OrgID: &orgID}
-	auths, err := a.listAuthorizations(ctx, authQuery)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Authorizations, nil
+	return a.listAuthorizations(ctx, authQuery)
 }
 
-func (a *authorizationsAPI) listAuthorizations(ctx context.Context, query *domain.GetAuthorizationsParams) (*domain.Authorizations, error) {
-	if query == nil {
-		query = &domain.GetAuthorizationsParams{}
-	}
+func (a *authorizationsAPI) listAuthorizations(ctx context.Context, query *domain.GetAuthorizationsParams) (*[]domain.Authorization, error) {
 	response, err := a.apiClient.GetAuthorizationsWithResponse(ctx, query)
 	if err != nil {
 		return nil, err
@@ -101,7 +78,7 @@ func (a *authorizationsAPI) listAuthorizations(ctx context.Context, query *domai
 	if response.JSONDefault != nil {
 		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
-	return response.JSON200, nil
+	return response.JSON200.Authorizations, nil
 }
 
 func (a *authorizationsAPI) CreateAuthorization(ctx context.Context, authorization *domain.Authorization) (*domain.Authorization, error) {

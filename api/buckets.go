@@ -133,29 +133,9 @@ func (b *bucketsAPI) FindBucketsByOrgName(ctx context.Context, orgName string, p
 	return b.getBuckets(ctx, params, pagingOptions...)
 }
 
-func (b *bucketsAPI) CreateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
+func (b *bucketsAPI) createBucket(ctx context.Context, bucketReq *domain.PostBucketRequest) (*domain.Bucket, error) {
 	params := &domain.PostBucketsParams{}
-	bucketReq := &domain.PostBucketRequest{
-		Description:    bucket.Description,
-		Name:           bucket.Name,
-		OrgID:          bucket.OrgID,
-		RetentionRules: bucket.RetentionRules,
-		Rp:             bucket.Rp,
-	}
 	response, err := b.apiClient.PostBucketsWithResponse(ctx, params, domain.PostBucketsJSONRequestBody(*bucketReq))
-	if err != nil {
-		return nil, err
-	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return response.JSON201, nil
-}
-
-func (b *bucketsAPI) CreateBucketWithNameWithID(ctx context.Context, orgID, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
-	params := &domain.PostBucketsParams{}
-	bucket := &domain.PostBucketRequest{Name: bucketName, OrgID: &orgID, RetentionRules: rules}
-	response, err := b.apiClient.PostBucketsWithResponse(ctx, params, domain.PostBucketsJSONRequestBody(*bucket))
 	if err != nil {
 		return nil, err
 	}
@@ -166,6 +146,22 @@ func (b *bucketsAPI) CreateBucketWithNameWithID(ctx context.Context, orgID, buck
 		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
+}
+
+func (b *bucketsAPI) CreateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
+	bucketReq := &domain.PostBucketRequest{
+		Description:    bucket.Description,
+		Name:           bucket.Name,
+		OrgID:          bucket.OrgID,
+		RetentionRules: bucket.RetentionRules,
+		Rp:             bucket.Rp,
+	}
+	return b.createBucket(ctx, bucketReq)
+}
+
+func (b *bucketsAPI) CreateBucketWithNameWithID(ctx context.Context, orgID, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
+	bucket := &domain.PostBucketRequest{Name: bucketName, OrgID: &orgID, RetentionRules: rules}
+	return b.createBucket(ctx, bucket)
 }
 func (b *bucketsAPI) CreateBucketWithName(ctx context.Context, org *domain.Organization, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
 	return b.CreateBucketWithNameWithID(ctx, *org.Id, bucketName, rules...)

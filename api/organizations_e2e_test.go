@@ -23,7 +23,6 @@ func TestOrganizationsAPI(t *testing.T) {
 	orgName := "my-org-2"
 	orgDescription := "my-org 2 description"
 	ctx := context.Background()
-	invalidID := "aaaaaaaaaaaaaaaa"
 
 	orgList, err := orgsAPI.GetOrganizations(ctx)
 	require.Nil(t, err)
@@ -110,42 +109,21 @@ func TestOrganizationsAPI(t *testing.T) {
 	assert.Equal(t, *user.Id, *member.Id)
 	assert.Equal(t, user.Name, member.Name)
 
-	// Add member with invalid id
-	member, err = orgsAPI.AddMemberWithID(ctx, *org.Id, invalidID)
-	assert.NotNil(t, err)
-	assert.Nil(t, member)
-
 	members, err = orgsAPI.GetMembers(ctx, org)
 	require.Nil(t, err)
 	require.NotNil(t, members)
 	require.Len(t, *members, 1)
-
-	// get member with invalid id
-	members, err = orgsAPI.GetMembersWithID(ctx, invalidID)
-	assert.NotNil(t, err)
-	assert.Nil(t, members)
 
 	org2, err = orgsAPI.FindOrganizationByID(ctx, *org.Id)
 	require.Nil(t, err)
 	require.NotNil(t, org2)
 	assert.Equal(t, org.Name, org2.Name)
 
-	// find invalid id
-	org2, err = orgsAPI.FindOrganizationByID(ctx, invalidID)
-	assert.NotNil(t, err)
-	assert.Nil(t, org2)
-
 	orgs, err := orgsAPI.FindOrganizationsByUserID(ctx, *user.Id)
 	require.Nil(t, err)
 	require.NotNil(t, orgs)
 	require.Len(t, *orgs, 1)
 	assert.Equal(t, org.Name, (*orgs)[0].Name)
-
-	// look for not existent
-	orgs, err = orgsAPI.FindOrganizationsByUserID(ctx, invalidID)
-	assert.Nil(t, err)
-	assert.NotNil(t, orgs)
-	assert.Len(t, *orgs, 0)
 
 	orgName2 := "my-org-3"
 
@@ -164,19 +142,9 @@ func TestOrganizationsAPI(t *testing.T) {
 	assert.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	//get owners with invalid id
-	owners, err = orgsAPI.GetOwnersWithID(ctx, invalidID)
-	assert.NotNil(t, err)
-	assert.Nil(t, owners)
-
 	owner, err := orgsAPI.AddOwner(ctx, org2, user)
 	require.Nil(t, err)
 	require.NotNil(t, owner)
-
-	// add owner with invalid ID
-	owner, err = orgsAPI.AddOwnerWithID(ctx, *org2.Id, invalidID)
-	assert.NotNil(t, err)
-	assert.Nil(t, owner)
 
 	owners, err = orgsAPI.GetOwners(ctx, org2)
 	require.Nil(t, err)
@@ -189,10 +157,6 @@ func TestOrganizationsAPI(t *testing.T) {
 
 	err = orgsAPI.RemoveOwner(ctx, org2, u)
 	require.Nil(t, err)
-
-	// remove owner with invalid ID
-	err = orgsAPI.RemoveOwnerWithID(ctx, invalidID, invalidID)
-	assert.NotNil(t, err)
 
 	owners, err = orgsAPI.GetOwners(ctx, org2)
 	require.Nil(t, err)
@@ -207,10 +171,6 @@ func TestOrganizationsAPI(t *testing.T) {
 	err = orgsAPI.RemoveMember(ctx, org, user)
 	require.Nil(t, err)
 
-	// remove invalid memberID
-	err = orgsAPI.RemoveMemberWithID(ctx, invalidID, invalidID)
-	assert.NotNil(t, err)
-
 	members, err = orgsAPI.GetMembers(ctx, org)
 	require.Nil(t, err)
 	require.NotNil(t, members)
@@ -222,10 +182,6 @@ func TestOrganizationsAPI(t *testing.T) {
 	err = orgsAPI.DeleteOrganization(ctx, org2)
 	assert.Nil(t, err)
 
-	// delete invalid org
-	err = orgsAPI.DeleteOrganizationWithID(ctx, invalidID)
-	assert.NotNil(t, err)
-
 	orgList, err = orgsAPI.GetOrganizations(ctx)
 	require.Nil(t, err)
 	require.NotNil(t, orgList)
@@ -234,4 +190,146 @@ func TestOrganizationsAPI(t *testing.T) {
 	err = usersAPI.DeleteUser(ctx, user)
 	require.Nil(t, err)
 
+}
+
+func TestOrganizationAPI_failing(t *testing.T) {
+	client := influxdb2.NewClient(serverURL, authToken)
+	orgsAPI := client.OrganizationsAPI()
+	ctx := context.Background()
+	notExistingID := "aaaaaaaaaaaaaaaa"
+	invalidID := "aaaaaa"
+
+	org, err := orgsAPI.FindOrganizationByName(ctx, "my-org")
+	require.Nil(t, err, err)
+	require.NotNil(t, org)
+
+	// Add member with invalid id
+	member, err := orgsAPI.AddMemberWithID(ctx, *org.Id, notExistingID)
+	assert.NotNil(t, err)
+	assert.Nil(t, member)
+
+	// get member with invalid id
+	members, err := orgsAPI.GetMembersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, members)
+
+	// get member with not existing id
+	members, err = orgsAPI.GetMembersWithID(ctx, notExistingID)
+	assert.NotNil(t, err)
+	assert.Nil(t, members)
+
+	//get owners with invalid id
+	owners, err := orgsAPI.GetOwnersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, owners)
+
+	//get owners with not existing id
+	owners, err = orgsAPI.GetOwnersWithID(ctx, notExistingID)
+	assert.NotNil(t, err)
+	assert.Nil(t, owners)
+
+	// look for not existent
+	orgs, err := orgsAPI.FindOrganizationsByUserID(ctx, notExistingID)
+	assert.Nil(t, err)
+	assert.NotNil(t, orgs)
+	assert.Len(t, *orgs, 0)
+
+	// look for not existent - bug returns current org: https://github.com/influxdata/influxdb/issues/19110
+	//orgs, err = orgsAPI.FindOrganizationsByUserID(ctx, invalidID)
+	//assert.NotNil(t, err)
+	//assert.Nil(t, orgs)
+
+	// add owner with invalid ID
+	owner, err := orgsAPI.AddOwnerWithID(ctx, *org.Id, notExistingID)
+	assert.NotNil(t, err)
+	assert.Nil(t, owner)
+
+	// update with not existing id
+	org.Id = &notExistingID
+	org, err = orgsAPI.UpdateOrganization(ctx, org)
+	assert.NotNil(t, err)
+	assert.Nil(t, org)
+
+	// remove owner with invalid ID
+	err = orgsAPI.RemoveOwnerWithID(ctx, notExistingID, notExistingID)
+	assert.NotNil(t, err)
+
+	// find invalid id
+	org, err = orgsAPI.FindOrganizationByID(ctx, notExistingID)
+	assert.NotNil(t, err)
+	assert.Nil(t, org)
+
+	// remove invalid memberID
+	err = orgsAPI.RemoveMemberWithID(ctx, notExistingID, notExistingID)
+	assert.NotNil(t, err)
+
+	// delete not existent org
+	err = orgsAPI.DeleteOrganizationWithID(ctx, notExistingID)
+	assert.NotNil(t, err)
+
+	// delete invalid org
+	err = orgsAPI.DeleteOrganizationWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+}
+
+func TestOrganizationAPI_requestFailing(t *testing.T) {
+	client := influxdb2.NewClient("serverURL", authToken)
+	orgsAPI := client.OrganizationsAPI()
+	ctx := context.Background()
+
+	anID := "aaaaaaaaaaaaaaaa"
+	invalidID := "aaaaaa"
+
+	org := &domain.Organization{Id: &anID}
+
+	_, err := orgsAPI.GetOrganizations(ctx)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.FindOrganizationByName(ctx, "my-org")
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.FindOrganizationByID(ctx, anID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.FindOrganizationsByUserID(ctx, anID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.CreateOrganizationWithName(ctx, "name")
+	assert.NotNil(t, err)
+
+	err = orgsAPI.DeleteOrganizationWithID(ctx, anID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.UpdateOrganization(ctx, org)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.GetMembersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.AddMemberWithID(ctx, *org.Id, anID)
+	assert.NotNil(t, err)
+
+	// remove invalid memberID
+	err = orgsAPI.RemoveMemberWithID(ctx, anID, anID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.GetOwnersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.AddOwnerWithID(ctx, *org.Id, anID)
+	assert.NotNil(t, err)
+
+	// remove owner with invalid ID
+	err = orgsAPI.RemoveOwnerWithID(ctx, anID, anID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.GetOwnersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	_, err = orgsAPI.AddLabelWithID(ctx, *org.Id, anID)
+	assert.NotNil(t, err)
+
+	// remove owner with invalid ID
+	err = orgsAPI.RemoveLabelWithID(ctx, anID, anID)
+	assert.NotNil(t, err)
 }

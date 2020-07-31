@@ -9,6 +9,7 @@ package api_test
 import (
 	"context"
 	"github.com/influxdata/influxdb-client-go/api/write"
+	"github.com/influxdata/influxdb-client-go/domain"
 	"strconv"
 	"strings"
 	"testing"
@@ -88,4 +89,69 @@ func TestDeleteAPI(t *testing.T) {
 	err = deleteAPI.DeleteWithName(ctx, "my-org", "bucket", tmStart.Add(50*time.Minute), tmEnd, "b=static")
 	require.NotNil(t, err, err)
 	assert.True(t, strings.Contains(err.Error(), "not found"))
+}
+
+func TestDeleteAPI_failing(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClient(serverURL, authToken)
+	deleteAPI := client.DeleteAPI()
+
+	invalidID := "xcv"
+	notExistentID := "1000000000000000"
+
+	tmStart := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
+	tmEnd := tmStart.Add(time.Second)
+	err := deleteAPI.DeleteWithID(ctx, notExistentID, invalidID, tmStart, tmEnd, "a=1")
+	assert.NotNil(t, err)
+
+	err = deleteAPI.DeleteWithID(ctx, notExistentID, notExistentID, tmStart, tmEnd, "a=1")
+	assert.NotNil(t, err)
+
+	org, err := client.OrganizationsAPI().FindOrganizationByName(ctx, "my-org")
+	assert.Nil(t, err, err)
+	assert.NotNil(t, org)
+
+	bucket, err := client.BucketsAPI().FindBucketByName(ctx, "my-bucket")
+	assert.Nil(t, err, err)
+	assert.NotNil(t, bucket)
+
+	org, err = client.OrganizationsAPI().CreateOrganizationWithName(ctx, "org1")
+	require.Nil(t, err)
+	require.NotNil(t, org)
+
+	permission := &domain.Permission{
+		Action: domain.PermissionActionWrite,
+		Resource: domain.Resource{
+			Type: domain.ResourceTypeOrgs,
+		},
+	}
+	permissions := []domain.Permission{*permission}
+
+	//create authorization for new org
+	auth, err := client.AuthorizationsAPI().CreateAuthorizationWithOrgID(context.Background(), *org.Id, permissions)
+	require.Nil(t, err)
+	require.NotNil(t, auth)
+
+	// create client with new auth token without permission for buckets
+	clientOrg2 := influxdb2.NewClient(serverURL, *auth.Token)
+	// test 403
+	err = clientOrg2.DeleteAPI().Delete(ctx, org, bucket, tmStart, tmStart.Add(50*time.Minute), "b=static")
+	assert.NotNil(t, err)
+
+	err = client.AuthorizationsAPI().DeleteAuthorization(ctx, auth)
+	assert.Nil(t, err)
+
+	err = client.OrganizationsAPI().DeleteOrganization(ctx, org)
+	assert.Nil(t, err)
+}
+
+func TestDeleteAPI_requestFailing(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClient("serverURL", authToken)
+	deleteAPI := client.DeleteAPI()
+
+	anID := "1000000000000000"
+
+	err := deleteAPI.DeleteWithName(ctx, anID, anID, time.Now(), time.Now(), "")
+	assert.NotNil(t, err)
 }

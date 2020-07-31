@@ -8,6 +8,7 @@ package api_test
 
 import (
 	"context"
+	"github.com/influxdata/influxdb-client-go/domain"
 	"testing"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go"
@@ -53,18 +54,14 @@ func TestLabelsAPI(t *testing.T) {
 	require.NotNil(t, label2)
 	assert.Equal(t, labelName, *label2.Name)
 
-	label2, err = labelsAPI.FindLabelByID(ctx, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
 	label2, err = labelsAPI.FindLabelByName(ctx, *myorg.Id, labelName)
 	require.Nil(t, err, err)
 	require.NotNil(t, label2)
 	assert.Equal(t, labelName, *label2.Name)
 
 	label2, err = labelsAPI.FindLabelByName(ctx, *myorg.Id, "wrong label")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
+	assert.NotNil(t, err, err)
+	assert.Nil(t, label2)
 
 	labels, err = labelsAPI.GetLabels(ctx)
 	require.Nil(t, err, err)
@@ -81,14 +78,10 @@ func TestLabelsAPI(t *testing.T) {
 	require.NotNil(t, labels)
 	assert.Len(t, *labels, 1)
 
-	labels, err = labelsAPI.FindLabelsByOrgID(ctx, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, labels)
-
 	// duplicate label
 	label2, err = labelsAPI.CreateLabelWithName(ctx, myorg, labelName, nil)
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
+	assert.NotNil(t, err)
+	assert.Nil(t, label2)
 
 	labels, err = orgAPI.GetLabels(ctx, myorg)
 	require.Nil(t, err, err)
@@ -121,32 +114,93 @@ func TestLabelsAPI(t *testing.T) {
 	require.NotNil(t, labels)
 	assert.Len(t, *labels, 0)
 
-	labels, err = orgAPI.GetLabelsWithID(ctx, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, labels)
-
-	label2, err = orgAPI.AddLabelWithID(ctx, *org.Id, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	label2, err = orgAPI.AddLabelWithID(ctx, "000000000000000", "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	err = orgAPI.RemoveLabelWithID(ctx, *org.Id, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	err = orgAPI.RemoveLabelWithID(ctx, "000000000000000", "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
 	err = orgAPI.DeleteOrganization(ctx, org)
 	assert.Nil(t, err, err)
 
 	err = labelsAPI.DeleteLabel(ctx, label)
 	require.Nil(t, err, err)
+	//
+	err = labelsAPI.DeleteLabel(ctx, label)
+	assert.NotNil(t, err, err)
+}
+
+func TestLabelsAPI_failing(t *testing.T) {
+	client := influxdb2.NewClient(serverURL, authToken)
+	labelsAPI := client.LabelsAPI()
+	orgAPI := client.OrganizationsAPI()
+	ctx := context.Background()
+
+	invalidID := "xyz"
+	wrongID := "1000000000000000"
+
+	var label = &domain.Label{
+		Id: &wrongID,
+	}
+
+	org, err := orgAPI.FindOrganizationByName(ctx, "my-org")
+	require.Nil(t, err, err)
+	require.NotNil(t, org)
+
+	label, err = labelsAPI.UpdateLabel(ctx, label)
+	assert.NotNil(t, err)
+	assert.Nil(t, label)
+
+	label, err = labelsAPI.FindLabelByID(ctx, wrongID)
+	assert.NotNil(t, err)
+	assert.Nil(t, label)
+
+	labels, err := labelsAPI.FindLabelsByOrgID(ctx, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, labels)
+
+	err = labelsAPI.DeleteLabelWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	labels, err = orgAPI.GetLabelsWithID(ctx, wrongID)
+	assert.NotNil(t, err)
+	assert.Nil(t, labels)
+
+	label, err = orgAPI.AddLabelWithID(ctx, *org.Id, wrongID)
+	assert.NotNil(t, err)
+	assert.Nil(t, label)
+
+	label, err = orgAPI.AddLabelWithID(ctx, wrongID, wrongID)
+	assert.NotNil(t, err)
+	assert.Nil(t, label)
+
+	err = orgAPI.RemoveLabelWithID(ctx, *org.Id, invalidID)
+	assert.NotNil(t, err)
+	assert.Nil(t, label)
+
+	err = orgAPI.RemoveLabelWithID(ctx, invalidID, invalidID)
+	assert.NotNil(t, err, err)
+	assert.Nil(t, label)
+}
+
+func TestLabelsAPI_requestFailing(t *testing.T) {
+	client := influxdb2.NewClient("serverURL", authToken)
+	labelsAPI := client.LabelsAPI()
+	ctx := context.Background()
+
+	anID := "1000000000000000"
+
+	label := &domain.Label{Id: &anID}
+
+	_, err := labelsAPI.GetLabels(ctx)
+	assert.NotNil(t, err)
+
+	_, err = labelsAPI.FindLabelByName(ctx, anID, "name")
+	assert.NotNil(t, err)
+
+	_, err = labelsAPI.FindLabelByID(ctx, anID)
+	assert.NotNil(t, err)
+
+	_, err = labelsAPI.CreateLabelWithNameWithID(ctx, anID, "name", nil)
+	assert.NotNil(t, err)
+
+	_, err = labelsAPI.UpdateLabel(ctx, label)
+	assert.NotNil(t, err)
 
 	err = labelsAPI.DeleteLabel(ctx, label)
-	require.NotNil(t, err, err)
+	assert.NotNil(t, err)
 }

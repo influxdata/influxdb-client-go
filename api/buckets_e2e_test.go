@@ -71,6 +71,10 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Equal(t, desc, *b.Description)
 	assert.Len(t, b.RetentionRules, 1)
 
+	b, err = bucketsAPI.FindBucketByID(ctx, *b.Id)
+	require.Nil(t, err, err)
+	require.NotNil(t, b)
+
 	// Test owners
 	userOwner, err := client.UsersAPI().CreateUserWithName(ctx, "bucket-owner")
 	require.Nil(t, err, err)
@@ -91,29 +95,13 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	err = bucketsAPI.RemoveOwnerWithID(ctx, *b.Id, *(&(*owners)[0]).Id)
+	err = bucketsAPI.RemoveOwner(ctx, b, &(*owners)[0].User)
 	require.Nil(t, err, err)
 
 	owners, err = bucketsAPI.GetOwners(ctx, b)
 	require.Nil(t, err, err)
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 0)
-
-	//test failures
-	_, err = bucketsAPI.AddOwnerWithID(ctx, "000000000000000", *userOwner.Id)
-	assert.NotNil(t, err)
-
-	_, err = bucketsAPI.AddOwnerWithID(ctx, *b.Id, "000000000000000")
-	assert.NotNil(t, err)
-
-	_, err = bucketsAPI.GetOwnersWithID(ctx, "000000000000000")
-	assert.NotNil(t, err)
-
-	err = bucketsAPI.RemoveOwnerWithID(ctx, *b.Id, "000000000000000")
-	assert.NotNil(t, err)
-
-	err = bucketsAPI.RemoveOwnerWithID(ctx, "000000000000000", *userOwner.Id)
-	assert.NotNil(t, err)
 
 	// Test members
 	userMember, err := client.UsersAPI().CreateUserWithName(ctx, "bucket-member")
@@ -135,29 +123,13 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, members)
 	assert.Len(t, *members, 1)
 
-	err = bucketsAPI.RemoveMemberWithID(ctx, *b.Id, *(&(*members)[0]).Id)
+	err = bucketsAPI.RemoveMember(ctx, b, &(*members)[0].User)
 	require.Nil(t, err, err)
 
 	members, err = bucketsAPI.GetMembers(ctx, b)
 	require.Nil(t, err, err)
 	require.NotNil(t, members)
 	assert.Len(t, *members, 0)
-
-	//test failures
-	_, err = bucketsAPI.AddMemberWithID(ctx, "000000000000000", *userMember.Id)
-	assert.NotNil(t, err)
-
-	_, err = bucketsAPI.AddMemberWithID(ctx, *b.Id, "000000000000000")
-	assert.NotNil(t, err)
-
-	_, err = bucketsAPI.GetMembersWithID(ctx, "000000000000000")
-	assert.NotNil(t, err)
-
-	err = bucketsAPI.RemoveMemberWithID(ctx, *b.Id, "000000000000000")
-	assert.NotNil(t, err)
-
-	err = bucketsAPI.RemoveMemberWithID(ctx, "000000000000000", *userMember.Id)
-	assert.NotNil(t, err)
 
 	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
 	assert.Nil(t, err, err)
@@ -205,7 +177,7 @@ func TestBucketsAPI(t *testing.T) {
 
 	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
 	assert.Nil(t, err, err)
-
+	//delete already deleted
 	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
 	assert.NotNil(t, err)
 
@@ -262,5 +234,98 @@ func TestBucketsAPI(t *testing.T) {
 
 	// should fail with org not found
 	_, err = bucketsAPI.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
+	assert.NotNil(t, err)
+}
+
+func TestBucketsAPI_failures(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClient(serverURL, authToken)
+
+	bucketsAPI := client.BucketsAPI()
+
+	invalidID := "000000000000000"
+	notExistingID := "1000000000000000"
+
+	//test failures
+	_, err := bucketsAPI.AddMemberWithID(ctx, invalidID, notExistingID)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.AddMemberWithID(ctx, notExistingID, invalidID)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.GetMembersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.RemoveMemberWithID(ctx, notExistingID, invalidID)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.RemoveMemberWithID(ctx, invalidID, notExistingID)
+	assert.NotNil(t, err)
+
+	//test failures
+	_, err = bucketsAPI.AddOwnerWithID(ctx, invalidID, notExistingID)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.AddOwnerWithID(ctx, notExistingID, invalidID)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.GetOwnersWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.RemoveOwnerWithID(ctx, notExistingID, invalidID)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.RemoveOwnerWithID(ctx, invalidID, notExistingID)
+	assert.NotNil(t, err)
+
+	//delete with invalid id
+	err = bucketsAPI.DeleteBucketWithID(ctx, invalidID)
+	assert.NotNil(t, err)
+
+}
+
+func TestBucketsAPI_requestFailing(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClient("htp://localhost:9990", authToken)
+	bucketsAPI := client.BucketsAPI()
+
+	anID := "1000000000000000"
+	bucket := &domain.Bucket{Id: &anID}
+	user := &domain.User{Id: &anID}
+
+	_, err := bucketsAPI.GetBuckets(ctx)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.FindBucketByID(ctx, anID)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.FindBucketByName(ctx, anID)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.CreateBucket(ctx, bucket)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.UpdateBucket(ctx, bucket)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.DeleteBucket(ctx, bucket)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.GetMembers(ctx, bucket)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.AddMember(ctx, bucket, user)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.RemoveMember(ctx, bucket, user)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.GetOwners(ctx, bucket)
+	assert.NotNil(t, err)
+
+	_, err = bucketsAPI.AddOwner(ctx, bucket, user)
+	assert.NotNil(t, err)
+
+	err = bucketsAPI.RemoveOwner(ctx, bucket, user)
 	assert.NotNil(t, err)
 }

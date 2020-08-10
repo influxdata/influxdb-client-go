@@ -180,7 +180,7 @@ func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket 
 	body := &domain.PostSetupJSONRequestBody{
 		Bucket:             bucket,
 		Org:                org,
-		Password:           password,
+		Password:           &password,
 		RetentionPeriodHrs: &retentionPeriodHours,
 		Username:           username,
 	}

@@ -152,7 +152,7 @@ func (b *bucketsAPI) CreateBucket(ctx context.Context, bucket *domain.Bucket) (*
 	bucketReq := &domain.PostBucketRequest{
 		Description:    bucket.Description,
 		Name:           bucket.Name,
-		OrgID:          bucket.OrgID,
+		OrgID:          *bucket.OrgID,
 		RetentionRules: bucket.RetentionRules,
 		Rp:             bucket.Rp,
 	}
@@ -160,7 +160,7 @@ func (b *bucketsAPI) CreateBucket(ctx context.Context, bucket *domain.Bucket) (*
 }
 
 func (b *bucketsAPI) CreateBucketWithNameWithID(ctx context.Context, orgID, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {
-	bucket := &domain.PostBucketRequest{Name: bucketName, OrgID: &orgID, RetentionRules: rules}
+	bucket := &domain.PostBucketRequest{Name: bucketName, OrgID: orgID, RetentionRules: rules}
 	return b.createBucket(ctx, bucket)
 }
 func (b *bucketsAPI) CreateBucketWithName(ctx context.Context, org *domain.Organization, bucketName string, rules ...domain.RetentionRule) (*domain.Bucket, error) {

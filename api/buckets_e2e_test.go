@@ -199,8 +199,7 @@ func TestBucketsAPI(t *testing.T) {
 	buckets, err = bucketsAPI.GetBuckets(ctx, api.PagingWithOffset(20))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
-	//+2 is a bug, when using offset>4 there are returned also system buckets
-	assert.Len(t, *buckets, 10+2+bucketsNum)
+	assert.Len(t, *buckets, 10+bucketsNum)
 	// test paging with increase limit to cover all buckets
 	buckets, err = bucketsAPI.GetBuckets(ctx, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
@@ -210,11 +209,13 @@ func TestBucketsAPI(t *testing.T) {
 	buckets, err = bucketsAPI.FindBucketsByOrgID(ctx, *org.Id, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
+	////+2 for system buckets
 	assert.Len(t, *buckets, 30+2)
 	// test filtering buckets by org name
 	buckets, err = bucketsAPI.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
+	////+2 for system buckets
 	assert.Len(t, *buckets, 30+2)
 	// delete buckete
 	for _, b := range *buckets {
@@ -290,7 +291,7 @@ func TestBucketsAPI_requestFailing(t *testing.T) {
 	bucketsAPI := client.BucketsAPI()
 
 	anID := "1000000000000000"
-	bucket := &domain.Bucket{Id: &anID}
+	bucket := &domain.Bucket{Id: &anID, OrgID: &anID}
 	user := &domain.User{Id: &anID}
 
 	_, err := bucketsAPI.GetBuckets(ctx)

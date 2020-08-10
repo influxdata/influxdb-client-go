@@ -61,7 +61,7 @@ func TestUserAgent(t *testing.T) {
 	assert.True(t, ready)
 	assert.Nil(t, err)
 
-	err = c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	err = c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	assert.Nil(t, err)
 }
 
@@ -76,7 +76,7 @@ func TestServerError429(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL, "x")
-	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
 	perror, ok := err.(*http2.Error)
 	require.True(t, ok)
@@ -97,7 +97,7 @@ func TestServerOnPath(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL+"/proxy/0:0/influx/", "x")
-	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.Nil(t, err)
 }
 
@@ -110,7 +110,7 @@ func TestServerErrorNonJSON(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL, "x")
-	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
 	perror, ok := err.(*http2.Error)
 	require.True(t, ok)
@@ -129,7 +129,7 @@ func TestServerErrorInflux1_8(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL, "x")
-	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
 	perror, ok := err.(*http2.Error)
 	require.True(t, ok)
@@ -145,7 +145,7 @@ func TestServerErrorEmptyBody(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL, "x")
-	err := c.WriteApiBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
 	assert.Equal(t, "Unexpected status code 404", err.Error())
 }

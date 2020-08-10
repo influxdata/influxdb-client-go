@@ -1,4 +1,8 @@
 ## 1.5.0 [In progress]
+### Breaking changes
+1. [#173](https://github.com/influxdata/influxdb-client-go/pull/173) Removed deprecated API.
+
+### Features
 1. [#165](https://github.com/influxdata/influxdb-client-go/pull/165) Allow overriding the http.Client for the http service.
 
 ## 1.4.0 [2020-07-17]

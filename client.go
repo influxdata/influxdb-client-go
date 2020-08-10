@@ -43,49 +43,22 @@ type Client interface {
 	ServerUrl() string
 	// WriteAPI returns the asynchronous, non-blocking, Write client
 	WriteAPI(org, bucket string) api.WriteAPI
-	// WriteApi returns the asynchronous, non-blocking, Write client
-	// Deprecated: Use WriteAPI instead
-	WriteApi(org, bucket string) api.WriteApi
 	// WriteAPIBlocking returns the synchronous, blocking, Write client
 	WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking
-	// WriteApi returns the synchronous, blocking, Write client.
-	// Deprecated: Use WriteAPIBlocking instead.
-	WriteApiBlocking(org, bucket string) api.WriteApiBlocking
 	// QueryAPI returns Query client
 	QueryAPI(org string) api.QueryAPI
-	// QueryApi returns Query client
-	// Deprecated: Use QueryAPI instead.
-	QueryApi(org string) api.QueryApi
 	// AuthorizationsAPI returns Authorizations API client.
 	AuthorizationsAPI() api.AuthorizationsAPI
-	// AuthorizationsApi returns Authorizations API client.
-	// Deprecated: Use AuthorizationsAPI instead.
-	AuthorizationsApi() api.AuthorizationsApi
 	// OrganizationsAPI returns Organizations API client
 	OrganizationsAPI() api.OrganizationsAPI
-	// OrganizationsApi returns Organizations API client.
-	// Deprecated: Use OrganizationsAPI instead.
-	OrganizationsApi() api.OrganizationsApi
 	// UsersAPI returns Users API client.
 	UsersAPI() api.UsersAPI
-	// UsersApi returns Users API client.
-	// Deprecated: Use UsersAPI instead.
-	UsersApi() api.UsersApi
 	// DeleteAPI returns Delete API client
 	DeleteAPI() api.DeleteAPI
-	// DeleteApi returns Delete API client.
-	// Deprecated: Use DeleteAPI instead.
-	DeleteApi() api.DeleteApi
 	// BucketsAPI returns Buckets API client
 	BucketsAPI() api.BucketsAPI
-	// BucketsApi returns Buckets API client.
-	// Deprecated: Use BucketsAPI instead.
-	BucketsApi() api.BucketsApi
 	// LabelsAPI returns Labels API client
 	LabelsAPI() api.LabelsAPI
-	// LabelsApi returns Labels API client;
-	// Deprecated: Use LabelsAPI instead.
-	LabelsApi() api.LabelsApi
 }
 
 // clientImpl implements Client interface
@@ -97,23 +70,11 @@ type clientImpl struct {
 	httpService ihttp.Service
 	apiClient   *domain.ClientWithResponses
 	authAPI     api.AuthorizationsAPI
-	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
-	authApi api.AuthorizationsApi
-	orgAPI  api.OrganizationsAPI
-	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
-	orgApi api.OrganizationsApi
-	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
-	usersApi  api.UsersApi
-	usersAPI  api.UsersAPI
-	deleteAPI api.DeleteAPI
-	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
-	deleteApi  api.DeleteApi
-	bucketsAPI api.BucketsAPI
-	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
-	bucketsApi api.BucketsApi
-	//lint:ignore ST1003 Field for deprecated API to be removed in the next release
-	labelsApi api.LabelsApi
-	labelsAPI api.LabelsAPI
+	orgAPI      api.OrganizationsAPI
+	usersAPI    api.UsersAPI
+	deleteAPI   api.DeleteAPI
+	bucketsAPI  api.BucketsAPI
+	labelsAPI   api.LabelsAPI
 }
 
 // NewClient creates Client for connecting to given serverURL with provided authentication token, with the default options.
@@ -212,20 +173,10 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 	return response.JSON200, nil
 }
 
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) WriteApi(org, bucket string) api.WriteApi {
-	return c.WriteAPI(org, bucket)
-}
-
 func (c *clientImpl) WriteAPI(org, bucket string) api.WriteAPI {
 	w := api.NewWriteAPI(org, bucket, c.httpService, c.options.writeOptions)
 	c.writeAPIs = append(c.writeAPIs, w)
 	return w
-}
-
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) WriteApiBlocking(org, bucket string) api.WriteApiBlocking {
-	return c.WriteAPIBlocking(org, bucket)
 }
 
 func (c *clientImpl) WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking {
@@ -243,11 +194,6 @@ func (c *clientImpl) QueryAPI(org string) api.QueryAPI {
 	return api.NewQueryAPI(org, c.httpService)
 }
 
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) QueryApi(org string) api.QueryApi {
-	return c.QueryAPI(org)
-}
-
 func (c *clientImpl) AuthorizationsAPI() api.AuthorizationsAPI {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -255,16 +201,6 @@ func (c *clientImpl) AuthorizationsAPI() api.AuthorizationsAPI {
 		c.authAPI = api.NewAuthorizationsAPI(c.apiClient)
 	}
 	return c.authAPI
-}
-
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) AuthorizationsApi() api.AuthorizationsApi {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	if c.authApi == nil {
-		c.authApi = api.NewAuthorizationsApi(c.apiClient)
-	}
-	return c.authApi
 }
 
 func (c *clientImpl) OrganizationsAPI() api.OrganizationsAPI {
@@ -276,16 +212,6 @@ func (c *clientImpl) OrganizationsAPI() api.OrganizationsAPI {
 	return c.orgAPI
 }
 
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) OrganizationsApi() api.OrganizationsApi {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	if c.orgApi == nil {
-		c.orgApi = api.NewOrganizationsApi(c.apiClient)
-	}
-	return c.orgApi
-}
-
 func (c *clientImpl) UsersAPI() api.UsersAPI {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -293,16 +219,6 @@ func (c *clientImpl) UsersAPI() api.UsersAPI {
 		c.usersAPI = api.NewUsersAPI(c.apiClient)
 	}
 	return c.usersAPI
-}
-
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) UsersApi() api.UsersApi {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	if c.usersApi == nil {
-		c.usersApi = api.NewUsersApi(c.apiClient)
-	}
-	return c.usersApi
 }
 
 func (c *clientImpl) DeleteAPI() api.DeleteAPI {
@@ -314,16 +230,6 @@ func (c *clientImpl) DeleteAPI() api.DeleteAPI {
 	return c.deleteAPI
 }
 
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) DeleteApi() api.DeleteApi {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	if c.deleteApi == nil {
-		c.deleteApi = api.NewDeleteApi(c.apiClient)
-	}
-	return c.deleteApi
-}
-
 func (c *clientImpl) BucketsAPI() api.BucketsAPI {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -333,16 +239,6 @@ func (c *clientImpl) BucketsAPI() api.BucketsAPI {
 	return c.bucketsAPI
 }
 
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) BucketsApi() api.BucketsApi {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	if c.bucketsApi == nil {
-		c.bucketsApi = api.NewBucketsApi(c.apiClient)
-	}
-	return c.bucketsApi
-}
-
 func (c *clientImpl) LabelsAPI() api.LabelsAPI {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -350,14 +246,4 @@ func (c *clientImpl) LabelsAPI() api.LabelsAPI {
 		c.labelsAPI = api.NewLabelsAPI(c.apiClient)
 	}
 	return c.labelsAPI
-}
-
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) LabelsApi() api.LabelsApi {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	if c.labelsApi == nil {
-		c.labelsApi = api.NewLabelsApi(c.apiClient)
-	}
-	return c.labelsApi
 }

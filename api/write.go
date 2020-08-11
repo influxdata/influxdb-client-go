@@ -19,11 +19,11 @@ import (
 type WriteAPI interface {
 	// WriteRecord writes asynchronously line protocol record into bucket.
 	// WriteRecord adds record into the buffer which is sent on the background when it reaches the batch size.
-	// Blocking alternative is available in the WriteApiBlocking interface
+	// Blocking alternative is available in the WriteAPIBlocking interface
 	WriteRecord(line string)
 	// WritePoint writes asynchronously Point into bucket.
 	// WritePoint adds Point into the buffer which is sent on the background when it reaches the batch size.
-	// Blocking alternative is available in the WriteApiBlocking interface
+	// Blocking alternative is available in the WriteAPIBlocking interface
 	WritePoint(point *write.Point)
 	// Flush forces all pending writes from the buffer to be sent
 	Flush()

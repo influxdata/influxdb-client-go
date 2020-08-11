@@ -209,13 +209,13 @@ func TestBucketsAPI(t *testing.T) {
 	buckets, err = bucketsAPI.FindBucketsByOrgID(ctx, *org.Id, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
-	////+2 for system buckets
+	//+2 for system buckets
 	assert.Len(t, *buckets, 30+2)
 	// test filtering buckets by org name
 	buckets, err = bucketsAPI.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
-	////+2 for system buckets
+	//+2 for system buckets
 	assert.Len(t, *buckets, 30+2)
 	// delete buckete
 	for _, b := range *buckets {

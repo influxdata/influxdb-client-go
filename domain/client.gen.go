@@ -404,28 +404,6 @@ type ClientInterface interface {
 
 	PatchOrgsID(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*http.Response, error)
 
-	// PostOrgsIDInvites request  with any body
-	PostOrgsIDInvitesWithBody(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Response, error)
-
-	PostOrgsIDInvites(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Response, error)
-
-	// DeleteOrgsIDInviteID request
-	DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Response, error)
-
-	// PostOrgsIDInviteID request
-	PostOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Response, error)
-
-	// GetOrgsIDLabels request
-	GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error)
-
-	// PostOrgsIDLabels request  with any body
-	PostOrgsIDLabelsWithBody(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error)
-
-	PostOrgsIDLabels(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, body PostOrgsIDLabelsJSONRequestBody) (*http.Response, error)
-
-	// DeleteOrgsIDLabelsID request
-	DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Response, error)
-
 	// GetOrgsIDMembers request
 	GetOrgsIDMembers(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*http.Response, error)
 
@@ -460,44 +438,6 @@ type ClientInterface interface {
 	PostOrgsIDSecretsWithBody(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader) (*http.Response, error)
 
 	PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error)
-
-	// GetCloudUsers request
-	GetCloudUsers(ctx context.Context, orgID string, params *GetCloudUsersParams) (*http.Response, error)
-
-	// DeleteOrgsIDCloudUserID request
-	DeleteOrgsIDCloudUserID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Response, error)
-
-	// CreatePkg request  with any body
-	CreatePkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
-
-	CreatePkg(ctx context.Context, body CreatePkgJSONRequestBody) (*http.Response, error)
-
-	// ApplyPkg request  with any body
-	ApplyPkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
-
-	ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*http.Response, error)
-
-	// ListStacks request
-	ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error)
-
-	// CreateStack request  with any body
-	CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
-
-	CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error)
-
-	// DeleteStack request
-	DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error)
-
-	// ReadStack request
-	ReadStack(ctx context.Context, stackId string) (*http.Response, error)
-
-	// UpdateStack request  with any body
-	UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error)
-
-	UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error)
-
-	// ExportStack request
-	ExportStack(ctx context.Context, stackId string, params *ExportStackParams) (*http.Response, error)
 
 	// PostQuery request  with any body
 	PostQueryWithBody(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*http.Response, error)
@@ -623,6 +563,28 @@ type ClientInterface interface {
 
 	// GetSourcesIDHealth request
 	GetSourcesIDHealth(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*http.Response, error)
+
+	// ListStacks request
+	ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error)
+
+	// CreateStack request  with any body
+	CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
+
+	CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error)
+
+	// DeleteStack request
+	DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error)
+
+	// ReadStack request
+	ReadStack(ctx context.Context, stackId string) (*http.Response, error)
+
+	// UpdateStack request  with any body
+	UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error)
+
+	UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error)
+
+	// UninstallStack request
+	UninstallStack(ctx context.Context, stackId string) (*http.Response, error)
 
 	// GetTasks request
 	GetTasks(ctx context.Context, params *GetTasksParams) (*http.Response, error)
@@ -753,6 +715,16 @@ type ClientInterface interface {
 
 	// DeleteTelegrafsIDOwnersID request
 	DeleteTelegrafsIDOwnersID(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*http.Response, error)
+
+	// ApplyTemplate request  with any body
+	ApplyTemplateWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
+
+	ApplyTemplate(ctx context.Context, body ApplyTemplateJSONRequestBody) (*http.Response, error)
+
+	// ExportTemplate request  with any body
+	ExportTemplateWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
+
+	ExportTemplate(ctx context.Context, body ExportTemplateJSONRequestBody) (*http.Response, error)
 
 	// GetUsers request
 	GetUsers(ctx context.Context, params *GetUsersParams) (*http.Response, error)
@@ -2041,78 +2013,6 @@ func (c *Client) PatchOrgsID(ctx context.Context, orgID string, params *PatchOrg
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
-func (c *Client) PostOrgsIDInvitesWithBody(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDInvitesRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostOrgsIDInvites(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDInvitesRequest(c.service.ServerAPIURL(), orgID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) DeleteOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDInviteIDRequest(c.service.ServerAPIURL(), orgID, inviteID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostOrgsIDInviteID(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Response, error) {
-	req, err := NewPostOrgsIDInviteIDRequest(c.service.ServerAPIURL(), orgID, inviteID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetOrgsIDLabels(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetOrgsIDLabelsRequest(c.service.ServerAPIURL(), orgID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostOrgsIDLabelsWithBody(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostOrgsIDLabelsRequestWithBody(c.service.ServerAPIURL(), orgID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostOrgsIDLabels(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, body PostOrgsIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostOrgsIDLabelsRequest(c.service.ServerAPIURL(), orgID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) DeleteOrgsIDLabelsID(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDLabelsIDRequest(c.service.ServerAPIURL(), orgID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
 func (c *Client) GetOrgsIDMembers(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*http.Response, error) {
 	req, err := NewGetOrgsIDMembersRequest(c.service.ServerAPIURL(), orgID, params)
 	if err != nil {
@@ -2223,132 +2123,6 @@ func (c *Client) PostOrgsIDSecretsWithBody(ctx context.Context, orgID string, pa
 
 func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error) {
 	req, err := NewPostOrgsIDSecretsRequest(c.service.ServerAPIURL(), orgID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetCloudUsers(ctx context.Context, orgID string, params *GetCloudUsersParams) (*http.Response, error) {
-	req, err := NewGetCloudUsersRequest(c.service.ServerAPIURL(), orgID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) DeleteOrgsIDCloudUserID(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Response, error) {
-	req, err := NewDeleteOrgsIDCloudUserIDRequest(c.service.ServerAPIURL(), orgID, userID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) CreatePkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreatePkgRequestWithBody(c.service.ServerAPIURL(), contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) CreatePkg(ctx context.Context, body CreatePkgJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreatePkgRequest(c.service.ServerAPIURL(), body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) ApplyPkgWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewApplyPkgRequestWithBody(c.service.ServerAPIURL(), contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) ApplyPkg(ctx context.Context, body ApplyPkgJSONRequestBody) (*http.Response, error) {
-	req, err := NewApplyPkgRequest(c.service.ServerAPIURL(), body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error) {
-	req, err := NewListStacksRequest(c.service.ServerAPIURL(), params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewCreateStackRequestWithBody(c.service.ServerAPIURL(), contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error) {
-	req, err := NewCreateStackRequest(c.service.ServerAPIURL(), body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error) {
-	req, err := NewDeleteStackRequest(c.service.ServerAPIURL(), stackId, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) ReadStack(ctx context.Context, stackId string) (*http.Response, error) {
-	req, err := NewReadStackRequest(c.service.ServerAPIURL(), stackId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewUpdateStackRequestWithBody(c.service.ServerAPIURL(), stackId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error) {
-	req, err := NewUpdateStackRequest(c.service.ServerAPIURL(), stackId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) ExportStack(ctx context.Context, stackId string, params *ExportStackParams) (*http.Response, error) {
-	req, err := NewExportStackRequest(c.service.ServerAPIURL(), stackId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2763,6 +2537,78 @@ func (c *Client) GetSourcesIDBuckets(ctx context.Context, sourceID string, param
 
 func (c *Client) GetSourcesIDHealth(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*http.Response, error) {
 	req, err := NewGetSourcesIDHealthRequest(c.service.ServerAPIURL(), sourceID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) ListStacks(ctx context.Context, params *ListStacksParams) (*http.Response, error) {
+	req, err := NewListStacksRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) CreateStackWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewCreateStackRequestWithBody(c.service.ServerAPIURL(), contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) CreateStack(ctx context.Context, body CreateStackJSONRequestBody) (*http.Response, error) {
+	req, err := NewCreateStackRequest(c.service.ServerAPIURL(), body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteStack(ctx context.Context, stackId string, params *DeleteStackParams) (*http.Response, error) {
+	req, err := NewDeleteStackRequest(c.service.ServerAPIURL(), stackId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) ReadStack(ctx context.Context, stackId string) (*http.Response, error) {
+	req, err := NewReadStackRequest(c.service.ServerAPIURL(), stackId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) UpdateStackWithBody(ctx context.Context, stackId string, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewUpdateStackRequestWithBody(c.service.ServerAPIURL(), stackId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) UpdateStack(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*http.Response, error) {
+	req, err := NewUpdateStackRequest(c.service.ServerAPIURL(), stackId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) UninstallStack(ctx context.Context, stackId string) (*http.Response, error) {
+	req, err := NewUninstallStackRequest(c.service.ServerAPIURL(), stackId)
 	if err != nil {
 		return nil, err
 	}
@@ -3186,6 +3032,42 @@ func (c *Client) PostTelegrafsIDOwners(ctx context.Context, telegrafID string, p
 
 func (c *Client) DeleteTelegrafsIDOwnersID(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*http.Response, error) {
 	req, err := NewDeleteTelegrafsIDOwnersIDRequest(c.service.ServerAPIURL(), telegrafID, userID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) ApplyTemplateWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewApplyTemplateRequestWithBody(c.service.ServerAPIURL(), contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) ApplyTemplate(ctx context.Context, body ApplyTemplateJSONRequestBody) (*http.Response, error) {
+	req, err := NewApplyTemplateRequest(c.service.ServerAPIURL(), body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) ExportTemplateWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewExportTemplateRequestWithBody(c.service.ServerAPIURL(), contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) ExportTemplate(ctx context.Context, body ExportTemplateJSONRequestBody) (*http.Response, error) {
+	req, err := NewExportTemplateRequest(c.service.ServerAPIURL(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -8857,321 +8739,6 @@ func NewPatchOrgsIDRequestWithBody(server string, orgID string, params *PatchOrg
 	return req, nil
 }
 
-// NewPostOrgsIDInvitesRequest calls the generic PostOrgsIDInvites builder with application/json body
-func NewPostOrgsIDInvitesRequest(server string, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostOrgsIDInvitesRequestWithBody(server, orgID, params, "application/json", bodyReader)
-}
-
-// NewPostOrgsIDInvitesRequestWithBody generates requests for PostOrgsIDInvites with any type of body
-func NewPostOrgsIDInvitesRequestWithBody(server string, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/invites", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewDeleteOrgsIDInviteIDRequest generates requests for DeleteOrgsIDInviteID
-func NewDeleteOrgsIDInviteIDRequest(server string, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParam("simple", false, "inviteID", inviteID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/invites/%s", pathParam0, pathParam1)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewPostOrgsIDInviteIDRequest generates requests for PostOrgsIDInviteID
-func NewPostOrgsIDInviteIDRequest(server string, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParam("simple", false, "inviteID", inviteID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/invites/%s/resend", pathParam0, pathParam1)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewGetOrgsIDLabelsRequest generates requests for GetOrgsIDLabels
-func NewGetOrgsIDLabelsRequest(server string, orgID string, params *GetOrgsIDLabelsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/labels", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewPostOrgsIDLabelsRequest calls the generic PostOrgsIDLabels builder with application/json body
-func NewPostOrgsIDLabelsRequest(server string, orgID string, params *PostOrgsIDLabelsParams, body PostOrgsIDLabelsJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostOrgsIDLabelsRequestWithBody(server, orgID, params, "application/json", bodyReader)
-}
-
-// NewPostOrgsIDLabelsRequestWithBody generates requests for PostOrgsIDLabels with any type of body
-func NewPostOrgsIDLabelsRequestWithBody(server string, orgID string, params *PostOrgsIDLabelsParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/labels", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewDeleteOrgsIDLabelsIDRequest generates requests for DeleteOrgsIDLabelsID
-func NewDeleteOrgsIDLabelsIDRequest(server string, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParam("simple", false, "labelID", labelID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/labels/%s", pathParam0, pathParam1)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
 // NewGetOrgsIDMembersRequest generates requests for GetOrgsIDMembers
 func NewGetOrgsIDMembersRequest(server string, orgID string, params *GetOrgsIDMembersParams) (*http.Request, error) {
 	var err error
@@ -9636,475 +9203,6 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 	}
 
 	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewGetCloudUsersRequest generates requests for GetCloudUsers
-func NewGetCloudUsersRequest(server string, orgID string, params *GetCloudUsersParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/users", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewDeleteOrgsIDCloudUserIDRequest generates requests for DeleteOrgsIDCloudUserID
-func NewDeleteOrgsIDCloudUserIDRequest(server string, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "orgID", orgID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParam("simple", false, "userID", userID)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/orgs/%s/users/%s", pathParam0, pathParam1)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParam("simple", false, "Zap-Trace-Span", *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Add("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewCreatePkgRequest calls the generic CreatePkg builder with application/json body
-func NewCreatePkgRequest(server string, body CreatePkgJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreatePkgRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewCreatePkgRequestWithBody generates requests for CreatePkg with any type of body
-func NewCreatePkgRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages")
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewApplyPkgRequest calls the generic ApplyPkg builder with application/json body
-func NewApplyPkgRequest(server string, body ApplyPkgJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewApplyPkgRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewApplyPkgRequestWithBody generates requests for ApplyPkg with any type of body
-func NewApplyPkgRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/apply")
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewListStacksRequest generates requests for ListStacks
-func NewListStacksRequest(server string, params *ListStacksParams) (*http.Request, error) {
-	var err error
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/stacks")
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
-			}
-		}
-	}
-
-	if params.Name != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "name", *params.Name); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	if params.StackID != nil {
-
-		if queryFrag, err := runtime.StyleParam("form", true, "stackID", *params.StackID); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateStackRequest calls the generic CreateStack builder with application/json body
-func NewCreateStackRequest(server string, body CreateStackJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateStackRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewCreateStackRequestWithBody generates requests for CreateStack with any type of body
-func NewCreateStackRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/stacks")
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewDeleteStackRequest generates requests for DeleteStack
-func NewDeleteStackRequest(server string, stackId string, params *DeleteStackParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/stacks/%s", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
-			}
-		}
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewReadStackRequest generates requests for ReadStack
-func NewReadStackRequest(server string, stackId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/stacks/%s", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateStackRequest calls the generic UpdateStack builder with application/json body
-func NewUpdateStackRequest(server string, stackId string, body UpdateStackJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateStackRequestWithBody(server, stackId, "application/json", bodyReader)
-}
-
-// NewUpdateStackRequestWithBody generates requests for UpdateStack with any type of body
-func NewUpdateStackRequestWithBody(server string, stackId string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/stacks/%s", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PATCH", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewExportStackRequest generates requests for ExportStack
-func NewExportStackRequest(server string, stackId string, params *ExportStackParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
-	if err != nil {
-		return nil, err
-	}
-
-	queryURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	basePath := fmt.Sprintf("/packages/stacks/%s/export", pathParam0)
-	if basePath[0] == '/' {
-		basePath = basePath[1:]
-	}
-
-	queryURL, err = queryURL.Parse(basePath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
-			}
-		}
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
 	return req, nil
 }
 
@@ -11862,6 +10960,284 @@ func NewGetSourcesIDHealthRequest(server string, sourceID string, params *GetSou
 		}
 
 		req.Header.Add("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewListStacksRequest generates requests for ListStacks
+func NewListStacksRequest(server string, params *ListStacksParams) (*http.Request, error) {
+	var err error
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/stacks")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if params.Name != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "name", *params.Name); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.StackID != nil {
+
+		if queryFrag, err := runtime.StyleParam("form", true, "stackID", *params.StackID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateStackRequest calls the generic CreateStack builder with application/json body
+func NewCreateStackRequest(server string, body CreateStackJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateStackRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateStackRequestWithBody generates requests for CreateStack with any type of body
+func NewCreateStackRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/stacks")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewDeleteStackRequest generates requests for DeleteStack
+func NewDeleteStackRequest(server string, stackId string, params *DeleteStackParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/stacks/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if queryFrag, err := runtime.StyleParam("form", true, "orgID", params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewReadStackRequest generates requests for ReadStack
+func NewReadStackRequest(server string, stackId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/stacks/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateStackRequest calls the generic UpdateStack builder with application/json body
+func NewUpdateStackRequest(server string, stackId string, body UpdateStackJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateStackRequestWithBody(server, stackId, "application/json", bodyReader)
+}
+
+// NewUpdateStackRequestWithBody generates requests for UpdateStack with any type of body
+func NewUpdateStackRequestWithBody(server string, stackId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/stacks/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewUninstallStackRequest generates requests for UninstallStack
+func NewUninstallStackRequest(server string, stackId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "stack_id", stackId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/stacks/%s/uninstall", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
 	}
 
 	return req, nil
@@ -13886,6 +13262,84 @@ func NewDeleteTelegrafsIDOwnersIDRequest(server string, telegrafID string, userI
 		req.Header.Add("Zap-Trace-Span", headerParam0)
 	}
 
+	return req, nil
+}
+
+// NewApplyTemplateRequest calls the generic ApplyTemplate builder with application/json body
+func NewApplyTemplateRequest(server string, body ApplyTemplateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewApplyTemplateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewApplyTemplateRequestWithBody generates requests for ApplyTemplate with any type of body
+func NewApplyTemplateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/templates/apply")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewExportTemplateRequest calls the generic ExportTemplate builder with application/json body
+func NewExportTemplateRequest(server string, body ExportTemplateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewExportTemplateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewExportTemplateRequestWithBody generates requests for ExportTemplate with any type of body
+func NewExportTemplateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	queryURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/templates/export")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryURL, err = queryURL.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -17069,143 +16523,6 @@ func (r patchOrgsIDResponse) StatusCode() int {
 	return 0
 }
 
-type postOrgsIDInvitesResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *Invite
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r postOrgsIDInvitesResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDInvitesResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type deleteOrgsIDInviteIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r deleteOrgsIDInviteIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r deleteOrgsIDInviteIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type postOrgsIDInviteIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Invite
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r postOrgsIDInviteIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDInviteIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type getOrgsIDLabelsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getOrgsIDLabelsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsIDLabelsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type postOrgsIDLabelsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r postOrgsIDLabelsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDLabelsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type deleteOrgsIDLabelsIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r deleteOrgsIDLabelsIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r deleteOrgsIDLabelsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type getOrgsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17405,239 +16722,6 @@ func (r postOrgsIDSecretsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r postOrgsIDSecretsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type getCloudUsersResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *CloudUsers
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getCloudUsersResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getCloudUsersResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type deleteOrgsIDCloudUserIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r deleteOrgsIDCloudUserIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r deleteOrgsIDCloudUserIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type createPkgResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Pkg
-	YAML200      *Pkg
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r createPkgResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r createPkgResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type applyPkgResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *PkgSummary
-	JSON201      *PkgSummary
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r applyPkgResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r applyPkgResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type listStacksResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Stacks *[]Stack `json:"stacks,omitempty"`
-	}
-	JSONDefault *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r listStacksResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r listStacksResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type createStackResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *Stack
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r createStackResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r createStackResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type deleteStackResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r deleteStackResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r deleteStackResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type readStackResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Stack
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r readStackResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r readStackResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type updateStackResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Stack
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r updateStackResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r updateStackResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type exportStackResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Pkg
-	YAML200      *Pkg
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r exportStackResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r exportStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18396,6 +17480,145 @@ func (r getSourcesIDHealthResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r getSourcesIDHealthResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type listStacksResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Stacks *[]Stack `json:"stacks,omitempty"`
+	}
+	JSONDefault *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r listStacksResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r listStacksResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type createStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r createStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r createStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type deleteStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r deleteStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r deleteStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type readStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r readStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r readStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type updateStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r updateStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r updateStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type uninstallStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r uninstallStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r uninstallStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19217,6 +18440,54 @@ func (r deleteTelegrafsIDOwnersIDResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r deleteTelegrafsIDOwnersIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type applyTemplateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TemplateSummary
+	JSON201      *TemplateSummary
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r applyTemplateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r applyTemplateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type exportTemplateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Template
+	YAML200      *Template
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r exportTemplateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r exportTemplateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -20778,76 +20049,6 @@ func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID
 	return ParsePatchOrgsIDResponse(rsp)
 }
 
-// PostOrgsIDInvitesWithBodyWithResponse request with arbitrary body returning *PostOrgsIDInvitesResponse
-func (c *ClientWithResponses) PostOrgsIDInvitesWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, contentType string, body io.Reader) (*postOrgsIDInvitesResponse, error) {
-	rsp, err := c.PostOrgsIDInvitesWithBody(ctx, orgID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostOrgsIDInvitesResponse(rsp)
-}
-
-func (c *ClientWithResponses) PostOrgsIDInvitesWithResponse(ctx context.Context, orgID string, params *PostOrgsIDInvitesParams, body PostOrgsIDInvitesJSONRequestBody) (*postOrgsIDInvitesResponse, error) {
-	rsp, err := c.PostOrgsIDInvites(ctx, orgID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostOrgsIDInvitesResponse(rsp)
-}
-
-// DeleteOrgsIDInviteIDWithResponse request returning *DeleteOrgsIDInviteIDResponse
-func (c *ClientWithResponses) DeleteOrgsIDInviteIDWithResponse(ctx context.Context, orgID string, inviteID string, params *DeleteOrgsIDInviteIDParams) (*deleteOrgsIDInviteIDResponse, error) {
-	rsp, err := c.DeleteOrgsIDInviteID(ctx, orgID, inviteID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteOrgsIDInviteIDResponse(rsp)
-}
-
-// PostOrgsIDInviteIDWithResponse request returning *PostOrgsIDInviteIDResponse
-func (c *ClientWithResponses) PostOrgsIDInviteIDWithResponse(ctx context.Context, orgID string, inviteID string, params *PostOrgsIDInviteIDParams) (*postOrgsIDInviteIDResponse, error) {
-	rsp, err := c.PostOrgsIDInviteID(ctx, orgID, inviteID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostOrgsIDInviteIDResponse(rsp)
-}
-
-// GetOrgsIDLabelsWithResponse request returning *GetOrgsIDLabelsResponse
-func (c *ClientWithResponses) GetOrgsIDLabelsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDLabelsParams) (*getOrgsIDLabelsResponse, error) {
-	rsp, err := c.GetOrgsIDLabels(ctx, orgID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetOrgsIDLabelsResponse(rsp)
-}
-
-// PostOrgsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostOrgsIDLabelsResponse
-func (c *ClientWithResponses) PostOrgsIDLabelsWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, contentType string, body io.Reader) (*postOrgsIDLabelsResponse, error) {
-	rsp, err := c.PostOrgsIDLabelsWithBody(ctx, orgID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostOrgsIDLabelsResponse(rsp)
-}
-
-func (c *ClientWithResponses) PostOrgsIDLabelsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDLabelsParams, body PostOrgsIDLabelsJSONRequestBody) (*postOrgsIDLabelsResponse, error) {
-	rsp, err := c.PostOrgsIDLabels(ctx, orgID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostOrgsIDLabelsResponse(rsp)
-}
-
-// DeleteOrgsIDLabelsIDWithResponse request returning *DeleteOrgsIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteOrgsIDLabelsIDWithResponse(ctx context.Context, orgID string, labelID string, params *DeleteOrgsIDLabelsIDParams) (*deleteOrgsIDLabelsIDResponse, error) {
-	rsp, err := c.DeleteOrgsIDLabelsID(ctx, orgID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteOrgsIDLabelsIDResponse(rsp)
-}
-
 // GetOrgsIDMembersWithResponse request returning *GetOrgsIDMembersResponse
 func (c *ClientWithResponses) GetOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*getOrgsIDMembersResponse, error) {
 	rsp, err := c.GetOrgsIDMembers(ctx, orgID, params)
@@ -20959,128 +20160,6 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParsePostOrgsIDSecretsResponse(rsp)
-}
-
-// GetCloudUsersWithResponse request returning *GetCloudUsersResponse
-func (c *ClientWithResponses) GetCloudUsersWithResponse(ctx context.Context, orgID string, params *GetCloudUsersParams) (*getCloudUsersResponse, error) {
-	rsp, err := c.GetCloudUsers(ctx, orgID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetCloudUsersResponse(rsp)
-}
-
-// DeleteOrgsIDCloudUserIDWithResponse request returning *DeleteOrgsIDCloudUserIDResponse
-func (c *ClientWithResponses) DeleteOrgsIDCloudUserIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDCloudUserIDParams) (*deleteOrgsIDCloudUserIDResponse, error) {
-	rsp, err := c.DeleteOrgsIDCloudUserID(ctx, orgID, userID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteOrgsIDCloudUserIDResponse(rsp)
-}
-
-// CreatePkgWithBodyWithResponse request with arbitrary body returning *CreatePkgResponse
-func (c *ClientWithResponses) CreatePkgWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createPkgResponse, error) {
-	rsp, err := c.CreatePkgWithBody(ctx, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreatePkgResponse(rsp)
-}
-
-func (c *ClientWithResponses) CreatePkgWithResponse(ctx context.Context, body CreatePkgJSONRequestBody) (*createPkgResponse, error) {
-	rsp, err := c.CreatePkg(ctx, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreatePkgResponse(rsp)
-}
-
-// ApplyPkgWithBodyWithResponse request with arbitrary body returning *ApplyPkgResponse
-func (c *ClientWithResponses) ApplyPkgWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*applyPkgResponse, error) {
-	rsp, err := c.ApplyPkgWithBody(ctx, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseApplyPkgResponse(rsp)
-}
-
-func (c *ClientWithResponses) ApplyPkgWithResponse(ctx context.Context, body ApplyPkgJSONRequestBody) (*applyPkgResponse, error) {
-	rsp, err := c.ApplyPkg(ctx, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseApplyPkgResponse(rsp)
-}
-
-// ListStacksWithResponse request returning *ListStacksResponse
-func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params *ListStacksParams) (*listStacksResponse, error) {
-	rsp, err := c.ListStacks(ctx, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListStacksResponse(rsp)
-}
-
-// CreateStackWithBodyWithResponse request with arbitrary body returning *CreateStackResponse
-func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createStackResponse, error) {
-	rsp, err := c.CreateStackWithBody(ctx, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateStackResponse(rsp)
-}
-
-func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody) (*createStackResponse, error) {
-	rsp, err := c.CreateStack(ctx, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateStackResponse(rsp)
-}
-
-// DeleteStackWithResponse request returning *DeleteStackResponse
-func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams) (*deleteStackResponse, error) {
-	rsp, err := c.DeleteStack(ctx, stackId, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteStackResponse(rsp)
-}
-
-// ReadStackWithResponse request returning *ReadStackResponse
-func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId string) (*readStackResponse, error) {
-	rsp, err := c.ReadStack(ctx, stackId)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReadStackResponse(rsp)
-}
-
-// UpdateStackWithBodyWithResponse request with arbitrary body returning *UpdateStackResponse
-func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader) (*updateStackResponse, error) {
-	rsp, err := c.UpdateStackWithBody(ctx, stackId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateStackResponse(rsp)
-}
-
-func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*updateStackResponse, error) {
-	rsp, err := c.UpdateStack(ctx, stackId, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateStackResponse(rsp)
-}
-
-// ExportStackWithResponse request returning *ExportStackResponse
-func (c *ClientWithResponses) ExportStackWithResponse(ctx context.Context, stackId string, params *ExportStackParams) (*exportStackResponse, error) {
-	rsp, err := c.ExportStack(ctx, stackId, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseExportStackResponse(rsp)
 }
 
 // PostQueryWithBodyWithResponse request with arbitrary body returning *PostQueryResponse
@@ -21482,6 +20561,76 @@ func (c *ClientWithResponses) GetSourcesIDHealthWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParseGetSourcesIDHealthResponse(rsp)
+}
+
+// ListStacksWithResponse request returning *ListStacksResponse
+func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params *ListStacksParams) (*listStacksResponse, error) {
+	rsp, err := c.ListStacks(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListStacksResponse(rsp)
+}
+
+// CreateStackWithBodyWithResponse request with arbitrary body returning *CreateStackResponse
+func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createStackResponse, error) {
+	rsp, err := c.CreateStackWithBody(ctx, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateStackResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody) (*createStackResponse, error) {
+	rsp, err := c.CreateStack(ctx, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateStackResponse(rsp)
+}
+
+// DeleteStackWithResponse request returning *DeleteStackResponse
+func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams) (*deleteStackResponse, error) {
+	rsp, err := c.DeleteStack(ctx, stackId, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteStackResponse(rsp)
+}
+
+// ReadStackWithResponse request returning *ReadStackResponse
+func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId string) (*readStackResponse, error) {
+	rsp, err := c.ReadStack(ctx, stackId)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReadStackResponse(rsp)
+}
+
+// UpdateStackWithBodyWithResponse request with arbitrary body returning *UpdateStackResponse
+func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader) (*updateStackResponse, error) {
+	rsp, err := c.UpdateStackWithBody(ctx, stackId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateStackResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*updateStackResponse, error) {
+	rsp, err := c.UpdateStack(ctx, stackId, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateStackResponse(rsp)
+}
+
+// UninstallStackWithResponse request returning *UninstallStackResponse
+func (c *ClientWithResponses) UninstallStackWithResponse(ctx context.Context, stackId string) (*uninstallStackResponse, error) {
+	rsp, err := c.UninstallStack(ctx, stackId)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUninstallStackResponse(rsp)
 }
 
 // GetTasksWithResponse request returning *GetTasksResponse
@@ -21894,6 +21043,40 @@ func (c *ClientWithResponses) DeleteTelegrafsIDOwnersIDWithResponse(ctx context.
 		return nil, err
 	}
 	return ParseDeleteTelegrafsIDOwnersIDResponse(rsp)
+}
+
+// ApplyTemplateWithBodyWithResponse request with arbitrary body returning *ApplyTemplateResponse
+func (c *ClientWithResponses) ApplyTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*applyTemplateResponse, error) {
+	rsp, err := c.ApplyTemplateWithBody(ctx, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApplyTemplateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ApplyTemplateWithResponse(ctx context.Context, body ApplyTemplateJSONRequestBody) (*applyTemplateResponse, error) {
+	rsp, err := c.ApplyTemplate(ctx, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApplyTemplateResponse(rsp)
+}
+
+// ExportTemplateWithBodyWithResponse request with arbitrary body returning *ExportTemplateResponse
+func (c *ClientWithResponses) ExportTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*exportTemplateResponse, error) {
+	rsp, err := c.ExportTemplateWithBody(ctx, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportTemplateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ExportTemplateWithResponse(ctx context.Context, body ExportTemplateJSONRequestBody) (*exportTemplateResponse, error) {
+	rsp, err := c.ExportTemplate(ctx, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportTemplateResponse(rsp)
 }
 
 // GetUsersWithResponse request returning *GetUsersResponse
@@ -25437,197 +24620,6 @@ func ParsePatchOrgsIDResponse(rsp *http.Response) (*patchOrgsIDResponse, error) 
 	return response, nil
 }
 
-// ParsePostOrgsIDInvitesResponse parses an HTTP response from a PostOrgsIDInvitesWithResponse call
-func ParsePostOrgsIDInvitesResponse(rsp *http.Response) (*postOrgsIDInvitesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &postOrgsIDInvitesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Invite
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteOrgsIDInviteIDResponse parses an HTTP response from a DeleteOrgsIDInviteIDWithResponse call
-func ParseDeleteOrgsIDInviteIDResponse(rsp *http.Response) (*deleteOrgsIDInviteIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &deleteOrgsIDInviteIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePostOrgsIDInviteIDResponse parses an HTTP response from a PostOrgsIDInviteIDWithResponse call
-func ParsePostOrgsIDInviteIDResponse(rsp *http.Response) (*postOrgsIDInviteIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &postOrgsIDInviteIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Invite
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetOrgsIDLabelsResponse parses an HTTP response from a GetOrgsIDLabelsWithResponse call
-func ParseGetOrgsIDLabelsResponse(rsp *http.Response) (*getOrgsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &getOrgsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePostOrgsIDLabelsResponse parses an HTTP response from a PostOrgsIDLabelsWithResponse call
-func ParsePostOrgsIDLabelsResponse(rsp *http.Response) (*postOrgsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &postOrgsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteOrgsIDLabelsIDResponse parses an HTTP response from a DeleteOrgsIDLabelsIDWithResponse call
-func ParseDeleteOrgsIDLabelsIDResponse(rsp *http.Response) (*deleteOrgsIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &deleteOrgsIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetOrgsIDMembersResponse parses an HTTP response from a GetOrgsIDMembersWithResponse call
 func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*getOrgsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -25905,345 +24897,6 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*postOrgsIDSecretsRespo
 			return nil, err
 		}
 		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetCloudUsersResponse parses an HTTP response from a GetCloudUsersWithResponse call
-func ParseGetCloudUsersResponse(rsp *http.Response) (*getCloudUsersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &getCloudUsersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest CloudUsers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteOrgsIDCloudUserIDResponse parses an HTTP response from a DeleteOrgsIDCloudUserIDWithResponse call
-func ParseDeleteOrgsIDCloudUserIDResponse(rsp *http.Response) (*deleteOrgsIDCloudUserIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &deleteOrgsIDCloudUserIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreatePkgResponse parses an HTTP response from a CreatePkgWithResponse call
-func ParseCreatePkgResponse(rsp *http.Response) (*createPkgResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &createPkgResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Pkg
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.YAML200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "yaml") && rsp.StatusCode == 200:
-		var dest Pkg
-		if err := yaml.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.YAML200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseApplyPkgResponse parses an HTTP response from a ApplyPkgWithResponse call
-func ParseApplyPkgResponse(rsp *http.Response) (*applyPkgResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &applyPkgResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest PkgSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest PkgSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListStacksResponse parses an HTTP response from a ListStacksWithResponse call
-func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &listStacksResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Stacks *[]Stack `json:"stacks,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateStackResponse parses an HTTP response from a CreateStackWithResponse call
-func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &createStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteStackResponse parses an HTTP response from a DeleteStackWithResponse call
-func ParseDeleteStackResponse(rsp *http.Response) (*deleteStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &deleteStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseReadStackResponse parses an HTTP response from a ReadStackWithResponse call
-func ParseReadStackResponse(rsp *http.Response) (*readStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &readStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseUpdateStackResponse parses an HTTP response from a UpdateStackWithResponse call
-func ParseUpdateStackResponse(rsp *http.Response) (*updateStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &updateStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseExportStackResponse parses an HTTP response from a ExportStackWithResponse call
-func ParseExportStackResponse(rsp *http.Response) (*exportStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &exportStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Pkg
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.YAML200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "yaml") && rsp.StatusCode == 200:
-		var dest Pkg
-		if err := yaml.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.YAML200 = &dest
 
 	}
 
@@ -27319,6 +25972,199 @@ func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*getSourcesIDHealthRes
 			return nil, err
 		}
 		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListStacksResponse parses an HTTP response from a ListStacksWithResponse call
+func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &listStacksResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Stacks *[]Stack `json:"stacks,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateStackResponse parses an HTTP response from a CreateStackWithResponse call
+func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &createStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Stack
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteStackResponse parses an HTTP response from a DeleteStackWithResponse call
+func ParseDeleteStackResponse(rsp *http.Response) (*deleteStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &deleteStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReadStackResponse parses an HTTP response from a ReadStackWithResponse call
+func ParseReadStackResponse(rsp *http.Response) (*readStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &readStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Stack
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateStackResponse parses an HTTP response from a UpdateStackWithResponse call
+func ParseUpdateStackResponse(rsp *http.Response) (*updateStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &updateStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Stack
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUninstallStackResponse parses an HTTP response from a UninstallStackWithResponse call
+func ParseUninstallStackResponse(rsp *http.Response) (*uninstallStackResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &uninstallStackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Stack
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
 		var dest Error
@@ -28468,6 +27314,86 @@ func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*deleteTelegraf
 			return nil, err
 		}
 		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseApplyTemplateResponse parses an HTTP response from a ApplyTemplateWithResponse call
+func ParseApplyTemplateResponse(rsp *http.Response) (*applyTemplateResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &applyTemplateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TemplateSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest TemplateSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExportTemplateResponse parses an HTTP response from a ExportTemplateWithResponse call
+func ParseExportTemplateResponse(rsp *http.Response) (*exportTemplateResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &exportTemplateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Template
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.YAML200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "yaml") && rsp.StatusCode == 200:
+		var dest Template
+		if err := yaml.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.YAML200 = &dest
 
 	}
 

@@ -56,18 +56,6 @@ type OrganizationsApi interface {
 	RemoveOwner(ctx context.Context, org *domain.Organization, user *domain.User) error
 	// RemoveOwnerWithId removes an owner with id memberId from an organization with orgId.
 	RemoveOwnerWithId(ctx context.Context, orgId, memberId string) error
-	// GetLabels returns labels of an organization.
-	GetLabels(ctx context.Context, org *domain.Organization) (*[]domain.Label, error)
-	// GetLabelsWithId returns labels of an organization with orgId.
-	GetLabelsWithId(ctx context.Context, orgId string) (*[]domain.Label, error)
-	// AddLabel adds a label to an organization.
-	AddLabel(ctx context.Context, org *domain.Organization, label *domain.Label) (*domain.Label, error)
-	// AddLabelWithId adds a label with id labelId to an organization with orgId.
-	AddLabelWithId(ctx context.Context, orgId, labelId string) (*domain.Label, error)
-	// RemoveLabel removes an label from an organization.
-	RemoveLabel(ctx context.Context, org *domain.Organization, label *domain.Label) error
-	// RemoveLabelWithId removes an label with id labelId from an organization with orgId.
-	RemoveLabelWithId(ctx context.Context, orgId, labelId string) error
 }
 
 type organizationsApiImpl struct {
@@ -164,28 +152,4 @@ func (o *organizationsApiImpl) RemoveOwner(ctx context.Context, org *domain.Orga
 
 func (o *organizationsApiImpl) RemoveOwnerWithId(ctx context.Context, orgId, memberId string) error {
 	return o.organizationsAPI.RemoveMemberWithID(ctx, orgId, memberId)
-}
-
-func (o *organizationsApiImpl) GetLabels(ctx context.Context, org *domain.Organization) (*[]domain.Label, error) {
-	return o.organizationsAPI.GetLabels(ctx, org)
-}
-
-func (o *organizationsApiImpl) GetLabelsWithId(ctx context.Context, orgId string) (*[]domain.Label, error) {
-	return o.organizationsAPI.GetLabelsWithID(ctx, orgId)
-}
-
-func (o *organizationsApiImpl) AddLabel(ctx context.Context, org *domain.Organization, label *domain.Label) (*domain.Label, error) {
-	return o.organizationsAPI.AddLabel(ctx, org, label)
-}
-
-func (o *organizationsApiImpl) AddLabelWithId(ctx context.Context, orgId, labelId string) (*domain.Label, error) {
-	return o.organizationsAPI.AddLabelWithID(ctx, orgId, labelId)
-}
-
-func (o *organizationsApiImpl) RemoveLabel(ctx context.Context, org *domain.Organization, label *domain.Label) error {
-	return o.organizationsAPI.RemoveLabel(ctx, org, label)
-}
-
-func (o *organizationsApiImpl) RemoveLabelWithId(ctx context.Context, orgId, memberId string) error {
-	return o.organizationsAPI.RemoveLabelWithID(ctx, orgId, memberId)
 }

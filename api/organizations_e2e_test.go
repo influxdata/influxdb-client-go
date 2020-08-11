@@ -325,11 +325,4 @@ func TestOrganizationAPI_requestFailing(t *testing.T) {
 
 	_, err = orgsAPI.GetOwnersWithID(ctx, invalidID)
 	assert.NotNil(t, err)
-
-	_, err = orgsAPI.AddLabelWithID(ctx, *org.Id, anID)
-	assert.NotNil(t, err)
-
-	// remove owner with invalid ID
-	err = orgsAPI.RemoveLabelWithID(ctx, anID, anID)
-	assert.NotNil(t, err)
 }

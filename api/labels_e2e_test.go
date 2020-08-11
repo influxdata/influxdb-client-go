@@ -83,40 +83,6 @@ func TestLabelsAPI(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Nil(t, label2)
 
-	labels, err = orgAPI.GetLabels(ctx, myorg)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 0)
-
-	org, err := orgAPI.CreateOrganizationWithName(ctx, "org1")
-	require.Nil(t, err, err)
-	require.NotNil(t, org)
-
-	labels, err = orgAPI.GetLabels(ctx, org)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 0)
-
-	labelx, err := orgAPI.AddLabel(ctx, org, label)
-	require.Nil(t, err, err)
-	require.NotNil(t, labelx)
-
-	labels, err = orgAPI.GetLabels(ctx, org)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 1)
-
-	err = orgAPI.RemoveLabel(ctx, org, label)
-	require.Nil(t, err, err)
-
-	labels, err = orgAPI.GetLabels(ctx, org)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 0)
-
-	err = orgAPI.DeleteOrganization(ctx, org)
-	assert.Nil(t, err, err)
-
 	err = labelsAPI.DeleteLabel(ctx, label)
 	require.Nil(t, err, err)
 	//
@@ -155,26 +121,6 @@ func TestLabelsAPI_failing(t *testing.T) {
 
 	err = labelsAPI.DeleteLabelWithID(ctx, invalidID)
 	assert.NotNil(t, err)
-
-	labels, err = orgAPI.GetLabelsWithID(ctx, wrongID)
-	assert.NotNil(t, err)
-	assert.Nil(t, labels)
-
-	label, err = orgAPI.AddLabelWithID(ctx, *org.Id, wrongID)
-	assert.NotNil(t, err)
-	assert.Nil(t, label)
-
-	label, err = orgAPI.AddLabelWithID(ctx, wrongID, wrongID)
-	assert.NotNil(t, err)
-	assert.Nil(t, label)
-
-	err = orgAPI.RemoveLabelWithID(ctx, *org.Id, invalidID)
-	assert.NotNil(t, err)
-	assert.Nil(t, label)
-
-	err = orgAPI.RemoveLabelWithID(ctx, invalidID, invalidID)
-	assert.NotNil(t, err, err)
-	assert.Nil(t, label)
 }
 
 func TestLabelsAPI_requestFailing(t *testing.T) {

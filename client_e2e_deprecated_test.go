@@ -714,8 +714,7 @@ func TestBuckets(t *testing.T) {
 	buckets, err = bucketsAPI.GetBuckets(ctx, api.PagingWithOffset(20))
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)
-	//+2 is a bug, when using offset>4 there are returned also system buckets
-	assert.Len(t, *buckets, 10+2+bucketsNum)
+	assert.Len(t, *buckets, 10+bucketsNum)
 	// test paging with increase limit to cover all buckets
 	buckets, err = bucketsAPI.GetBuckets(ctx, api.PagingWithLimit(100))
 	require.Nil(t, err, err)
@@ -826,60 +825,6 @@ func TestLabels(t *testing.T) {
 	label2, err = labelsAPI.CreateLabelWithName(ctx, myorg, labelName, nil)
 	require.NotNil(t, err, err)
 	require.Nil(t, label2)
-
-	labels, err = orgAPI.GetLabels(ctx, myorg)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 0)
-
-	org, err := orgAPI.CreateOrganizationWithName(ctx, "org1")
-	require.Nil(t, err, err)
-	require.NotNil(t, org)
-
-	labels, err = orgAPI.GetLabels(ctx, org)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 0)
-
-	labelx, err := orgAPI.AddLabel(ctx, org, label)
-	require.Nil(t, err, err)
-	require.NotNil(t, labelx)
-
-	labels, err = orgAPI.GetLabels(ctx, org)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 1)
-
-	err = orgAPI.RemoveLabel(ctx, org, label)
-	require.Nil(t, err, err)
-
-	labels, err = orgAPI.GetLabels(ctx, org)
-	require.Nil(t, err, err)
-	require.NotNil(t, labels)
-	assert.Len(t, *labels, 0)
-
-	labels, err = orgAPI.GetLabelsWithId(ctx, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, labels)
-
-	label2, err = orgAPI.AddLabelWithId(ctx, *org.Id, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	label2, err = orgAPI.AddLabelWithId(ctx, "000000000000000", "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	err = orgAPI.RemoveLabelWithId(ctx, *org.Id, "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	err = orgAPI.RemoveLabelWithId(ctx, "000000000000000", "000000000000000")
-	require.NotNil(t, err, err)
-	require.Nil(t, label2)
-
-	err = orgAPI.DeleteOrganization(ctx, org)
-	assert.Nil(t, err, err)
 
 	err = labelsAPI.DeleteLabel(ctx, label)
 	require.Nil(t, err, err)

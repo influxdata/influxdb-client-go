@@ -199,7 +199,8 @@ func (c *clientImpl) WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking {
 
 func (c *clientImpl) Close() {
 	for key, w := range c.writeAPIs {
-		w.Close()
+		wa := w.(*api.WriteAPIImpl)
+		wa.Close()
 		delete(c.writeAPIs, key)
 	}
 	for key := range c.syncWriteAPIs {

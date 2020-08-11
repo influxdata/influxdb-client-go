@@ -2,6 +2,7 @@
 ### Breaking changes
 1. [#173](https://github.com/influxdata/influxdb-client-go/pull/173) Removed deprecated API.
 1. [#174](https://github.com/influxdata/influxdb-client-go/pull/174) Removed orgs labels API cause [it has been removed from the server API](https://github.com/influxdata/influxdb/pull/19104)
+1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Removed WriteAPI.Close()
 
 ### Features
 1. [#165](https://github.com/influxdata/influxdb-client-go/pull/165) Allow overriding the http.Client for the http service.

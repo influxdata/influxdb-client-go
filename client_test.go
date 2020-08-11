@@ -45,6 +45,37 @@ func TestUrls(t *testing.T) {
 	}
 }
 
+func TestWriteAPIManagement(t *testing.T) {
+	data := []struct {
+		org          string
+		bucket       string
+		expectedCout int
+	}{
+		{"o1", "b1", 1},
+		{"o1", "b2", 2},
+		{"o1", "b1", 2},
+		{"o2", "b1", 3},
+		{"o2", "b2", 4},
+		{"o1", "b2", 4},
+		{"o1", "b3", 5},
+		{"o2", "b2", 5},
+	}
+	c := NewClient("http://localhost", "x").(*clientImpl)
+	for i, d := range data {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			w := c.WriteAPI(d.org, d.bucket)
+			assert.NotNil(t, w)
+			assert.Len(t, c.writeAPIs, d.expectedCout)
+			wb := c.WriteAPIBlocking(d.org, d.bucket)
+			assert.NotNil(t, wb)
+			assert.Len(t, c.syncWriteAPIs, d.expectedCout)
+		})
+	}
+	c.Close()
+	assert.Len(t, c.writeAPIs, 0)
+	assert.Len(t, c.syncWriteAPIs, 0)
+}
+
 func TestUserAgent(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(100 * time.Millisecond)

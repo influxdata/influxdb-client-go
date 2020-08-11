@@ -6,6 +6,9 @@
 ### Features
 1. [#165](https://github.com/influxdata/influxdb-client-go/pull/165) Allow overriding the http.Client for the http service.
 
+### Bug fixes 
+1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Fixed WriteAPIs management. Keeping single instance for each org and bucket pair.
+
 ## 1.4.0 [2020-07-17]
 ### Breaking changes
 1. [#156](https://github.com/influxdata/influxdb-client-go/pull/156) Fixing Go naming and code style violations: 

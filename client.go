@@ -38,9 +38,6 @@ type Client interface {
 	Options() *Options
 	// ServerURL returns the url of the server url client talks to
 	ServerURL() string
-	// ServerURL returns the url of the server url client talks to
-	// Deprecated: Use ServerURL instead.
-	ServerUrl() string
 	// WriteAPI returns the asynchronous, non-blocking, Write client
 	WriteAPI(org, bucket string) api.WriteAPI
 	// WriteAPIBlocking returns the synchronous, blocking, Write client
@@ -111,11 +108,6 @@ func (c *clientImpl) Options() *Options {
 }
 
 func (c *clientImpl) ServerURL() string {
-	return c.serverURL
-}
-
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) ServerUrl() string {
 	return c.serverURL
 }
 

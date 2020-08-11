@@ -17,15 +17,15 @@ import (
 type WriteAPIBlocking interface {
 	// WriteRecord writes line protocol record(s) into bucket.
 	// WriteRecord writes without implicit batching. Batch is created from given number of records
-	// Non-blocking alternative is available in the WriteApi interface
+	// Non-blocking alternative is available in the WriteAPI interface
 	WriteRecord(ctx context.Context, line ...string) error
 	// WritePoint data point into bucket.
 	// WritePoint writes without implicit batching. Batch is created from given number of points
-	// Non-blocking alternative is available in the WriteApi interface
+	// Non-blocking alternative is available in the WriteAPI interface
 	WritePoint(ctx context.Context, point ...*write.Point) error
 }
 
-// writeAPIBlocking implements WriteApiBlocking interface
+// writeAPIBlocking implements WriteAPIBlocking interface
 type writeAPIBlocking struct {
 	service      *iwrite.Service
 	writeOptions *write.Options

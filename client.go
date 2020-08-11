@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // Package influxdb2 provides API for using InfluxDB client in Go.
-// It's intended to use with InfluxDB 2 server. WriteApi, QueryApi and Health work also with InfluxDB 1.8
+// It's intended to use with InfluxDB 2 server. WriteAPI, QueryAPI and Health work also with InfluxDB 1.8
 package influxdb2
 
 import (
@@ -19,9 +19,9 @@ import (
 )
 
 // Client provides API to communicate with InfluxDBServer.
-// There two APIs for writing, WriteApi and WriteApiBlocking.
-// WriteApi provides asynchronous, non-blocking, methods for writing time series data.
-// WriteApiBlocking provides blocking methods for writing time series data.
+// There two APIs for writing, WriteAPI and WriteAPIBlocking.
+// WriteAPI provides asynchronous, non-blocking, methods for writing time series data.
+// WriteAPIBlocking provides blocking methods for writing time series data.
 type Client interface {
 	// Setup sends request to initialise new InfluxDB server with user, org and bucket, and data retention period
 	// and returns details about newly created entities along with the authorization object.

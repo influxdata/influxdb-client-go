@@ -181,7 +181,7 @@ func genRecords(num int) []string {
 	return lines
 }
 
-func TestWriteApiWriteDefaultTag(t *testing.T) {
+func TestWriteAPIWriteDefaultTag(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
 	opts := write.DefaultOptions().
 		SetBatchSize(1)
@@ -200,7 +200,7 @@ func TestWriteApiWriteDefaultTag(t *testing.T) {
 	assert.Equal(t, "test,dft=a,vendor=AWS mem_free=1234567i 60000000060", service.Lines()[0])
 }
 
-func TestWriteApiImpl_Write(t *testing.T) {
+func TestWriteAPIImpl_Write(t *testing.T) {
 	service := newTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	points := genPoints(10)

@@ -55,7 +55,7 @@ func NewQueryAPI(org string, service ihttp.Service) QueryAPI {
 	}
 }
 
-// queryAPI implements QueryApi interface
+// queryAPI implements QueryAPI interface
 type queryAPI struct {
 	org         string
 	httpService ihttp.Service

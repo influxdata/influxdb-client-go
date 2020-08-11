@@ -62,6 +62,6 @@
 
 - initial release of new client version
 
-### Apis
+### APIs
 
 - initial release of new client version

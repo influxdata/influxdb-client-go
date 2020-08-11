@@ -54,18 +54,6 @@ type OrganizationsAPI interface {
 	RemoveOwner(ctx context.Context, org *domain.Organization, user *domain.User) error
 	// RemoveOwnerWithID removes an owner with id memberID from an organization with orgID.
 	RemoveOwnerWithID(ctx context.Context, orgID, memberID string) error
-	// GetLabels returns labels of an organization.
-	GetLabels(ctx context.Context, org *domain.Organization) (*[]domain.Label, error)
-	// GetLabelsWithID returns labels of an organization with orgID.
-	GetLabelsWithID(ctx context.Context, orgID string) (*[]domain.Label, error)
-	// AddLabel adds a label to an organization.
-	AddLabel(ctx context.Context, org *domain.Organization, label *domain.Label) (*domain.Label, error)
-	// AddLabelWithID adds a label with id labelID to an organization with orgID.
-	AddLabelWithID(ctx context.Context, orgID, labelID string) (*domain.Label, error)
-	// RemoveLabel removes an label from an organization.
-	RemoveLabel(ctx context.Context, org *domain.Organization, label *domain.Label) error
-	// RemoveLabelWithID removes an label with id labelID from an organization with orgID.
-	RemoveLabelWithID(ctx context.Context, orgID, labelID string) error
 }
 
 type organizationsAPI struct {
@@ -274,55 +262,6 @@ func (o *organizationsAPI) RemoveOwner(ctx context.Context, org *domain.Organiza
 func (o *organizationsAPI) RemoveOwnerWithID(ctx context.Context, orgID, memberID string) error {
 	params := &domain.DeleteOrgsIDOwnersIDParams{}
 	response, err := o.apiClient.DeleteOrgsIDOwnersIDWithResponse(ctx, orgID, memberID, params)
-	if err != nil {
-		return err
-	}
-	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return nil
-}
-
-func (o *organizationsAPI) GetLabels(ctx context.Context, org *domain.Organization) (*[]domain.Label, error) {
-	return o.GetLabelsWithID(ctx, *org.Id)
-}
-
-func (o *organizationsAPI) GetLabelsWithID(ctx context.Context, orgID string) (*[]domain.Label, error) {
-	params := &domain.GetOrgsIDLabelsParams{}
-	response, err := o.apiClient.GetOrgsIDLabelsWithResponse(ctx, orgID, params)
-	if err != nil {
-		return nil, err
-	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return (*[]domain.Label)(response.JSON200.Labels), nil
-}
-
-func (o *organizationsAPI) AddLabel(ctx context.Context, org *domain.Organization, label *domain.Label) (*domain.Label, error) {
-	return o.AddLabelWithID(ctx, *org.Id, *label.Id)
-}
-
-func (o *organizationsAPI) AddLabelWithID(ctx context.Context, orgID, labelID string) (*domain.Label, error) {
-	params := &domain.PostOrgsIDLabelsParams{}
-	body := &domain.PostOrgsIDLabelsJSONRequestBody{LabelID: &labelID}
-	response, err := o.apiClient.PostOrgsIDLabelsWithResponse(ctx, orgID, params, *body)
-	if err != nil {
-		return nil, err
-	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return response.JSON201.Label, nil
-}
-
-func (o *organizationsAPI) RemoveLabel(ctx context.Context, org *domain.Organization, label *domain.Label) error {
-	return o.RemoveLabelWithID(ctx, *org.Id, *label.Id)
-}
-
-func (o *organizationsAPI) RemoveLabelWithID(ctx context.Context, orgID, memberID string) error {
-	params := &domain.DeleteOrgsIDLabelsIDParams{}
-	response, err := o.apiClient.DeleteOrgsIDLabelsIDWithResponse(ctx, orgID, memberID, params)
 	if err != nil {
 		return err
 	}

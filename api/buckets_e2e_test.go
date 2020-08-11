@@ -291,7 +291,7 @@ func TestBucketsAPI_requestFailing(t *testing.T) {
 	bucketsAPI := client.BucketsAPI()
 
 	anID := "1000000000000000"
-	bucket := &domain.Bucket{Id: &anID}
+	bucket := &domain.Bucket{Id: &anID, OrgID: &anID}
 	user := &domain.User{Id: &anID}
 
 	_, err := bucketsAPI.GetBuckets(ctx)

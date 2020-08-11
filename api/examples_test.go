@@ -347,18 +347,6 @@ func ExampleLabelsAPI() {
 		panic(err)
 	}
 
-	// Get organization that will have the label
-	org, err := orgsAPI.FindOrganizationByName(ctx, "IT")
-	if err != nil {
-		panic(err)
-	}
-
-	// Add label to org
-	_, err = orgsAPI.AddLabel(ctx, org, label)
-	if err != nil {
-		panic(err)
-	}
-
 	// Change color property
 	label.Properties.AdditionalProperties = map[string]string{"color": "ff1122"}
 	label, err = labelsAPI.UpdateLabel(ctx, label)

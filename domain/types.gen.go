@@ -86,13 +86,6 @@ const (
 	CheckViewPropertiesTypeCheck CheckViewPropertiesType = "check"
 )
 
-// Defines values for CloudUserRole.
-const (
-	CloudUserRoleMember CloudUserRole = "member"
-
-	CloudUserRoleOwner CloudUserRole = "owner"
-)
-
 // Defines values for ConstantVariablePropertiesType.
 const (
 	ConstantVariablePropertiesTypeConstant ConstantVariablePropertiesType = "constant"
@@ -284,6 +277,17 @@ const (
 	LesserThresholdTypeLesser LesserThresholdType = "lesser"
 )
 
+// Defines values for LinePlusSingleStatPropertiesHoverDimension.
+const (
+	LinePlusSingleStatPropertiesHoverDimensionAuto LinePlusSingleStatPropertiesHoverDimension = "auto"
+
+	LinePlusSingleStatPropertiesHoverDimensionTrue LinePlusSingleStatPropertiesHoverDimension = "true"
+
+	LinePlusSingleStatPropertiesHoverDimensionX LinePlusSingleStatPropertiesHoverDimension = "x"
+
+	LinePlusSingleStatPropertiesHoverDimensionXy LinePlusSingleStatPropertiesHoverDimension = "xy"
+)
+
 // Defines values for LinePlusSingleStatPropertiesPosition.
 const (
 	LinePlusSingleStatPropertiesPositionOverlaid LinePlusSingleStatPropertiesPosition = "overlaid"
@@ -334,6 +338,16 @@ const (
 // Defines values for MarkdownViewPropertiesType.
 const (
 	MarkdownViewPropertiesTypeMarkdown MarkdownViewPropertiesType = "markdown"
+)
+
+// Defines values for MosaicViewPropertiesShape.
+const (
+	MosaicViewPropertiesShapeChronografV2 MosaicViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for MosaicViewPropertiesType.
+const (
+	MosaicViewPropertiesTypeMosaic MosaicViewPropertiesType = "mosaic"
 )
 
 // Defines values for NotificationEndpointBaseStatus.
@@ -894,6 +908,17 @@ const (
 	XYGeomStep XYGeom = "step"
 )
 
+// Defines values for XYViewPropertiesHoverDimension.
+const (
+	XYViewPropertiesHoverDimensionAuto XYViewPropertiesHoverDimension = "auto"
+
+	XYViewPropertiesHoverDimensionTrue XYViewPropertiesHoverDimension = "true"
+
+	XYViewPropertiesHoverDimensionX XYViewPropertiesHoverDimension = "x"
+
+	XYViewPropertiesHoverDimensionXy XYViewPropertiesHoverDimension = "xy"
+)
+
 // Defines values for XYViewPropertiesPosition.
 const (
 	XYViewPropertiesPositionOverlaid XYViewPropertiesPosition = "overlaid"
@@ -1126,7 +1151,8 @@ type BuilderAggregateFunctionType string
 // BuilderConfig defines model for BuilderConfig.
 type BuilderConfig struct {
 	AggregateWindow *struct {
-		Period *string `json:"period,omitempty"`
+		FillValues *bool   `json:"fillValues,omitempty"`
+		Period     *string `json:"period,omitempty"`
 	} `json:"aggregateWindow,omitempty"`
 	Buckets   *[]string               `json:"buckets,omitempty"`
 	Functions *[]BuilderFunctionsType `json:"functions,omitempty"`
@@ -1294,31 +1320,6 @@ type CheckViewPropertiesType string
 type Checks struct {
 	Checks *[]Check `json:"checks,omitempty"`
 	Links  *Links   `json:"links,omitempty"`
-}
-
-// CloudUser defines model for CloudUser.
-type CloudUser struct {
-	Email     string  `json:"email"`
-	FirstName *string `json:"firstName,omitempty"`
-
-	// the idpe id of the user
-	Id       string  `json:"id"`
-	LastName *string `json:"lastName,omitempty"`
-	Links    *struct {
-		Self *string `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-	Role CloudUserRole `json:"role"`
-}
-
-// CloudUserRole defines model for CloudUser.Role.
-type CloudUserRole string
-
-// CloudUsers defines model for CloudUsers.
-type CloudUsers struct {
-	Links *struct {
-		Self *string `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-	Users *[]CloudUser `json:"users,omitempty"`
 }
 
 // ConditionalExpression defines model for ConditionalExpression.
@@ -2161,7 +2162,8 @@ type LinePlusSingleStatProperties struct {
 	Colors []DashboardColor `json:"colors"`
 
 	// Indicates whether decimal places should be enforced, and how many digits it should show.
-	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
+	DecimalPlaces  DecimalPlaces                               `json:"decimalPlaces"`
+	HoverDimension *LinePlusSingleStatPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
 	Legend     Legend                               `json:"legend"`
@@ -2180,6 +2182,9 @@ type LinePlusSingleStatProperties struct {
 	XColumn           *string                          `json:"xColumn,omitempty"`
 	YColumn           *string                          `json:"yColumn,omitempty"`
 }
+
+// LinePlusSingleStatPropertiesHoverDimension defines model for LinePlusSingleStatProperties.HoverDimension.
+type LinePlusSingleStatPropertiesHoverDimension string
 
 // LinePlusSingleStatPropertiesPosition defines model for LinePlusSingleStatProperties.Position.
 type LinePlusSingleStatPropertiesPosition string
@@ -2315,6 +2320,38 @@ type MemberExpression struct {
 	// Type of AST node
 	Type *NodeType `json:"type,omitempty"`
 }
+
+// MosaicViewProperties defines model for MosaicViewProperties.
+type MosaicViewProperties struct {
+
+	// Colors define color encoding of data into a visualization
+	Colors      []string                  `json:"colors"`
+	FillColumns []string                  `json:"fillColumns"`
+	Note        string                    `json:"note"`
+	Queries     []DashboardQuery          `json:"queries"`
+	Shape       MosaicViewPropertiesShape `json:"shape"`
+
+	// If true, will display note when empty
+	ShowNoteWhenEmpty bool                     `json:"showNoteWhenEmpty"`
+	TimeFormat        *string                  `json:"timeFormat,omitempty"`
+	Type              MosaicViewPropertiesType `json:"type"`
+	XAxisLabel        string                   `json:"xAxisLabel"`
+	XColumn           string                   `json:"xColumn"`
+	XDomain           []float32                `json:"xDomain"`
+	XPrefix           string                   `json:"xPrefix"`
+	XSuffix           string                   `json:"xSuffix"`
+	YAxisLabel        string                   `json:"yAxisLabel"`
+	YDomain           []float32                `json:"yDomain"`
+	YPrefix           string                   `json:"yPrefix"`
+	YSeriesColumns    []string                 `json:"ySeriesColumns"`
+	YSuffix           string                   `json:"ySuffix"`
+}
+
+// MosaicViewPropertiesShape defines model for MosaicViewProperties.Shape.
+type MosaicViewPropertiesShape string
+
+// MosaicViewPropertiesType defines model for MosaicViewProperties.Type.
+type MosaicViewPropertiesType string
 
 // Node defines model for Node.
 type Node interface{}
@@ -2489,11 +2526,11 @@ type ObjectExpression struct {
 
 // OnboardingRequest defines model for OnboardingRequest.
 type OnboardingRequest struct {
-	Bucket             string `json:"bucket"`
-	Org                string `json:"org"`
-	Password           string `json:"password"`
-	RetentionPeriodHrs *int   `json:"retentionPeriodHrs,omitempty"`
-	Username           string `json:"username"`
+	Bucket             string  `json:"bucket"`
+	Org                string  `json:"org"`
+	Password           *string `json:"password,omitempty"`
+	RetentionPeriodHrs *int    `json:"retentionPeriodHrs,omitempty"`
+	Username           string  `json:"username"`
 }
 
 // OnboardingResponse defines model for OnboardingResponse.
@@ -2651,384 +2688,11 @@ type PipeLiteral struct {
 	Type *NodeType `json:"type,omitempty"`
 }
 
-// Pkg defines model for Pkg.
-type Pkg []struct {
-	ApiVersion *string       `json:"apiVersion,omitempty"`
-	Kind       *TemplateKind `json:"kind,omitempty"`
-	Meta       *struct {
-		Name *string `json:"name,omitempty"`
-	} `json:"meta,omitempty"`
-	Spec *map[string]interface{} `json:"spec,omitempty"`
-}
-
-// PkgApply defines model for PkgApply.
-type PkgApply struct {
-	Actions *[]interface{} `json:"actions,omitempty"`
-	DryRun  *bool          `json:"dryRun,omitempty"`
-	OrgID   *string        `json:"orgID,omitempty"`
-	Remotes *[]struct {
-		ContentType *string `json:"contentType,omitempty"`
-		Url         string  `json:"url"`
-	} `json:"remotes,omitempty"`
-	Secrets  *PkgApply_Secrets `json:"secrets,omitempty"`
-	StackID  *string           `json:"stackID,omitempty"`
-	Template *struct {
-		ContentType *string   `json:"contentType,omitempty"`
-		Package     *Pkg      `json:"package,omitempty"`
-		Sources     *[]string `json:"sources,omitempty"`
-	} `json:"template,omitempty"`
-	Templates *[]struct {
-		ContentType *string   `json:"contentType,omitempty"`
-		Package     *Pkg      `json:"package,omitempty"`
-		Sources     *[]string `json:"sources,omitempty"`
-	} `json:"templates,omitempty"`
-}
-
-// PkgApply_Secrets defines model for PkgApply.Secrets.
-type PkgApply_Secrets struct {
-	AdditionalProperties map[string]string `json:"-"`
-}
-
-// PkgChart defines model for PkgChart.
-type PkgChart struct {
-	Height     *int            `json:"height,omitempty"`
-	Properties *ViewProperties `json:"properties,omitempty"`
-	Width      *int            `json:"width,omitempty"`
-	XPos       *int            `json:"xPos,omitempty"`
-	YPos       *int            `json:"yPos,omitempty"`
-}
-
-// PkgCreate defines model for PkgCreate.
-type PkgCreate struct {
-	OrgIDs *[]struct {
-		OrgID           *string `json:"orgID,omitempty"`
-		ResourceFilters *struct {
-			ByLabel        *[]string       `json:"byLabel,omitempty"`
-			ByResourceKind *[]TemplateKind `json:"byResourceKind,omitempty"`
-		} `json:"resourceFilters,omitempty"`
-	} `json:"orgIDs,omitempty"`
-	Resources *struct {
-		Id   string       `json:"id"`
-		Kind TemplateKind `json:"kind"`
-		Name *string      `json:"name,omitempty"`
-	} `json:"resources,omitempty"`
-}
-
-// PkgEnvReferences defines model for PkgEnvReferences.
-type PkgEnvReferences []struct {
-
-	// Default value that will be provided for the reference when no value is provided
-	DefaultValue string `json:"defaultValue"`
-
-	// Key identified as environment reference and is the key identified in the template
-	EnvRefKey string `json:"envRefKey"`
-
-	// Field the environment reference corresponds too
-	ResourceField string `json:"resourceField"`
-
-	// Value provided to fulfill reference
-	Value *string `json:"value,omitempty"`
-}
-
-// PkgSummary defines model for PkgSummary.
-type PkgSummary struct {
-	Diff *struct {
-		Buckets *[]struct {
-			Id  *string `json:"id,omitempty"`
-			New *struct {
-				Description *string `json:"description,omitempty"`
-				Name        *string `json:"name,omitempty"`
-
-				// Rules to expire or retain data.  No rules means data never expires.
-				RetentionRules *RetentionRules `json:"retentionRules,omitempty"`
-			} `json:"new,omitempty"`
-			Old *struct {
-				Description *string `json:"description,omitempty"`
-				Name        *string `json:"name,omitempty"`
-
-				// Rules to expire or retain data.  No rules means data never expires.
-				RetentionRules *RetentionRules `json:"retentionRules,omitempty"`
-			} `json:"old,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			StateStatus *string `json:"stateStatus,omitempty"`
-		} `json:"buckets,omitempty"`
-		Checks *[]struct {
-			Id          *string             `json:"id,omitempty"`
-			New         *CheckDiscriminator `json:"new,omitempty"`
-			Old         *CheckDiscriminator `json:"old,omitempty"`
-			PkgName     *string             `json:"pkgName,omitempty"`
-			StateStatus *string             `json:"stateStatus,omitempty"`
-		} `json:"checks,omitempty"`
-		Dashboards *[]struct {
-			Id  *string `json:"id,omitempty"`
-			New *struct {
-				Charts      *[]PkgChart `json:"charts,omitempty"`
-				Description *string     `json:"description,omitempty"`
-				Name        *string     `json:"name,omitempty"`
-			} `json:"new,omitempty"`
-			Old *struct {
-				Charts      *[]PkgChart `json:"charts,omitempty"`
-				Description *string     `json:"description,omitempty"`
-				Name        *string     `json:"name,omitempty"`
-			} `json:"old,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			StateStatus *string `json:"stateStatus,omitempty"`
-		} `json:"dashboards,omitempty"`
-		LabelMappings *[]struct {
-			LabelID         *string `json:"labelID,omitempty"`
-			LabelName       *string `json:"labelName,omitempty"`
-			LabelPkgName    *string `json:"labelPkgName,omitempty"`
-			ResourceID      *string `json:"resourceID,omitempty"`
-			ResourceName    *string `json:"resourceName,omitempty"`
-			ResourcePkgName *string `json:"resourcePkgName,omitempty"`
-			ResourceType    *string `json:"resourceType,omitempty"`
-			Status          *string `json:"status,omitempty"`
-		} `json:"labelMappings,omitempty"`
-		Labels *[]struct {
-			Id  *string `json:"id,omitempty"`
-			New *struct {
-				Color       *string `json:"color,omitempty"`
-				Description *string `json:"description,omitempty"`
-				Name        *string `json:"name,omitempty"`
-			} `json:"new,omitempty"`
-			Old *struct {
-				Color       *string `json:"color,omitempty"`
-				Description *string `json:"description,omitempty"`
-				Name        *string `json:"name,omitempty"`
-			} `json:"old,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			StateStatus *string `json:"stateStatus,omitempty"`
-		} `json:"labels,omitempty"`
-		NotificationEndpoints *[]struct {
-			Id          *string                          `json:"id,omitempty"`
-			New         *NotificationEndpointDiscrimator `json:"new,omitempty"`
-			Old         *NotificationEndpointDiscrimator `json:"old,omitempty"`
-			PkgName     *string                          `json:"pkgName,omitempty"`
-			StateStatus *string                          `json:"stateStatus,omitempty"`
-		} `json:"notificationEndpoints,omitempty"`
-		NotificationRules *[]struct {
-			Id  *string `json:"id,omitempty"`
-			New *struct {
-				Description     *string `json:"description,omitempty"`
-				EndpointID      *string `json:"endpointID,omitempty"`
-				EndpointName    *string `json:"endpointName,omitempty"`
-				EndpointType    *string `json:"endpointType,omitempty"`
-				Every           *string `json:"every,omitempty"`
-				MessageTemplate *string `json:"messageTemplate,omitempty"`
-				Name            *string `json:"name,omitempty"`
-				Offset          *string `json:"offset,omitempty"`
-				Status          *string `json:"status,omitempty"`
-				StatusRules     *[]struct {
-					CurrentLevel  *string `json:"currentLevel,omitempty"`
-					PreviousLevel *string `json:"previousLevel,omitempty"`
-				} `json:"statusRules,omitempty"`
-				TagRules *[]struct {
-					Key      *string `json:"key,omitempty"`
-					Operator *string `json:"operator,omitempty"`
-					Value    *string `json:"value,omitempty"`
-				} `json:"tagRules,omitempty"`
-			} `json:"new,omitempty"`
-			Old *struct {
-				Description     *string `json:"description,omitempty"`
-				EndpointID      *string `json:"endpointID,omitempty"`
-				EndpointName    *string `json:"endpointName,omitempty"`
-				EndpointType    *string `json:"endpointType,omitempty"`
-				Every           *string `json:"every,omitempty"`
-				MessageTemplate *string `json:"messageTemplate,omitempty"`
-				Name            *string `json:"name,omitempty"`
-				Offset          *string `json:"offset,omitempty"`
-				Status          *string `json:"status,omitempty"`
-				StatusRules     *[]struct {
-					CurrentLevel  *string `json:"currentLevel,omitempty"`
-					PreviousLevel *string `json:"previousLevel,omitempty"`
-				} `json:"statusRules,omitempty"`
-				TagRules *[]struct {
-					Key      *string `json:"key,omitempty"`
-					Operator *string `json:"operator,omitempty"`
-					Value    *string `json:"value,omitempty"`
-				} `json:"tagRules,omitempty"`
-			} `json:"old,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			StateStatus *string `json:"stateStatus,omitempty"`
-		} `json:"notificationRules,omitempty"`
-		Tasks *[]struct {
-			Id  *string `json:"id,omitempty"`
-			New *struct {
-				Cron        *string `json:"cron,omitempty"`
-				Description *string `json:"description,omitempty"`
-				Every       *string `json:"every,omitempty"`
-				Name        *string `json:"name,omitempty"`
-				Offset      *string `json:"offset,omitempty"`
-				Query       *string `json:"query,omitempty"`
-				Status      *string `json:"status,omitempty"`
-			} `json:"new,omitempty"`
-			Old *struct {
-				Cron        *string `json:"cron,omitempty"`
-				Description *string `json:"description,omitempty"`
-				Every       *string `json:"every,omitempty"`
-				Name        *string `json:"name,omitempty"`
-				Offset      *string `json:"offset,omitempty"`
-				Query       *string `json:"query,omitempty"`
-				Status      *string `json:"status,omitempty"`
-			} `json:"old,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			StateStatus *string `json:"stateStatus,omitempty"`
-		} `json:"tasks,omitempty"`
-		TelegrafConfigs *[]struct {
-			Id          *string          `json:"id,omitempty"`
-			New         *TelegrafRequest `json:"new,omitempty"`
-			Old         *TelegrafRequest `json:"old,omitempty"`
-			PkgName     *string          `json:"pkgName,omitempty"`
-			StateStatus *string          `json:"stateStatus,omitempty"`
-		} `json:"telegrafConfigs,omitempty"`
-		Variables *[]struct {
-			Id  *string `json:"id,omitempty"`
-			New *struct {
-				Args        *VariableProperties `json:"args,omitempty"`
-				Description *string             `json:"description,omitempty"`
-				Name        *string             `json:"name,omitempty"`
-			} `json:"new,omitempty"`
-			Old *struct {
-				Args        *VariableProperties `json:"args,omitempty"`
-				Description *string             `json:"description,omitempty"`
-				Name        *string             `json:"name,omitempty"`
-			} `json:"old,omitempty"`
-			PkgName     *string `json:"pkgName,omitempty"`
-			StateStatus *string `json:"stateStatus,omitempty"`
-		} `json:"variables,omitempty"`
-	} `json:"diff,omitempty"`
-	Errors *[]struct {
-		Fields  *[]string     `json:"fields,omitempty"`
-		Indexes *[]int        `json:"indexes,omitempty"`
-		Kind    *TemplateKind `json:"kind,omitempty"`
-		Reason  *string       `json:"reason,omitempty"`
-	} `json:"errors,omitempty"`
-	Sources *[]string `json:"sources,omitempty"`
-	StackID *string   `json:"stackID,omitempty"`
-	Summary *struct {
-		Buckets *[]struct {
-			Description       *string            `json:"description,omitempty"`
-			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
-			Id                *string            `json:"id,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
-			Name              *string            `json:"name,omitempty"`
-			OrgID             *string            `json:"orgID,omitempty"`
-			PkgName           *string            `json:"pkgName,omitempty"`
-			RetentionPeriod   *int               `json:"retentionPeriod,omitempty"`
-		} `json:"buckets,omitempty"`
-		Checks *[]struct {
-			// Embedded struct due to allOf(#/components/schemas/CheckDiscriminator)
-			CheckDiscriminator
-			// Embedded fields due to inline allOf schema
-			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
-			PkgName           *string            `json:"pkgName,omitempty"`
-		} `json:"checks,omitempty"`
-		Dashboards *[]struct {
-			Charts            *[]PkgChart        `json:"charts,omitempty"`
-			Description       *string            `json:"description,omitempty"`
-			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
-			Id                *string            `json:"id,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
-			Name              *string            `json:"name,omitempty"`
-			OrgID             *string            `json:"orgID,omitempty"`
-			PkgName           *string            `json:"pkgName,omitempty"`
-		} `json:"dashboards,omitempty"`
-		LabelMappings *[]struct {
-			LabelID         *string `json:"labelID,omitempty"`
-			LabelName       *string `json:"labelName,omitempty"`
-			LabelPkgName    *string `json:"labelPkgName,omitempty"`
-			ResourceID      *string `json:"resourceID,omitempty"`
-			ResourceName    *string `json:"resourceName,omitempty"`
-			ResourcePkgName *string `json:"resourcePkgName,omitempty"`
-			ResourceType    *string `json:"resourceType,omitempty"`
-			Status          *string `json:"status,omitempty"`
-		} `json:"labelMappings,omitempty"`
-		Labels                *[]PkgSummaryLabel `json:"labels,omitempty"`
-		MissingEnvRefs        *[]string          `json:"missingEnvRefs,omitempty"`
-		MissingSecrets        *[]string          `json:"missingSecrets,omitempty"`
-		NotificationEndpoints *[]struct {
-			// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscrimator)
-			NotificationEndpointDiscrimator
-			// Embedded fields due to inline allOf schema
-			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
-			PkgName           *string            `json:"pkgName,omitempty"`
-		} `json:"notificationEndpoints,omitempty"`
-		NotificationRules *[]struct {
-			Description       *string            `json:"description,omitempty"`
-			EndpointID        *string            `json:"endpointID,omitempty"`
-			EndpointPkgName   *string            `json:"endpointPkgName,omitempty"`
-			EndpointType      *string            `json:"endpointType,omitempty"`
-			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
-			Every             *string            `json:"every,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
-			MessageTemplate   *string            `json:"messageTemplate,omitempty"`
-			Name              *string            `json:"name,omitempty"`
-			Offset            *string            `json:"offset,omitempty"`
-			PkgName           *string            `json:"pkgName,omitempty"`
-			Status            *string            `json:"status,omitempty"`
-			StatusRules       *[]struct {
-				CurrentLevel  *string `json:"currentLevel,omitempty"`
-				PreviousLevel *string `json:"previousLevel,omitempty"`
-			} `json:"statusRules,omitempty"`
-			TagRules *[]struct {
-				Key      *string `json:"key,omitempty"`
-				Operator *string `json:"operator,omitempty"`
-				Value    *string `json:"value,omitempty"`
-			} `json:"tagRules,omitempty"`
-		} `json:"notificationRules,omitempty"`
-		Tasks *[]struct {
-			Cron          *string           `json:"cron,omitempty"`
-			Description   *string           `json:"description,omitempty"`
-			EnvReferences *PkgEnvReferences `json:"envReferences,omitempty"`
-			Every         *string           `json:"every,omitempty"`
-			Id            *string           `json:"id,omitempty"`
-			Name          *string           `json:"name,omitempty"`
-			Offset        *string           `json:"offset,omitempty"`
-			PkgName       *string           `json:"pkgName,omitempty"`
-			Query         *string           `json:"query,omitempty"`
-			Status        *string           `json:"status,omitempty"`
-		} `json:"tasks,omitempty"`
-		TelegrafConfigs *[]struct {
-			// Embedded struct due to allOf(#/components/schemas/TelegrafRequest)
-			TelegrafRequest
-			// Embedded fields due to inline allOf schema
-			EnvReferences     *PkgEnvReferences  `json:"envReferences,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel `json:"labelAssociations,omitempty"`
-			PkgName           *string            `json:"pkgName,omitempty"`
-		} `json:"telegrafConfigs,omitempty"`
-		Variables *[]struct {
-			Arguments         *VariableProperties `json:"arguments,omitempty"`
-			Description       *string             `json:"description,omitempty"`
-			EnvReferences     *PkgEnvReferences   `json:"envReferences,omitempty"`
-			Id                *string             `json:"id,omitempty"`
-			LabelAssociations *[]PkgSummaryLabel  `json:"labelAssociations,omitempty"`
-			Name              *string             `json:"name,omitempty"`
-			OrgID             *string             `json:"orgID,omitempty"`
-			PkgName           *string             `json:"pkgName,omitempty"`
-		} `json:"variables,omitempty"`
-	} `json:"summary,omitempty"`
-}
-
-// PkgSummaryLabel defines model for PkgSummaryLabel.
-type PkgSummaryLabel struct {
-	EnvReferences *PkgEnvReferences `json:"envReferences,omitempty"`
-	Id            *string           `json:"id,omitempty"`
-	Name          *string           `json:"name,omitempty"`
-	OrgID         *string           `json:"orgID,omitempty"`
-	PkgName       *string           `json:"pkgName,omitempty"`
-	Properties    *struct {
-		Color       *string `json:"color,omitempty"`
-		Description *string `json:"description,omitempty"`
-	} `json:"properties,omitempty"`
-}
-
 // PostBucketRequest defines model for PostBucketRequest.
 type PostBucketRequest struct {
 	Description *string `json:"description,omitempty"`
 	Name        string  `json:"name"`
-	OrgID       *string `json:"orgID,omitempty"`
+	OrgID       string  `json:"orgID"`
 
 	// Rules to expire or retain data.  No rules means data never expires.
 	RetentionRules RetentionRules `json:"retentionRules"`
@@ -3543,24 +3207,30 @@ type Sources struct {
 
 // Stack defines model for Stack.
 type Stack struct {
-	CreatedAt   *time.Time `json:"createdAt,omitempty"`
-	Description *string    `json:"description,omitempty"`
-	Id          *string    `json:"id,omitempty"`
-	Name        *string    `json:"name,omitempty"`
-	OrgID       *string    `json:"orgID,omitempty"`
-	Resources   *[]struct {
-		ApiVersion   *string `json:"apiVersion,omitempty"`
-		Associations *[]struct {
-			Kind    *TemplateKind `json:"kind,omitempty"`
-			PkgName *string       `json:"pkgName,omitempty"`
-		} `json:"associations,omitempty"`
-		Kind       *TemplateKind `json:"kind,omitempty"`
-		PkgName    *string       `json:"pkgName,omitempty"`
-		ResourceID *string       `json:"resourceID,omitempty"`
-	} `json:"resources,omitempty"`
-	Sources   *[]string  `json:"sources,omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	Urls      *[]string  `json:"urls,omitempty"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	Events    *[]struct {
+		Description *string `json:"description,omitempty"`
+		EventType   *string `json:"eventType,omitempty"`
+		Name        *string `json:"name,omitempty"`
+		Resources   *[]struct {
+			ApiVersion   *string `json:"apiVersion,omitempty"`
+			Associations *[]struct {
+				Kind     *TemplateKind `json:"kind,omitempty"`
+				MetaName *string       `json:"metaName,omitempty"`
+			} `json:"associations,omitempty"`
+			Kind  *TemplateKind `json:"kind,omitempty"`
+			Links *struct {
+				Self *string `json:"self,omitempty"`
+			} `json:"links,omitempty"`
+			ResourceID       *string `json:"resourceID,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"resources,omitempty"`
+		Sources   *[]string  `json:"sources,omitempty"`
+		UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+		Urls      *[]string  `json:"urls,omitempty"`
+	} `json:"events,omitempty"`
+	Id    *string `json:"id,omitempty"`
+	OrgID *string `json:"orgID,omitempty"`
 }
 
 // Statement defines model for Statement.
@@ -4171,8 +3841,406 @@ type Telegrafs struct {
 	Configurations *[]Telegraf `json:"configurations,omitempty"`
 }
 
+// Template defines model for Template.
+type Template []struct {
+	ApiVersion *string       `json:"apiVersion,omitempty"`
+	Kind       *TemplateKind `json:"kind,omitempty"`
+	Meta       *struct {
+		Name *string `json:"name,omitempty"`
+	} `json:"meta,omitempty"`
+	Spec *map[string]interface{} `json:"spec,omitempty"`
+}
+
+// TemplateApply defines model for TemplateApply.
+type TemplateApply struct {
+	Actions *[]interface{}         `json:"actions,omitempty"`
+	DryRun  *bool                  `json:"dryRun,omitempty"`
+	EnvRefs *TemplateApply_EnvRefs `json:"envRefs,omitempty"`
+	OrgID   *string                `json:"orgID,omitempty"`
+	Remotes *[]struct {
+		ContentType *string `json:"contentType,omitempty"`
+		Url         string  `json:"url"`
+	} `json:"remotes,omitempty"`
+	Secrets  *TemplateApply_Secrets `json:"secrets,omitempty"`
+	StackID  *string                `json:"stackID,omitempty"`
+	Template *struct {
+		ContentType *string   `json:"contentType,omitempty"`
+		Contents    *Template `json:"contents,omitempty"`
+		Sources     *[]string `json:"sources,omitempty"`
+	} `json:"template,omitempty"`
+	Templates *[]struct {
+		ContentType *string   `json:"contentType,omitempty"`
+		Contents    *Template `json:"contents,omitempty"`
+		Sources     *[]string `json:"sources,omitempty"`
+	} `json:"templates,omitempty"`
+}
+
+// TemplateApply_EnvRefs defines model for TemplateApply.EnvRefs.
+type TemplateApply_EnvRefs struct {
+	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
+// TemplateApply_Secrets defines model for TemplateApply.Secrets.
+type TemplateApply_Secrets struct {
+	AdditionalProperties map[string]string `json:"-"`
+}
+
+// TemplateChart defines model for TemplateChart.
+type TemplateChart struct {
+	Height     *int            `json:"height,omitempty"`
+	Properties *ViewProperties `json:"properties,omitempty"`
+	Width      *int            `json:"width,omitempty"`
+	XPos       *int            `json:"xPos,omitempty"`
+	YPos       *int            `json:"yPos,omitempty"`
+}
+
+// TemplateEnvReferences defines model for TemplateEnvReferences.
+type TemplateEnvReferences []struct {
+
+	// Default value that will be provided for the reference when no value is provided
+	DefaultValue *interface{} `json:"defaultValue,omitempty"`
+
+	// Key identified as environment reference and is the key identified in the template
+	EnvRefKey string `json:"envRefKey"`
+
+	// Field the environment reference corresponds too
+	ResourceField string `json:"resourceField"`
+
+	// Value provided to fulfill reference
+	Value *interface{} `json:"value,omitempty"`
+}
+
+// TemplateExport defines model for TemplateExport.
+type TemplateExport struct {
+	OrgIDs *[]struct {
+		OrgID           *string `json:"orgID,omitempty"`
+		ResourceFilters *struct {
+			ByLabel        *[]string       `json:"byLabel,omitempty"`
+			ByResourceKind *[]TemplateKind `json:"byResourceKind,omitempty"`
+		} `json:"resourceFilters,omitempty"`
+	} `json:"orgIDs,omitempty"`
+	Resources *struct {
+		Id   string       `json:"id"`
+		Kind TemplateKind `json:"kind"`
+		Name *string      `json:"name,omitempty"`
+	} `json:"resources,omitempty"`
+	StackID *string `json:"stackID,omitempty"`
+}
+
 // TemplateKind defines model for TemplateKind.
 type TemplateKind string
+
+// TemplateSummary defines model for TemplateSummary.
+type TemplateSummary struct {
+	Diff *struct {
+		Buckets *[]struct {
+			Id   *string       `json:"id,omitempty"`
+			Kind *TemplateKind `json:"kind,omitempty"`
+			New  *struct {
+				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
+
+				// Rules to expire or retain data.  No rules means data never expires.
+				RetentionRules *RetentionRules `json:"retentionRules,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
+
+				// Rules to expire or retain data.  No rules means data never expires.
+				RetentionRules *RetentionRules `json:"retentionRules,omitempty"`
+			} `json:"old,omitempty"`
+			StateStatus      *string `json:"stateStatus,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"buckets,omitempty"`
+		Checks *[]struct {
+			Id               *string             `json:"id,omitempty"`
+			Kind             *TemplateKind       `json:"kind,omitempty"`
+			New              *CheckDiscriminator `json:"new,omitempty"`
+			Old              *CheckDiscriminator `json:"old,omitempty"`
+			StateStatus      *string             `json:"stateStatus,omitempty"`
+			TemplateMetaName *string             `json:"templateMetaName,omitempty"`
+		} `json:"checks,omitempty"`
+		Dashboards *[]struct {
+			Id   *string       `json:"id,omitempty"`
+			Kind *TemplateKind `json:"kind,omitempty"`
+			New  *struct {
+				Charts      *[]TemplateChart `json:"charts,omitempty"`
+				Description *string          `json:"description,omitempty"`
+				Name        *string          `json:"name,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Charts      *[]TemplateChart `json:"charts,omitempty"`
+				Description *string          `json:"description,omitempty"`
+				Name        *string          `json:"name,omitempty"`
+			} `json:"old,omitempty"`
+			StateStatus      *string `json:"stateStatus,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"dashboards,omitempty"`
+		LabelMappings *[]struct {
+			LabelID                  *string `json:"labelID,omitempty"`
+			LabelName                *string `json:"labelName,omitempty"`
+			LabelTemplateMetaName    *string `json:"labelTemplateMetaName,omitempty"`
+			ResourceID               *string `json:"resourceID,omitempty"`
+			ResourceName             *string `json:"resourceName,omitempty"`
+			ResourceTemplateMetaName *string `json:"resourceTemplateMetaName,omitempty"`
+			ResourceType             *string `json:"resourceType,omitempty"`
+			Status                   *string `json:"status,omitempty"`
+		} `json:"labelMappings,omitempty"`
+		Labels *[]struct {
+			Id   *string       `json:"id,omitempty"`
+			Kind *TemplateKind `json:"kind,omitempty"`
+			New  *struct {
+				Color       *string `json:"color,omitempty"`
+				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Color       *string `json:"color,omitempty"`
+				Description *string `json:"description,omitempty"`
+				Name        *string `json:"name,omitempty"`
+			} `json:"old,omitempty"`
+			StateStatus      *string `json:"stateStatus,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"labels,omitempty"`
+		NotificationEndpoints *[]struct {
+			Id               *string                          `json:"id,omitempty"`
+			Kind             *TemplateKind                    `json:"kind,omitempty"`
+			New              *NotificationEndpointDiscrimator `json:"new,omitempty"`
+			Old              *NotificationEndpointDiscrimator `json:"old,omitempty"`
+			StateStatus      *string                          `json:"stateStatus,omitempty"`
+			TemplateMetaName *string                          `json:"templateMetaName,omitempty"`
+		} `json:"notificationEndpoints,omitempty"`
+		NotificationRules *[]struct {
+			Id   *string       `json:"id,omitempty"`
+			Kind *TemplateKind `json:"kind,omitempty"`
+			New  *struct {
+				Description     *string `json:"description,omitempty"`
+				EndpointID      *string `json:"endpointID,omitempty"`
+				EndpointName    *string `json:"endpointName,omitempty"`
+				EndpointType    *string `json:"endpointType,omitempty"`
+				Every           *string `json:"every,omitempty"`
+				MessageTemplate *string `json:"messageTemplate,omitempty"`
+				Name            *string `json:"name,omitempty"`
+				Offset          *string `json:"offset,omitempty"`
+				Status          *string `json:"status,omitempty"`
+				StatusRules     *[]struct {
+					CurrentLevel  *string `json:"currentLevel,omitempty"`
+					PreviousLevel *string `json:"previousLevel,omitempty"`
+				} `json:"statusRules,omitempty"`
+				TagRules *[]struct {
+					Key      *string `json:"key,omitempty"`
+					Operator *string `json:"operator,omitempty"`
+					Value    *string `json:"value,omitempty"`
+				} `json:"tagRules,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Description     *string `json:"description,omitempty"`
+				EndpointID      *string `json:"endpointID,omitempty"`
+				EndpointName    *string `json:"endpointName,omitempty"`
+				EndpointType    *string `json:"endpointType,omitempty"`
+				Every           *string `json:"every,omitempty"`
+				MessageTemplate *string `json:"messageTemplate,omitempty"`
+				Name            *string `json:"name,omitempty"`
+				Offset          *string `json:"offset,omitempty"`
+				Status          *string `json:"status,omitempty"`
+				StatusRules     *[]struct {
+					CurrentLevel  *string `json:"currentLevel,omitempty"`
+					PreviousLevel *string `json:"previousLevel,omitempty"`
+				} `json:"statusRules,omitempty"`
+				TagRules *[]struct {
+					Key      *string `json:"key,omitempty"`
+					Operator *string `json:"operator,omitempty"`
+					Value    *string `json:"value,omitempty"`
+				} `json:"tagRules,omitempty"`
+			} `json:"old,omitempty"`
+			StateStatus      *string `json:"stateStatus,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"notificationRules,omitempty"`
+		Tasks *[]struct {
+			Id   *string       `json:"id,omitempty"`
+			Kind *TemplateKind `json:"kind,omitempty"`
+			New  *struct {
+				Cron        *string `json:"cron,omitempty"`
+				Description *string `json:"description,omitempty"`
+				Every       *string `json:"every,omitempty"`
+				Name        *string `json:"name,omitempty"`
+				Offset      *string `json:"offset,omitempty"`
+				Query       *string `json:"query,omitempty"`
+				Status      *string `json:"status,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Cron        *string `json:"cron,omitempty"`
+				Description *string `json:"description,omitempty"`
+				Every       *string `json:"every,omitempty"`
+				Name        *string `json:"name,omitempty"`
+				Offset      *string `json:"offset,omitempty"`
+				Query       *string `json:"query,omitempty"`
+				Status      *string `json:"status,omitempty"`
+			} `json:"old,omitempty"`
+			StateStatus      *string `json:"stateStatus,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"tasks,omitempty"`
+		TelegrafConfigs *[]struct {
+			Id               *string          `json:"id,omitempty"`
+			Kind             *TemplateKind    `json:"kind,omitempty"`
+			New              *TelegrafRequest `json:"new,omitempty"`
+			Old              *TelegrafRequest `json:"old,omitempty"`
+			StateStatus      *string          `json:"stateStatus,omitempty"`
+			TemplateMetaName *string          `json:"templateMetaName,omitempty"`
+		} `json:"telegrafConfigs,omitempty"`
+		Variables *[]struct {
+			Id   *string       `json:"id,omitempty"`
+			Kind *TemplateKind `json:"kind,omitempty"`
+			New  *struct {
+				Args        *VariableProperties `json:"args,omitempty"`
+				Description *string             `json:"description,omitempty"`
+				Name        *string             `json:"name,omitempty"`
+			} `json:"new,omitempty"`
+			Old *struct {
+				Args        *VariableProperties `json:"args,omitempty"`
+				Description *string             `json:"description,omitempty"`
+				Name        *string             `json:"name,omitempty"`
+			} `json:"old,omitempty"`
+			StateStatus      *string `json:"stateStatus,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"variables,omitempty"`
+	} `json:"diff,omitempty"`
+	Errors *[]struct {
+		Fields  *[]string     `json:"fields,omitempty"`
+		Indexes *[]int        `json:"indexes,omitempty"`
+		Kind    *TemplateKind `json:"kind,omitempty"`
+		Reason  *string       `json:"reason,omitempty"`
+	} `json:"errors,omitempty"`
+	Sources *[]string `json:"sources,omitempty"`
+	StackID *string   `json:"stackID,omitempty"`
+	Summary *struct {
+		Buckets *[]struct {
+			Description       *string                 `json:"description,omitempty"`
+			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Id                *string                 `json:"id,omitempty"`
+			Kind              *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			Name              *string                 `json:"name,omitempty"`
+			OrgID             *string                 `json:"orgID,omitempty"`
+			RetentionPeriod   *int                    `json:"retentionPeriod,omitempty"`
+			TemplateMetaName  *string                 `json:"templateMetaName,omitempty"`
+		} `json:"buckets,omitempty"`
+		Checks *[]struct {
+			// Embedded struct due to allOf(#/components/schemas/CheckDiscriminator)
+			CheckDiscriminator
+			// Embedded fields due to inline allOf schema
+			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Kind              *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			TemplateMetaName  *string                 `json:"templateMetaName,omitempty"`
+		} `json:"checks,omitempty"`
+		Dashboards *[]struct {
+			Charts            *[]TemplateChart        `json:"charts,omitempty"`
+			Description       *string                 `json:"description,omitempty"`
+			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Id                *string                 `json:"id,omitempty"`
+			Kind              *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			Name              *string                 `json:"name,omitempty"`
+			OrgID             *string                 `json:"orgID,omitempty"`
+			TemplateMetaName  *string                 `json:"templateMetaName,omitempty"`
+		} `json:"dashboards,omitempty"`
+		LabelMappings *[]struct {
+			LabelID                  *string `json:"labelID,omitempty"`
+			LabelName                *string `json:"labelName,omitempty"`
+			LabelTemplateMetaName    *string `json:"labelTemplateMetaName,omitempty"`
+			ResourceID               *string `json:"resourceID,omitempty"`
+			ResourceName             *string `json:"resourceName,omitempty"`
+			ResourceTemplateMetaName *string `json:"resourceTemplateMetaName,omitempty"`
+			ResourceType             *string `json:"resourceType,omitempty"`
+			Status                   *string `json:"status,omitempty"`
+		} `json:"labelMappings,omitempty"`
+		Labels                *[]TemplateSummaryLabel `json:"labels,omitempty"`
+		MissingEnvRefs        *[]string               `json:"missingEnvRefs,omitempty"`
+		MissingSecrets        *[]string               `json:"missingSecrets,omitempty"`
+		NotificationEndpoints *[]struct {
+			// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscrimator)
+			NotificationEndpointDiscrimator
+			// Embedded fields due to inline allOf schema
+			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Kind              *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			TemplateMetaName  *string                 `json:"templateMetaName,omitempty"`
+		} `json:"notificationEndpoints,omitempty"`
+		NotificationRules *[]struct {
+			Description              *string                 `json:"description,omitempty"`
+			EndpointID               *string                 `json:"endpointID,omitempty"`
+			EndpointTemplateMetaName *string                 `json:"endpointTemplateMetaName,omitempty"`
+			EndpointType             *string                 `json:"endpointType,omitempty"`
+			EnvReferences            *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Every                    *string                 `json:"every,omitempty"`
+			Kind                     *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations        *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			MessageTemplate          *string                 `json:"messageTemplate,omitempty"`
+			Name                     *string                 `json:"name,omitempty"`
+			Offset                   *string                 `json:"offset,omitempty"`
+			Status                   *string                 `json:"status,omitempty"`
+			StatusRules              *[]struct {
+				CurrentLevel  *string `json:"currentLevel,omitempty"`
+				PreviousLevel *string `json:"previousLevel,omitempty"`
+			} `json:"statusRules,omitempty"`
+			TagRules *[]struct {
+				Key      *string `json:"key,omitempty"`
+				Operator *string `json:"operator,omitempty"`
+				Value    *string `json:"value,omitempty"`
+			} `json:"tagRules,omitempty"`
+			TemplateMetaName *string `json:"templateMetaName,omitempty"`
+		} `json:"notificationRules,omitempty"`
+		Tasks *[]struct {
+			Cron             *string                `json:"cron,omitempty"`
+			Description      *string                `json:"description,omitempty"`
+			EnvReferences    *TemplateEnvReferences `json:"envReferences,omitempty"`
+			Every            *string                `json:"every,omitempty"`
+			Id               *string                `json:"id,omitempty"`
+			Kind             *TemplateKind          `json:"kind,omitempty"`
+			Name             *string                `json:"name,omitempty"`
+			Offset           *string                `json:"offset,omitempty"`
+			Query            *string                `json:"query,omitempty"`
+			Status           *string                `json:"status,omitempty"`
+			TemplateMetaName *string                `json:"templateMetaName,omitempty"`
+		} `json:"tasks,omitempty"`
+		TelegrafConfigs *[]struct {
+			// Embedded struct due to allOf(#/components/schemas/TelegrafRequest)
+			TelegrafRequest
+			// Embedded fields due to inline allOf schema
+			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Kind              *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			TemplateMetaName  *string                 `json:"templateMetaName,omitempty"`
+		} `json:"telegrafConfigs,omitempty"`
+		Variables *[]struct {
+			Arguments         *VariableProperties     `json:"arguments,omitempty"`
+			Description       *string                 `json:"description,omitempty"`
+			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
+			Id                *string                 `json:"id,omitempty"`
+			Kind              *TemplateKind           `json:"kind,omitempty"`
+			LabelAssociations *[]TemplateSummaryLabel `json:"labelAssociations,omitempty"`
+			Name              *string                 `json:"name,omitempty"`
+			OrgID             *string                 `json:"orgID,omitempty"`
+			TemplateMetaName  *string                 `json:"templateMetaName,omitempty"`
+		} `json:"variables,omitempty"`
+	} `json:"summary,omitempty"`
+}
+
+// TemplateSummaryLabel defines model for TemplateSummaryLabel.
+type TemplateSummaryLabel struct {
+	EnvReferences *TemplateEnvReferences `json:"envReferences,omitempty"`
+	Id            *string                `json:"id,omitempty"`
+	Kind          *TemplateKind          `json:"kind,omitempty"`
+	Name          *string                `json:"name,omitempty"`
+	OrgID         *string                `json:"orgID,omitempty"`
+	Properties    *struct {
+		Color       *string `json:"color,omitempty"`
+		Description *string `json:"description,omitempty"`
+	} `json:"properties,omitempty"`
+	TemplateMetaName *string `json:"templateMetaName,omitempty"`
+}
 
 // TestStatement defines model for TestStatement.
 type TestStatement struct {
@@ -4336,8 +4404,9 @@ type XYViewProperties struct {
 	Axes Axes `json:"axes"`
 
 	// Colors define color encoding of data into a visualization
-	Colors []DashboardColor `json:"colors"`
-	Geom   XYGeom           `json:"geom"`
+	Colors         []DashboardColor                `json:"colors"`
+	Geom           XYGeom                          `json:"geom"`
+	HoverDimension *XYViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
 	Legend     Legend                   `json:"legend"`
@@ -4354,6 +4423,9 @@ type XYViewProperties struct {
 	XColumn           *string              `json:"xColumn,omitempty"`
 	YColumn           *string              `json:"yColumn,omitempty"`
 }
+
+// XYViewPropertiesHoverDimension defines model for XYViewProperties.HoverDimension.
+type XYViewPropertiesHoverDimension string
 
 // XYViewPropertiesPosition defines model for XYViewProperties.Position.
 type XYViewPropertiesPosition string
@@ -4652,7 +4724,7 @@ type GetDashboardsParams struct {
 	// The column to sort by.
 	SortBy *GetDashboardsParamsSortBy `json:"sortBy,omitempty"`
 
-	// List of dashboard IDs to return. If both `id and `owner` are specified, only `id` is used.
+	// List of dashboard IDs to return. If both `id` and `owner` are specified, only `id` is used.
 	Id *[]string `json:"id,omitempty"`
 
 	// The organization ID.
@@ -5280,54 +5352,6 @@ type PatchOrgsIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// PostOrgsIDInvitesJSONBody defines parameters for PostOrgsIDInvites.
-type PostOrgsIDInvitesJSONBody Invite
-
-// PostOrgsIDInvitesParams defines parameters for PostOrgsIDInvites.
-type PostOrgsIDInvitesParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// DeleteOrgsIDInviteIDParams defines parameters for DeleteOrgsIDInviteID.
-type DeleteOrgsIDInviteIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// PostOrgsIDInviteIDParams defines parameters for PostOrgsIDInviteID.
-type PostOrgsIDInviteIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetOrgsIDLabelsParams defines parameters for GetOrgsIDLabels.
-type GetOrgsIDLabelsParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// PostOrgsIDLabelsJSONBody defines parameters for PostOrgsIDLabels.
-type PostOrgsIDLabelsJSONBody LabelMapping
-
-// PostOrgsIDLabelsParams defines parameters for PostOrgsIDLabels.
-type PostOrgsIDLabelsParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// DeleteOrgsIDLabelsIDParams defines parameters for DeleteOrgsIDLabelsID.
-type DeleteOrgsIDLabelsIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
 // GetOrgsIDMembersParams defines parameters for GetOrgsIDMembers.
 type GetOrgsIDMembersParams struct {
 
@@ -5401,68 +5425,6 @@ type PostOrgsIDSecretsParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetCloudUsersParams defines parameters for GetCloudUsers.
-type GetCloudUsersParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// DeleteOrgsIDCloudUserIDParams defines parameters for DeleteOrgsIDCloudUserID.
-type DeleteOrgsIDCloudUserIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// CreatePkgJSONBody defines parameters for CreatePkg.
-type CreatePkgJSONBody PkgCreate
-
-// ApplyPkgJSONBody defines parameters for ApplyPkg.
-type ApplyPkgJSONBody PkgApply
-
-// ListStacksParams defines parameters for ListStacks.
-type ListStacksParams struct {
-
-	// The organization id of the stacks
-	OrgID string `json:"orgID"`
-
-	// A collection of names to filter the list by.
-	Name *string `json:"name,omitempty"`
-
-	// A collection of stackIDs to filter the list by.
-	StackID *string `json:"stackID,omitempty"`
-}
-
-// CreateStackJSONBody defines parameters for CreateStack.
-type CreateStackJSONBody struct {
-	Description *string   `json:"description,omitempty"`
-	Name        *string   `json:"name,omitempty"`
-	OrgID       *string   `json:"orgID,omitempty"`
-	Urls        *[]string `json:"urls,omitempty"`
-}
-
-// DeleteStackParams defines parameters for DeleteStack.
-type DeleteStackParams struct {
-
-	// The organization id of the user
-	OrgID string `json:"orgID"`
-}
-
-// UpdateStackJSONBody defines parameters for UpdateStack.
-type UpdateStackJSONBody struct {
-	Description *string   `json:"description,omitempty"`
-	Name        *string   `json:"name,omitempty"`
-	Urls        *[]string `json:"urls,omitempty"`
-}
-
-// ExportStackParams defines parameters for ExportStack.
-type ExportStackParams struct {
-
-	// The organization id of the user
-	OrgID string `json:"orgID"`
 }
 
 // PostQueryJSONBody defines parameters for PostQuery.
@@ -5775,6 +5737,46 @@ type GetSourcesIDHealthParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// ListStacksParams defines parameters for ListStacks.
+type ListStacksParams struct {
+
+	// The organization id of the stacks
+	OrgID string `json:"orgID"`
+
+	// A collection of names to filter the list by.
+	Name *string `json:"name,omitempty"`
+
+	// A collection of stackIDs to filter the list by.
+	StackID *string `json:"stackID,omitempty"`
+}
+
+// CreateStackJSONBody defines parameters for CreateStack.
+type CreateStackJSONBody struct {
+	Description *string   `json:"description,omitempty"`
+	Name        *string   `json:"name,omitempty"`
+	OrgID       *string   `json:"orgID,omitempty"`
+	Urls        *[]string `json:"urls,omitempty"`
+}
+
+// DeleteStackParams defines parameters for DeleteStack.
+type DeleteStackParams struct {
+
+	// The organization id of the user
+	OrgID string `json:"orgID"`
+}
+
+// UpdateStackJSONBody defines parameters for UpdateStack.
+type UpdateStackJSONBody struct {
+	AdditionalResources *[]struct {
+		Kind             string  `json:"kind"`
+		ResourceID       string  `json:"resourceID"`
+		TemplateMetaName *string `json:"templateMetaName,omitempty"`
+	} `json:"additionalResources,omitempty"`
+	Description  *string   `json:"description,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	TemplateURLs *[]string `json:"templateURLs,omitempty"`
 }
 
 // GetTasksParams defines parameters for GetTasks.
@@ -6108,6 +6110,12 @@ type DeleteTelegrafsIDOwnersIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// ApplyTemplateJSONBody defines parameters for ApplyTemplate.
+type ApplyTemplateJSONBody TemplateApply
+
+// ExportTemplateJSONBody defines parameters for ExportTemplate.
+type ExportTemplateJSONBody TemplateExport
+
 // GetUsersParams defines parameters for GetUsers.
 type GetUsersParams struct {
 
@@ -6397,12 +6405,6 @@ type PostOrgsJSONRequestBody PostOrgsJSONBody
 // PatchOrgsIDRequestBody defines body for PatchOrgsID for application/json ContentType.
 type PatchOrgsIDJSONRequestBody PatchOrgsIDJSONBody
 
-// PostOrgsIDInvitesRequestBody defines body for PostOrgsIDInvites for application/json ContentType.
-type PostOrgsIDInvitesJSONRequestBody PostOrgsIDInvitesJSONBody
-
-// PostOrgsIDLabelsRequestBody defines body for PostOrgsIDLabels for application/json ContentType.
-type PostOrgsIDLabelsJSONRequestBody PostOrgsIDLabelsJSONBody
-
 // PostOrgsIDMembersRequestBody defines body for PostOrgsIDMembers for application/json ContentType.
 type PostOrgsIDMembersJSONRequestBody PostOrgsIDMembersJSONBody
 
@@ -6414,18 +6416,6 @@ type PatchOrgsIDSecretsJSONRequestBody PatchOrgsIDSecretsJSONBody
 
 // PostOrgsIDSecretsRequestBody defines body for PostOrgsIDSecrets for application/json ContentType.
 type PostOrgsIDSecretsJSONRequestBody PostOrgsIDSecretsJSONBody
-
-// CreatePkgRequestBody defines body for CreatePkg for application/json ContentType.
-type CreatePkgJSONRequestBody CreatePkgJSONBody
-
-// ApplyPkgRequestBody defines body for ApplyPkg for application/json ContentType.
-type ApplyPkgJSONRequestBody ApplyPkgJSONBody
-
-// CreateStackRequestBody defines body for CreateStack for application/json ContentType.
-type CreateStackJSONRequestBody CreateStackJSONBody
-
-// UpdateStackRequestBody defines body for UpdateStack for application/json ContentType.
-type UpdateStackJSONRequestBody UpdateStackJSONBody
 
 // PostQueryRequestBody defines body for PostQuery for application/json ContentType.
 type PostQueryJSONRequestBody PostQueryJSONBody
@@ -6466,6 +6456,12 @@ type PostSourcesJSONRequestBody PostSourcesJSONBody
 // PatchSourcesIDRequestBody defines body for PatchSourcesID for application/json ContentType.
 type PatchSourcesIDJSONRequestBody PatchSourcesIDJSONBody
 
+// CreateStackRequestBody defines body for CreateStack for application/json ContentType.
+type CreateStackJSONRequestBody CreateStackJSONBody
+
+// UpdateStackRequestBody defines body for UpdateStack for application/json ContentType.
+type UpdateStackJSONRequestBody UpdateStackJSONBody
+
 // PostTasksRequestBody defines body for PostTasks for application/json ContentType.
 type PostTasksJSONRequestBody PostTasksJSONBody
 
@@ -6498,6 +6494,12 @@ type PostTelegrafsIDMembersJSONRequestBody PostTelegrafsIDMembersJSONBody
 
 // PostTelegrafsIDOwnersRequestBody defines body for PostTelegrafsIDOwners for application/json ContentType.
 type PostTelegrafsIDOwnersJSONRequestBody PostTelegrafsIDOwnersJSONBody
+
+// ApplyTemplateRequestBody defines body for ApplyTemplate for application/json ContentType.
+type ApplyTemplateJSONRequestBody ApplyTemplateJSONBody
+
+// ExportTemplateRequestBody defines body for ExportTemplate for application/json ContentType.
+type ExportTemplateJSONRequestBody ExportTemplateJSONBody
 
 // PostUsersRequestBody defines body for PostUsers for application/json ContentType.
 type PostUsersJSONRequestBody PostUsersJSONBody
@@ -6891,59 +6893,6 @@ func (a MapVariableProperties_Values) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
-// Getter for additional properties for PkgApply_Secrets. Returns the specified
-// element and whether it was found
-func (a PkgApply_Secrets) Get(fieldName string) (value string, found bool) {
-	if a.AdditionalProperties != nil {
-		value, found = a.AdditionalProperties[fieldName]
-	}
-	return
-}
-
-// Setter for additional properties for PkgApply_Secrets
-func (a *PkgApply_Secrets) Set(fieldName string, value string) {
-	if a.AdditionalProperties == nil {
-		a.AdditionalProperties = make(map[string]string)
-	}
-	a.AdditionalProperties[fieldName] = value
-}
-
-// Override default JSON handling for PkgApply_Secrets to handle AdditionalProperties
-func (a *PkgApply_Secrets) UnmarshalJSON(b []byte) error {
-	object := make(map[string]json.RawMessage)
-	err := json.Unmarshal(b, &object)
-	if err != nil {
-		return err
-	}
-
-	if len(object) != 0 {
-		a.AdditionalProperties = make(map[string]string)
-		for fieldName, fieldBuf := range object {
-			var fieldVal string
-			err := json.Unmarshal(fieldBuf, &fieldVal)
-			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
-			}
-			a.AdditionalProperties[fieldName] = fieldVal
-		}
-	}
-	return nil
-}
-
-// Override default JSON handling for PkgApply_Secrets to handle AdditionalProperties
-func (a PkgApply_Secrets) MarshalJSON() ([]byte, error) {
-	var err error
-	object := make(map[string]json.RawMessage)
-
-	for fieldName, field := range a.AdditionalProperties {
-		object[fieldName], err = json.Marshal(field)
-		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
-		}
-	}
-	return json.Marshal(object)
-}
-
 // Getter for additional properties for Secrets. Returns the specified
 // element and whether it was found
 func (a Secrets) Get(fieldName string) (value string, found bool) {
@@ -6985,6 +6934,112 @@ func (a *Secrets) UnmarshalJSON(b []byte) error {
 
 // Override default JSON handling for Secrets to handle AdditionalProperties
 func (a Secrets) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for TemplateApply_EnvRefs. Returns the specified
+// element and whether it was found
+func (a TemplateApply_EnvRefs) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for TemplateApply_EnvRefs
+func (a *TemplateApply_EnvRefs) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for TemplateApply_EnvRefs to handle AdditionalProperties
+func (a *TemplateApply_EnvRefs) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for TemplateApply_EnvRefs to handle AdditionalProperties
+func (a TemplateApply_EnvRefs) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for TemplateApply_Secrets. Returns the specified
+// element and whether it was found
+func (a TemplateApply_Secrets) Get(fieldName string) (value string, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for TemplateApply_Secrets
+func (a *TemplateApply_Secrets) Set(fieldName string, value string) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]string)
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for TemplateApply_Secrets to handle AdditionalProperties
+func (a *TemplateApply_Secrets) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]string)
+		for fieldName, fieldBuf := range object {
+			var fieldVal string
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for TemplateApply_Secrets to handle AdditionalProperties
+func (a TemplateApply_Secrets) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
 

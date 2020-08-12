@@ -167,10 +167,14 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 	return response.JSON200, nil
 }
 
+func createKey(org, bucket string) string {
+	return org + "\t" + bucket
+}
+
 func (c *clientImpl) WriteAPI(org, bucket string) api.WriteAPI {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	key := org + "_" + bucket
+	key := createKey(org, bucket)
 	if _, ok := c.writeAPIs[key]; !ok {
 		w := api.NewWriteAPI(org, bucket, c.httpService, c.options.writeOptions)
 		c.writeAPIs[key] = w
@@ -181,7 +185,7 @@ func (c *clientImpl) WriteAPI(org, bucket string) api.WriteAPI {
 func (c *clientImpl) WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	key := org + "_" + bucket
+	key := createKey(org, bucket)
 	if _, ok := c.syncWriteAPIs[key]; !ok {
 		w := api.NewWriteAPIBlocking(org, bucket, c.httpService, c.options.writeOptions)
 		c.syncWriteAPIs[key] = w

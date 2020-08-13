@@ -30,7 +30,9 @@ func (q *queue) pop() *Batch {
 	el := q.list.Front()
 	if el != nil {
 		q.list.Remove(el)
-		return el.Value.(*Batch)
+		batch := el.Value.(*Batch)
+		batch.evicted = true
+		return batch
 	}
 	return nil
 }

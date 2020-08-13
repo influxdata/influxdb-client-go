@@ -14,12 +14,6 @@ type Options struct {
 	batchSize uint
 	// Interval, in ms, in which is buffer flushed if it has not been already written (by reaching batch size) . Default 1000ms
 	flushInterval uint
-	// Default retry interval in ms, if not sent by server. Default 1000ms
-	retryInterval uint
-	// Maximum count of retry attempts of failed writes
-	maxRetries uint
-	// Maximum number of points to keep for retry. Should be multiple of BatchSize. Default 10,000
-	retryBufferLimit uint
 	// Precision to use in writes for timestamp. In unit of duration: time.Nanosecond, time.Microsecond, time.Millisecond, time.Second
 	// Default time.Nanosecond
 	precision time.Duration
@@ -27,6 +21,14 @@ type Options struct {
 	useGZip bool
 	// Tags added to each point during writing. If a point already has a tag with the same key, it is left unchanged.
 	defaultTags map[string]string
+	// Default retry interval in ms, if not sent by server. Default 5,000ms
+	retryInterval uint
+	// Maximum count of retry attempts of failed writes
+	maxRetries uint
+	// Maximum number of points to keep for retry. Should be multiple of BatchSize. Default 50,000
+	retryBufferLimit uint
+	// Maximum retry interval, default 5min (300,000ms)
+	maxRetryInterval uint
 }
 
 // BatchSize returns size of batch
@@ -84,6 +86,17 @@ func (o *Options) SetRetryBufferLimit(retryBufferLimit uint) *Options {
 	return o
 }
 
+// MaxRetryInterval return maximum retry interval in ms. Default 5min.
+func (o *Options) MaxRetryInterval() uint {
+	return o.maxRetryInterval
+}
+
+// SetMaxRetryInterval set maximum retry interval in ms
+func (o *Options) SetMaxRetryInterval(maxRetryIntervalMs uint) *Options {
+	o.maxRetryInterval = maxRetryIntervalMs
+	return o
+}
+
 // Precision returns time precision for writes
 func (o *Options) Precision() time.Duration {
 	return o.precision
@@ -124,5 +137,5 @@ func (o *Options) DefaultTags() map[string]string {
 
 // DefaultOptions returns Options object with default values
 func DefaultOptions() *Options {
-	return &Options{batchSize: 5000, maxRetries: 3, retryInterval: 1000, flushInterval: 1000, precision: time.Nanosecond, useGZip: false, retryBufferLimit: 10000, defaultTags: make(map[string]string)}
+	return &Options{batchSize: 5000, maxRetries: 3, retryInterval: 5000, maxRetryInterval: 300000, flushInterval: 1000, precision: time.Nanosecond, useGZip: false, retryBufferLimit: 50000, defaultTags: make(map[string]string)}
 }

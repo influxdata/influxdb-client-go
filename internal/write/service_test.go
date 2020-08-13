@@ -5,10 +5,16 @@
 package write
 
 import (
+	"context"
+	"testing"
+	"time"
+
 	"github.com/influxdata/influxdb-client-go/api/write"
+	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
+	"github.com/influxdata/influxdb-client-go/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestAddDefaultTags(t *testing.T) {
@@ -49,4 +55,158 @@ func TestAddDefaultTags(t *testing.T) {
 	assert.Equal(t, "d,dt1=val1,id=1,zdt=val10 i=-1i\n", s)
 
 	assert.Len(t, p.TagList(), 2)
+}
+
+func TestDefaultRetryDelay(t *testing.T) {
+	log.Log.SetDebugLevel(4)
+	hs := test.NewTestService(t, "http://localhost:9999")
+	opts := write.DefaultOptions()
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+	hs.SetReplyError(&ihttp.Error{
+		StatusCode: 502,
+	})
+	b1 := NewBatch("", opts.RetryInterval())
+	err := srv.HandleWrite(ctx, b1)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(5000), b1.retryDelay)
+	assert.Equal(t, 1, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b2 := NewBatch("", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b2)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(25000), b1.retryDelay)
+	assert.Equal(t, 2, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b3 := NewBatch("", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b3)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(125000), b1.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
+}
+
+func TestCustomRetryDelayWithFLush(t *testing.T) {
+	log.Log.SetDebugLevel(4)
+	hs := test.NewTestService(t, "http://localhost:9999")
+	opts := write.DefaultOptions().SetRetryInterval(1)
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+	hs.SetReplyError(&ihttp.Error{
+		StatusCode: 429,
+	})
+	b1 := NewBatch("1\n", opts.RetryInterval())
+	err := srv.HandleWrite(ctx, b1)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(1), b1.retryDelay)
+	assert.Equal(t, 1, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b2 := NewBatch("2\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b2)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(5), b1.retryDelay)
+	assert.Equal(t, 2, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b3 := NewBatch("3\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b3)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(25), b1.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
+
+	// let write pass and it will clear queue
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	hs.SetReplyError(nil)
+	err = srv.HandleWrite(ctx, NewBatch("4\n", opts.RetryInterval()))
+	assert.Nil(t, err)
+	assert.Equal(t, 0, srv.retryQueue.list.Len())
+	require.Len(t, hs.Lines(), 4)
+	assert.Equal(t, "1", hs.Lines()[0])
+	assert.Equal(t, "2", hs.Lines()[1])
+	assert.Equal(t, "3", hs.Lines()[2])
+	assert.Equal(t, "4", hs.Lines()[3])
+}
+
+func TestBufferOverwrite(t *testing.T) {
+	log.Log.SetDebugLevel(4)
+	hs := test.NewTestService(t, "http://localhost:9999")
+	//
+	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+	hs.SetReplyError(&ihttp.Error{
+		StatusCode: 429,
+	})
+	b1 := NewBatch("1\n", opts.RetryInterval())
+	err := srv.HandleWrite(ctx, b1)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(1), b1.retryDelay)
+	assert.Equal(t, 1, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b2 := NewBatch("2\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b2)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(5), b1.retryDelay)
+	assert.Equal(t, 2, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b3 := NewBatch("3\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b3)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(25), b1.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
+
+	// now it should drop b1
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b4 := NewBatch("4\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b4)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(1), b2.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
+
+	// let write pass and it will clear queue
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	hs.SetReplyError(nil)
+	err = srv.HandleWrite(ctx, NewBatch("5\n", opts.RetryInterval()))
+	assert.Nil(t, err)
+	assert.Equal(t, 0, srv.retryQueue.list.Len())
+	require.Len(t, hs.Lines(), 4)
+	assert.Equal(t, "2", hs.Lines()[0])
+	assert.Equal(t, "3", hs.Lines()[1])
+	assert.Equal(t, "4", hs.Lines()[2])
+	assert.Equal(t, "5", hs.Lines()[3])
+}
+
+func TestMaxRetryInterval(t *testing.T) {
+	log.Log.SetDebugLevel(4)
+	hs := test.NewTestService(t, "http://localhost:9999")
+	//
+	opts := write.DefaultOptions().SetRetryInterval(1).SetMaxRetryInterval(10)
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+	hs.SetReplyError(&ihttp.Error{
+		StatusCode: 503,
+	})
+	b1 := NewBatch("1\n", opts.RetryInterval())
+	err := srv.HandleWrite(ctx, b1)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(1), b1.retryDelay)
+	assert.Equal(t, 1, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b2 := NewBatch("2\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b2)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(5), b1.retryDelay)
+	assert.Equal(t, 2, srv.retryQueue.list.Len())
+
+	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	b3 := NewBatch("3\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b3)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(10), b1.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
 }

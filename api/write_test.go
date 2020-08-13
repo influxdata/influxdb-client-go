@@ -5,13 +5,8 @@
 package api
 
 import (
-	"compress/gzip"
-	"context"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"math/rand"
-	"net/http"
 	"strings"
 	"sync"
 	"testing"
@@ -20,123 +15,10 @@ import (
 	"github.com/influxdata/influxdb-client-go/api/write"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/log"
+	"github.com/influxdata/influxdb-client-go/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-type testHTTPService struct {
-	serverURL      string
-	authorization  string
-	lines          []string
-	t              *testing.T
-	wasGzip        bool
-	requestHandler func(c *testHTTPService, url string, body io.Reader) error
-	replyError     *ihttp.Error
-	lock           sync.Mutex
-}
-
-func (t *testHTTPService) ServerURL() string {
-	return t.serverURL
-}
-
-func (t *testHTTPService) ServerAPIURL() string {
-	return t.serverURL
-}
-
-func (t *testHTTPService) Authorization() string {
-	return t.authorization
-}
-
-func (t *testHTTPService) HTTPClient() *http.Client {
-	return nil
-}
-
-func (t *testHTTPService) Close() {
-	t.lock.Lock()
-	if len(t.lines) > 0 {
-		t.lines = t.lines[:0]
-	}
-	t.wasGzip = false
-	t.replyError = nil
-	t.requestHandler = nil
-	t.lock.Unlock()
-}
-
-func (t *testHTTPService) ReplyError() *ihttp.Error {
-	t.lock.Lock()
-	defer t.lock.Unlock()
-	return t.replyError
-}
-
-func (t *testHTTPService) SetAuthorization(_ string) {
-
-}
-func (t *testHTTPService) GetRequest(_ context.Context, _ string, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
-	return nil
-}
-func (t *testHTTPService) DoHTTPRequest(_ *http.Request, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
-	return nil
-}
-
-func (t *testHTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ ihttp.RequestCallback) (*http.Response, error) {
-	return nil, nil
-}
-
-func (t *testHTTPService) PostRequest(_ context.Context, url string, body io.Reader, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
-	req, err := http.NewRequest("POST", url, nil)
-	if err != nil {
-		return ihttp.NewError(err)
-	}
-	if requestCallback != nil {
-		requestCallback(req)
-	}
-	if req.Header.Get("Content-Encoding") == "gzip" {
-		body, _ = gzip.NewReader(body)
-		t.wasGzip = true
-	}
-	assert.Equal(t.t, fmt.Sprintf("%swrite?bucket=my-bucket&org=my-org&precision=ns", t.serverURL), url)
-
-	if t.ReplyError() != nil {
-		return t.ReplyError()
-	}
-	if t.requestHandler != nil {
-		err = t.requestHandler(t, url, body)
-	} else {
-		err = t.decodeLines(body)
-	}
-
-	if err != nil {
-		return ihttp.NewError(err)
-	} else {
-		return nil
-	}
-}
-
-func (t *testHTTPService) decodeLines(body io.Reader) error {
-	bytes, err := ioutil.ReadAll(body)
-	if err != nil {
-		return err
-	}
-	lines := strings.Split(string(bytes), "\n")
-	lines = lines[:len(lines)-1]
-	t.lock.Lock()
-	t.lines = append(t.lines, lines...)
-	t.lock.Unlock()
-	return nil
-}
-
-func (t *testHTTPService) Lines() []string {
-	t.lock.Lock()
-	defer t.lock.Unlock()
-	return t.lines
-}
-
-func newTestService(t *testing.T, serverURL string) *testHTTPService {
-	return &testHTTPService{
-		t:         t,
-		serverURL: serverURL + "/api/v2/",
-	}
-}
 
 func genPoints(num int) []*write.Point {
 	points := make([]*write.Point, num)
@@ -182,7 +64,7 @@ func genRecords(num int) []string {
 }
 
 func TestWriteAPIWriteDefaultTag(t *testing.T) {
-	service := newTestService(t, "http://localhost:8888")
+	service := test.NewTestService(t, "http://localhost:8888")
 	opts := write.DefaultOptions().
 		SetBatchSize(1)
 	opts.AddDefaultTag("dft", "a")
@@ -201,7 +83,7 @@ func TestWriteAPIWriteDefaultTag(t *testing.T) {
 }
 
 func TestWriteAPIImpl_Write(t *testing.T) {
-	service := newTestService(t, "http://localhost:8888")
+	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	points := genPoints(10)
 	for _, p := range points {
@@ -218,7 +100,7 @@ func TestWriteAPIImpl_Write(t *testing.T) {
 }
 
 func TestGzipWithFlushing(t *testing.T) {
-	service := newTestService(t, "http://localhost:8888")
+	service := test.NewTestService(t, "http://localhost:8888")
 	log.Log.SetDebugLevel(4)
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
 	points := genPoints(5)
@@ -230,7 +112,7 @@ func TestGzipWithFlushing(t *testing.T) {
 	end := time.Now()
 	fmt.Printf("Flash duration: %dns\n", end.Sub(start).Nanoseconds())
 	assert.Len(t, service.Lines(), 5)
-	assert.True(t, service.wasGzip)
+	assert.True(t, service.WasGzip())
 
 	service.Close()
 	writeAPI.writeOptions.SetUseGZip(false)
@@ -239,12 +121,12 @@ func TestGzipWithFlushing(t *testing.T) {
 	}
 	writeAPI.waitForFlushing()
 	assert.Len(t, service.Lines(), 5)
-	assert.False(t, service.wasGzip)
+	assert.False(t, service.WasGzip())
 
 	writeAPI.Close()
 }
 func TestFlushInterval(t *testing.T) {
-	service := newTestService(t, "http://localhost:8888")
+	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(10).SetFlushInterval(500))
 	points := genPoints(5)
 	for _, p := range points {
@@ -268,7 +150,7 @@ func TestFlushInterval(t *testing.T) {
 }
 
 func TestRetry(t *testing.T) {
-	service := newTestService(t, "http://localhost:8888")
+	service := test.NewTestService(t, "http://localhost:8888")
 	log.Log.SetDebugLevel(5)
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetRetryInterval(10000))
 	points := genPoints(15)
@@ -278,10 +160,10 @@ func TestRetry(t *testing.T) {
 	writeAPI.waitForFlushing()
 	require.Len(t, service.Lines(), 5)
 	service.Close()
-	service.replyError = &ihttp.Error{
+	service.SetReplyError(&ihttp.Error{
 		StatusCode: 429,
 		RetryAfter: 5,
-	}
+	})
 	for i := 0; i < 5; i++ {
 		writeAPI.WritePoint(points[i])
 	}
@@ -305,13 +187,13 @@ func TestRetry(t *testing.T) {
 }
 
 func TestWriteError(t *testing.T) {
-	service := newTestService(t, "http://localhost:8888")
+	service := test.NewTestService(t, "http://localhost:8888")
 	log.Log.SetDebugLevel(3)
-	service.replyError = &ihttp.Error{
+	service.SetReplyError(&ihttp.Error{
 		StatusCode: 400,
 		Code:       "write",
 		Message:    "error",
-	}
+	})
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	errCh := writeAPI.Errors()
 	var recErr error

@@ -78,6 +78,17 @@ func (o *Options) SetRetryBufferLimit(retryBufferLimit uint) *Options {
 	return o
 }
 
+// MaxRetryInterval return maximum retry interval in ms. Default 5min.
+func (o *Options) MaxRetryInterval() uint {
+	return o.WriteOptions().MaxRetryInterval()
+}
+
+// SetMaxRetryInterval set maximum retry interval in ms
+func (o *Options) SetMaxRetryInterval(maxRetryIntervalMs uint) *Options {
+	o.WriteOptions().SetMaxRetryInterval(maxRetryIntervalMs)
+	return o
+}
+
 // LogLevel returns log level
 func (o *Options) LogLevel() uint {
 	return o.logLevel

@@ -11,8 +11,8 @@ import (
 
 	"github.com/influxdata/influxdb-client-go/api/write"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/influxdata/influxdb-client-go/internal/log"
 	"github.com/influxdata/influxdb-client-go/internal/test"
+	"github.com/influxdata/influxdb-client-go/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -58,7 +58,7 @@ func TestAddDefaultTags(t *testing.T) {
 }
 
 func TestDefaultRetryDelay(t *testing.T) {
-	log.Log.SetDebugLevel(4)
+	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:9999")
 	opts := write.DefaultOptions()
 	ctx := context.Background()
@@ -88,7 +88,7 @@ func TestDefaultRetryDelay(t *testing.T) {
 }
 
 func TestCustomRetryDelayWithFLush(t *testing.T) {
-	log.Log.SetDebugLevel(4)
+	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:9999")
 	opts := write.DefaultOptions().SetRetryInterval(1)
 	ctx := context.Background()
@@ -130,7 +130,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 }
 
 func TestBufferOverwrite(t *testing.T) {
-	log.Log.SetDebugLevel(4)
+	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:9999")
 	//
 	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
@@ -181,7 +181,7 @@ func TestBufferOverwrite(t *testing.T) {
 }
 
 func TestMaxRetryInterval(t *testing.T) {
-	log.Log.SetDebugLevel(4)
+	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:9999")
 	//
 	opts := write.DefaultOptions().SetRetryInterval(1).SetMaxRetryInterval(10)

@@ -59,27 +59,27 @@ func NewService(org string, bucket string, httpService ihttp.Service, options *w
 }
 
 func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
-	log.Log.Debug("Write proc: received write request")
+	log.Debug("Write proc: received write request")
 	batchToWrite := batch
 	retrying := false
 	for {
 		select {
 		case <-ctx.Done():
-			log.Log.Debug("Write proc: ctx cancelled req")
+			log.Debug("Write proc: ctx cancelled req")
 			return ctx.Err()
 		default:
 		}
 		if !w.retryQueue.isEmpty() {
-			log.Log.Debug("Write proc: taking batch from retry queue")
+			log.Debug("Write proc: taking batch from retry queue")
 			if !retrying {
 				b := w.retryQueue.first()
 				// Can we write? In case of retryable error we must wait a bit
 				if w.lastWriteAttempt.IsZero() || time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(b.retryDelay))) {
 					retrying = true
 				} else {
-					log.Log.Warn("Write proc: cannot write yet, storing batch to queue")
+					log.Warn("Write proc: cannot write yet, storing batch to queue")
 					if w.retryQueue.push(batch) {
-						log.Log.Warn("Write proc: Retry buffer full, discarding oldest batch")
+						log.Warn("Write proc: Retry buffer full, discarding oldest batch")
 					}
 					batchToWrite = nil
 				}
@@ -89,7 +89,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 				batchToWrite.retryAttempts++
 				if batch != nil { //store actual batch to retry queue
 					if w.retryQueue.push(batch) {
-						log.Log.Warn("Write proc: Retry buffer full, discarding oldest batch")
+						log.Warn("Write proc: Retry buffer full, discarding oldest batch")
 					}
 					batch = nil
 				}
@@ -100,7 +100,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 			perror := w.WriteBatch(ctx, batchToWrite)
 			if perror != nil {
 				if perror.StatusCode >= http.StatusTooManyRequests {
-					log.Log.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
+					log.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
 					if perror.RetryAfter > 0 {
 						batchToWrite.retryDelay = perror.RetryAfter * 1000
 					} else {
@@ -112,16 +112,16 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 					}
 					if batchToWrite.retryAttempts == 0 {
 						if w.retryQueue.push(batch) {
-							log.Log.Warn("Retry buffer full, discarding oldest batch")
+							log.Warn("Retry buffer full, discarding oldest batch")
 						}
 					} else if batchToWrite.retryAttempts == w.writeOptions.MaxRetries() {
-						log.Log.Warn("Reached maximum number of retries, discarding batch")
+						log.Warn("Reached maximum number of retries, discarding batch")
 						if !batchToWrite.evicted {
 							w.retryQueue.pop()
 						}
 					}
 				} else {
-					log.Log.Errorf("Write error: %s\n", perror.Error())
+					log.Errorf("Write error: %s\n", perror.Error())
 				}
 				return perror
 			} else {
@@ -140,12 +140,12 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *ihttp.Error {
 	wURL, err := w.WriteURL()
 	if err != nil {
-		log.Log.Errorf("%s\n", err.Error())
+		log.Errorf("%s\n", err.Error())
 		return ihttp.NewError(err)
 	}
 	var body io.Reader
 	body = strings.NewReader(batch.batch)
-	log.Log.Debugf("Writing batch: %s", batch.batch)
+	log.Debugf("Writing batch: %s", batch.batch)
 	if w.writeOptions.UseGZip() {
 		body, err = gzip.CompressWithGzip(body)
 		if err != nil {
@@ -163,7 +163,6 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *ihttp.Error {
 		// _ = r.Body.Close()
 		return nil
 	})
-
 	return perror
 }
 

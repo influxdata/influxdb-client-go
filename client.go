@@ -15,7 +15,8 @@ import (
 	"github.com/influxdata/influxdb-client-go/api"
 	"github.com/influxdata/influxdb-client-go/domain"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/influxdata/influxdb-client-go/internal/log"
+	ilog "github.com/influxdata/influxdb-client-go/internal/log"
+	"github.com/influxdata/influxdb-client-go/log"
 )
 
 // Client provides API to communicate with InfluxDBServer.
@@ -101,8 +102,10 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		httpService:   service,
 		apiClient:     domain.NewClientWithResponses(service),
 	}
-	log.Log.SetDebugLevel(client.Options().LogLevel())
-	log.Log.Infof("Using URL '%s', token '%s'", serverURL, authToken)
+	if log.Log != nil {
+		log.Log.SetLogLevel(options.LogLevel())
+	}
+	ilog.Infof("Using URL '%s', token '%s'", serverURL, authToken)
 	return client
 }
 func (c *clientImpl) Options() *Options {

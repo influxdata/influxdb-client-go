@@ -14,8 +14,8 @@ import (
 
 	"github.com/influxdata/influxdb-client-go/api/write"
 	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/influxdata/influxdb-client-go/internal/log"
 	"github.com/influxdata/influxdb-client-go/internal/test"
+	"github.com/influxdata/influxdb-client-go/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -101,7 +101,7 @@ func TestWriteAPIImpl_Write(t *testing.T) {
 
 func TestGzipWithFlushing(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
-	log.Log.SetDebugLevel(4)
+	log.Log.SetLogLevel(log.DebugLevel)
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
 	points := genPoints(5)
 	for _, p := range points {
@@ -151,7 +151,7 @@ func TestFlushInterval(t *testing.T) {
 
 func TestRetry(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
-	log.Log.SetDebugLevel(5)
+	log.Log.SetLogLevel(log.DebugLevel)
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetRetryInterval(10000))
 	points := genPoints(15)
 	for i := 0; i < 5; i++ {
@@ -188,7 +188,7 @@ func TestRetry(t *testing.T) {
 
 func TestWriteError(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
-	log.Log.SetDebugLevel(3)
+	log.Log.SetLogLevel(log.DebugLevel)
 	service.SetReplyError(&ihttp.Error{
 		StatusCode: 400,
 		Code:       "write",

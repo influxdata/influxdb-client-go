@@ -16,6 +16,7 @@ import (
 	"strconv"
 
 	http2 "github.com/influxdata/influxdb-client-go/api/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
 )
 
 // RequestCallback defines function called after a request is created before any call
@@ -59,7 +60,7 @@ func NewService(serverURL, authorization string, httpOptions *http2.Options) Ser
 		serverAPIURL:  serverAPIURL,
 		serverURL:     serverURL,
 		authorization: authorization,
-		client: httpOptions.HTTPClient(),
+		client:        httpOptions.HTTPClient(),
 	}
 }
 
@@ -114,6 +115,7 @@ func (s *service) DoHTTPRequest(req *http.Request, requestCallback RequestCallba
 }
 
 func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error) {
+	log.Infof("HTTP %s req to %s", req.Method, req.URL.String())
 	req.Header.Set("Authorization", s.authorization)
 	req.Header.Set("User-Agent", UserAgent)
 	if requestCallback != nil {

@@ -83,8 +83,15 @@ func (o *Options) LogLevel() uint {
 	return o.logLevel
 }
 
-// SetLogLevel set level to filter log messages. Each level mean to log all categories bellow. 0 error, 1 - warning, 2 - info, 3 - debug
-// Debug level will print also content of writen batches
+// SetLogLevel set level to filter log messages. Each level mean to log all categories bellow. Default is ErrorLevel.
+// There are four level constant int the log package in this library:
+//   - ErrorLevel
+//   - WarningLevel
+//   - InfoLevel
+//   - DebugLevel
+// The DebugLevel will print also content of writen batches, queries.
+// The InfoLevel prints HTTP requests info, among others.
+// Set log.Log to nil in order to completely disable logging.
 func (o *Options) SetLogLevel(logLevel uint) *Options {
 	o.logLevel = logLevel
 	return o

@@ -94,7 +94,7 @@ func (w *WriteAPIImpl) waitForFlushing() {
 		if writeBuffInfo.writeBuffLen == 0 {
 			break
 		}
-		log.Log.Info("Waiting buffer is flushed")
+		log.Info("Waiting buffer is flushed")
 		time.Sleep(time.Millisecond)
 	}
 	for {
@@ -103,13 +103,13 @@ func (w *WriteAPIImpl) waitForFlushing() {
 		if writeBuffInfo.writeBuffLen == 0 {
 			break
 		}
-		log.Log.Info("Waiting buffer is flushed")
+		log.Info("Waiting buffer is flushed")
 		time.Sleep(time.Millisecond)
 	}
 }
 
 func (w *WriteAPIImpl) bufferProc() {
-	log.Log.Info("Buffer proc started")
+	log.Info("Buffer proc started")
 	ticker := time.NewTicker(time.Duration(w.writeOptions.FlushInterval()) * time.Millisecond)
 x:
 	for {
@@ -132,13 +132,13 @@ x:
 			w.bufferInfoCh <- buffInfo
 		}
 	}
-	log.Log.Info("Buffer proc finished")
+	log.Info("Buffer proc finished")
 	w.doneCh <- struct{}{}
 }
 
 func (w *WriteAPIImpl) flushBuffer() {
 	if len(w.writeBuffer) > 0 {
-		log.Log.Info("sending batch")
+		log.Info("sending batch")
 		batch := iwrite.NewBatch(buffer(w.writeBuffer), w.writeOptions.RetryInterval())
 		w.writeCh <- batch
 		w.writeBuffer = w.writeBuffer[:0]
@@ -146,7 +146,7 @@ func (w *WriteAPIImpl) flushBuffer() {
 }
 
 func (w *WriteAPIImpl) writeProc() {
-	log.Log.Info("Write proc started")
+	log.Info("Write proc started")
 x:
 	for {
 		select {
@@ -156,14 +156,14 @@ x:
 				w.errCh <- err
 			}
 		case <-w.writeStop:
-			log.Log.Info("Write proc: received stop")
+			log.Info("Write proc: received stop")
 			break x
 		case buffInfo := <-w.writeInfoCh:
 			buffInfo.writeBuffLen = len(w.writeCh)
 			w.writeInfoCh <- buffInfo
 		}
 	}
-	log.Log.Info("Write proc finished")
+	log.Info("Write proc finished")
 	w.doneCh <- struct{}{}
 }
 
@@ -205,7 +205,7 @@ func (w *WriteAPIImpl) WriteRecord(line string) {
 func (w *WriteAPIImpl) WritePoint(point *write.Point) {
 	line, err := w.service.EncodePoints(point)
 	if err != nil {
-		log.Log.Errorf("point encoding error: %s\n", err.Error())
+		log.Errorf("point encoding error: %s\n", err.Error())
 	} else {
 		w.bufferCh <- line
 	}

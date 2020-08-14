@@ -13,8 +13,8 @@ import (
 	"sync"
 
 	"github.com/influxdata/influxdb-client-go/api"
+	"github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/domain"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	ilog "github.com/influxdata/influxdb-client-go/internal/log"
 	"github.com/influxdata/influxdb-client-go/log"
 )
@@ -39,6 +39,8 @@ type Client interface {
 	Options() *Options
 	// ServerURL returns the url of the server url client talks to
 	ServerURL() string
+	// HTTPService returns underlying HTTP service object used by client
+	HTTPService() http.Service
 	// WriteAPI returns the asynchronous, non-blocking, Write client
 	WriteAPI(org, bucket string) api.WriteAPI
 	// WriteAPIBlocking returns the synchronous, blocking, Write client
@@ -66,7 +68,7 @@ type clientImpl struct {
 	writeAPIs     map[string]api.WriteAPI
 	syncWriteAPIs map[string]api.WriteAPIBlocking
 	lock          sync.Mutex
-	httpService   ihttp.Service
+	httpService   http.Service
 	apiClient     *domain.ClientWithResponses
 	authAPI       api.AuthorizationsAPI
 	orgAPI        api.OrganizationsAPI
@@ -93,7 +95,7 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		// For subsequent path parts concatenation, url has to end with '/'
 		normServerURL = serverURL + "/"
 	}
-	service := ihttp.NewService(normServerURL, "Token "+authToken, options.httpOptions)
+	service := http.NewService(normServerURL, "Token "+authToken, options.httpOptions)
 	client := &clientImpl{
 		serverURL:     serverURL,
 		options:       options,
@@ -114,6 +116,10 @@ func (c *clientImpl) Options() *Options {
 
 func (c *clientImpl) ServerURL() string {
 	return c.serverURL
+}
+
+func (c *clientImpl) HTTPService() http.Service {
+	return c.httpService
 }
 
 func (c *clientImpl) Ready(ctx context.Context) (bool, error) {

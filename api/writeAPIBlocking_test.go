@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -48,7 +48,7 @@ func TestWriteRecord(t *testing.T) {
 	require.Nil(t, err)
 	require.Len(t, service.Lines(), 0)
 
-	service.SetReplyError(&http.Error{Code: "invalid", Message: "data"})
+	service.SetReplyError(&http2.Error{Code: "invalid", Message: "data"})
 	err = writeAPI.WriteRecord(context.Background(), lines...)
 	require.NotNil(t, err)
 	require.Equal(t, "invalid: data", err.Error())

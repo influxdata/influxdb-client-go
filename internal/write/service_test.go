@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/test"
 	"github.com/influxdata/influxdb-client-go/log"
 	"github.com/stretchr/testify/assert"
@@ -63,7 +63,7 @@ func TestDefaultRetryDelay(t *testing.T) {
 	opts := write.DefaultOptions()
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
-	hs.SetReplyError(&ihttp.Error{
+	hs.SetReplyError(&http.Error{
 		StatusCode: 502,
 	})
 	b1 := NewBatch("", opts.RetryInterval())
@@ -93,7 +93,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 	opts := write.DefaultOptions().SetRetryInterval(1)
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
-	hs.SetReplyError(&ihttp.Error{
+	hs.SetReplyError(&http.Error{
 		StatusCode: 429,
 	})
 	b1 := NewBatch("1\n", opts.RetryInterval())
@@ -136,7 +136,7 @@ func TestBufferOverwrite(t *testing.T) {
 	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
-	hs.SetReplyError(&ihttp.Error{
+	hs.SetReplyError(&http.Error{
 		StatusCode: 429,
 	})
 	b1 := NewBatch("1\n", opts.RetryInterval())
@@ -187,7 +187,7 @@ func TestMaxRetryInterval(t *testing.T) {
 	opts := write.DefaultOptions().SetRetryInterval(1).SetMaxRetryInterval(10)
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
-	hs.SetReplyError(&ihttp.Error{
+	hs.SetReplyError(&http.Error{
 		StatusCode: 503,
 	})
 	b1 := NewBatch("1\n", opts.RetryInterval())

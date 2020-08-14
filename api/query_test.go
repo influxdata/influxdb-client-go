@@ -8,11 +8,6 @@ import (
 	"context"
 	"encoding/csv"
 	"fmt"
-	http2 "github.com/influxdata/influxdb-client-go/api/http"
-	"github.com/influxdata/influxdb-client-go/api/query"
-	"github.com/influxdata/influxdb-client-go/internal/gzip"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -20,6 +15,10 @@ import (
 	"testing"
 	"time"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
+	"github.com/influxdata/influxdb-client-go/api/query"
+	"github.com/influxdata/influxdb-client-go/internal/gzip"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -508,7 +507,7 @@ func TestQueryRawResult(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	queryAPI := NewQueryAPI("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
+	queryAPI := NewQueryAPI("org", http2.NewService(server.URL, "a", http2.DefaultOptions()))
 
 	result, err := queryAPI.QueryRaw(context.Background(), "flux", nil)
 	require.Nil(t, err)
@@ -903,7 +902,7 @@ func TestFluxError(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	queryAPI := NewQueryAPI("org", ihttp.NewService(server.URL, "a", http2.DefaultOptions()))
+	queryAPI := NewQueryAPI("org", http2.NewService(server.URL, "a", http2.DefaultOptions()))
 
 	result, err := queryAPI.QueryRaw(context.Background(), "errored flux", nil)
 	assert.Equal(t, "", result)

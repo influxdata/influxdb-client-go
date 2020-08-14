@@ -7,6 +7,7 @@ package influxdb2
 import (
 	"context"
 	"fmt"
+	http3 "github.com/influxdata/influxdb-client-go/api/http"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -109,7 +110,7 @@ func TestServerError429(t *testing.T) {
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
-	perror, ok := err.(*http2.Error)
+	perror, ok := err.(*http3.Error)
 	require.True(t, ok)
 	require.NotNil(t, perror)
 	assert.Equal(t, "too many requests", perror.Code)
@@ -143,7 +144,7 @@ func TestServerErrorNonJSON(t *testing.T) {
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
-	perror, ok := err.(*http2.Error)
+	perror, ok := err.(*http3.Error)
 	require.True(t, ok)
 	require.NotNil(t, perror)
 	assert.Equal(t, "500 Internal Server Error", perror.Code)
@@ -162,7 +163,7 @@ func TestServerErrorInflux1_8(t *testing.T) {
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.NotNil(t, err)
-	perror, ok := err.(*http2.Error)
+	perror, ok := err.(*http3.Error)
 	require.True(t, ok)
 	require.NotNil(t, perror)
 	assert.Equal(t, "404 Not Found", perror.Code)

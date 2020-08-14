@@ -2,7 +2,14 @@
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
-// Package http provides http related servicing  stuff
+// Package http provides HTTP servicing related code.
+//
+// Important type is Service which handles HTTP operations. It is internally used by library and it is not necessary to use it directly for common operations.
+// It can be useful when creating custom InfluxDB2 server API calls using generated code from the domain package, that are not yet exposed by API of this library.
+//
+// Service can be obtained from client using HTTPService() method.
+// It can be also created directly. To instantiate a Service use NewService(). Remember, the authorization param is in form "Token your-auth-token". e.g. "Token DXnd7annkGteV5Wqx9G3YjO9Ezkw87nHk8OabcyHCxF5451kdBV0Ag2cG7OmZZgCUTHroagUPdxbuoyen6TSPw==".
+//     srv := http.NewService("http://localhost:9999", "Token my-token", http.DefaultOptions())
 package http
 
 import (
@@ -15,7 +22,8 @@ import (
 	"net/url"
 	"strconv"
 
-	http2 "github.com/influxdata/influxdb-client-go/api/http"
+	http2 "github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
 )
 
 // RequestCallback defines function called after a request is created before any call
@@ -24,16 +32,21 @@ type RequestCallback func(req *http.Request)
 // ResponseCallback defines function called after a successful response was received
 type ResponseCallback func(resp *http.Response) error
 
-// Service handles HTTP operations with taking care of mandatory request headers
+// Service handles HTTP operations with taking care of mandatory request headers and known errors
 type Service interface {
-	PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
-	GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	// DoPostRequest sends HTTP POST request to the given url with body
+	DoPostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	// DoHTTPRequest sends given HTTP request and handles response
 	DoHTTPRequest(req *http.Request, requestCallback RequestCallback, responseCallback ResponseCallback) *Error
+	// DoHTTPRequestWithResponse sends given HTTP request and returns response
 	DoHTTPRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error)
+	// SetAuthorization sets the authorization header value
 	SetAuthorization(authorization string)
+	// Authorization returns current authorization header value
 	Authorization() string
-	HTTPClient() *http.Client
+	// ServerAPIURL returns URL to InfluxDB2 server API space
 	ServerAPIURL() string
+	// ServerURL returns URL to InfluxDB2 server
 	ServerURL() string
 }
 
@@ -46,7 +59,7 @@ type service struct {
 }
 
 // NewService creates instance of http Service with given parameters
-func NewService(serverURL, authorization string, httpOptions *http2.Options) Service {
+func NewService(serverURL, authorization string, httpOptions *Options) Service {
 	apiURL, err := url.Parse(serverURL)
 	serverAPIURL := serverURL
 	if err == nil {
@@ -59,7 +72,7 @@ func NewService(serverURL, authorization string, httpOptions *http2.Options) Ser
 		serverAPIURL:  serverAPIURL,
 		serverURL:     serverURL,
 		authorization: authorization,
-		client: httpOptions.HTTPClient(),
+		client:        httpOptions.HTTPClient(),
 	}
 }
 
@@ -79,11 +92,7 @@ func (s *service) Authorization() string {
 	return s.authorization
 }
 
-func (s *service) HTTPClient() *http.Client {
-	return s.client
-}
-
-func (s *service) PostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
+func (s *service) DoPostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
 	return s.doHTTPRequestWithURL(ctx, http.MethodPost, url, body, requestCallback, responseCallback)
 }
 
@@ -114,16 +123,13 @@ func (s *service) DoHTTPRequest(req *http.Request, requestCallback RequestCallba
 }
 
 func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error) {
+	log.Infof("HTTP %s req to %s", req.Method, req.URL.String())
 	req.Header.Set("Authorization", s.authorization)
-	req.Header.Set("User-Agent", UserAgent)
+	req.Header.Set("User-Agent", http2.UserAgent)
 	if requestCallback != nil {
 		requestCallback(req)
 	}
 	return s.client.Do(req)
-}
-
-func (s *service) GetRequest(ctx context.Context, url string, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {
-	return s.doHTTPRequestWithURL(ctx, http.MethodGet, url, nil, requestCallback, responseCallback)
 }
 
 func (s *service) handleHTTPError(r *http.Response) *Error {

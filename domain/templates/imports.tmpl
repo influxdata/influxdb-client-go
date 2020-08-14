@@ -7,6 +7,6 @@ package {{.PackageName}}
 import (
 {{range .Imports}} {{ . }}
 {{end}}
-    ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+    ihttp "github.com/influxdata/influxdb-client-go/api/http"
 )
 {{end}}

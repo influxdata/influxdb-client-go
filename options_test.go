@@ -20,9 +20,10 @@ func TestDefaultOptions(t *testing.T) {
 	assert.Equal(t, false, opts.UseGZip())
 	assert.Equal(t, uint(1000), opts.FlushInterval())
 	assert.Equal(t, time.Nanosecond, opts.Precision())
-	assert.Equal(t, uint(10000), opts.RetryBufferLimit())
-	assert.Equal(t, uint(1000), opts.RetryInterval())
+	assert.Equal(t, uint(50000), opts.RetryBufferLimit())
+	assert.Equal(t, uint(5000), opts.RetryInterval())
 	assert.Equal(t, uint(3), opts.MaxRetries())
+	assert.Equal(t, uint(300000), opts.MaxRetryInterval())
 	assert.Equal(t, (*tls.Config)(nil), opts.TLSConfig())
 	assert.Equal(t, uint(20), opts.HTTPRequestTimeout())
 	assert.Equal(t, uint(0), opts.LogLevel())
@@ -38,7 +39,8 @@ func TestSettingsOptions(t *testing.T) {
 		SetFlushInterval(5000).
 		SetPrecision(time.Millisecond).
 		SetRetryBufferLimit(5).
-		SetRetryInterval(5000).
+		SetRetryInterval(1000).
+		SetMaxRetryInterval(10000).
 		SetMaxRetries(7).
 		SetTLSConfig(tlsConfig).
 		SetHTTPRequestTimeout(50).
@@ -49,7 +51,8 @@ func TestSettingsOptions(t *testing.T) {
 	assert.Equal(t, uint(5000), opts.FlushInterval())
 	assert.Equal(t, time.Millisecond, opts.Precision())
 	assert.Equal(t, uint(5), opts.RetryBufferLimit())
-	assert.Equal(t, uint(5000), opts.RetryInterval())
+	assert.Equal(t, uint(1000), opts.RetryInterval())
+	assert.Equal(t, uint(10000), opts.MaxRetryInterval())
 	assert.Equal(t, uint(7), opts.MaxRetries())
 	assert.Equal(t, tlsConfig, opts.TLSConfig())
 	assert.Equal(t, uint(50), opts.HTTPRequestTimeout())

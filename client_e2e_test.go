@@ -245,5 +245,40 @@ func TestQueryV1Compatibility(t *testing.T) {
 		}
 		assert.Equal(t, 42, rows)
 	}
+}
 
+func TestHTTPService(t *testing.T) {
+	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	apiClient := domain.NewClientWithResponses(client.HTTPService())
+	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
+	if err != nil {
+		//return err
+		t.Error(err)
+	}
+	taskDescription := "Example task"
+	taskFlux := `option task = {
+  name: "My task",
+  every: 1h
+}
+
+from(bucket:"my-bucket") |> range(start: -1m) |> last()`
+	taskStatus := domain.TaskStatusTypeActive
+	taskRequest := domain.TaskCreateRequest{
+		Org:         &org.Name,
+		OrgID:       org.Id,
+		Description: &taskDescription,
+		Flux:        taskFlux,
+		Status:      &taskStatus,
+	}
+	resp, err := apiClient.PostTasksWithResponse(context.Background(), &domain.PostTasksParams{}, domain.PostTasksJSONRequestBody(taskRequest))
+	if err != nil {
+		//return err
+		t.Error(err)
+	}
+	if resp.JSONDefault != nil {
+		t.Error(resp.JSONDefault.Message)
+	}
+	if assert.NotNil(t, resp.JSON201) {
+		assert.Equal(t, "My task", resp.JSON201.Name)
+	}
 }

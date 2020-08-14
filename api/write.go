@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/log"
 	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
 )
@@ -27,16 +27,14 @@ type WriteAPI interface {
 	WritePoint(point *write.Point)
 	// Flush forces all pending writes from the buffer to be sent
 	Flush()
-	// Flushes all pending writes and stop async processes. After this the Write client cannot be used
-	Close()
 	// Errors returns a channel for reading errors which occurs during async writes.
 	// Must be called before performing any writes for errors to be collected.
 	// The chan is unbuffered and must be drained or the writer will block.
 	Errors() <-chan error
 }
 
-// writeAPI provides main implementation for WriteAPI
-type writeAPI struct {
+// WriteAPIImpl provides main implementation for WriteAPI
+type WriteAPIImpl struct {
 	service     *iwrite.Service
 	writeBuffer []string
 
@@ -56,8 +54,8 @@ type writeBuffInfoReq struct {
 	writeBuffLen int
 }
 
-func NewWriteAPI(org string, bucket string, service http.Service, writeOptions *write.Options) *writeAPI {
-	w := &writeAPI{
+func NewWriteAPI(org string, bucket string, service http2.Service, writeOptions *write.Options) *WriteAPIImpl {
+	w := &WriteAPIImpl{
 		service:      iwrite.NewService(org, bucket, service, writeOptions),
 		writeBuffer:  make([]string, 0, writeOptions.BatchSize()+1),
 		writeCh:      make(chan *iwrite.Batch),
@@ -77,26 +75,26 @@ func NewWriteAPI(org string, bucket string, service http.Service, writeOptions *
 	return w
 }
 
-func (w *writeAPI) Errors() <-chan error {
+func (w *WriteAPIImpl) Errors() <-chan error {
 	if w.errCh == nil {
 		w.errCh = make(chan error)
 	}
 	return w.errCh
 }
 
-func (w *writeAPI) Flush() {
+func (w *WriteAPIImpl) Flush() {
 	w.bufferFlush <- struct{}{}
 	w.waitForFlushing()
 }
 
-func (w *writeAPI) waitForFlushing() {
+func (w *WriteAPIImpl) waitForFlushing() {
 	for {
 		w.bufferInfoCh <- writeBuffInfoReq{}
 		writeBuffInfo := <-w.bufferInfoCh
 		if writeBuffInfo.writeBuffLen == 0 {
 			break
 		}
-		log.Log.Info("Waiting buffer is flushed")
+		log.Info("Waiting buffer is flushed")
 		time.Sleep(time.Millisecond)
 	}
 	for {
@@ -105,14 +103,13 @@ func (w *writeAPI) waitForFlushing() {
 		if writeBuffInfo.writeBuffLen == 0 {
 			break
 		}
-		log.Log.Info("Waiting buffer is flushed")
+		log.Info("Waiting buffer is flushed")
 		time.Sleep(time.Millisecond)
 	}
-	//time.Sleep(time.Millisecond)
 }
 
-func (w *writeAPI) bufferProc() {
-	log.Log.Info("Buffer proc started")
+func (w *WriteAPIImpl) bufferProc() {
+	log.Info("Buffer proc started")
 	ticker := time.NewTicker(time.Duration(w.writeOptions.FlushInterval()) * time.Millisecond)
 x:
 	for {
@@ -135,25 +132,21 @@ x:
 			w.bufferInfoCh <- buffInfo
 		}
 	}
-	log.Log.Info("Buffer proc finished")
+	log.Info("Buffer proc finished")
 	w.doneCh <- struct{}{}
 }
 
-func (w *writeAPI) flushBuffer() {
+func (w *WriteAPIImpl) flushBuffer() {
 	if len(w.writeBuffer) > 0 {
-		//go func(lines []string) {
-		log.Log.Info("sending batch")
+		log.Info("sending batch")
 		batch := iwrite.NewBatch(buffer(w.writeBuffer), w.writeOptions.RetryInterval())
 		w.writeCh <- batch
-		//	lines = lines[:0]
-		//}(w.writeBuffer)
-		//w.writeBuffer = make([]string,0, w.service.clientImpl.Options.BatchSize+1)
 		w.writeBuffer = w.writeBuffer[:0]
 	}
 }
 
-func (w *writeAPI) writeProc() {
-	log.Log.Info("Write proc started")
+func (w *WriteAPIImpl) writeProc() {
+	log.Info("Write proc started")
 x:
 	for {
 		select {
@@ -163,18 +156,18 @@ x:
 				w.errCh <- err
 			}
 		case <-w.writeStop:
-			log.Log.Info("Write proc: received stop")
+			log.Info("Write proc: received stop")
 			break x
 		case buffInfo := <-w.writeInfoCh:
 			buffInfo.writeBuffLen = len(w.writeCh)
 			w.writeInfoCh <- buffInfo
 		}
 	}
-	log.Log.Info("Write proc finished")
+	log.Info("Write proc finished")
 	w.doneCh <- struct{}{}
 }
 
-func (w *writeAPI) Close() {
+func (w *WriteAPIImpl) Close() {
 	if w.writeCh != nil {
 		// Flush outstanding metrics
 		w.Flush()
@@ -203,17 +196,16 @@ func (w *writeAPI) Close() {
 	}
 }
 
-func (w *writeAPI) WriteRecord(line string) {
+func (w *WriteAPIImpl) WriteRecord(line string) {
 	b := []byte(line)
 	b = append(b, 0xa)
 	w.bufferCh <- string(b)
 }
 
-func (w *writeAPI) WritePoint(point *write.Point) {
-	//w.bufferCh <- point.ToLineProtocol(w.service.clientImpl.Options().Precision)
+func (w *WriteAPIImpl) WritePoint(point *write.Point) {
 	line, err := w.service.EncodePoints(point)
 	if err != nil {
-		log.Log.Errorf("point encoding error: %s\n", err.Error())
+		log.Errorf("point encoding error: %s\n", err.Error())
 	} else {
 		w.bufferCh <- line
 	}

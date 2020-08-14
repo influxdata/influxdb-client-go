@@ -2,9 +2,16 @@
 ### Breaking changes
 1. [#173](https://github.com/influxdata/influxdb-client-go/pull/173) Removed deprecated API.
 1. [#174](https://github.com/influxdata/influxdb-client-go/pull/174) Removed orgs labels API cause [it has been removed from the server API](https://github.com/influxdata/influxdb/pull/19104)
+1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Removed WriteAPI.Close()
 
 ### Features
 1. [#165](https://github.com/influxdata/influxdb-client-go/pull/165) Allow overriding the http.Client for the http service.
+1. [#179](https://github.com/influxdata/influxdb-client-go/pull/179) Unifying retry strategy among InfluxDB 2 clients: added exponential backoff.
+1. [#180](https://github.com/influxdata/influxdb-client-go/pull/180) Provided public logger API to enable overriding logging. It is also possible to disable logging. 
+1. [#181](https://github.com/influxdata/influxdb-client-go/pull/181) Exposed HTTP service to allow custom server API calls. Added example. 
+
+### Bug fixes 
+1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Fixed WriteAPIs management. Keeping single instance for each org and bucket pair.
 
 ## 1.4.0 [2020-07-17]
 ### Breaking changes

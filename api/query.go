@@ -23,9 +23,10 @@ import (
 	"sync"
 	"time"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/query"
 	"github.com/influxdata/influxdb-client-go/domain"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+	"github.com/influxdata/influxdb-client-go/internal/log"
 )
 
 const (
@@ -48,7 +49,7 @@ type QueryAPI interface {
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
 }
 
-func NewQueryAPI(org string, service ihttp.Service) QueryAPI {
+func NewQueryAPI(org string, service http2.Service) QueryAPI {
 	return &queryAPI{
 		org:         org,
 		httpService: service,
@@ -58,7 +59,7 @@ func NewQueryAPI(org string, service ihttp.Service) QueryAPI {
 // queryAPI implements QueryAPI interface
 type queryAPI struct {
 	org         string
-	httpService ihttp.Service
+	httpService http2.Service
 	url         string
 	lock        sync.Mutex
 }
@@ -74,8 +75,9 @@ func (q *queryAPI) QueryRaw(ctx context.Context, query string, dialect *domain.D
 	if err != nil {
 		return "", err
 	}
+	log.Debugf("Query: %s", string(qrJSON))
 	var body string
-	perror := q.httpService.PostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
+	perror := q.httpService.DoPostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept-Encoding", "gzip")
 	},
@@ -123,7 +125,8 @@ func (q *queryAPI) Query(ctx context.Context, query string) (*QueryTableResult, 
 	if err != nil {
 		return nil, err
 	}
-	perror := q.httpService.PostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
+	log.Debugf("Query: %s", string(qrJSON))
+	perror := q.httpService.DoPostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept-Encoding", "gzip")
 	},

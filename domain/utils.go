@@ -4,10 +4,12 @@
 
 package domain
 
-import ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+import (
+	"github.com/influxdata/influxdb-client-go/api/http"
+)
 
-func DomainErrorToError(error *Error, statusCode int) *ihttp.Error {
-	return &ihttp.Error{
+func DomainErrorToError(error *Error, statusCode int) *http.Error {
+	return &http.Error{
 		StatusCode: statusCode,
 		Code:       string(error.Code),
 		Message:    error.Message,

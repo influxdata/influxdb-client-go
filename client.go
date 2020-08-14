@@ -13,9 +13,10 @@ import (
 	"sync"
 
 	"github.com/influxdata/influxdb-client-go/api"
+	"github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/domain"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/influxdata/influxdb-client-go/internal/log"
+	ilog "github.com/influxdata/influxdb-client-go/internal/log"
+	"github.com/influxdata/influxdb-client-go/log"
 )
 
 // Client provides API to communicate with InfluxDBServer.
@@ -38,9 +39,8 @@ type Client interface {
 	Options() *Options
 	// ServerURL returns the url of the server url client talks to
 	ServerURL() string
-	// ServerURL returns the url of the server url client talks to
-	// Deprecated: Use ServerURL instead.
-	ServerUrl() string
+	// HTTPService returns underlying HTTP service object used by client
+	HTTPService() http.Service
 	// WriteAPI returns the asynchronous, non-blocking, Write client
 	WriteAPI(org, bucket string) api.WriteAPI
 	// WriteAPIBlocking returns the synchronous, blocking, Write client
@@ -63,18 +63,19 @@ type Client interface {
 
 // clientImpl implements Client interface
 type clientImpl struct {
-	serverURL   string
-	options     *Options
-	writeAPIs   []api.WriteAPI
-	lock        sync.Mutex
-	httpService ihttp.Service
-	apiClient   *domain.ClientWithResponses
-	authAPI     api.AuthorizationsAPI
-	orgAPI      api.OrganizationsAPI
-	usersAPI    api.UsersAPI
-	deleteAPI   api.DeleteAPI
-	bucketsAPI  api.BucketsAPI
-	labelsAPI   api.LabelsAPI
+	serverURL     string
+	options       *Options
+	writeAPIs     map[string]api.WriteAPI
+	syncWriteAPIs map[string]api.WriteAPIBlocking
+	lock          sync.Mutex
+	httpService   http.Service
+	apiClient     *domain.ClientWithResponses
+	authAPI       api.AuthorizationsAPI
+	orgAPI        api.OrganizationsAPI
+	usersAPI      api.UsersAPI
+	deleteAPI     api.DeleteAPI
+	bucketsAPI    api.BucketsAPI
+	labelsAPI     api.LabelsAPI
 }
 
 // NewClient creates Client for connecting to given serverURL with provided authentication token, with the default options.
@@ -94,16 +95,19 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		// For subsequent path parts concatenation, url has to end with '/'
 		normServerURL = serverURL + "/"
 	}
-	service := ihttp.NewService(normServerURL, "Token "+authToken, options.httpOptions)
+	service := http.NewService(normServerURL, "Token "+authToken, options.httpOptions)
 	client := &clientImpl{
-		serverURL:   serverURL,
-		options:     options,
-		writeAPIs:   make([]api.WriteAPI, 0, 5),
-		httpService: service,
-		apiClient:   domain.NewClientWithResponses(service),
+		serverURL:     serverURL,
+		options:       options,
+		writeAPIs:     make(map[string]api.WriteAPI, 5),
+		syncWriteAPIs: make(map[string]api.WriteAPIBlocking, 5),
+		httpService:   service,
+		apiClient:     domain.NewClientWithResponses(service),
 	}
-	log.Log.SetDebugLevel(client.Options().LogLevel())
-	log.Log.Infof("Using URL '%s', token '%s'", serverURL, authToken)
+	if log.Log != nil {
+		log.Log.SetLogLevel(options.LogLevel())
+	}
+	ilog.Infof("Using URL '%s', token '%s'", serverURL, authToken)
 	return client
 }
 func (c *clientImpl) Options() *Options {
@@ -114,9 +118,8 @@ func (c *clientImpl) ServerURL() string {
 	return c.serverURL
 }
 
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (c *clientImpl) ServerUrl() string {
-	return c.serverURL
+func (c *clientImpl) HTTPService() http.Service {
+	return c.httpService
 }
 
 func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
@@ -173,20 +176,40 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 	return response.JSON200, nil
 }
 
+func createKey(org, bucket string) string {
+	return org + "\t" + bucket
+}
+
 func (c *clientImpl) WriteAPI(org, bucket string) api.WriteAPI {
-	w := api.NewWriteAPI(org, bucket, c.httpService, c.options.writeOptions)
-	c.writeAPIs = append(c.writeAPIs, w)
-	return w
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	key := createKey(org, bucket)
+	if _, ok := c.writeAPIs[key]; !ok {
+		w := api.NewWriteAPI(org, bucket, c.httpService, c.options.writeOptions)
+		c.writeAPIs[key] = w
+	}
+	return c.writeAPIs[key]
 }
 
 func (c *clientImpl) WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking {
-	w := api.NewWriteAPIBlocking(org, bucket, c.httpService, c.options.writeOptions)
-	return w
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	key := createKey(org, bucket)
+	if _, ok := c.syncWriteAPIs[key]; !ok {
+		w := api.NewWriteAPIBlocking(org, bucket, c.httpService, c.options.writeOptions)
+		c.syncWriteAPIs[key] = w
+	}
+	return c.syncWriteAPIs[key]
 }
 
 func (c *clientImpl) Close() {
-	for _, w := range c.writeAPIs {
-		w.Close()
+	for key, w := range c.writeAPIs {
+		wa := w.(*api.WriteAPIImpl)
+		wa.Close()
+		delete(c.writeAPIs, key)
+	}
+	for key := range c.syncWriteAPIs {
+		delete(c.syncWriteAPIs, key)
 	}
 }
 

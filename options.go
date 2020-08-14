@@ -78,13 +78,31 @@ func (o *Options) SetRetryBufferLimit(retryBufferLimit uint) *Options {
 	return o
 }
 
+// MaxRetryInterval return maximum retry interval in ms. Default 5min.
+func (o *Options) MaxRetryInterval() uint {
+	return o.WriteOptions().MaxRetryInterval()
+}
+
+// SetMaxRetryInterval set maximum retry interval in ms
+func (o *Options) SetMaxRetryInterval(maxRetryIntervalMs uint) *Options {
+	o.WriteOptions().SetMaxRetryInterval(maxRetryIntervalMs)
+	return o
+}
+
 // LogLevel returns log level
 func (o *Options) LogLevel() uint {
 	return o.logLevel
 }
 
-// SetLogLevel set level to filter log messages. Each level mean to log all categories bellow. 0 error, 1 - warning, 2 - info, 3 - debug
-// Debug level will print also content of writen batches
+// SetLogLevel set level to filter log messages. Each level mean to log all categories bellow. Default is ErrorLevel.
+// There are four level constant int the log package in this library:
+//   - ErrorLevel
+//   - WarningLevel
+//   - InfoLevel
+//   - DebugLevel
+// The DebugLevel will print also content of writen batches, queries.
+// The InfoLevel prints HTTP requests info, among others.
+// Set log.Log to nil in order to completely disable logging.
 func (o *Options) SetLogLevel(logLevel uint) *Options {
 	o.logLevel = logLevel
 	return o
@@ -126,20 +144,14 @@ func (o *Options) HTTPClient() *nethttp.Client {
 //
 // Setting the HTTPClient will cause the other HTTP options
 // to be ignored.
-func (o *Options) SetHTTPClient(c *nethttp.Client) {
+func (o *Options) SetHTTPClient(c *nethttp.Client) *Options {
 	o.httpOptions.SetHTTPClient(c)
+	return o
 }
 
 // TLSConfig returns TLS config
 func (o *Options) TLSConfig() *tls.Config {
 	return o.HTTPOptions().TLSConfig()
-}
-
-// TlsConfig returns TLS config.
-// Deprecated: Use TLSConfig instead.
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (o *Options) TlsConfig() *tls.Config {
-	return o.TLSConfig()
 }
 
 // SetTLSConfig sets TLS configuration for secure connection
@@ -148,36 +160,15 @@ func (o *Options) SetTLSConfig(tlsConfig *tls.Config) *Options {
 	return o
 }
 
-// SetTlsConfig sets TLS configuration for secure connection.
-// Deprecated: Use SetTLSConfig instead.
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (o *Options) SetTlsConfig(tlsConfig *tls.Config) *Options {
-	return o.SetTLSConfig(tlsConfig)
-}
-
 // HTTPRequestTimeout returns HTTP request timeout
 func (o *Options) HTTPRequestTimeout() uint {
 	return o.HTTPOptions().HTTPRequestTimeout()
-}
-
-// HttpRequestTimeout returns HTTP request timeout.
-// Deprecated: Use HTTPRequestTimeout instead.
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (o *Options) HttpRequestTimeout() uint {
-	return o.HTTPRequestTimeout()
 }
 
 // SetHTTPRequestTimeout sets HTTP request timeout in sec
 func (o *Options) SetHTTPRequestTimeout(httpRequestTimeout uint) *Options {
 	o.HTTPOptions().SetHTTPRequestTimeout(httpRequestTimeout)
 	return o
-}
-
-// SetHttpRequestTimeout sets HTTP request timeout in sec
-// Deprecated: Use SetHTTPRequestTimeout instead
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (o *Options) SetHttpRequestTimeout(httpRequestTimeout uint) *Options {
-	return o.SetHTTPRequestTimeout(httpRequestTimeout)
 }
 
 // WriteOptions returns write related options
@@ -194,13 +185,6 @@ func (o *Options) HTTPOptions() *http.Options {
 		o.httpOptions = http.DefaultOptions()
 	}
 	return o.httpOptions
-}
-
-// HttpOptions returns http related options
-// Deprecated: Use HTTPOptions instead
-//lint:ignore ST1003 Deprecated method to be removed in the next release
-func (o *Options) HttpOptions() *http.Options {
-	return o.HTTPOptions()
 }
 
 // AddDefaultTag adds a default tag. DefaultTags are added to each written point.

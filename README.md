@@ -11,6 +11,7 @@ This repository contains the reference Go client for InfluxDB 2.
 
 - [Features](#features)
 - [Documentation](#documentation)
+    - [Examples](#examples)
 - [How To Use](#how-to-use)
     - [Basic Example](#basic-example)
     - [Writes in Detail](#writes)
@@ -40,6 +41,14 @@ This repository contains the reference Go client for InfluxDB 2.
 ## Documentation
 
 Go API docs is available at: [https://pkg.go.dev/github.com/influxdata/influxdb-client-go](https://pkg.go.dev/github.com/influxdata/influxdb-client-go)
+
+### Examples
+
+Examples for basic writing and querying data are shown below in this document 
+
+There are also other examples in the API docs:
+ - [Client usage](https://pkg.go.dev/github.com/influxdata/influxdb-client-go?tab=doc#pkg-examples) 
+ - [Management APIs](https://pkg.go.dev/github.com/influxdata/influxdb-client-go@v1.4.0/api?tab=doc#pkg-examples) 
 
 ## How To Use
 
@@ -359,6 +368,7 @@ func main() {
     client.Close()
 }    
 ```
+
 
 ## InfluxDB 1.8 API compatibility
   

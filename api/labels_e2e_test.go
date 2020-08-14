@@ -8,10 +8,10 @@ package api_test
 
 import (
 	"context"
-	"github.com/influxdata/influxdb-client-go/domain"
 	"testing"
 
-	influxdb2 "github.com/influxdata/influxdb-client-go"
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

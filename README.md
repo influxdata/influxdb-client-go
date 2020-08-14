@@ -67,7 +67,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/influxdata/influxdb-client-go"
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
@@ -154,9 +154,10 @@ package main
 
 import (
     "fmt"
-    "github.com/influxdata/influxdb-client-go"
     "math/rand"
     "time"
+    
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
@@ -205,7 +206,7 @@ import (
     "math/rand"
     "time"
 
-    "github.com/influxdata/influxdb-client-go"
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
@@ -253,9 +254,10 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/influxdata/influxdb-client-go"
     "math/rand"
     "time"
+
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
@@ -305,7 +307,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/influxdata/influxdb-client-go"
+
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
@@ -347,7 +350,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/influxdata/influxdb-client-go"
+
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
@@ -397,7 +401,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/influxdata/influxdb-client-go"
+    "github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-## 2.0.1 [In progress]
+## 2.0.1 [2020-08-14]
 ### Bug fixes 
 1. [#187](https://github.com/influxdata/influxdb-client-go/pull/187) Properly updated library for new major version.
 

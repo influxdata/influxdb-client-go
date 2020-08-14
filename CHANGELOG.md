@@ -12,6 +12,7 @@
 
 ### Bug fixes 
 1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Fixed WriteAPIs management. Keeping single instance for each org and bucket pair.
+1. [#184](https://github.com/influxdata/influxdb-client-go/pull/184) Closing result at end of reading to avoid leaked connections.
 
 ## 1.4.0 [2020-07-17]
 ### Breaking changes

@@ -220,6 +220,8 @@ const (
 // During the first time it is called, Next creates also table metadata
 // Actual parsed row is available through Record() function
 // Returns false in case of end or an error, otherwise true
+// Close() is called automatically at the end of the result or in case of an error.
+// If result is not read to the end, it must be closed explicitly.
 func (q *QueryTableResult) Next() bool {
 	var row []string
 	// set closing query in case of preliminary return
@@ -241,7 +243,7 @@ func (q *QueryTableResult) Next() bool {
 readRow:
 	row, q.err = q.csvReader.Read()
 	if q.err == io.EOF {
-		q.err = nil
+		q.err = q.Close()
 		return false
 	}
 	if q.err != nil {

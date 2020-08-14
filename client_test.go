@@ -7,14 +7,14 @@ package influxdb2
 import (
 	"context"
 	"fmt"
-	http3 "github.com/influxdata/influxdb-client-go/api/http"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
-	http2 "github.com/influxdata/influxdb-client-go/internal/http"
-	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
+	http3 "github.com/influxdata/influxdb-client-go/v2/api/http"
+	http2 "github.com/influxdata/influxdb-client-go/v2/internal/http"
+	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

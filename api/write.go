@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	http2 "github.com/influxdata/influxdb-client-go/api/http"
-	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/log"
-	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
+	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
+	"github.com/influxdata/influxdb-client-go/v2/api/write"
+	"github.com/influxdata/influxdb-client-go/v2/internal/log"
+	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
 )
 
 // WriteAPI is Write client interface with non-blocking methods for writing time series data asynchronously in batches into an InfluxDB server.

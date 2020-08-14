@@ -5,9 +5,10 @@
 package api
 
 import (
-	"github.com/influxdata/influxdb-client-go/domain"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/influxdata/influxdb-client-go/v2/domain"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPaging(t *testing.T) {

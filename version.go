@@ -6,12 +6,13 @@ package influxdb2
 
 import (
 	"fmt"
-	"github.com/influxdata/influxdb-client-go/internal/http"
 	"runtime"
+
+	"github.com/influxdata/influxdb-client-go/v2/internal/http"
 )
 
 const (
-	Version = "2.1.0"
+	Version = "2.0.1"
 )
 
 func init() {

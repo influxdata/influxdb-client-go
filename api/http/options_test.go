@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go/api/http"
+	"github.com/influxdata/influxdb-client-go/v2/api/http"
 	"github.com/stretchr/testify/assert"
 )
 

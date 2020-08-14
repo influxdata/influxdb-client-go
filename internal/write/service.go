@@ -16,10 +16,10 @@ import (
 	"sync"
 	"time"
 
-	http2 "github.com/influxdata/influxdb-client-go/api/http"
-	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/gzip"
-	"github.com/influxdata/influxdb-client-go/internal/log"
+	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
+	"github.com/influxdata/influxdb-client-go/v2/api/write"
+	"github.com/influxdata/influxdb-client-go/v2/internal/gzip"
+	"github.com/influxdata/influxdb-client-go/v2/internal/log"
 	lp "github.com/influxdata/line-protocol"
 )
 

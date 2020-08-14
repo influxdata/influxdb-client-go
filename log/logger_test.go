@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	dlog "github.com/influxdata/influxdb-client-go/log"
+	dlog "github.com/influxdata/influxdb-client-go/v2/log"
 	"github.com/stretchr/testify/assert"
 )
 

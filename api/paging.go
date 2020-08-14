@@ -4,7 +4,7 @@
 
 package api
 
-import "github.com/influxdata/influxdb-client-go/domain"
+import "github.com/influxdata/influxdb-client-go/v2/domain"
 
 type PagingOption func(p *Paging)
 

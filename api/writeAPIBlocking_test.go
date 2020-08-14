@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	http2 "github.com/influxdata/influxdb-client-go/api/http"
-	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/test"
+	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
+	"github.com/influxdata/influxdb-client-go/v2/api/write"
+	"github.com/influxdata/influxdb-client-go/v2/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

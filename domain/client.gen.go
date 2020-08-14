@@ -16,7 +16,7 @@ import (
 	"net/url"
 	"strings"
 
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
+	ihttp "github.com/influxdata/influxdb-client-go/api/http"
 )
 
 // Client which conforms to the OpenAPI3 specification for this service.

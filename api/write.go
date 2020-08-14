@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/log"
 	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
 )
@@ -54,7 +54,7 @@ type writeBuffInfoReq struct {
 	writeBuffLen int
 }
 
-func NewWriteAPI(org string, bucket string, service http.Service, writeOptions *write.Options) *WriteAPIImpl {
+func NewWriteAPI(org string, bucket string, service http2.Service, writeOptions *write.Options) *WriteAPIImpl {
 	w := &WriteAPIImpl{
 		service:      iwrite.NewService(org, bucket, service, writeOptions),
 		writeBuffer:  make([]string, 0, writeOptions.BatchSize()+1),

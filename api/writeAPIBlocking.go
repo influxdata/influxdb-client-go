@@ -8,8 +8,8 @@ import (
 	"context"
 	"strings"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	"github.com/influxdata/influxdb-client-go/internal/http"
 	iwrite "github.com/influxdata/influxdb-client-go/internal/write"
 )
 
@@ -32,7 +32,7 @@ type writeAPIBlocking struct {
 }
 
 // NewWriteAPIBlocking creates new WriteAPIBlocking instance for org and bucket with underlying client
-func NewWriteAPIBlocking(org string, bucket string, service http.Service, writeOptions *write.Options) *writeAPIBlocking {
+func NewWriteAPIBlocking(org string, bucket string, service http2.Service, writeOptions *write.Options) *writeAPIBlocking {
 	return &writeAPIBlocking{service: iwrite.NewService(org, bucket, service, writeOptions), writeOptions: writeOptions}
 }
 

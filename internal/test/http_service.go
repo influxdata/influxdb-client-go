@@ -9,14 +9,15 @@ import (
 	"compress/gzip"
 	"context"
 	"fmt"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"sync"
 	"testing"
+
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
+	"github.com/stretchr/testify/assert"
 )
 
 type HTTPService struct {
@@ -26,7 +27,7 @@ type HTTPService struct {
 	t              *testing.T
 	wasGzip        bool
 	requestHandler func(c *HTTPService, url string, body io.Reader) error
-	replyError     *ihttp.Error
+	replyError     *http2.Error
 	lock           sync.Mutex
 }
 
@@ -65,13 +66,13 @@ func (t *HTTPService) Close() {
 	t.lock.Unlock()
 }
 
-func (t *HTTPService) SetReplyError(replyError *ihttp.Error) {
+func (t *HTTPService) SetReplyError(replyError *http2.Error) {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	t.replyError = replyError
 }
 
-func (t *HTTPService) ReplyError() *ihttp.Error {
+func (t *HTTPService) ReplyError() *http2.Error {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	return t.replyError
@@ -80,21 +81,21 @@ func (t *HTTPService) ReplyError() *ihttp.Error {
 func (t *HTTPService) SetAuthorization(_ string) {
 
 }
-func (t *HTTPService) GetRequest(_ context.Context, _ string, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
+func (t *HTTPService) GetRequest(_ context.Context, _ string, _ http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	return nil
 }
-func (t *HTTPService) DoHTTPRequest(_ *http.Request, _ ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
+func (t *HTTPService) DoHTTPRequest(_ *http.Request, _ http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	return nil
 }
 
-func (t *HTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ ihttp.RequestCallback) (*http.Response, error) {
+func (t *HTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ http2.RequestCallback) (*http.Response, error) {
 	return nil, nil
 }
 
-func (t *HTTPService) PostRequest(_ context.Context, url string, body io.Reader, requestCallback ihttp.RequestCallback, _ ihttp.ResponseCallback) *ihttp.Error {
+func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reader, requestCallback http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		return ihttp.NewError(err)
+		return http2.NewError(err)
 	}
 	if requestCallback != nil {
 		requestCallback(req)
@@ -115,7 +116,7 @@ func (t *HTTPService) PostRequest(_ context.Context, url string, body io.Reader,
 	}
 
 	if err != nil {
-		return ihttp.NewError(err)
+		return http2.NewError(err)
 	} else {
 		return nil
 	}

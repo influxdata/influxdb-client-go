@@ -16,9 +16,9 @@ import (
 	"sync"
 	"time"
 
+	http2 "github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
 	"github.com/influxdata/influxdb-client-go/internal/gzip"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/log"
 	lp "github.com/influxdata/line-protocol"
 )
@@ -40,7 +40,7 @@ func NewBatch(data string, retryDelay uint) *Batch {
 type Service struct {
 	org                  string
 	bucket               string
-	httpService          ihttp.Service
+	httpService          http2.Service
 	url                  string
 	lastWriteAttempt     time.Time
 	retryQueue           *queue
@@ -49,7 +49,7 @@ type Service struct {
 	retryExponentialBase uint
 }
 
-func NewService(org string, bucket string, httpService ihttp.Service, options *write.Options) *Service {
+func NewService(org string, bucket string, httpService http2.Service, options *write.Options) *Service {
 
 	retryBufferLimit := options.RetryBufferLimit() / options.BatchSize()
 	if retryBufferLimit == 0 {
@@ -137,11 +137,11 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 	return nil
 }
 
-func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *ihttp.Error {
+func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 	wURL, err := w.WriteURL()
 	if err != nil {
 		log.Errorf("%s\n", err.Error())
-		return ihttp.NewError(err)
+		return http2.NewError(err)
 	}
 	var body io.Reader
 	body = strings.NewReader(batch.batch)
@@ -149,11 +149,11 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *ihttp.Error {
 	if w.writeOptions.UseGZip() {
 		body, err = gzip.CompressWithGzip(body)
 		if err != nil {
-			return ihttp.NewError(err)
+			return http2.NewError(err)
 		}
 	}
 	w.lastWriteAttempt = time.Now()
-	perror := w.httpService.PostRequest(ctx, wURL, body, func(req *http.Request) {
+	perror := w.httpService.DoPostRequest(ctx, wURL, body, func(req *http.Request) {
 		if w.writeOptions.UseGZip() {
 			req.Header.Set("Content-Encoding", "gzip")
 		}

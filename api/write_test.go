@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/influxdata/influxdb-client-go/api/http"
 	"github.com/influxdata/influxdb-client-go/api/write"
-	ihttp "github.com/influxdata/influxdb-client-go/internal/http"
 	"github.com/influxdata/influxdb-client-go/internal/test"
 	"github.com/influxdata/influxdb-client-go/log"
 	"github.com/stretchr/testify/assert"
@@ -160,7 +160,7 @@ func TestRetry(t *testing.T) {
 	writeAPI.waitForFlushing()
 	require.Len(t, service.Lines(), 5)
 	service.Close()
-	service.SetReplyError(&ihttp.Error{
+	service.SetReplyError(&http.Error{
 		StatusCode: 429,
 		RetryAfter: 5,
 	})
@@ -189,7 +189,7 @@ func TestRetry(t *testing.T) {
 func TestWriteError(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	log.Log.SetLogLevel(log.DebugLevel)
-	service.SetReplyError(&ihttp.Error{
+	service.SetReplyError(&http.Error{
 		StatusCode: 400,
 		Code:       "write",
 		Message:    "error",

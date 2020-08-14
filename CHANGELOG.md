@@ -1,4 +1,4 @@
-## 2.0.0 [In progress]
+## 2.0.0 [2020-08-14]
 ### Breaking changes
 1. [#173](https://github.com/influxdata/influxdb-client-go/pull/173) Removed deprecated API.
 1. [#174](https://github.com/influxdata/influxdb-client-go/pull/174) Removed orgs labels API cause [it has been removed from the server API](https://github.com/influxdata/influxdb/pull/19104)

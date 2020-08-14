@@ -14,6 +14,37 @@ import (
 )
 
 // WriteAPIBlocking offers blocking methods for writing time series data synchronously into an InfluxDB server.
+// It doesn't implicitly create batches of points. It is intended to use for writing less frequent data, such as a weather sensing, or if there is a need to have explicit control of failed batches.
+// To add implicit batching, use a wrapper, such as:
+//	type writer struct {
+//		batch []*write.Point
+//		writeAPI api.WriteAPIBlocking
+//		batchSize int
+//	}
+//
+//	func (w *writer) CurrentBatch() []*write.Point {
+//		return w.batch
+//	}
+//
+//	func newWriter(writeAPI api.WriteAPIBlocking, batchSize int) *writer {
+//		return &writer{
+//			batch:     make([]*write.Point, 0, batchSize),
+//			writeAPI:  writeAPI,
+//			batchSize: batchSize,
+//		}
+//	}
+//
+//	func (w *writer) write(ctx context.Context, p *write.Point) error {
+//		w.batch = append(w.batch, p)
+//		if len(w.batch) == w.batchSize {
+//			err := w.writeAPI.WritePoint(ctx, w.batch...)
+//			if err != nil {
+//				return err
+//			}
+//			w.batch = w.batch[:0]
+//		}
+//		return nil
+//	}
 type WriteAPIBlocking interface {
 	// WriteRecord writes line protocol record(s) into bucket.
 	// WriteRecord writes without implicit batching. Batch is created from given number of records

@@ -13,6 +13,9 @@
 ### Bug fixes 
 1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Fixed WriteAPIs management. Keeping single instance for each org and bucket pair.
 
+### Documentation
+1. [#185](https://github.com/influxdata/influxdb-client-go/pull/185) DeleteAPI and sample WriteAPIBlocking wrapper for implicit batching 
+
 ## 1.4.0 [2020-07-17]
 ### Breaking changes
 1. [#156](https://github.com/influxdata/influxdb-client-go/pull/156) Fixing Go naming and code style violations: 

@@ -358,7 +358,7 @@ func ExampleLabelsAPI() {
 	client.Close()
 }
 
-func ExampleDeletesAPI() {
+func ExampleDeleteAPI() {
 	// Create influxdb client
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")
 

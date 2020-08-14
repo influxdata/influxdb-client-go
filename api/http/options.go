@@ -48,8 +48,9 @@ func (o *Options) HTTPClient() *http.Client {
 //
 // Setting the HTTPClient will cause the other HTTP options
 // to be ignored.
-func (o *Options) SetHTTPClient(c *http.Client) {
+func (o *Options) SetHTTPClient(c *http.Client) *Options {
 	o.httpClient = c
+	return o
 }
 
 // TLSConfig returns tls.Config

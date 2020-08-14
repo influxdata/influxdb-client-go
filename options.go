@@ -144,8 +144,9 @@ func (o *Options) HTTPClient() *nethttp.Client {
 //
 // Setting the HTTPClient will cause the other HTTP options
 // to be ignored.
-func (o *Options) SetHTTPClient(c *nethttp.Client) {
+func (o *Options) SetHTTPClient(c *nethttp.Client) *Options {
 	o.httpOptions.SetHTTPClient(c)
+	return o
 }
 
 // TLSConfig returns TLS config

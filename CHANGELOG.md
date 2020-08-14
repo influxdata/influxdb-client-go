@@ -1,3 +1,4 @@
+## 2.1.0 [In progress]
 ## 2.0.0 [2020-08-14]
 ### Breaking changes
 1. [#173](https://github.com/influxdata/influxdb-client-go/pull/173) Removed deprecated API.

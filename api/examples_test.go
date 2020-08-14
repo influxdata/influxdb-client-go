@@ -357,3 +357,20 @@ func ExampleLabelsAPI() {
 	// Close the client
 	client.Close()
 }
+
+func ExampleDeletesAPI() {
+	// Create influxdb client
+	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+
+	ctx := context.Background()
+	// Get Delete API client
+	deleteAPI := client.DeleteAPI()
+	// Delete last hour data with tag b = static
+	err := deleteAPI.DeleteWithName(ctx, "org", "my-bucket", time.Now().Add(-time.Hour), time.Now(), "b=static")
+	if err != nil {
+		panic(err)
+	}
+
+	// Close the client
+	client.Close()
+}

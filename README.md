@@ -379,6 +379,7 @@ func main() {
   [InfluxDB 1.8.0 introduced forward compatibility APIs](https://docs.influxdata.com/influxdb/latest/tools/api/#influxdb-2-0-api-compatibility-endpoints) for InfluxDB 2.0. This allow you to easily move from InfluxDB 1.x to InfluxDB 2.0 Cloud or open source.
   
   Client API usage differences summary:
+ 1. Use the base URL when creating a new client, not the compatibility endpoint, so `host:port` instead of `host:port/api/v2`. 
  1. Use the form `username:password` for an **authentication token**. Example: `my-user:my-password`. Use an empty string (`""`) if the server doesn't require authentication.
  1. The organization parameter is not used. Use an empty string (`""`) where necessary.
  1. Use the form `database/retention-policy` where a **bucket** is required. Skip retention policy if the default retention policy should be used. Examples: `telegraf/autogen`, `telegraf`.  

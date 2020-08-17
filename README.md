@@ -71,18 +71,18 @@ import (
 )
 
 func main() {
-    // create new client with default option for server url authenticate by token
+    // Create a new client using an InfluxDB server base URL and an authentication token
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
-    // user blocking write client for writes to desired bucket
+    // Use blocking write client for writes to desired bucket
     writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
-    // create point using full params constructor 
+    // Create point using full params constructor 
     p := influxdb2.NewPoint("stat",
         map[string]string{"unit": "temperature"},
         map[string]interface{}{"avg": 24.5, "max": 45},
         time.Now())
     // write point immediately 
     writeAPI.WritePoint(context.Background(), p)
-    // create point using fluent style
+    // Create point using fluent style
     p = influxdb2.NewPointWithMeasurement("stat").
         AddTag("unit", "temperature").
         AddField("avg", 23.2).
@@ -94,9 +94,9 @@ func main() {
     line := fmt.Sprintf("stat,unit=temperature avg=%f,max=%f", 23.5, 45.0)
     writeAPI.WriteRecord(context.Background(), line)
 
-    // get query client
+    // Get query client
     queryAPI := client.QueryAPI("my-org")
-    // get parser flux query result
+    // Get parser flux query result
     result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
     if err == nil {
         // Use Next() to iterate over query result lines
@@ -140,7 +140,7 @@ Client offers two ways of writing, non-blocking and blocking.
 
 ### Non-blocking write client 
 Non-blocking write client uses implicit batching. Data are asynchronously
-written to the underlying buffer and they are automatically sent to a server when the size of the write buffer reaches the batch size, default 1000, or the flush interval, default 1s, times out.
+written to the underlying buffer and they are automatically sent to a server when the size of the write buffer reaches the batch size, default 5000, or the flush interval, default 1s, times out.
 Writes are automatically retried on server back pressure.
 
 This write client also offers synchronous blocking method to ensure that write buffer is flushed and all pending writes are finished, 
@@ -161,7 +161,8 @@ import (
 )
 
 func main() {
-    // Create client and set batch size to 20 
+    // Create a new client using an InfluxDB server base URL and an authentication token
+    // and set batch size to 20 
     client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token",
         influxdb2.DefaultOptions().SetBatchSize(20))
     // Get non-blocking write client
@@ -210,7 +211,7 @@ import (
 )
 
 func main() {
-    // Create client
+    // Create a new client using an InfluxDB server base URL and an authentication token
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get non-blocking write client
     writeAPI := client.WriteAPI("my-org", "my-bucket")
@@ -261,7 +262,7 @@ import (
 )
 
 func main() {
-    // Create client
+    // Create a new client using an InfluxDB server base URL and an authentication token
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get blocking write client
     writeAPI := client.WriteAPIBlocking("my-org","my-bucket")
@@ -312,7 +313,7 @@ import (
 )
 
 func main() {
-    // Create client
+    // Create a new client using an InfluxDB server base URL and an authentication token
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get query client
     queryAPI := client.QueryAPI("my-org")
@@ -355,7 +356,7 @@ import (
 )
 
 func main() {
-    // Create client
+    // Create a new client using an InfluxDB server base URL and an authentication token
     client := influxdb2.NewClient("http://localhost:9999", "my-token")
     // Get query client
     queryAPI := client.QueryAPI("my-org")
@@ -407,8 +408,8 @@ import (
 func main() {
     userName := "my-user"
     password := "my-password"
-    // Create a client
-    // Supply a string in the form: "username:password" as a token. Set empty value for an unauthenticated server
+     // Create a new client using an InfluxDB server base URL and an authentication token
+    // For authentication token supply a string in the form: "username:password" as a token. Set empty value for an unauthenticated server
     client := influxdb2.NewClient("http://localhost:8086", fmt.Sprintf("%s:%s",userName, password))
     // Get the blocking write client
     // Supply a string in the form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)

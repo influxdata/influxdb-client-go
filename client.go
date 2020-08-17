@@ -79,16 +79,18 @@ type clientImpl struct {
 }
 
 // NewClient creates Client for connecting to given serverURL with provided authentication token, with the default options.
-// Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
-// In such case Setup will set authentication token
+// serverURL is the InfluxDB server base URL, e.g. http://localhost:9999,
+// authToken is an authentication token. It can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
+// In such case, calling Setup() will set the authentication token.
 func NewClient(serverURL string, authToken string) Client {
 	return NewClientWithOptions(serverURL, authToken, DefaultOptions())
 }
 
 // NewClientWithOptions creates Client for connecting to given serverURL with provided authentication token
-// and configured with custom Options
-// Authentication token can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
-// In such case Setup will set authentication token
+// and configured with custom Options.
+// serverURL is the InfluxDB server base URL, e.g. http://localhost:9999,
+// authToken is an authentication token. It can be empty in case of connecting to newly installed InfluxDB server, which has not been set up yet.
+// In such case, calling Setup() will set authentication token
 func NewClientWithOptions(serverURL string, authToken string, options *Options) Client {
 	normServerURL := serverURL
 	if !strings.HasSuffix(normServerURL, "/") {

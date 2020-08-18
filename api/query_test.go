@@ -120,7 +120,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 ,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,4,i,test,1,adsfasdf
 ,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,-1,i,test,1,adsfasdf
 
-#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,bool,string,string,string,string
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,boolean,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
 #default,_result,,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
@@ -228,7 +228,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_time", false, 4),
-			query.NewFluxColumnFull("bool", "", "_value", false, 5),
+			query.NewFluxColumnFull("boolean", "", "_value", false, 5),
 			query.NewFluxColumnFull("string", "", "_field", true, 6),
 			query.NewFluxColumnFull("string", "", "_measurement", true, 7),
 			query.NewFluxColumnFull("string", "", "a", true, 8),

@@ -9,6 +9,7 @@ package api_test
 import (
 	"context"
 	"fmt"
+	"github.com/influxdata/influxdb-client-go/v2/log"
 	"strings"
 	"testing"
 
@@ -46,12 +47,6 @@ func TestBucketsAPI(t *testing.T) {
 	org, err := client.OrganizationsAPI().CreateOrganizationWithName(ctx, "bucket-org")
 	require.Nil(t, err)
 	require.NotNil(t, org)
-
-	// collect all buckets including system ones created for new organization
-	buckets, err = bucketsAPI.GetBuckets(ctx)
-	require.Nil(t, err, err)
-	//store #all buckets before creating new ones
-	bucketsNum := len(*buckets)
 
 	name := "bucket-x"
 	b, err := bucketsAPI.CreateBucketWithName(ctx, org, name, domain.RetentionRule{EverySeconds: 3600 * 1}, domain.RetentionRule{EverySeconds: 3600 * 24})
@@ -181,6 +176,31 @@ func TestBucketsAPI(t *testing.T) {
 	err = bucketsAPI.DeleteBucketWithID(ctx, *b.Id)
 	assert.NotNil(t, err)
 
+	err = client.OrganizationsAPI().DeleteOrganization(ctx, org)
+	assert.Nil(t, err, err)
+
+	// should fail with org not found
+	_, err = bucketsAPI.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
+	assert.NotNil(t, err)
+}
+
+func TestBucketsAPI_paging(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClientWithOptions(serverURL, authToken, influxdb2.DefaultOptions().SetLogLevel(log.DebugLevel))
+
+	bucketsAPI := client.BucketsAPI()
+
+	// create organizatiton for buckets
+	org, err := client.OrganizationsAPI().CreateOrganizationWithName(ctx, "bucket-org")
+	require.Nil(t, err)
+	require.NotNil(t, org)
+
+	// collect all buckets including system ones created for new organization
+	buckets, err := bucketsAPI.GetBuckets(ctx)
+	require.Nil(t, err, err)
+	//store #all buckets before creating new ones
+	bucketsNum := len(*buckets)
+
 	// create new buckets inside org
 	for i := 0; i < 30; i++ {
 		name := fmt.Sprintf("bucket-%03d", i)
@@ -233,11 +253,7 @@ func TestBucketsAPI(t *testing.T) {
 	err = client.OrganizationsAPI().DeleteOrganization(ctx, org)
 	assert.Nil(t, err, err)
 
-	// should fail with org not found
-	_, err = bucketsAPI.FindBucketsByOrgName(ctx, org.Name, api.PagingWithLimit(100))
-	assert.NotNil(t, err)
 }
-
 func TestBucketsAPI_failures(t *testing.T) {
 	ctx := context.Background()
 	client := influxdb2.NewClient(serverURL, authToken)

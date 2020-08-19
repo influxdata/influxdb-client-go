@@ -18,6 +18,8 @@ func TestDefaultOptions(t *testing.T) {
 	opts := http.DefaultOptions()
 	assert.Equal(t, (*tls.Config)(nil), opts.TLSConfig())
 	assert.Equal(t, uint(20), opts.HTTPRequestTimeout())
+	assert.NotNil(t, opts.HTTPClient())
+	assert.True(t, opts.OwnHTTPClient())
 }
 
 func TestOptionsSetting(t *testing.T) {
@@ -32,6 +34,7 @@ func TestOptionsSetting(t *testing.T) {
 	if client := opts.HTTPClient(); assert.NotNil(t, client) {
 		assert.Equal(t, 50*time.Second, client.Timeout)
 		assert.Equal(t, tlsConfig, client.Transport.(*nethttp.Transport).TLSClientConfig)
+		assert.True(t, opts.OwnHTTPClient())
 	}
 
 	client := &nethttp.Client{
@@ -40,4 +43,5 @@ func TestOptionsSetting(t *testing.T) {
 	opts = http.DefaultOptions()
 	opts.SetHTTPClient(client)
 	assert.Equal(t, client, opts.HTTPClient())
+	assert.False(t, opts.OwnHTTPClient())
 }

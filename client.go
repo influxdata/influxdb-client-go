@@ -33,7 +33,8 @@ type Client interface {
 	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
 	// Health doesn't validate authentication params.
 	Health(ctx context.Context) (*domain.HealthCheck, error)
-	// Close ensures all ongoing asynchronous write clients finish
+	// Close ensures all ongoing asynchronous write clients finish.
+	// Also closes all idle connections, in case of HTTP client was created internally.
 	Close()
 	// Options returns the options associated with client
 	Options() *Options
@@ -212,6 +213,9 @@ func (c *clientImpl) Close() {
 	}
 	for key := range c.syncWriteAPIs {
 		delete(c.syncWriteAPIs, key)
+	}
+	if c.options.HTTPOptions().OwnHTTPClient() {
+		c.options.HTTPOptions().HTTPClient().CloseIdleConnections()
 	}
 }
 

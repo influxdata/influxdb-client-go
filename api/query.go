@@ -32,7 +32,7 @@ import (
 const (
 	stringDatatype       = "string"
 	doubleDatatype       = "double"
-	boolDatatype         = "bool"
+	boolDatatype         = "boolean"
 	longDatatype         = "long"
 	uLongDatatype        = "unsignedLong"
 	durationDatatype     = "duration"

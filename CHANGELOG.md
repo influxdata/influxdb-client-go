@@ -1,12 +1,10 @@
 ## 2.1.0 [in progress]
 ### Bug fixes
 1. [#191](https://github.com/influxdata/influxdb-client-go/pull/191) Fixed QueryTableResult.Next() failed to parse boolean datatype.
+1. [#192](https://github.com/influxdata/influxdb-client-go/pull/192) Client.Close() closes idle connections of internally created HTTP client
 
 ### Documentation
 1. [#189](https://github.com/influxdata/influxdb-client-go/pull/189) Added clarification that server URL has to be the InfluxDB server base URL to API docs and all examples.   
-
-### Bug fixes 
-1. [#192](https://github.com/influxdata/influxdb-client-go/pull/192) Client.Close() closes idle connections of internally created HTTP client 
 
 ## 2.0.1 [2020-08-14]
 ### Bug fixes 

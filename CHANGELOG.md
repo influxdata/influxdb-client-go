@@ -1,4 +1,7 @@
 ## 2.1.0 [in progress]
+### Bug fixes
+1. [#191](https://github.com/influxdata/influxdb-client-go/pull/191) Fixed QueryTableResult.Next() failed to parse boolean datatype.
+
 ### Documentation
 1. [#189](https://github.com/influxdata/influxdb-client-go/pull/189) Added clarification that server URL has to be the InfluxDB server base URL to API docs and all examples.   
 

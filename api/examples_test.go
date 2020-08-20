@@ -325,6 +325,33 @@ func ExampleUsersAPI() {
 	client.Close()
 }
 
+func ExampleUsersAPI_signInOut() {
+	// Create a new client using an InfluxDB server base URL and empty token
+	client := influxdb2.NewClient("http://localhost:9999", "")
+	// Always close client at the end
+	defer client.Close()
+
+	ctx := context.Background()
+
+	// The first call must be signIn
+	err := client.UsersAPI().SignIn(ctx, "username", "password")
+	if err != nil {
+		panic(err)
+	}
+
+	// Perform some authorized operations
+	err = client.WriteAPIBlocking("my-org", "my-bucket").WriteRecord(ctx, "test,a=rock,b=local f=1.2,i=-5i")
+	if err != nil {
+		panic(err)
+	}
+
+	// Sign out at the end
+	err = client.UsersAPI().SignOut(ctx)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func ExampleLabelsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client := influxdb2.NewClient("http://localhost:9999", "my-token")

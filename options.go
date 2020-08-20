@@ -144,6 +144,7 @@ func (o *Options) HTTPClient() *nethttp.Client {
 //
 // Setting the HTTPClient will cause the other HTTP options
 // to be ignored.
+// In case of UsersAPI.SignIn() is used, HTTPClient.Jar will be used for storing session cookie.
 func (o *Options) SetHTTPClient(c *nethttp.Client) *Options {
 	o.httpOptions.SetHTTPClient(c)
 	return o

@@ -6,8 +6,15 @@ package api
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	nethttp "net/http"
+	"net/http/cookiejar"
+	"sync"
+
+	"github.com/influxdata/influxdb-client-go/v2/api/http"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
+	"golang.org/x/net/publicsuffix"
 )
 
 // UsersAPI provides methods for managing users in a InfluxDB server
@@ -35,16 +42,26 @@ type UsersAPI interface {
 	// Me returns actual user
 	Me(ctx context.Context) (*domain.User, error)
 	// MeUpdatePassword set password of actual user
-	MeUpdatePassword(ctx context.Context, password string) error
+	MeUpdatePassword(ctx context.Context, oldPassword, newPassword string) error
+	// SignIn signs in a user with username and password credentials. This overrides any previously set authentication token
+	SignIn(ctx context.Context, username, password string) error
+	// SignOut signs out previously signed in user
+	SignOut(ctx context.Context) error
 }
 
 type usersAPI struct {
-	apiClient *domain.ClientWithResponses
+	apiClient       *domain.ClientWithResponses
+	httpService     http.Service
+	httpClient      *nethttp.Client
+	deleteCookieJar bool
+	lock            sync.Mutex
 }
 
-func NewUsersAPI(apiClient *domain.ClientWithResponses) UsersAPI {
+func NewUsersAPI(apiClient *domain.ClientWithResponses, httpService http.Service, httpClient *nethttp.Client) UsersAPI {
 	return &usersAPI{
-		apiClient: apiClient,
+		apiClient:   apiClient,
+		httpService: httpService,
+		httpClient:  httpClient,
 	}
 }
 
@@ -164,15 +181,74 @@ func (u *usersAPI) Me(ctx context.Context) (*domain.User, error) {
 	return response.JSON200, nil
 }
 
-func (u *usersAPI) MeUpdatePassword(ctx context.Context, password string) error {
+func (u *usersAPI) MeUpdatePassword(ctx context.Context, oldPassword, newPassword string) error {
+	u.lock.Lock()
+	defer u.lock.Unlock()
+	me, err := u.Me(ctx)
+	if err != nil {
+		return err
+	}
+	creds := base64.StdEncoding.EncodeToString([]byte(me.Name + ":" + oldPassword))
+	auth := u.httpService.Authorization()
+	defer u.httpService.SetAuthorization(auth)
+	u.httpService.SetAuthorization("Basic " + creds)
 	params := &domain.PutMePasswordParams{}
-	body := &domain.PasswordResetBody{Password: password}
+	body := &domain.PasswordResetBody{Password: newPassword}
 	response, err := u.apiClient.PutMePasswordWithResponse(ctx, params, domain.PutMePasswordJSONRequestBody(*body))
 	if err != nil {
 		return err
 	}
 	if response.JSONDefault != nil {
 		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+	}
+	return nil
+}
+
+func (u *usersAPI) SignIn(ctx context.Context, username, password string) error {
+	u.lock.Lock()
+	defer u.lock.Unlock()
+	if u.httpClient.Jar == nil {
+		jar, err := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
+		if err != nil {
+			return err
+		}
+		u.httpClient.Jar = jar
+		u.deleteCookieJar = true
+	}
+	creds := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+	u.httpService.SetAuthorization("Basic " + creds)
+	defer u.httpService.SetAuthorization("")
+	resp, err := u.apiClient.PostSigninWithResponse(ctx, &domain.PostSigninParams{})
+	if err != nil {
+		return err
+	}
+	if resp.JSONDefault != nil {
+		return domain.DomainErrorToError(resp.JSONDefault, resp.StatusCode())
+	}
+	if resp.JSON401 != nil {
+		return domain.DomainErrorToError(resp.JSON401, resp.StatusCode())
+	}
+	if resp.JSON403 != nil {
+		return domain.DomainErrorToError(resp.JSON403, resp.StatusCode())
+	}
+	return nil
+}
+
+func (u *usersAPI) SignOut(ctx context.Context) error {
+	u.lock.Lock()
+	defer u.lock.Unlock()
+	resp, err := u.apiClient.PostSignoutWithResponse(ctx, &domain.PostSignoutParams{})
+	if err != nil {
+		return err
+	}
+	if resp.JSONDefault != nil {
+		return domain.DomainErrorToError(resp.JSONDefault, resp.StatusCode())
+	}
+	if resp.JSON401 != nil {
+		return domain.DomainErrorToError(resp.JSON401, resp.StatusCode())
+	}
+	if u.deleteCookieJar {
+		u.httpClient.Jar = nil
 	}
 	return nil
 }

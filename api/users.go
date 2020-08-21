@@ -43,7 +43,7 @@ type UsersAPI interface {
 	Me(ctx context.Context) (*domain.User, error)
 	// MeUpdatePassword set password of actual user
 	MeUpdatePassword(ctx context.Context, oldPassword, newPassword string) error
-	// SignIn signs in a user with username and password credentials. This overrides any previously set authentication token
+	// SignIn exchanges username and password credentials to establish an authenticated session with the InfluxDB server. The Client's authentication token is then ignored, it can be empty.
 	SignIn(ctx context.Context, username, password string) error
 	// SignOut signs out previously signed in user
 	SignOut(ctx context.Context) error

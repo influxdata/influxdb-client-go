@@ -50,6 +50,7 @@ func (o *Options) HTTPClient() *http.Client {
 //
 // Setting the HTTPClient will cause the other HTTP options
 // to be ignored.
+// In case of UsersAPI.SignIn() is used, HTTPClient.Jar will be used for storing session cookie.
 func (o *Options) SetHTTPClient(c *http.Client) *Options {
 	o.httpClient = c
 	o.ownClient = false

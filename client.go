@@ -98,7 +98,11 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		// For subsequent path parts concatenation, url has to end with '/'
 		normServerURL = serverURL + "/"
 	}
-	service := http.NewService(normServerURL, "Token "+authToken, options.httpOptions)
+	authorization := ""
+	if len(authToken) > 0 {
+		authorization = "Token " + authToken
+	}
+	service := http.NewService(normServerURL, authorization, options.httpOptions)
 	client := &clientImpl{
 		serverURL:     serverURL,
 		options:       options,
@@ -245,7 +249,7 @@ func (c *clientImpl) UsersAPI() api.UsersAPI {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.usersAPI == nil {
-		c.usersAPI = api.NewUsersAPI(c.apiClient)
+		c.usersAPI = api.NewUsersAPI(c.apiClient, c.httpService, c.options.HTTPClient())
 	}
 	return c.usersAPI
 }

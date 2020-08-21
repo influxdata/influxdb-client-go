@@ -124,7 +124,9 @@ func (s *service) DoHTTPRequest(req *http.Request, requestCallback RequestCallba
 
 func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback RequestCallback) (*http.Response, error) {
 	log.Infof("HTTP %s req to %s", req.Method, req.URL.String())
-	req.Header.Set("Authorization", s.authorization)
+	if len(s.authorization) > 0 {
+		req.Header.Set("Authorization", s.authorization)
+	}
 	req.Header.Set("User-Agent", http2.UserAgent)
 	if requestCallback != nil {
 		requestCallback(req)

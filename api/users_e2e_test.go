@@ -75,9 +75,12 @@ func TestUsersAPI(t *testing.T) {
 	require.NotNil(t, users)
 	assert.Len(t, *users, 1)
 
-	// this fails now
-	err = usersAPI.MeUpdatePassword(ctx, "new-password")
-	assert.NotNil(t, err)
+	// it fails, https://github.com/influxdata/influxdb/pull/15981
+	//err = usersAPI.MeUpdatePassword(ctx, "my-password", "my-new-password")
+	//assert.Nil(t, err)
+
+	//err = usersAPI.MeUpdatePassword(ctx, "my-new-password", "my-password")
+	//assert.Nil(t, err)
 }
 
 func TestUsersAPI_failing(t *testing.T) {
@@ -136,6 +139,89 @@ func TestUsersAPI_requestFailing(t *testing.T) {
 	_, err = usersAPI.Me(ctx)
 	assert.NotNil(t, err)
 
-	err = usersAPI.MeUpdatePassword(ctx, "pass")
+	err = usersAPI.MeUpdatePassword(ctx, "my-password", "my-new-password")
 	assert.NotNil(t, err)
+
+	err = usersAPI.SignIn(ctx, "user", "my-password")
+	assert.NotNil(t, err)
+
+	err = usersAPI.SignOut(ctx)
+	assert.NotNil(t, err)
+}
+
+func TestSignInOut(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClient("http://localhost:9999", "")
+
+	usersAPI := client.UsersAPI()
+
+	err := usersAPI.SignIn(ctx, "my-user", "my-password")
+	require.Nil(t, err)
+
+	// try authorized calls
+	orgs, err := client.OrganizationsAPI().GetOrganizations(ctx)
+	assert.Nil(t, err)
+	assert.NotNil(t, orgs)
+
+	// try authorized calls
+	buckets, err := client.BucketsAPI().GetBuckets(ctx)
+	assert.Nil(t, err)
+	assert.NotNil(t, buckets)
+
+	// try authorized calls
+	err = client.WriteAPIBlocking("my-org", "my-bucket").WriteRecord(ctx, "test,a=rock,b=local f=1.2,i=-5i")
+	assert.Nil(t, err)
+
+	res, err := client.QueryAPI("my-org").QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
+	assert.Nil(t, err)
+	assert.NotNil(t, res)
+
+	err = usersAPI.SignOut(ctx)
+	assert.Nil(t, err)
+
+	// unauthorized signout
+	err = usersAPI.SignOut(ctx)
+	assert.NotNil(t, err)
+
+	// Unauthorized call
+	_, err = client.OrganizationsAPI().GetOrganizations(ctx)
+	assert.NotNil(t, err)
+
+	// test wrong credentials
+	err = usersAPI.SignIn(ctx, "my-user", "password")
+	assert.NotNil(t, err)
+
+	client.HTTPService().SetAuthorization("Token my-token")
+
+	user, err := usersAPI.CreateUserWithName(ctx, "user-01")
+	require.Nil(t, err)
+	require.NotNil(t, user)
+
+	// 2nd client to use for new user auth
+	client2 := influxdb2.NewClient("http://localhost:9999", "")
+
+	err = usersAPI.UpdateUserPassword(ctx, user, "123password")
+	assert.Nil(t, err)
+
+	err = client2.UsersAPI().SignIn(ctx, "user-01", "123password")
+	assert.Nil(t, err)
+
+	err = client2.UsersAPI().SignOut(ctx)
+	assert.Nil(t, err)
+
+	status := domain.UserStatusInactive
+	user.Status = &status
+	u, err := usersAPI.UpdateUser(ctx, user)
+	assert.Nil(t, err)
+	assert.NotNil(t, u)
+
+	// log in inactive user,
+	//err = client2.SignIn(ctx, "user-01", "123password")
+	//assert.NotNil(t, err)
+
+	err = usersAPI.DeleteUser(ctx, user)
+	assert.Nil(t, err)
+
+	client.Close()
+	client2.Close()
 }

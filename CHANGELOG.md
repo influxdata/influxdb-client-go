@@ -1,4 +1,7 @@
 ## 2.1.0 [in progress]
+### Features
+1. [#193](https://github.com/influxdata/influxdb-client-go/pull/193) Added authentication using username and password. See `UsersAPI.SignIn()` and `UsersAPI.SignOut()`
+
 ### Bug fixes
 1. [#191](https://github.com/influxdata/influxdb-client-go/pull/191) Fixed QueryTableResult.Next() failed to parse boolean datatype.
 1. [#192](https://github.com/influxdata/influxdb-client-go/pull/192) Client.Close() closes idle connections of internally created HTTP client

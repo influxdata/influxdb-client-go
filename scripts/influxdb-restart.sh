@@ -61,17 +61,16 @@ docker run \
        --detach \
        --name influxdb \
        --network influx_network \
-       --publish 8086:8086 \
-       --publish 8089:8089/udp \
+       --publish 8087:8086 \
        --volume ${SCRIPT_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf \
        ${INFLUXDB_IMAGE}
 
 echo "Wait to start InfluxDB"
-wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/ping
+wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8087/ping
 echo
 echo "Post with create dabase"
 echo
-curl -X POST localhost:8086/query --data-urlencode "q=create database mydb"
+curl -X POST localhost:8087/query --data-urlencode "q=create database mydb"
 #
 # InfluxDB 2.0
 #
@@ -84,16 +83,16 @@ docker run \
        --detach \
        --name influxdb_v2 \
        --network influx_network \
-       --publish 9999:9999 \
+       --publish 8086:9999 \
        ${INFLUXDB_V2_IMAGE}
 
 echo "Wait to start InfluxDB 2.0"
-wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:9999/metrics
+wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/metrics
 
 echo
 echo "Post onBoarding request, to setup initial user (my-user@my-password), org (my-org) and bucketSetup (my-bucket)"
 echo
-curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json' \
+curl -i -X POST http://localhost:8086/api/v2/setup -H 'accept: application/json' \
     -d '{
             "username": "my-user",
             "password": "my-password",
@@ -113,6 +112,6 @@ docker run \
        --detach \
        --name influxdb_v2_onboarding \
        --network influx_network \
-       --publish 9990:9999 \
+       --publish 8089:9999 \
        ${INFLUXDB_V2_IMAGE}
 

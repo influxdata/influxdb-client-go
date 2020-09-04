@@ -8,6 +8,7 @@
 
 ### Documentation
 1. [#189](https://github.com/influxdata/influxdb-client-go/pull/189) Added clarification that server URL has to be the InfluxDB server base URL to API docs and all examples.   
+1. [#196](https://github.com/influxdata/influxdb-client-go/pull/196) Changed default server port 9999 to 8086 in docs and examples  
 
 ## 2.0.1 [2020-08-14]
 ### Bug fixes 

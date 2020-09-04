@@ -11,8 +11,8 @@ import (
 )
 
 func TestService(t *testing.T) {
-	srv := NewService("http://localhost:9999/aa/", "Token my-token", DefaultOptions())
-	assert.Equal(t, "http://localhost:9999/aa/", srv.ServerURL())
-	assert.Equal(t, "http://localhost:9999/aa/api/v2/", srv.ServerAPIURL())
+	srv := NewService("http://localhost:8086/aa/", "Token my-token", DefaultOptions())
+	assert.Equal(t, "http://localhost:8086/aa/", srv.ServerURL())
+	assert.Equal(t, "http://localhost:8086/aa/api/v2/", srv.ServerAPIURL())
 	assert.Equal(t, "Token my-token", srv.Authorization())
 }

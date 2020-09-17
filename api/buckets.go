@@ -13,13 +13,15 @@ import (
 
 // BucketsAPI provides methods for managing Buckets in a InfluxDB server.
 type BucketsAPI interface {
-	// GetBuckets returns all buckets, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
+	// GetBuckets returns all buckets.
+	// GetBuckets supports PagingOptions: Offset, Limit, After. Empty pagingOptions means the default paging (first 20 results).
 	GetBuckets(ctx context.Context, pagingOptions ...PagingOption) (*[]domain.Bucket, error)
 	// FindBucketByName returns a bucket found using bucketName.
 	FindBucketByName(ctx context.Context, bucketName string) (*domain.Bucket, error)
 	// FindBucketByID returns a bucket found using bucketID.
 	FindBucketByID(ctx context.Context, bucketID string) (*domain.Bucket, error)
-	// FindBucketsByOrgID returns buckets belonging to the organization with ID orgID, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
+	// FindBucketsByOrgID returns buckets belonging to the organization with ID orgID.
+	// FindBucketsByOrgID supports PagingOptions: Offset, Limit, After. Empty pagingOptions means the default paging (first 20 results).
 	FindBucketsByOrgID(ctx context.Context, orgID string, pagingOptions ...PagingOption) (*[]domain.Bucket, error)
 	// FindBucketsByOrgName returns buckets belonging to the organization with name orgName, with the specified paging. Empty pagingOptions means the default paging (first 20 results).
 	FindBucketsByOrgName(ctx context.Context, orgName string, pagingOptions ...PagingOption) (*[]domain.Bucket, error)

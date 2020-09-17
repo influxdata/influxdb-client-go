@@ -111,7 +111,7 @@ func (u *labelsAPI) CreateLabelWithName(ctx context.Context, org *domain.Organiz
 
 func (u *labelsAPI) CreateLabelWithNameWithID(ctx context.Context, orgID, labelName string, properties map[string]string) (*domain.Label, error) {
 	props := &domain.LabelCreateRequest_Properties{AdditionalProperties: properties}
-	label := &domain.LabelCreateRequest{Name: &labelName, OrgID: orgID, Properties: props}
+	label := &domain.LabelCreateRequest{Name: labelName, OrgID: orgID, Properties: props}
 	return u.CreateLabel(ctx, label)
 }
 

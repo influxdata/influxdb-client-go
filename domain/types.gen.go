@@ -33,6 +33,27 @@ const (
 	AxisScaleLog AxisScale = "log"
 )
 
+// Defines values for BandViewPropertiesHoverDimension.
+const (
+	BandViewPropertiesHoverDimensionAuto BandViewPropertiesHoverDimension = "auto"
+
+	BandViewPropertiesHoverDimensionTrue BandViewPropertiesHoverDimension = "true"
+
+	BandViewPropertiesHoverDimensionX BandViewPropertiesHoverDimension = "x"
+
+	BandViewPropertiesHoverDimensionXy BandViewPropertiesHoverDimension = "xy"
+)
+
+// Defines values for BandViewPropertiesShape.
+const (
+	BandViewPropertiesShapeChronografV2 BandViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for BandViewPropertiesType.
+const (
+	BandViewPropertiesTypeBand BandViewPropertiesType = "band"
+)
+
 // Defines values for BucketType.
 const (
 	BucketTypeSystem BucketType = "system"
@@ -364,6 +385,8 @@ const (
 	NotificationEndpointTypePagerduty NotificationEndpointType = "pagerduty"
 
 	NotificationEndpointTypeSlack NotificationEndpointType = "slack"
+
+	NotificationEndpointTypeTelegram NotificationEndpointType = "telegram"
 )
 
 // Defines values for NotificationEndpointUpdateStatus.
@@ -841,6 +864,20 @@ const (
 	TelegrafPluginOutputInfluxDBV2TypeOutput TelegrafPluginOutputInfluxDBV2Type = "output"
 )
 
+// Defines values for TelegramNotificationRuleBaseParseMode.
+const (
+	TelegramNotificationRuleBaseParseModeHTML TelegramNotificationRuleBaseParseMode = "HTML"
+
+	TelegramNotificationRuleBaseParseModeMarkdown TelegramNotificationRuleBaseParseMode = "Markdown"
+
+	TelegramNotificationRuleBaseParseModeMarkdownV2 TelegramNotificationRuleBaseParseMode = "MarkdownV2"
+)
+
+// Defines values for TelegramNotificationRuleBaseType.
+const (
+	TelegramNotificationRuleBaseTypeTelegram TelegramNotificationRuleBaseType = "telegram"
+)
+
 // Defines values for TemplateKind.
 const (
 	TemplateKindBucket TemplateKind = "Bucket"
@@ -1071,6 +1108,45 @@ type BadStatement struct {
 	// Type of AST node
 	Type *NodeType `json:"type,omitempty"`
 }
+
+// BandViewProperties defines model for BandViewProperties.
+type BandViewProperties struct {
+
+	// The viewport for a View's visualizations
+	Axes Axes `json:"axes"`
+
+	// Colors define color encoding of data into a visualization
+	Colors         []DashboardColor                  `json:"colors"`
+	Geom           XYGeom                            `json:"geom"`
+	HoverDimension *BandViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+
+	// Legend define encoding of data into a view's legend
+	Legend                     Legend                  `json:"legend"`
+	LegendOpacity              *float32                `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                    `json:"legendOrientationThreshold,omitempty"`
+	LowerColumn                *string                 `json:"lowerColumn,omitempty"`
+	MainColumn                 *string                 `json:"mainColumn,omitempty"`
+	Note                       string                  `json:"note"`
+	Queries                    []DashboardQuery        `json:"queries"`
+	Shape                      BandViewPropertiesShape `json:"shape"`
+
+	// If true, will display note when empty
+	ShowNoteWhenEmpty bool                   `json:"showNoteWhenEmpty"`
+	TimeFormat        *string                `json:"timeFormat,omitempty"`
+	Type              BandViewPropertiesType `json:"type"`
+	UpperColumn       *string                `json:"upperColumn,omitempty"`
+	XColumn           *string                `json:"xColumn,omitempty"`
+	YColumn           *string                `json:"yColumn,omitempty"`
+}
+
+// BandViewPropertiesHoverDimension defines model for BandViewProperties.HoverDimension.
+type BandViewPropertiesHoverDimension string
+
+// BandViewPropertiesShape defines model for BandViewProperties.Shape.
+type BandViewPropertiesShape string
+
+// BandViewPropertiesType defines model for BandViewProperties.Type.
+type BandViewPropertiesType string
 
 // BinaryExpression defines model for BinaryExpression.
 type BinaryExpression struct {
@@ -1304,10 +1380,12 @@ type CheckViewProperties struct {
 	CheckID string `json:"checkID"`
 
 	// Colors define color encoding of data into a visualization
-	Colors  []DashboardColor         `json:"colors"`
-	Queries []DashboardQuery         `json:"queries"`
-	Shape   CheckViewPropertiesShape `json:"shape"`
-	Type    CheckViewPropertiesType  `json:"type"`
+	Colors                     []DashboardColor         `json:"colors"`
+	LegendOpacity              *float32                 `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                     `json:"legendOrientationThreshold,omitempty"`
+	Queries                    []DashboardQuery         `json:"queries"`
+	Shape                      CheckViewPropertiesShape `json:"shape"`
+	Type                       CheckViewPropertiesType  `json:"type"`
 }
 
 // CheckViewPropertiesShape defines model for CheckViewProperties.Shape.
@@ -1599,7 +1677,7 @@ type DeletePredicateRequest struct {
 // Dialect defines model for Dialect.
 type Dialect struct {
 
-	// Https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns
+	// https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns
 	Annotations *[]DialectAnnotations `json:"annotations,omitempty"`
 
 	// Character prefixed to comment strings
@@ -1914,10 +1992,12 @@ type HeatmapViewProperties struct {
 	BinSize float32 `json:"binSize"`
 
 	// Colors define color encoding of data into a visualization
-	Colors  []string                   `json:"colors"`
-	Note    string                     `json:"note"`
-	Queries []DashboardQuery           `json:"queries"`
-	Shape   HeatmapViewPropertiesShape `json:"shape"`
+	Colors                     []string                   `json:"colors"`
+	LegendOpacity              *float32                   `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                       `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                     `json:"note"`
+	Queries                    []DashboardQuery           `json:"queries"`
+	Shape                      HeatmapViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                      `json:"showNoteWhenEmpty"`
@@ -1946,12 +2026,14 @@ type HistogramViewProperties struct {
 	BinCount int `json:"binCount"`
 
 	// Colors define color encoding of data into a visualization
-	Colors      []DashboardColor                `json:"colors"`
-	FillColumns []string                        `json:"fillColumns"`
-	Note        string                          `json:"note"`
-	Position    HistogramViewPropertiesPosition `json:"position"`
-	Queries     []DashboardQuery                `json:"queries"`
-	Shape       HistogramViewPropertiesShape    `json:"shape"`
+	Colors                     []DashboardColor                `json:"colors"`
+	FillColumns                []string                        `json:"fillColumns"`
+	LegendOpacity              *float32                        `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                            `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                          `json:"note"`
+	Position                   HistogramViewPropertiesPosition `json:"position"`
+	Queries                    []DashboardQuery                `json:"queries"`
+	Shape                      HistogramViewPropertiesShape    `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                        `json:"showNoteWhenEmpty"`
@@ -2072,8 +2154,8 @@ type Label_Properties struct {
 
 // LabelCreateRequest defines model for LabelCreateRequest.
 type LabelCreateRequest struct {
-	Name  *string `json:"name,omitempty"`
-	OrgID string  `json:"orgID"`
+	Name  string `json:"name"`
+	OrgID string `json:"orgID"`
 
 	// Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.
 	Properties *LabelCreateRequest_Properties `json:"properties,omitempty"`
@@ -2166,13 +2248,15 @@ type LinePlusSingleStatProperties struct {
 	HoverDimension *LinePlusSingleStatPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
-	Legend     Legend                               `json:"legend"`
-	Note       string                               `json:"note"`
-	Position   LinePlusSingleStatPropertiesPosition `json:"position"`
-	Prefix     string                               `json:"prefix"`
-	Queries    []DashboardQuery                     `json:"queries"`
-	ShadeBelow *bool                                `json:"shadeBelow,omitempty"`
-	Shape      LinePlusSingleStatPropertiesShape    `json:"shape"`
+	Legend                     Legend                               `json:"legend"`
+	LegendOpacity              *float32                             `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                                 `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                               `json:"note"`
+	Position                   LinePlusSingleStatPropertiesPosition `json:"position"`
+	Prefix                     string                               `json:"prefix"`
+	Queries                    []DashboardQuery                     `json:"queries"`
+	ShadeBelow                 *bool                                `json:"shadeBelow,omitempty"`
+	Shape                      LinePlusSingleStatPropertiesShape    `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                             `json:"showNoteWhenEmpty"`
@@ -2325,11 +2409,13 @@ type MemberExpression struct {
 type MosaicViewProperties struct {
 
 	// Colors define color encoding of data into a visualization
-	Colors      []string                  `json:"colors"`
-	FillColumns []string                  `json:"fillColumns"`
-	Note        string                    `json:"note"`
-	Queries     []DashboardQuery          `json:"queries"`
-	Shape       MosaicViewPropertiesShape `json:"shape"`
+	Colors                     []string                  `json:"colors"`
+	FillColumns                []string                  `json:"fillColumns"`
+	LegendOpacity              *float32                  `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                      `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                    `json:"note"`
+	Queries                    []DashboardQuery          `json:"queries"`
+	Shape                      MosaicViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                     `json:"showNoteWhenEmpty"`
@@ -2997,11 +3083,13 @@ type SMTPNotificationRuleBaseType string
 type ScatterViewProperties struct {
 
 	// Colors define color encoding of data into a visualization
-	Colors      []string                   `json:"colors"`
-	FillColumns []string                   `json:"fillColumns"`
-	Note        string                     `json:"note"`
-	Queries     []DashboardQuery           `json:"queries"`
-	Shape       ScatterViewPropertiesShape `json:"shape"`
+	Colors                     []string                   `json:"colors"`
+	FillColumns                []string                   `json:"fillColumns"`
+	LegendOpacity              *float32                   `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                       `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                     `json:"note"`
+	Queries                    []DashboardQuery           `json:"queries"`
+	Shape                      ScatterViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                      `json:"showNoteWhenEmpty"`
@@ -3115,11 +3203,13 @@ type SingleStatViewProperties struct {
 	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
 
 	// Legend define encoding of data into a view's legend
-	Legend  Legend                        `json:"legend"`
-	Note    string                        `json:"note"`
-	Prefix  string                        `json:"prefix"`
-	Queries []DashboardQuery              `json:"queries"`
-	Shape   SingleStatViewPropertiesShape `json:"shape"`
+	Legend                     Legend                        `json:"legend"`
+	LegendOpacity              *float32                      `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                          `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                        `json:"note"`
+	Prefix                     string                        `json:"prefix"`
+	Queries                    []DashboardQuery              `json:"queries"`
+	Shape                      SingleStatViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                         `json:"showNoteWhenEmpty"`
@@ -3841,6 +3931,49 @@ type Telegrafs struct {
 	Configurations *[]Telegraf `json:"configurations,omitempty"`
 }
 
+// TelegramNotificationEndpoint defines model for TelegramNotificationEndpoint.
+type TelegramNotificationEndpoint struct {
+	// Embedded struct due to allOf(#/components/schemas/NotificationEndpointBase)
+	NotificationEndpointBase
+	// Embedded fields due to inline allOf schema
+
+	// ID of the telegram channel, a chat_id in https://core.telegram.org/bots/api#sendmessage .
+	Channel string `json:"channel"`
+
+	// Specifies the Telegram bot token. See https://core.telegram.org/bots#creating-a-new-bot .
+	Token string `json:"token"`
+}
+
+// TelegramNotificationRule defines model for TelegramNotificationRule.
+type TelegramNotificationRule struct {
+	// Embedded struct due to allOf(#/components/schemas/NotificationRuleBase)
+	NotificationRuleBase
+	// Embedded struct due to allOf(#/components/schemas/TelegramNotificationRuleBase)
+	TelegramNotificationRuleBase
+}
+
+// TelegramNotificationRuleBase defines model for TelegramNotificationRuleBase.
+type TelegramNotificationRuleBase struct {
+
+	// Disables preview of web links in the sent messages when "true". Defaults to "false" .
+	DisableWebPagePreview *bool `json:"disableWebPagePreview,omitempty"`
+
+	// The message template as a flux interpolated string.
+	MessageTemplate string `json:"messageTemplate"`
+
+	// Parse mode of the message text per https://core.telegram.org/bots/api#formatting-options . Defaults to "MarkdownV2" .
+	ParseMode *TelegramNotificationRuleBaseParseMode `json:"parseMode,omitempty"`
+
+	// The discriminator between other types of notification rules is "telegram".
+	Type TelegramNotificationRuleBaseType `json:"type"`
+}
+
+// TelegramNotificationRuleBaseParseMode defines model for TelegramNotificationRuleBase.ParseMode.
+type TelegramNotificationRuleBaseParseMode string
+
+// TelegramNotificationRuleBaseType defines model for TelegramNotificationRuleBase.Type.
+type TelegramNotificationRuleBaseType string
+
 // Template defines model for Template.
 type Template []struct {
 	ApiVersion *string       `json:"apiVersion,omitempty"`
@@ -4409,12 +4542,14 @@ type XYViewProperties struct {
 	HoverDimension *XYViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
-	Legend     Legend                   `json:"legend"`
-	Note       string                   `json:"note"`
-	Position   XYViewPropertiesPosition `json:"position"`
-	Queries    []DashboardQuery         `json:"queries"`
-	ShadeBelow *bool                    `json:"shadeBelow,omitempty"`
-	Shape      XYViewPropertiesShape    `json:"shape"`
+	Legend                     Legend                   `json:"legend"`
+	LegendOpacity              *float32                 `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                     `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                   `json:"note"`
+	Position                   XYViewPropertiesPosition `json:"position"`
+	Queries                    []DashboardQuery         `json:"queries"`
+	ShadeBelow                 *bool                    `json:"shadeBelow,omitempty"`
+	Shape                      XYViewPropertiesShape    `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                 `json:"showNoteWhenEmpty"`
@@ -4435,6 +4570,9 @@ type XYViewPropertiesShape string
 
 // XYViewPropertiesType defines model for XYViewProperties.Type.
 type XYViewPropertiesType string
+
+// After defines model for After.
+type After string
 
 // Descending defines model for Descending.
 type Descending bool
@@ -4515,6 +4653,9 @@ type PatchAuthorizationsIDParams struct {
 type GetBucketsParams struct {
 	Offset *Offset `json:"offset,omitempty"`
 	Limit  *Limit  `json:"limit,omitempty"`
+
+	// The last resource ID from which to seek from (but not including). This is to be used instead of `offset`.
+	After *After `json:"after,omitempty"`
 
 	// The organization name.
 	Org *string `json:"org,omitempty"`
@@ -4717,6 +4858,9 @@ type GetChecksIDQueryParams struct {
 
 // GetDashboardsParams defines parameters for GetDashboards.
 type GetDashboardsParams struct {
+	Offset     *Offset     `json:"offset,omitempty"`
+	Limit      *Limit      `json:"limit,omitempty"`
+	Descending *Descending `json:"descending,omitempty"`
 
 	// The owner ID.
 	Owner *string `json:"owner,omitempty"`
@@ -5304,6 +5448,9 @@ type GetNotificationRulesIDQueryParams struct {
 
 // GetOrgsParams defines parameters for GetOrgs.
 type GetOrgsParams struct {
+	Offset     *Offset     `json:"offset,omitempty"`
+	Limit      *Limit      `json:"limit,omitempty"`
+	Descending *Descending `json:"descending,omitempty"`
 
 	// Filter organizations to a specific organization name.
 	Org *string `json:"org,omitempty"`
@@ -5574,16 +5721,6 @@ type PostScrapersIDLabelsParams struct {
 
 // DeleteScrapersIDLabelsIDParams defines parameters for DeleteScrapersIDLabelsID.
 type DeleteScrapersIDLabelsIDParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// PatchScrapersIDLabelsIDJSONBody defines parameters for PatchScrapersIDLabelsID.
-type PatchScrapersIDLabelsIDJSONBody Label
-
-// PatchScrapersIDLabelsIDParams defines parameters for PatchScrapersIDLabelsID.
-type PatchScrapersIDLabelsIDParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -6434,9 +6571,6 @@ type PatchScrapersIDJSONRequestBody PatchScrapersIDJSONBody
 
 // PostScrapersIDLabelsRequestBody defines body for PostScrapersIDLabels for application/json ContentType.
 type PostScrapersIDLabelsJSONRequestBody PostScrapersIDLabelsJSONBody
-
-// PatchScrapersIDLabelsIDRequestBody defines body for PatchScrapersIDLabelsID for application/json ContentType.
-type PatchScrapersIDLabelsIDJSONRequestBody PatchScrapersIDLabelsIDJSONBody
 
 // PostScrapersIDMembersRequestBody defines body for PostScrapersIDMembers for application/json ContentType.
 type PostScrapersIDMembersJSONRequestBody PostScrapersIDMembersJSONBody

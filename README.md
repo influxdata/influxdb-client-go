@@ -78,7 +78,7 @@ func main() {
     // Create point using full params constructor 
     p := influxdb2.NewPoint("stat",
         map[string]string{"unit": "temperature"},
-        map[string]interface{}{"avg": 24.5, "max": 45},
+        map[string]interface{}{"avg": 24.5, "max": 45.0},
         time.Now())
     // write point immediately 
     writeAPI.WritePoint(context.Background(), p)
@@ -86,7 +86,7 @@ func main() {
     p = influxdb2.NewPointWithMeasurement("stat").
         AddTag("unit", "temperature").
         AddField("avg", 23.2).
-        AddField("max", 45).
+        AddField("max", 45.0).
         SetTime(time.Now())
     writeAPI.WritePoint(context.Background(), p)
     

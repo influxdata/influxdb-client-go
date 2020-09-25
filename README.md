@@ -53,7 +53,7 @@ There are also other examples in the API docs:
 ## How To Use
 
 ### Installation
-**Go 1.3** or later is required.
+**Go 1.13** or later is required.
 
 Add import `github.com/influxdata/influxdb-client-go` to your source code and sync dependencies or directly edit the `go.mod` file.
 

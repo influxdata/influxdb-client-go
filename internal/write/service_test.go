@@ -59,7 +59,7 @@ func TestAddDefaultTags(t *testing.T) {
 
 func TestDefaultRetryDelay(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
-	hs := test.NewTestService(t, "http://localhost:9999")
+	hs := test.NewTestService(t, "http://localhost:8086")
 	opts := write.DefaultOptions()
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
@@ -89,7 +89,7 @@ func TestDefaultRetryDelay(t *testing.T) {
 
 func TestCustomRetryDelayWithFLush(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
-	hs := test.NewTestService(t, "http://localhost:9999")
+	hs := test.NewTestService(t, "http://localhost:8086")
 	opts := write.DefaultOptions().SetRetryInterval(1)
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
@@ -133,7 +133,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 
 func TestBufferOverwrite(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
-	hs := test.NewTestService(t, "http://localhost:9999")
+	hs := test.NewTestService(t, "http://localhost:8086")
 	//
 	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
 	ctx := context.Background()
@@ -184,7 +184,7 @@ func TestBufferOverwrite(t *testing.T) {
 
 func TestMaxRetryInterval(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
-	hs := test.NewTestService(t, "http://localhost:9999")
+	hs := test.NewTestService(t, "http://localhost:8086")
 	//
 	opts := write.DefaultOptions().SetRetryInterval(1).SetMaxRetryInterval(10)
 	ctx := context.Background()

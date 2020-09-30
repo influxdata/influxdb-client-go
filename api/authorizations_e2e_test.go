@@ -30,7 +30,7 @@ func getEnvValue(key, defVal string) string {
 
 func init() {
 	authToken = getEnvValue("INFLUXDB2_TOKEN", "my-token")
-	serverURL = getEnvValue("INFLUXDB2_URL", "http://localhost:9999")
+	serverURL = getEnvValue("INFLUXDB2_URL", "http://localhost:8086")
 }
 
 func TestAuthorizationsAPI(t *testing.T) {

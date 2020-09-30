@@ -151,7 +151,7 @@ func TestUsersAPI_requestFailing(t *testing.T) {
 
 func TestSignInOut(t *testing.T) {
 	ctx := context.Background()
-	client := influxdb2.NewClient("http://localhost:9999", "")
+	client := influxdb2.NewClient("http://localhost:8086", "")
 
 	usersAPI := client.UsersAPI()
 
@@ -198,7 +198,7 @@ func TestSignInOut(t *testing.T) {
 	require.NotNil(t, user)
 
 	// 2nd client to use for new user auth
-	client2 := influxdb2.NewClient("http://localhost:9999", "")
+	client2 := influxdb2.NewClient("http://localhost:8086", "")
 
 	err = usersAPI.UpdateUserPassword(ctx, user, "123password")
 	assert.Nil(t, err)

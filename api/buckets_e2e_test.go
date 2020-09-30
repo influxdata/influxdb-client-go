@@ -49,7 +49,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, org)
 
 	name := "bucket-x"
-	b, err := bucketsAPI.CreateBucketWithName(ctx, org, name, domain.RetentionRule{EverySeconds: 3600 * 1}, domain.RetentionRule{EverySeconds: 3600 * 24})
+	b, err := bucketsAPI.CreateBucketWithName(ctx, org, name, domain.RetentionRule{EverySeconds: 3600 * 12}, domain.RetentionRule{EverySeconds: 3600 * 24})
 	require.Nil(t, err, err)
 	require.NotNil(t, b)
 	assert.Equal(t, name, b.Name)
@@ -58,7 +58,7 @@ func TestBucketsAPI(t *testing.T) {
 	// Test update
 	desc := "bucket description"
 	b.Description = &desc
-	b.RetentionRules = []domain.RetentionRule{{EverySeconds: 60}}
+	b.RetentionRules = []domain.RetentionRule{{EverySeconds: 3600}}
 	b, err = bucketsAPI.UpdateBucket(ctx, b)
 	require.Nil(t, err, err)
 	require.NotNil(t, b)
@@ -191,7 +191,7 @@ func TestBucketsAPI_paging(t *testing.T) {
 	bucketsAPI := client.BucketsAPI()
 
 	// create organizatiton for buckets
-	org, err := client.OrganizationsAPI().CreateOrganizationWithName(ctx, "bucket-org")
+	org, err := client.OrganizationsAPI().CreateOrganizationWithName(ctx, "bucket-paging-org")
 	require.Nil(t, err)
 	require.NotNil(t, org)
 

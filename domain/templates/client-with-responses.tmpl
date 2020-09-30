@@ -80,6 +80,11 @@ func Parse{{genResponseTypeName $opid | ucFirst}}(rsp *http.Response) (*{{genRes
 
     {{genResponseUnmarshal .}}
 
+    // Fallback for unexpected error
+    if len(response.Body) == 0 && rsp.StatusCode > 299 {
+        return  nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+    }
+
     return response, nil
 }
 {{end}}{{/* range . $opid := .OperationId */}}

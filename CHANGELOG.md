@@ -1,6 +1,7 @@
 ## 2.1.0 [in progress]
 ### Features
 1. [#193](https://github.com/influxdata/influxdb-client-go/pull/193) Added authentication using username and password. See `UsersAPI.SignIn()` and `UsersAPI.SignOut()`
+1. [#204](https://github.com/influxdata/influxdb-client-go/pull/204) Synced with InfluxDB 2 RC0 swagger. Added pagination to Organizations API and `After` paging param to Buckets API. 
 
 ### Bug fixes
 1. [#191](https://github.com/influxdata/influxdb-client-go/pull/191) Fixed QueryTableResult.Next() failed to parse boolean datatype.

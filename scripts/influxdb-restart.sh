@@ -26,12 +26,12 @@ set -e
 DEFAULT_DOCKER_REGISTRY="quay.io/influxdb/"
 DOCKER_REGISTRY="${DOCKER_REGISTRY:-$DEFAULT_DOCKER_REGISTRY}"
 
-DEFAULT_INFLUXDB_VERSION="1.8.1"
+DEFAULT_INFLUXDB_VERSION="1.8.2"
 INFLUXDB_VERSION="${INFLUXDB_VERSION:-$DEFAULT_INFLUXDB_VERSION}"
 INFLUXDB_IMAGE=influxdb:${INFLUXDB_VERSION}-alpine
 
 DEFAULT_INFLUXDB_V2_REPOSITORY="influxdb"
-DEFAULT_INFLUXDB_V2_VERSION="2.0.0-beta"
+DEFAULT_INFLUXDB_V2_VERSION="2.0.0-rc"
 INFLUXDB_V2_REPOSITORY="${INFLUXDB_V2_REPOSITORY:-$DEFAULT_INFLUXDB_V2_REPOSITORY}"
 INFLUXDB_V2_VERSION="${INFLUXDB_V2_VERSION:-$DEFAULT_INFLUXDB_V2_VERSION}"
 INFLUXDB_V2_IMAGE=${DOCKER_REGISTRY}${INFLUXDB_V2_REPOSITORY}:${INFLUXDB_V2_VERSION}
@@ -83,7 +83,7 @@ docker run \
        --detach \
        --name influxdb_v2 \
        --network influx_network \
-       --publish 8086:9999 \
+       --publish 8086:8086 \
        ${INFLUXDB_V2_IMAGE}
 
 echo "Wait to start InfluxDB 2.0"
@@ -112,6 +112,6 @@ docker run \
        --detach \
        --name influxdb_v2_onboarding \
        --network influx_network \
-       --publish 8089:9999 \
+       --publish 8089:8086 \
        ${INFLUXDB_V2_IMAGE}
 

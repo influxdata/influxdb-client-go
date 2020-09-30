@@ -14,13 +14,15 @@ import (
 // OrganizationsAPI provides methods for managing Organizations in a InfluxDB server.
 type OrganizationsAPI interface {
 	// GetOrganizations returns all organizations.
-	GetOrganizations(ctx context.Context) (*[]domain.Organization, error)
+	// GetOrganizations supports PagingOptions: Offset, Limit, Descending
+	GetOrganizations(ctx context.Context, pagingOptions ...PagingOption) (*[]domain.Organization, error)
 	// FindOrganizationByName returns an organization found using orgName.
 	FindOrganizationByName(ctx context.Context, orgName string) (*domain.Organization, error)
 	// FindOrganizationByID returns an organization found using orgID.
 	FindOrganizationByID(ctx context.Context, orgID string) (*domain.Organization, error)
 	// FindOrganizationsByUserID returns organizations an user with userID belongs to.
-	FindOrganizationsByUserID(ctx context.Context, userID string) (*[]domain.Organization, error)
+	// FindOrganizationsByUserID supports PagingOptions: Offset, Limit, Descending
+	FindOrganizationsByUserID(ctx context.Context, userID string, pagingOptions ...PagingOption) (*[]domain.Organization, error)
 	// CreateOrganization creates new organization.
 	CreateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error)
 	// CreateOrganizationWithName creates new organization with orgName and with status active.
@@ -67,8 +69,14 @@ func NewOrganizationsAPI(apiClient *domain.ClientWithResponses) OrganizationsAPI
 	}
 }
 
-func (o *organizationsAPI) GetOrganizations(ctx context.Context) (*[]domain.Organization, error) {
-	params := &domain.GetOrgsParams{}
+func (o *organizationsAPI) getOrganizations(ctx context.Context, params *domain.GetOrgsParams, pagingOptions ...PagingOption) (*[]domain.Organization, error) {
+	options := defaultPaging()
+	for _, opt := range pagingOptions {
+		opt(options)
+	}
+	params.Limit = &options.limit
+	params.Offset = &options.offset
+	params.Descending = &options.descending
 	response, err := o.apiClient.GetOrgsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
@@ -78,18 +86,19 @@ func (o *organizationsAPI) GetOrganizations(ctx context.Context) (*[]domain.Orga
 	}
 	return response.JSON200.Orgs, nil
 }
+func (o *organizationsAPI) GetOrganizations(ctx context.Context, pagingOptions ...PagingOption) (*[]domain.Organization, error) {
+	params := &domain.GetOrgsParams{}
+	return o.getOrganizations(ctx, params, pagingOptions...)
+}
 
 func (o *organizationsAPI) FindOrganizationByName(ctx context.Context, orgName string) (*domain.Organization, error) {
 	params := &domain.GetOrgsParams{Org: &orgName}
-	response, err := o.apiClient.GetOrgsWithResponse(ctx, params)
+	organizations, err := o.getOrganizations(ctx, params)
 	if err != nil {
 		return nil, err
 	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	if response.JSON200.Orgs != nil && len(*response.JSON200.Orgs) > 0 {
-		return &(*response.JSON200.Orgs)[0], nil
+	if organizations != nil && len(*organizations) > 0 {
+		return &(*organizations)[0], nil
 	} else {
 		return nil, fmt.Errorf("organization '%s' not found", orgName)
 	}
@@ -107,16 +116,9 @@ func (o *organizationsAPI) FindOrganizationByID(ctx context.Context, orgID strin
 	return response.JSON200, nil
 }
 
-func (o *organizationsAPI) FindOrganizationsByUserID(ctx context.Context, userID string) (*[]domain.Organization, error) {
+func (o *organizationsAPI) FindOrganizationsByUserID(ctx context.Context, userID string, pagingOptions ...PagingOption) (*[]domain.Organization, error) {
 	params := &domain.GetOrgsParams{UserID: &userID}
-	response, err := o.apiClient.GetOrgsWithResponse(ctx, params)
-	if err != nil {
-		return nil, err
-	}
-	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
-	}
-	return response.JSON200.Orgs, nil
+	return o.getOrganizations(ctx, params, pagingOptions...)
 }
 
 func (o *organizationsAPI) CreateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error) {

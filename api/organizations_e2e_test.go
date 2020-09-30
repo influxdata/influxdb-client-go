@@ -8,9 +8,11 @@ package api_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2/api"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -189,6 +191,48 @@ func TestOrganizationsAPI(t *testing.T) {
 
 	err = usersAPI.DeleteUser(ctx, user)
 	require.Nil(t, err)
+
+}
+
+func TestOrganizationAPI_pagination(t *testing.T) {
+	ctx := context.Background()
+	client := influxdb2.NewClient(serverURL, authToken)
+
+	orgsAPI := client.OrganizationsAPI()
+
+	for i := 0; i < 50; i++ {
+		org, err := orgsAPI.CreateOrganizationWithName(ctx, fmt.Sprintf("org-%02d", i+1))
+		require.Nil(t, err)
+		require.NotNil(t, org)
+	}
+
+	orgList, err := orgsAPI.GetOrganizations(ctx)
+	require.Nil(t, err)
+	require.NotNil(t, orgList)
+	require.Len(t, *orgList, 20)
+
+	orgList, err = orgsAPI.GetOrganizations(ctx, api.PagingWithOffset(20))
+	require.Nil(t, err)
+	require.NotNil(t, orgList)
+	require.Len(t, *orgList, 20)
+
+	orgList, err = orgsAPI.GetOrganizations(ctx, api.PagingWithOffset(40))
+	require.Nil(t, err)
+	require.NotNil(t, orgList)
+	require.Len(t, *orgList, 11)
+
+	orgList, err = orgsAPI.GetOrganizations(ctx, api.PagingWithLimit(100))
+	require.Nil(t, err)
+	require.NotNil(t, orgList)
+	require.Len(t, *orgList, 51)
+
+	for _, org := range *orgList {
+		if org.Name == "my-org" {
+			continue
+		}
+		err = orgsAPI.DeleteOrganization(ctx, &org)
+		assert.Nil(t, err)
+	}
 
 }
 

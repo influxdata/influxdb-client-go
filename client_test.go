@@ -25,12 +25,12 @@ func TestUrls(t *testing.T) {
 		serverAPIURL   string
 		writeURLPrefix string
 	}{
-		{"http://host:9999", "http://host:9999/api/v2/", "http://host:9999/api/v2/write"},
-		{"http://host:9999/", "http://host:9999/api/v2/", "http://host:9999/api/v2/write"},
-		{"http://host:9999/path", "http://host:9999/path/api/v2/", "http://host:9999/path/api/v2/write"},
-		{"http://host:9999/path/", "http://host:9999/path/api/v2/", "http://host:9999/path/api/v2/write"},
-		{"http://host:9999/path1/path2/path3", "http://host:9999/path1/path2/path3/api/v2/", "http://host:9999/path1/path2/path3/api/v2/write"},
-		{"http://host:9999/path1/path2/path3/", "http://host:9999/path1/path2/path3/api/v2/", "http://host:9999/path1/path2/path3/api/v2/write"},
+		{"http://host:8086", "http://host:8086/api/v2/", "http://host:8086/api/v2/write"},
+		{"http://host:8086/", "http://host:8086/api/v2/", "http://host:8086/api/v2/write"},
+		{"http://host:8086/path", "http://host:8086/path/api/v2/", "http://host:8086/path/api/v2/write"},
+		{"http://host:8086/path/", "http://host:8086/path/api/v2/", "http://host:8086/path/api/v2/write"},
+		{"http://host:8086/path1/path2/path3", "http://host:8086/path1/path2/path3/api/v2/", "http://host:8086/path1/path2/path3/api/v2/write"},
+		{"http://host:8086/path1/path2/path3/", "http://host:8086/path1/path2/path3/api/v2/", "http://host:8086/path1/path2/path3/api/v2/write"},
 	}
 	for _, url := range urls {
 		t.Run(url.serverURL, func(t *testing.T) {

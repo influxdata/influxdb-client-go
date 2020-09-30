@@ -10,7 +10,7 @@ import (
 
 func ExampleClient_newClient() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	// Always close client at the end
 	defer client.Close()
@@ -19,7 +19,7 @@ func ExampleClient_newClient() {
 func ExampleClient_newClientWithOptions() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	// Create client and set batch size to 20
-	client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token",
+	client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token",
 		influxdb2.DefaultOptions().SetBatchSize(20))
 
 	// Always close client at the end
@@ -28,7 +28,7 @@ func ExampleClient_newClientWithOptions() {
 
 func ExampleClient_customServerAPICall() {
 	// Create a new client using an InfluxDB server base URL and empty token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	// Always close client at the end
 	defer client.Close()
 	// Get generated client for server API calls

@@ -17,10 +17,12 @@ func TestPaging(t *testing.T) {
 	PagingWithLimit(100)(paging)
 	PagingWithSortBy("name")(paging)
 	PagingWithDescending(true)(paging)
-	assert.True(t, paging.descending)
+	PagingWithAfter("1111")(paging)
+	assert.True(t, bool(paging.descending))
 	assert.Equal(t, domain.Limit(100), paging.limit)
 	assert.Equal(t, domain.Offset(10), paging.offset)
 	assert.Equal(t, "name", paging.sortBy)
+	assert.Equal(t, domain.After("1111"), paging.after)
 
 	paging = &Paging{}
 	PagingWithLimit(0)(paging)

@@ -21,6 +21,7 @@ import (
 )
 
 func TestDeleteAPI(t *testing.T) {
+	t.Skip("Skipping due to https://github.com/influxdata/influxdb/issues/19635")
 	ctx := context.Background()
 	client := influxdb2.NewClient(serverURL, authToken)
 	writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")

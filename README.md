@@ -55,7 +55,11 @@ There are also other examples in the API docs:
 ### Installation
 **Go 1.13** or later is required.
 
-Add import `github.com/influxdata/influxdb-client-go/v2` to your source code and sync dependencies or directly edit the `go.mod` file.
+1.  Add the client package your to your project dependencies (go.mod).
+    ```sh
+    go get github.com/influxdata/influxdb-client-go/v2
+    ```
+1. Add import `github.com/influxdata/influxdb-client-go/v2` to your source code.
 
 ### Basic Example
 The following example demonstrates how to write data to InfluxDB 2 and read them back using the Flux language:

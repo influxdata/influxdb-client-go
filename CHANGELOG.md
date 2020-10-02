@@ -1,3 +1,10 @@
+## 2.2.0 [in progress]
+### Features
+
+### Bug fixes
+
+### Documentation
+
 ## 2.1.0 [2020-10-02]
 ### Features
 1. [#193](https://github.com/influxdata/influxdb-client-go/pull/193) Added authentication using username and password. See `UsersAPI.SignIn()` and `UsersAPI.SignOut()`

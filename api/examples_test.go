@@ -14,7 +14,7 @@ import (
 
 func ExampleBucketsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	ctx := context.Background()
 	// Get Buckets API client
@@ -45,7 +45,7 @@ func ExampleBucketsAPI() {
 
 func ExampleWriteAPIBlocking() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	// Get blocking write client
 	writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
 	// write some points
@@ -78,7 +78,7 @@ func ExampleWriteAPIBlocking() {
 
 func ExampleWriteAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	// Get non-blocking write client
 	writeAPI := client.WriteAPI("my-org", "my-bucket")
 	// write some points
@@ -110,7 +110,7 @@ func ExampleWriteAPI() {
 
 func ExampleWriteAPI_errors() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	// Get non-blocking write client
 	writeAPI := client.WriteAPI("my-org", "my-bucket")
 	// Get errors channel
@@ -145,7 +145,7 @@ func ExampleWriteAPI_errors() {
 
 func ExampleQueryAPI_query() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	// Get query client
 	queryAPI := client.QueryAPI("my-org")
 	// get QueryTableResult
@@ -173,7 +173,7 @@ func ExampleQueryAPI_query() {
 
 func ExampleQueryAPI_queryRaw() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	// Get query client
 	queryAPI := client.QueryAPI("my-org")
 	// Query and get complete result as a string
@@ -191,7 +191,7 @@ func ExampleQueryAPI_queryRaw() {
 
 func ExampleOrganizationsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	// Get Organizations API client
 	orgAPI := client.OrganizationsAPI()
@@ -239,7 +239,7 @@ func ExampleOrganizationsAPI() {
 
 func ExampleAuthorizationsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	// Find user to grant permission
 	user, err := client.UsersAPI().FindUserByName(context.Background(), "user-01")
@@ -293,7 +293,7 @@ func ExampleAuthorizationsAPI() {
 
 func ExampleUsersAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	// Find organization
 	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
@@ -327,7 +327,7 @@ func ExampleUsersAPI() {
 
 func ExampleUsersAPI_signInOut() {
 	// Create a new client using an InfluxDB server base URL and empty token
-	client := influxdb2.NewClient("http://localhost:9999", "")
+	client := influxdb2.NewClient("http://localhost:8086", "")
 	// Always close client at the end
 	defer client.Close()
 
@@ -354,7 +354,7 @@ func ExampleUsersAPI_signInOut() {
 
 func ExampleLabelsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	ctx := context.Background()
 	// Get Labels API client
@@ -388,7 +388,7 @@ func ExampleLabelsAPI() {
 
 func ExampleDeleteAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	ctx := context.Background()
 	// Get Delete API client

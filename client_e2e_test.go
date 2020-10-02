@@ -36,9 +36,9 @@ func getEnvValue(key, defVal string) string {
 
 func init() {
 	authToken = getEnvValue("INFLUXDB2_TOKEN", "my-token")
-	serverURL = getEnvValue("INFLUXDB2_URL", "http://localhost:9999")
-	serverV1URL = getEnvValue("INFLUXDB_URL", "http://localhost:8086")
-	onboardingURL = getEnvValue("INFLUXDB2_ONBOARDING_URL", "http://localhost:9990")
+	serverURL = getEnvValue("INFLUXDB2_URL", "http://localhost:8086")
+	serverV1URL = getEnvValue("INFLUXDB_URL", "http://localhost:8087")
+	onboardingURL = getEnvValue("INFLUXDB2_ONBOARDING_URL", "http://localhost:8089")
 }
 
 func TestSetup(t *testing.T) {
@@ -248,7 +248,7 @@ func TestQueryV1Compatibility(t *testing.T) {
 }
 
 func TestHTTPService(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:9999", "my-token")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 	apiClient := domain.NewClientWithResponses(client.HTTPService())
 	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
 	if err != nil {

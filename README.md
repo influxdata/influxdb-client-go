@@ -72,13 +72,13 @@ import (
 
 func main() {
     // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
     // Use blocking write client for writes to desired bucket
     writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
     // Create point using full params constructor 
     p := influxdb2.NewPoint("stat",
         map[string]string{"unit": "temperature"},
-        map[string]interface{}{"avg": 24.5, "max": 45},
+        map[string]interface{}{"avg": 24.5, "max": 45.0},
         time.Now())
     // write point immediately 
     writeAPI.WritePoint(context.Background(), p)
@@ -86,7 +86,7 @@ func main() {
     p = influxdb2.NewPointWithMeasurement("stat").
         AddTag("unit", "temperature").
         AddField("avg", 23.2).
-        AddField("max", 45).
+        AddField("max", 45.0).
         SetTime(time.Now())
     writeAPI.WritePoint(context.Background(), p)
     
@@ -120,14 +120,14 @@ func main() {
 The InfluxDBClient uses set of options to configure behavior. These are available in the [Options](https://github.com/influxdata/influxdb-client-go/blob/master/options.go) object
 Creating a client instance using
 ```go
-client := influxdb2.NewClient("http://localhost:9999", "my-token")
+client := influxdb2.NewClient("http://localhost:8086", "my-token")
 ```
 will use the default options.
 
 To set different configuration values, e.g. to set gzip compression and trust all server certificates, get default options 
 and change what is needed: 
 ```go
-client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token", 
+client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token", 
     influxdb2.DefaultOptions().
         SetUseGZip(true).
         SetTLSConfig(&tls.Config{
@@ -163,7 +163,7 @@ import (
 func main() {
     // Create a new client using an InfluxDB server base URL and an authentication token
     // and set batch size to 20 
-    client := influxdb2.NewClientWithOptions("http://localhost:9999", "my-token",
+    client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token",
         influxdb2.DefaultOptions().SetBatchSize(20))
     // Get non-blocking write client
     writeAPI := client.WriteAPI("my-org","my-bucket")
@@ -212,7 +212,7 @@ import (
 
 func main() {
     // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
     // Get non-blocking write client
     writeAPI := client.WriteAPI("my-org", "my-bucket")
     // Get errors channel
@@ -263,7 +263,7 @@ import (
 
 func main() {
     // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
     // Get blocking write client
     writeAPI := client.WriteAPIBlocking("my-org","my-bucket")
     // write some points
@@ -314,7 +314,7 @@ import (
 
 func main() {
     // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
     // Get query client
     queryAPI := client.QueryAPI("my-org")
     // get QueryTableResult
@@ -357,7 +357,7 @@ import (
 
 func main() {
     // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:9999", "my-token")
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
     // Get query client
     queryAPI := client.QueryAPI("my-org")
     // Query and get complete result as a string

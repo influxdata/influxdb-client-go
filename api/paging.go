@@ -15,7 +15,7 @@ type Paging struct {
 	// Default 0.
 	offset domain.Offset
 	// Maximum number of items returned.
-	// Default 20, minimum 1 and maximum 100.
+	// Default 0 - not applied
 	limit domain.Limit
 	// What field should be used for sorting
 	sortBy string
@@ -26,21 +26,16 @@ type Paging struct {
 	after domain.After
 }
 
-// defaultPagingOptions returns default paging options: offset 0, limit 20, default sorting, ascending
+// defaultPagingOptions returns default paging options: offset 0, limit 0 (not applied), default sorting, ascending
 func defaultPaging() *Paging {
-	return &Paging{limit: 20, offset: 0, sortBy: "", descending: false, after: ""}
+	return &Paging{limit: 0, offset: 0, sortBy: "", descending: false, after: ""}
 }
 
 // PagingWithLimit sets limit option - maximum number of items returned.
-// Default 20, minimum 1 and maximum 100.
+// For buckets and organization the  default 20, minimum 1 and maximum 100,
+// For tasks and task runs the default is 100, minimum 1 and maximum 500
 func PagingWithLimit(limit int) PagingOption {
 	return func(p *Paging) {
-		if limit > 100 {
-			limit = 100
-		}
-		if limit < 1 {
-			limit = 1
-		}
 		p.limit = domain.Limit(limit)
 	}
 }

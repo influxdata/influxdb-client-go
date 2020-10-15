@@ -85,7 +85,9 @@ func (b *bucketsAPI) getBuckets(ctx context.Context, params *domain.GetBucketsPa
 	for _, opt := range pagingOptions {
 		opt(options)
 	}
-	params.Limit = &options.limit
+	if options.limit > 0 {
+		params.Limit = &options.limit
+	}
 	params.Offset = &options.offset
 
 	response, err := b.apiClient.GetBucketsWithResponse(ctx, params)

@@ -74,7 +74,9 @@ func (o *organizationsAPI) getOrganizations(ctx context.Context, params *domain.
 	for _, opt := range pagingOptions {
 		opt(options)
 	}
-	params.Limit = &options.limit
+	if options.limit > 0 {
+		params.Limit = &options.limit
+	}
 	params.Offset = &options.offset
 	params.Descending = &options.descending
 	response, err := o.apiClient.GetOrgsWithResponse(ctx, params)

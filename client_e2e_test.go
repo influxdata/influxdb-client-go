@@ -280,5 +280,10 @@ from(bucket:"my-bucket") |> range(start: -1m) |> last()`
 	}
 	if assert.NotNil(t, resp.JSON201) {
 		assert.Equal(t, "My task", resp.JSON201.Name)
+		_, err := apiClient.DeleteTasksID(context.Background(), resp.JSON201.Id, &domain.DeleteTasksIDParams{})
+		if err != nil {
+			//return err
+			t.Error(err)
+		}
 	}
 }

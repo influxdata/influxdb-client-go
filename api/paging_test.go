@@ -25,8 +25,8 @@ func TestPaging(t *testing.T) {
 	assert.Equal(t, domain.After("1111"), paging.after)
 
 	paging = &Paging{}
-	PagingWithLimit(1)(paging)
-	assert.Equal(t, domain.Limit(1), paging.limit)
+	PagingWithLimit(0)(paging)
+	assert.Equal(t, domain.Limit(0), paging.limit)
 
 	paging = &Paging{}
 	PagingWithLimit(1000)(paging)

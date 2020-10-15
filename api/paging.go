@@ -32,8 +32,6 @@ func defaultPaging() *Paging {
 }
 
 // PagingWithLimit sets limit option - maximum number of items returned.
-// For buckets and organization the  default 20, minimum 1 and maximum 100,
-// For tasks and task runs the default is 100, minimum 1 and maximum 500
 func PagingWithLimit(limit int) PagingOption {
 	return func(p *Paging) {
 		p.limit = domain.Limit(limit)

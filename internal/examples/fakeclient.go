@@ -20,10 +20,6 @@ func (o *Options) SetBatchSize(_ uint) *Options {
 	return o
 }
 
-func DefaultOptions() *Options {
-	return nil
-}
-
 type fakeClient struct {
 }
 
@@ -93,5 +89,9 @@ func (c *fakeClient) BucketsAPI() api.BucketsAPI {
 }
 
 func (c *fakeClient) LabelsAPI() api.LabelsAPI {
+	return nil
+}
+
+func (c *fakeClient) TasksAPI() api.TasksAPI {
 	return nil
 }

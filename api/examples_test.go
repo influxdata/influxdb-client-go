@@ -402,3 +402,57 @@ func ExampleDeleteAPI() {
 	// Close the client
 	client.Close()
 }
+
+func ExampleTasksAPI() {
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+
+	ctx := context.Background()
+	// Get Delete API client
+	tasksAPI := client.TasksAPI()
+	// Get organization that will own task
+	myorg, err := client.OrganizationsAPI().FindOrganizationByName(ctx, "my-org")
+	if err != nil {
+		panic(err)
+	}
+	// task flux script from https://www.influxdata.com/blog/writing-tasks-and-setting-up-alerts-for-influxdb-cloud/
+	flux := `fruitCollected = from(bucket: “farming”)
+  |> range(start: -task.every)
+  |> filter(fn: (r)  => (r._measurement == “totalFruitsCollected))
+  |> filter(fn: (r)  => (r._field == “fruits))
+  |> group(columns: [“farmName”])
+  |> aggregateWindow(fn: sum, every: task.every)
+  |> map(fn: (r) => {
+    return: _time: r._time,  _stop: r._stop, _start: r._start, _measurement: “fruitCollectionRate”, _field: “fruits”, _value: r._value, farmName: farmName, 
+  }
+})
+
+fruitCollected 
+  |> to(bucket: “farming”)
+`
+	task, err := tasksAPI.CreateTaskWithEvery(ctx, "fruitCollectedRate", flux, "1h", *myorg.Id)
+	if err != nil {
+		panic(err)
+	}
+	// Force running a task
+	run, err := tasksAPI.RunManually(ctx, task)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Forced run completed on ", *run.FinishedAt, " with status ", *run.Status)
+
+	// Print logs
+	logs, err := tasksAPI.FindRunLogs(ctx, run)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Log:")
+	for _, logEvent := range logs {
+		fmt.Println(" Time:", *logEvent.Time, ", Message: ", *logEvent.Message)
+	}
+
+	// Close the client
+	client.Close()
+}

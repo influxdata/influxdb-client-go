@@ -1,5 +1,6 @@
 ## 2.2.0 [in progress]
 ### Features
+1. [#206](https://github.com/influxdata/influxdb-client-go/pull/206) Adding TasksAPI for managing tasks and associated logs and runs.
 
 ### Bug fixes
 

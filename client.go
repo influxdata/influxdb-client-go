@@ -60,6 +60,8 @@ type Client interface {
 	BucketsAPI() api.BucketsAPI
 	// LabelsAPI returns Labels API client
 	LabelsAPI() api.LabelsAPI
+	// TasksAPI returns Tasks API client
+	TasksAPI() api.TasksAPI
 }
 
 // clientImpl implements Client interface
@@ -77,6 +79,7 @@ type clientImpl struct {
 	deleteAPI     api.DeleteAPI
 	bucketsAPI    api.BucketsAPI
 	labelsAPI     api.LabelsAPI
+	tasksAPI      api.TasksAPI
 }
 
 // NewClient creates Client for connecting to given serverURL with provided authentication token, with the default options.
@@ -279,4 +282,13 @@ func (c *clientImpl) LabelsAPI() api.LabelsAPI {
 		c.labelsAPI = api.NewLabelsAPI(c.apiClient)
 	}
 	return c.labelsAPI
+}
+
+func (c *clientImpl) TasksAPI() api.TasksAPI {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if c.tasksAPI == nil {
+		c.tasksAPI = api.NewTasksAPI(c.apiClient)
+	}
+	return c.tasksAPI
 }

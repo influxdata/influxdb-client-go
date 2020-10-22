@@ -6,8 +6,9 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // Defines values for AuthorizationUpdateRequestStatus.
@@ -15,25 +16,19 @@ const (
 	AuthorizationUpdateRequestStatusActive AuthorizationUpdateRequestStatus = "active"
 
 	AuthorizationUpdateRequestStatusInactive AuthorizationUpdateRequestStatus = "inactive"
-)
-
-// Defines values for AxisBase.
+) // Defines values for AxisBase.
 const (
-	AxisBase10 AxisBase = "10"
-
-	AxisBase2 AxisBase = "2"
+	AxisBase1 AxisBase = "2"
 
 	AxisBaseEmpty AxisBase = ""
-)
 
-// Defines values for AxisScale.
+	AxisBaseN0 AxisBase = "10"
+) // Defines values for AxisScale.
 const (
 	AxisScaleLinear AxisScale = "linear"
 
 	AxisScaleLog AxisScale = "log"
-)
-
-// Defines values for BandViewPropertiesHoverDimension.
+) // Defines values for BandViewPropertiesHoverDimension.
 const (
 	BandViewPropertiesHoverDimensionAuto BandViewPropertiesHoverDimension = "auto"
 
@@ -42,49 +37,35 @@ const (
 	BandViewPropertiesHoverDimensionX BandViewPropertiesHoverDimension = "x"
 
 	BandViewPropertiesHoverDimensionXy BandViewPropertiesHoverDimension = "xy"
-)
-
-// Defines values for BandViewPropertiesShape.
+) // Defines values for BandViewPropertiesShape.
 const (
 	BandViewPropertiesShapeChronografV2 BandViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for BandViewPropertiesType.
+) // Defines values for BandViewPropertiesType.
 const (
 	BandViewPropertiesTypeBand BandViewPropertiesType = "band"
-)
-
-// Defines values for BucketType.
+) // Defines values for BucketType.
 const (
 	BucketTypeSystem BucketType = "system"
 
 	BucketTypeUser BucketType = "user"
-)
-
-// Defines values for BuilderAggregateFunctionType.
+) // Defines values for BuilderAggregateFunctionType.
 const (
 	BuilderAggregateFunctionTypeFilter BuilderAggregateFunctionType = "filter"
 
 	BuilderAggregateFunctionTypeGroup BuilderAggregateFunctionType = "group"
-)
-
-// Defines values for CheckBaseLastRunStatus.
+) // Defines values for CheckBaseLastRunStatus.
 const (
 	CheckBaseLastRunStatusCanceled CheckBaseLastRunStatus = "canceled"
 
 	CheckBaseLastRunStatusFailed CheckBaseLastRunStatus = "failed"
 
 	CheckBaseLastRunStatusSuccess CheckBaseLastRunStatus = "success"
-)
-
-// Defines values for CheckPatchStatus.
+) // Defines values for CheckPatchStatus.
 const (
 	CheckPatchStatusActive CheckPatchStatus = "active"
 
 	CheckPatchStatusInactive CheckPatchStatus = "inactive"
-)
-
-// Defines values for CheckStatusLevel.
+) // Defines values for CheckStatusLevel.
 const (
 	CheckStatusLevelCRIT CheckStatusLevel = "CRIT"
 
@@ -95,29 +76,19 @@ const (
 	CheckStatusLevelUNKNOWN CheckStatusLevel = "UNKNOWN"
 
 	CheckStatusLevelWARN CheckStatusLevel = "WARN"
-)
-
-// Defines values for CheckViewPropertiesShape.
+) // Defines values for CheckViewPropertiesShape.
 const (
 	CheckViewPropertiesShapeChronografV2 CheckViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for CheckViewPropertiesType.
+) // Defines values for CheckViewPropertiesType.
 const (
 	CheckViewPropertiesTypeCheck CheckViewPropertiesType = "check"
-)
-
-// Defines values for ConstantVariablePropertiesType.
+) // Defines values for ConstantVariablePropertiesType.
 const (
 	ConstantVariablePropertiesTypeConstant ConstantVariablePropertiesType = "constant"
-)
-
-// Defines values for CustomCheckType.
+) // Defines values for CustomCheckType.
 const (
 	CustomCheckTypeCustom CustomCheckType = "custom"
-)
-
-// Defines values for DashboardColorType.
+) // Defines values for DashboardColorType.
 const (
 	DashboardColorTypeBackground DashboardColorType = "background"
 
@@ -130,30 +101,22 @@ const (
 	DashboardColorTypeText DashboardColorType = "text"
 
 	DashboardColorTypeThreshold DashboardColorType = "threshold"
-)
-
-// Defines values for DeadmanCheckType.
+) // Defines values for DeadmanCheckType.
 const (
 	DeadmanCheckTypeDeadman DeadmanCheckType = "deadman"
-)
-
-// Defines values for DialectAnnotations.
+) // Defines values for DialectAnnotations.
 const (
 	DialectAnnotationsDatatype DialectAnnotations = "datatype"
 
 	DialectAnnotationsDefault DialectAnnotations = "default"
 
 	DialectAnnotationsGroup DialectAnnotations = "group"
-)
-
-// Defines values for DialectDateTimeFormat.
+) // Defines values for DialectDateTimeFormat.
 const (
 	DialectDateTimeFormatRFC3339 DialectDateTimeFormat = "RFC3339"
 
 	DialectDateTimeFormatRFC3339Nano DialectDateTimeFormat = "RFC3339Nano"
-)
-
-// Defines values for ErrorCode.
+) // Defines values for ErrorCode.
 const (
 	ErrorCodeConflict ErrorCode = "conflict"
 
@@ -176,9 +139,7 @@ const (
 	ErrorCodeUnavailable ErrorCode = "unavailable"
 
 	ErrorCodeUnprocessableEntity ErrorCode = "unprocessable entity"
-)
-
-// Defines values for FieldType.
+) // Defines values for FieldType.
 const (
 	FieldTypeField FieldType = "field"
 
@@ -191,93 +152,58 @@ const (
 	FieldTypeRegex FieldType = "regex"
 
 	FieldTypeWildcard FieldType = "wildcard"
-)
-
-// Defines values for GaugeViewPropertiesShape.
+) // Defines values for GaugeViewPropertiesShape.
 const (
 	GaugeViewPropertiesShapeChronografV2 GaugeViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for GaugeViewPropertiesType.
+) // Defines values for GaugeViewPropertiesType.
 const (
 	GaugeViewPropertiesTypeGauge GaugeViewPropertiesType = "gauge"
-)
-
-// Defines values for GreaterThresholdType.
+) // Defines values for GreaterThresholdType.
 const (
 	GreaterThresholdTypeGreater GreaterThresholdType = "greater"
-)
-
-// Defines values for HTTPNotificationEndpointAuthMethod.
+) // Defines values for HTTPNotificationEndpointAuthMethod.
 const (
 	HTTPNotificationEndpointAuthMethodBasic HTTPNotificationEndpointAuthMethod = "basic"
 
 	HTTPNotificationEndpointAuthMethodBearer HTTPNotificationEndpointAuthMethod = "bearer"
 
 	HTTPNotificationEndpointAuthMethodNone HTTPNotificationEndpointAuthMethod = "none"
-)
-
-// Defines values for HTTPNotificationEndpointMethod.
+) // Defines values for HTTPNotificationEndpointMethod.
 const (
 	HTTPNotificationEndpointMethodGET HTTPNotificationEndpointMethod = "GET"
 
 	HTTPNotificationEndpointMethodPOST HTTPNotificationEndpointMethod = "POST"
 
 	HTTPNotificationEndpointMethodPUT HTTPNotificationEndpointMethod = "PUT"
-)
-
-// Defines values for HTTPNotificationRuleBaseType.
+) // Defines values for HTTPNotificationRuleBaseType.
 const (
 	HTTPNotificationRuleBaseTypeHttp HTTPNotificationRuleBaseType = "http"
-)
-
-// Defines values for HealthCheckStatus.
+) // Defines values for HealthCheckStatus.
 const (
 	HealthCheckStatusFail HealthCheckStatus = "fail"
 
 	HealthCheckStatusPass HealthCheckStatus = "pass"
-)
-
-// Defines values for HeatmapViewPropertiesShape.
+) // Defines values for HeatmapViewPropertiesShape.
 const (
 	HeatmapViewPropertiesShapeChronografV2 HeatmapViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for HeatmapViewPropertiesType.
+) // Defines values for HeatmapViewPropertiesType.
 const (
 	HeatmapViewPropertiesTypeHeatmap HeatmapViewPropertiesType = "heatmap"
-)
-
-// Defines values for HistogramViewPropertiesPosition.
+) // Defines values for HistogramViewPropertiesPosition.
 const (
 	HistogramViewPropertiesPositionOverlaid HistogramViewPropertiesPosition = "overlaid"
 
 	HistogramViewPropertiesPositionStacked HistogramViewPropertiesPosition = "stacked"
-)
-
-// Defines values for HistogramViewPropertiesShape.
+) // Defines values for HistogramViewPropertiesShape.
 const (
 	HistogramViewPropertiesShapeChronografV2 HistogramViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for HistogramViewPropertiesType.
+) // Defines values for HistogramViewPropertiesType.
 const (
 	HistogramViewPropertiesTypeHistogram HistogramViewPropertiesType = "histogram"
-)
-
-// Defines values for InfluxQLQueryType.
+) // Defines values for InfluxQLQueryType.
 const (
 	InfluxQLQueryTypeInfluxql InfluxQLQueryType = "influxql"
-)
-
-// Defines values for InviteRole.
-const (
-	InviteRoleMember InviteRole = "member"
-
-	InviteRoleOwner InviteRole = "owner"
-)
-
-// Defines values for LegendOrientation.
+) // Defines values for LegendOrientation.
 const (
 	LegendOrientationBottom LegendOrientation = "bottom"
 
@@ -286,19 +212,13 @@ const (
 	LegendOrientationRight LegendOrientation = "right"
 
 	LegendOrientationTop LegendOrientation = "top"
-)
-
-// Defines values for LegendType.
+) // Defines values for LegendType.
 const (
 	LegendTypeStatic LegendType = "static"
-)
-
-// Defines values for LesserThresholdType.
+) // Defines values for LesserThresholdType.
 const (
 	LesserThresholdTypeLesser LesserThresholdType = "lesser"
-)
-
-// Defines values for LinePlusSingleStatPropertiesHoverDimension.
+) // Defines values for LinePlusSingleStatPropertiesHoverDimension.
 const (
 	LinePlusSingleStatPropertiesHoverDimensionAuto LinePlusSingleStatPropertiesHoverDimension = "auto"
 
@@ -307,26 +227,18 @@ const (
 	LinePlusSingleStatPropertiesHoverDimensionX LinePlusSingleStatPropertiesHoverDimension = "x"
 
 	LinePlusSingleStatPropertiesHoverDimensionXy LinePlusSingleStatPropertiesHoverDimension = "xy"
-)
-
-// Defines values for LinePlusSingleStatPropertiesPosition.
+) // Defines values for LinePlusSingleStatPropertiesPosition.
 const (
 	LinePlusSingleStatPropertiesPositionOverlaid LinePlusSingleStatPropertiesPosition = "overlaid"
 
 	LinePlusSingleStatPropertiesPositionStacked LinePlusSingleStatPropertiesPosition = "stacked"
-)
-
-// Defines values for LinePlusSingleStatPropertiesShape.
+) // Defines values for LinePlusSingleStatPropertiesShape.
 const (
 	LinePlusSingleStatPropertiesShapeChronografV2 LinePlusSingleStatPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for LinePlusSingleStatPropertiesType.
+) // Defines values for LinePlusSingleStatPropertiesType.
 const (
 	LinePlusSingleStatPropertiesTypeLinePlusSingleStat LinePlusSingleStatPropertiesType = "line-plus-single-stat"
-)
-
-// Defines values for LineProtocolErrorCode.
+) // Defines values for LineProtocolErrorCode.
 const (
 	LineProtocolErrorCodeConflict LineProtocolErrorCode = "conflict"
 
@@ -339,46 +251,30 @@ const (
 	LineProtocolErrorCodeNotFound LineProtocolErrorCode = "not found"
 
 	LineProtocolErrorCodeUnavailable LineProtocolErrorCode = "unavailable"
-)
-
-// Defines values for LineProtocolLengthErrorCode.
+) // Defines values for LineProtocolLengthErrorCode.
 const (
 	LineProtocolLengthErrorCodeInvalid LineProtocolLengthErrorCode = "invalid"
-)
-
-// Defines values for MapVariablePropertiesType.
+) // Defines values for MapVariablePropertiesType.
 const (
 	MapVariablePropertiesTypeMap MapVariablePropertiesType = "map"
-)
-
-// Defines values for MarkdownViewPropertiesShape.
+) // Defines values for MarkdownViewPropertiesShape.
 const (
 	MarkdownViewPropertiesShapeChronografV2 MarkdownViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for MarkdownViewPropertiesType.
+) // Defines values for MarkdownViewPropertiesType.
 const (
 	MarkdownViewPropertiesTypeMarkdown MarkdownViewPropertiesType = "markdown"
-)
-
-// Defines values for MosaicViewPropertiesShape.
+) // Defines values for MosaicViewPropertiesShape.
 const (
 	MosaicViewPropertiesShapeChronografV2 MosaicViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for MosaicViewPropertiesType.
+) // Defines values for MosaicViewPropertiesType.
 const (
 	MosaicViewPropertiesTypeMosaic MosaicViewPropertiesType = "mosaic"
-)
-
-// Defines values for NotificationEndpointBaseStatus.
+) // Defines values for NotificationEndpointBaseStatus.
 const (
 	NotificationEndpointBaseStatusActive NotificationEndpointBaseStatus = "active"
 
 	NotificationEndpointBaseStatusInactive NotificationEndpointBaseStatus = "inactive"
-)
-
-// Defines values for NotificationEndpointType.
+) // Defines values for NotificationEndpointType.
 const (
 	NotificationEndpointTypeHttp NotificationEndpointType = "http"
 
@@ -387,78 +283,54 @@ const (
 	NotificationEndpointTypeSlack NotificationEndpointType = "slack"
 
 	NotificationEndpointTypeTelegram NotificationEndpointType = "telegram"
-)
-
-// Defines values for NotificationEndpointUpdateStatus.
+) // Defines values for NotificationEndpointUpdateStatus.
 const (
 	NotificationEndpointUpdateStatusActive NotificationEndpointUpdateStatus = "active"
 
 	NotificationEndpointUpdateStatusInactive NotificationEndpointUpdateStatus = "inactive"
-)
-
-// Defines values for NotificationRuleBaseLastRunStatus.
+) // Defines values for NotificationRuleBaseLastRunStatus.
 const (
 	NotificationRuleBaseLastRunStatusCanceled NotificationRuleBaseLastRunStatus = "canceled"
 
 	NotificationRuleBaseLastRunStatusFailed NotificationRuleBaseLastRunStatus = "failed"
 
 	NotificationRuleBaseLastRunStatusSuccess NotificationRuleBaseLastRunStatus = "success"
-)
-
-// Defines values for NotificationRuleUpdateStatus.
+) // Defines values for NotificationRuleUpdateStatus.
 const (
 	NotificationRuleUpdateStatusActive NotificationRuleUpdateStatus = "active"
 
 	NotificationRuleUpdateStatusInactive NotificationRuleUpdateStatus = "inactive"
-)
-
-// Defines values for OrganizationStatus.
+) // Defines values for OrganizationStatus.
 const (
 	OrganizationStatusActive OrganizationStatus = "active"
 
 	OrganizationStatusInactive OrganizationStatus = "inactive"
-)
-
-// Defines values for PagerDutyNotificationRuleBaseType.
+) // Defines values for PagerDutyNotificationRuleBaseType.
 const (
 	PagerDutyNotificationRuleBaseTypePagerduty PagerDutyNotificationRuleBaseType = "pagerduty"
-)
-
-// Defines values for PermissionAction.
+) // Defines values for PermissionAction.
 const (
 	PermissionActionRead PermissionAction = "read"
 
 	PermissionActionWrite PermissionAction = "write"
-)
-
-// Defines values for QueryType.
+) // Defines values for QueryType.
 const (
 	QueryTypeFlux QueryType = "flux"
-)
-
-// Defines values for QueryEditMode.
+) // Defines values for QueryEditMode.
 const (
 	QueryEditModeAdvanced QueryEditMode = "advanced"
 
 	QueryEditModeBuilder QueryEditMode = "builder"
-)
-
-// Defines values for QueryVariablePropertiesType.
+) // Defines values for QueryVariablePropertiesType.
 const (
 	QueryVariablePropertiesTypeQuery QueryVariablePropertiesType = "query"
-)
-
-// Defines values for RangeThresholdType.
+) // Defines values for RangeThresholdType.
 const (
 	RangeThresholdTypeRange RangeThresholdType = "range"
-)
-
-// Defines values for ReadyStatus.
+) // Defines values for ReadyStatus.
 const (
 	ReadyStatusReady ReadyStatus = "ready"
-)
-
-// Defines values for ResourceType.
+) // Defines values for ResourceType.
 const (
 	ResourceTypeAuthorizations ResourceType = "authorizations"
 
@@ -495,24 +367,16 @@ const (
 	ResourceTypeVariables ResourceType = "variables"
 
 	ResourceTypeViews ResourceType = "views"
-)
-
-// Defines values for ResourceMemberRole.
+) // Defines values for ResourceMemberRole.
 const (
 	ResourceMemberRoleMember ResourceMemberRole = "member"
-)
-
-// Defines values for ResourceOwnerRole.
+) // Defines values for ResourceOwnerRole.
 const (
 	ResourceOwnerRoleOwner ResourceOwnerRole = "owner"
-)
-
-// Defines values for RetentionRuleType.
+) // Defines values for RetentionRuleType.
 const (
 	RetentionRuleTypeExpire RetentionRuleType = "expire"
-)
-
-// Defines values for RuleStatusLevel.
+) // Defines values for RuleStatusLevel.
 const (
 	RuleStatusLevelANY RuleStatusLevel = "ANY"
 
@@ -525,9 +389,7 @@ const (
 	RuleStatusLevelUNKNOWN RuleStatusLevel = "UNKNOWN"
 
 	RuleStatusLevelWARN RuleStatusLevel = "WARN"
-)
-
-// Defines values for RunStatus.
+) // Defines values for RunStatus.
 const (
 	RunStatusCanceled RunStatus = "canceled"
 
@@ -538,79 +400,53 @@ const (
 	RunStatusStarted RunStatus = "started"
 
 	RunStatusSuccess RunStatus = "success"
-)
-
-// Defines values for SMTPNotificationRuleBaseType.
+) // Defines values for SMTPNotificationRuleBaseType.
 const (
 	SMTPNotificationRuleBaseTypeSmtp SMTPNotificationRuleBaseType = "smtp"
-)
-
-// Defines values for ScatterViewPropertiesShape.
+) // Defines values for ScatterViewPropertiesShape.
 const (
 	ScatterViewPropertiesShapeChronografV2 ScatterViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for ScatterViewPropertiesType.
+) // Defines values for ScatterViewPropertiesType.
 const (
 	ScatterViewPropertiesTypeScatter ScatterViewPropertiesType = "scatter"
-)
-
-// Defines values for ScraperTargetRequestType.
+) // Defines values for ScraperTargetRequestType.
 const (
 	ScraperTargetRequestTypePrometheus ScraperTargetRequestType = "prometheus"
-)
-
-// Defines values for SingleStatViewPropertiesShape.
+) // Defines values for SingleStatViewPropertiesShape.
 const (
 	SingleStatViewPropertiesShapeChronografV2 SingleStatViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for SingleStatViewPropertiesType.
+) // Defines values for SingleStatViewPropertiesType.
 const (
 	SingleStatViewPropertiesTypeSingleStat SingleStatViewPropertiesType = "single-stat"
-)
-
-// Defines values for SlackNotificationRuleBaseType.
+) // Defines values for SlackNotificationRuleBaseType.
 const (
 	SlackNotificationRuleBaseTypeSlack SlackNotificationRuleBaseType = "slack"
-)
-
-// Defines values for SourceLanguages.
+) // Defines values for SourceLanguages.
 const (
 	SourceLanguagesFlux SourceLanguages = "flux"
 
 	SourceLanguagesInfluxql SourceLanguages = "influxql"
-)
-
-// Defines values for SourceType.
+) // Defines values for SourceType.
 const (
 	SourceTypeSelf SourceType = "self"
 
 	SourceTypeV1 SourceType = "v1"
 
 	SourceTypeV2 SourceType = "v2"
-)
-
-// Defines values for TableViewPropertiesShape.
+) // Defines values for TableViewPropertiesShape.
 const (
 	TableViewPropertiesShapeChronografV2 TableViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for TableViewPropertiesTableOptionsWrapping.
+) // Defines values for TableViewPropertiesTableOptionsWrapping.
 const (
 	TableViewPropertiesTableOptionsWrappingSingleLine TableViewPropertiesTableOptionsWrapping = "single-line"
 
 	TableViewPropertiesTableOptionsWrappingTruncate TableViewPropertiesTableOptionsWrapping = "truncate"
 
 	TableViewPropertiesTableOptionsWrappingWrap TableViewPropertiesTableOptionsWrapping = "wrap"
-)
-
-// Defines values for TableViewPropertiesType.
+) // Defines values for TableViewPropertiesType.
 const (
 	TableViewPropertiesTypeTable TableViewPropertiesType = "table"
-)
-
-// Defines values for TagRuleOperator.
+) // Defines values for TagRuleOperator.
 const (
 	TagRuleOperatorEqual TagRuleOperator = "equal"
 
@@ -619,266 +455,29 @@ const (
 	TagRuleOperatorNotequal TagRuleOperator = "notequal"
 
 	TagRuleOperatorNotequalregex TagRuleOperator = "notequalregex"
-)
-
-// Defines values for TaskLastRunStatus.
+) // Defines values for TaskLastRunStatus.
 const (
 	TaskLastRunStatusCanceled TaskLastRunStatus = "canceled"
 
 	TaskLastRunStatusFailed TaskLastRunStatus = "failed"
 
 	TaskLastRunStatusSuccess TaskLastRunStatus = "success"
-)
-
-// Defines values for TaskStatusType.
+) // Defines values for TaskStatusType.
 const (
 	TaskStatusTypeActive TaskStatusType = "active"
 
 	TaskStatusTypeInactive TaskStatusType = "inactive"
-)
-
-// Defines values for TelegrafPluginInputCpuName.
-const (
-	TelegrafPluginInputCpuNameCpu TelegrafPluginInputCpuName = "cpu"
-)
-
-// Defines values for TelegrafPluginInputCpuType.
-const (
-	TelegrafPluginInputCpuTypeInput TelegrafPluginInputCpuType = "input"
-)
-
-// Defines values for TelegrafPluginInputDiskName.
-const (
-	TelegrafPluginInputDiskNameDisk TelegrafPluginInputDiskName = "disk"
-)
-
-// Defines values for TelegrafPluginInputDiskType.
-const (
-	TelegrafPluginInputDiskTypeInput TelegrafPluginInputDiskType = "input"
-)
-
-// Defines values for TelegrafPluginInputDiskioName.
-const (
-	TelegrafPluginInputDiskioNameDiskio TelegrafPluginInputDiskioName = "diskio"
-)
-
-// Defines values for TelegrafPluginInputDiskioType.
-const (
-	TelegrafPluginInputDiskioTypeInput TelegrafPluginInputDiskioType = "input"
-)
-
-// Defines values for TelegrafPluginInputDockerName.
-const (
-	TelegrafPluginInputDockerNameDocker TelegrafPluginInputDockerName = "docker"
-)
-
-// Defines values for TelegrafPluginInputDockerType.
-const (
-	TelegrafPluginInputDockerTypeInput TelegrafPluginInputDockerType = "input"
-)
-
-// Defines values for TelegrafPluginInputFileName.
-const (
-	TelegrafPluginInputFileNameFile TelegrafPluginInputFileName = "file"
-)
-
-// Defines values for TelegrafPluginInputFileType.
-const (
-	TelegrafPluginInputFileTypeInput TelegrafPluginInputFileType = "input"
-)
-
-// Defines values for TelegrafPluginInputKernelName.
-const (
-	TelegrafPluginInputKernelNameKernel TelegrafPluginInputKernelName = "kernel"
-)
-
-// Defines values for TelegrafPluginInputKernelType.
-const (
-	TelegrafPluginInputKernelTypeInput TelegrafPluginInputKernelType = "input"
-)
-
-// Defines values for TelegrafPluginInputKubernetesName.
-const (
-	TelegrafPluginInputKubernetesNameKubernetes TelegrafPluginInputKubernetesName = "kubernetes"
-)
-
-// Defines values for TelegrafPluginInputKubernetesType.
-const (
-	TelegrafPluginInputKubernetesTypeInput TelegrafPluginInputKubernetesType = "input"
-)
-
-// Defines values for TelegrafPluginInputLogParserName.
-const (
-	TelegrafPluginInputLogParserNameLogparser TelegrafPluginInputLogParserName = "logparser"
-)
-
-// Defines values for TelegrafPluginInputLogParserType.
-const (
-	TelegrafPluginInputLogParserTypeInput TelegrafPluginInputLogParserType = "input"
-)
-
-// Defines values for TelegrafPluginInputMemName.
-const (
-	TelegrafPluginInputMemNameMem TelegrafPluginInputMemName = "mem"
-)
-
-// Defines values for TelegrafPluginInputMemType.
-const (
-	TelegrafPluginInputMemTypeInput TelegrafPluginInputMemType = "input"
-)
-
-// Defines values for TelegrafPluginInputNetName.
-const (
-	TelegrafPluginInputNetNameNet TelegrafPluginInputNetName = "net"
-)
-
-// Defines values for TelegrafPluginInputNetType.
-const (
-	TelegrafPluginInputNetTypeInput TelegrafPluginInputNetType = "input"
-)
-
-// Defines values for TelegrafPluginInputNetResponseName.
-const (
-	TelegrafPluginInputNetResponseNameNetResponse TelegrafPluginInputNetResponseName = "net_response"
-)
-
-// Defines values for TelegrafPluginInputNetResponseType.
-const (
-	TelegrafPluginInputNetResponseTypeInput TelegrafPluginInputNetResponseType = "input"
-)
-
-// Defines values for TelegrafPluginInputNginxName.
-const (
-	TelegrafPluginInputNginxNameNginx TelegrafPluginInputNginxName = "nginx"
-)
-
-// Defines values for TelegrafPluginInputNginxType.
-const (
-	TelegrafPluginInputNginxTypeInput TelegrafPluginInputNginxType = "input"
-)
-
-// Defines values for TelegrafPluginInputProcessesName.
-const (
-	TelegrafPluginInputProcessesNameProcesses TelegrafPluginInputProcessesName = "processes"
-)
-
-// Defines values for TelegrafPluginInputProcessesType.
-const (
-	TelegrafPluginInputProcessesTypeInput TelegrafPluginInputProcessesType = "input"
-)
-
-// Defines values for TelegrafPluginInputProcstatName.
-const (
-	TelegrafPluginInputProcstatNameProcstat TelegrafPluginInputProcstatName = "procstat"
-)
-
-// Defines values for TelegrafPluginInputProcstatType.
-const (
-	TelegrafPluginInputProcstatTypeInput TelegrafPluginInputProcstatType = "input"
-)
-
-// Defines values for TelegrafPluginInputPrometheusName.
-const (
-	TelegrafPluginInputPrometheusNamePrometheus TelegrafPluginInputPrometheusName = "prometheus"
-)
-
-// Defines values for TelegrafPluginInputPrometheusType.
-const (
-	TelegrafPluginInputPrometheusTypeInput TelegrafPluginInputPrometheusType = "input"
-)
-
-// Defines values for TelegrafPluginInputRedisName.
-const (
-	TelegrafPluginInputRedisNameRedis TelegrafPluginInputRedisName = "redis"
-)
-
-// Defines values for TelegrafPluginInputRedisType.
-const (
-	TelegrafPluginInputRedisTypeInput TelegrafPluginInputRedisType = "input"
-)
-
-// Defines values for TelegrafPluginInputSwapName.
-const (
-	TelegrafPluginInputSwapNameSwap TelegrafPluginInputSwapName = "swap"
-)
-
-// Defines values for TelegrafPluginInputSwapType.
-const (
-	TelegrafPluginInputSwapTypeInput TelegrafPluginInputSwapType = "input"
-)
-
-// Defines values for TelegrafPluginInputSyslogName.
-const (
-	TelegrafPluginInputSyslogNameSyslog TelegrafPluginInputSyslogName = "syslog"
-)
-
-// Defines values for TelegrafPluginInputSyslogType.
-const (
-	TelegrafPluginInputSyslogTypeInput TelegrafPluginInputSyslogType = "input"
-)
-
-// Defines values for TelegrafPluginInputSystemName.
-const (
-	TelegrafPluginInputSystemNameSystem TelegrafPluginInputSystemName = "system"
-)
-
-// Defines values for TelegrafPluginInputSystemType.
-const (
-	TelegrafPluginInputSystemTypeInput TelegrafPluginInputSystemType = "input"
-)
-
-// Defines values for TelegrafPluginInputTailName.
-const (
-	TelegrafPluginInputTailNameTail TelegrafPluginInputTailName = "tail"
-)
-
-// Defines values for TelegrafPluginInputTailType.
-const (
-	TelegrafPluginInputTailTypeInput TelegrafPluginInputTailType = "input"
-)
-
-// Defines values for TelegrafPluginOutputFileName.
-const (
-	TelegrafPluginOutputFileNameFile TelegrafPluginOutputFileName = "file"
-)
-
-// Defines values for TelegrafPluginOutputFileType.
-const (
-	TelegrafPluginOutputFileTypeOutput TelegrafPluginOutputFileType = "output"
-)
-
-// Defines values for TelegrafPluginOutputFileConfigFilesType.
-const (
-	TelegrafPluginOutputFileConfigFilesTypePath TelegrafPluginOutputFileConfigFilesType = "path"
-
-	TelegrafPluginOutputFileConfigFilesTypeStdout TelegrafPluginOutputFileConfigFilesType = "stdout"
-)
-
-// Defines values for TelegrafPluginOutputInfluxDBV2Name.
-const (
-	TelegrafPluginOutputInfluxDBV2NameInfluxdbV2 TelegrafPluginOutputInfluxDBV2Name = "influxdb_v2"
-)
-
-// Defines values for TelegrafPluginOutputInfluxDBV2Type.
-const (
-	TelegrafPluginOutputInfluxDBV2TypeOutput TelegrafPluginOutputInfluxDBV2Type = "output"
-)
-
-// Defines values for TelegramNotificationRuleBaseParseMode.
+) // Defines values for TelegramNotificationRuleBaseParseMode.
 const (
 	TelegramNotificationRuleBaseParseModeHTML TelegramNotificationRuleBaseParseMode = "HTML"
 
 	TelegramNotificationRuleBaseParseModeMarkdown TelegramNotificationRuleBaseParseMode = "Markdown"
 
 	TelegramNotificationRuleBaseParseModeMarkdownV2 TelegramNotificationRuleBaseParseMode = "MarkdownV2"
-)
-
-// Defines values for TelegramNotificationRuleBaseType.
+) // Defines values for TelegramNotificationRuleBaseType.
 const (
 	TelegramNotificationRuleBaseTypeTelegram TelegramNotificationRuleBaseType = "telegram"
-)
-
-// Defines values for TemplateKind.
+) // Defines values for TemplateKind.
 const (
 	TemplateKindBucket TemplateKind = "Bucket"
 
@@ -907,21 +506,15 @@ const (
 	TemplateKindTelegraf TemplateKind = "Telegraf"
 
 	TemplateKindVariable TemplateKind = "Variable"
-)
-
-// Defines values for ThresholdCheckType.
+) // Defines values for ThresholdCheckType.
 const (
 	ThresholdCheckTypeThreshold ThresholdCheckType = "threshold"
-)
-
-// Defines values for UserStatus.
+) // Defines values for UserStatus.
 const (
 	UserStatusActive UserStatus = "active"
 
 	UserStatusInactive UserStatus = "inactive"
-)
-
-// Defines values for WritePrecision.
+) // Defines values for WritePrecision.
 const (
 	WritePrecisionMs WritePrecision = "ms"
 
@@ -930,9 +523,7 @@ const (
 	WritePrecisionS WritePrecision = "s"
 
 	WritePrecisionUs WritePrecision = "us"
-)
-
-// Defines values for XYGeom.
+) // Defines values for XYGeom.
 const (
 	XYGeomBar XYGeom = "bar"
 
@@ -943,9 +534,7 @@ const (
 	XYGeomStacked XYGeom = "stacked"
 
 	XYGeomStep XYGeom = "step"
-)
-
-// Defines values for XYViewPropertiesHoverDimension.
+) // Defines values for XYViewPropertiesHoverDimension.
 const (
 	XYViewPropertiesHoverDimensionAuto XYViewPropertiesHoverDimension = "auto"
 
@@ -954,21 +543,15 @@ const (
 	XYViewPropertiesHoverDimensionX XYViewPropertiesHoverDimension = "x"
 
 	XYViewPropertiesHoverDimensionXy XYViewPropertiesHoverDimension = "xy"
-)
-
-// Defines values for XYViewPropertiesPosition.
+) // Defines values for XYViewPropertiesPosition.
 const (
 	XYViewPropertiesPositionOverlaid XYViewPropertiesPosition = "overlaid"
 
 	XYViewPropertiesPositionStacked XYViewPropertiesPosition = "stacked"
-)
-
-// Defines values for XYViewPropertiesShape.
+) // Defines values for XYViewPropertiesShape.
 const (
 	XYViewPropertiesShapeChronografV2 XYViewPropertiesShape = "chronograf-v2"
-)
-
-// Defines values for XYViewPropertiesType.
+) // Defines values for XYViewPropertiesType.
 const (
 	XYViewPropertiesTypeXy XYViewPropertiesType = "xy"
 )
@@ -2106,30 +1689,6 @@ type IntegerLiteral struct {
 	Value *string   `json:"value,omitempty"`
 }
 
-// Invite defines model for Invite.
-type Invite struct {
-	Email     string     `json:"email"`
-	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
-
-	// the idpe id of the invite
-	Id    string `json:"id"`
-	Links *struct {
-		Self *string `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-	Role InviteRole `json:"role"`
-}
-
-// InviteRole defines model for Invite.Role.
-type InviteRole string
-
-// Invites defines model for Invites.
-type Invites struct {
-	Invites *[]Invite `json:"invites,omitempty"`
-	Links   *struct {
-		Self *string `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-}
-
 // IsOnboarding defines model for IsOnboarding.
 type IsOnboarding struct {
 
@@ -2901,16 +2460,16 @@ type RenamableField struct {
 type Resource struct {
 
 	// If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
-	Id *string `json:"id,omitempty"`
+	Id *string `json:"id"`
 
 	// Optional name of the resource if the resource has a name field.
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name"`
 
 	// Optional name of the organization of the organization with orgID.
-	Org *string `json:"org,omitempty"`
+	Org *string `json:"org"`
 
 	// If orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.
-	OrgID *string      `json:"orgID,omitempty"`
+	OrgID *string      `json:"orgID"`
 	Type  ResourceType `json:"type"`
 }
 
@@ -3051,7 +2610,7 @@ type RunStatus string
 type RunManually struct {
 
 	// Time used for run's "now" option, RFC3339.  Default is the server's now time.
-	ScheduledFor *time.Time `json:"scheduledFor,omitempty"`
+	ScheduledFor *time.Time `json:"scheduledFor"`
 }
 
 // Runs defines model for Runs.
@@ -3549,362 +3108,6 @@ type TelegrafPlugin struct {
 	Type        *string `json:"type,omitempty"`
 }
 
-// TelegrafPluginInputCpu defines model for TelegrafPluginInputCpu.
-type TelegrafPluginInputCpu struct {
-	Comment *string                    `json:"comment,omitempty"`
-	Name    TelegrafPluginInputCpuName `json:"name"`
-	Type    TelegrafPluginInputCpuType `json:"type"`
-}
-
-// TelegrafPluginInputCpuName defines model for TelegrafPluginInputCpu.Name.
-type TelegrafPluginInputCpuName string
-
-// TelegrafPluginInputCpuType defines model for TelegrafPluginInputCpu.Type.
-type TelegrafPluginInputCpuType string
-
-// TelegrafPluginInputDisk defines model for TelegrafPluginInputDisk.
-type TelegrafPluginInputDisk struct {
-	Comment *string                     `json:"comment,omitempty"`
-	Name    TelegrafPluginInputDiskName `json:"name"`
-	Type    TelegrafPluginInputDiskType `json:"type"`
-}
-
-// TelegrafPluginInputDiskName defines model for TelegrafPluginInputDisk.Name.
-type TelegrafPluginInputDiskName string
-
-// TelegrafPluginInputDiskType defines model for TelegrafPluginInputDisk.Type.
-type TelegrafPluginInputDiskType string
-
-// TelegrafPluginInputDiskio defines model for TelegrafPluginInputDiskio.
-type TelegrafPluginInputDiskio struct {
-	Comment *string                       `json:"comment,omitempty"`
-	Name    TelegrafPluginInputDiskioName `json:"name"`
-	Type    TelegrafPluginInputDiskioType `json:"type"`
-}
-
-// TelegrafPluginInputDiskioName defines model for TelegrafPluginInputDiskio.Name.
-type TelegrafPluginInputDiskioName string
-
-// TelegrafPluginInputDiskioType defines model for TelegrafPluginInputDiskio.Type.
-type TelegrafPluginInputDiskioType string
-
-// TelegrafPluginInputDocker defines model for TelegrafPluginInputDocker.
-type TelegrafPluginInputDocker struct {
-	Comment *string                         `json:"comment,omitempty"`
-	Config  TelegrafPluginInputDockerConfig `json:"config"`
-	Name    TelegrafPluginInputDockerName   `json:"name"`
-	Type    TelegrafPluginInputDockerType   `json:"type"`
-}
-
-// TelegrafPluginInputDockerName defines model for TelegrafPluginInputDocker.Name.
-type TelegrafPluginInputDockerName string
-
-// TelegrafPluginInputDockerType defines model for TelegrafPluginInputDocker.Type.
-type TelegrafPluginInputDockerType string
-
-// TelegrafPluginInputDockerConfig defines model for TelegrafPluginInputDockerConfig.
-type TelegrafPluginInputDockerConfig struct {
-	Endpoint string `json:"endpoint"`
-}
-
-// TelegrafPluginInputFile defines model for TelegrafPluginInputFile.
-type TelegrafPluginInputFile struct {
-	Comment *string                       `json:"comment,omitempty"`
-	Config  TelegrafPluginInputFileConfig `json:"config"`
-	Name    TelegrafPluginInputFileName   `json:"name"`
-	Type    TelegrafPluginInputFileType   `json:"type"`
-}
-
-// TelegrafPluginInputFileName defines model for TelegrafPluginInputFile.Name.
-type TelegrafPluginInputFileName string
-
-// TelegrafPluginInputFileType defines model for TelegrafPluginInputFile.Type.
-type TelegrafPluginInputFileType string
-
-// TelegrafPluginInputFileConfig defines model for TelegrafPluginInputFileConfig.
-type TelegrafPluginInputFileConfig struct {
-	Files *[]string `json:"files,omitempty"`
-}
-
-// TelegrafPluginInputKernel defines model for TelegrafPluginInputKernel.
-type TelegrafPluginInputKernel struct {
-	Comment *string                       `json:"comment,omitempty"`
-	Name    TelegrafPluginInputKernelName `json:"name"`
-	Type    TelegrafPluginInputKernelType `json:"type"`
-}
-
-// TelegrafPluginInputKernelName defines model for TelegrafPluginInputKernel.Name.
-type TelegrafPluginInputKernelName string
-
-// TelegrafPluginInputKernelType defines model for TelegrafPluginInputKernel.Type.
-type TelegrafPluginInputKernelType string
-
-// TelegrafPluginInputKubernetes defines model for TelegrafPluginInputKubernetes.
-type TelegrafPluginInputKubernetes struct {
-	Comment *string                             `json:"comment,omitempty"`
-	Config  TelegrafPluginInputKubernetesConfig `json:"config"`
-	Name    TelegrafPluginInputKubernetesName   `json:"name"`
-	Type    TelegrafPluginInputKubernetesType   `json:"type"`
-}
-
-// TelegrafPluginInputKubernetesName defines model for TelegrafPluginInputKubernetes.Name.
-type TelegrafPluginInputKubernetesName string
-
-// TelegrafPluginInputKubernetesType defines model for TelegrafPluginInputKubernetes.Type.
-type TelegrafPluginInputKubernetesType string
-
-// TelegrafPluginInputKubernetesConfig defines model for TelegrafPluginInputKubernetesConfig.
-type TelegrafPluginInputKubernetesConfig struct {
-	Url *string `json:"url,omitempty"`
-}
-
-// TelegrafPluginInputLogParser defines model for TelegrafPluginInputLogParser.
-type TelegrafPluginInputLogParser struct {
-	Comment *string                            `json:"comment,omitempty"`
-	Config  TelegrafPluginInputLogParserConfig `json:"config"`
-	Name    TelegrafPluginInputLogParserName   `json:"name"`
-	Type    TelegrafPluginInputLogParserType   `json:"type"`
-}
-
-// TelegrafPluginInputLogParserName defines model for TelegrafPluginInputLogParser.Name.
-type TelegrafPluginInputLogParserName string
-
-// TelegrafPluginInputLogParserType defines model for TelegrafPluginInputLogParser.Type.
-type TelegrafPluginInputLogParserType string
-
-// TelegrafPluginInputLogParserConfig defines model for TelegrafPluginInputLogParserConfig.
-type TelegrafPluginInputLogParserConfig struct {
-	Files *[]string `json:"files,omitempty"`
-}
-
-// TelegrafPluginInputMem defines model for TelegrafPluginInputMem.
-type TelegrafPluginInputMem struct {
-	Comment *string                    `json:"comment,omitempty"`
-	Name    TelegrafPluginInputMemName `json:"name"`
-	Type    TelegrafPluginInputMemType `json:"type"`
-}
-
-// TelegrafPluginInputMemName defines model for TelegrafPluginInputMem.Name.
-type TelegrafPluginInputMemName string
-
-// TelegrafPluginInputMemType defines model for TelegrafPluginInputMem.Type.
-type TelegrafPluginInputMemType string
-
-// TelegrafPluginInputNet defines model for TelegrafPluginInputNet.
-type TelegrafPluginInputNet struct {
-	Comment *string                    `json:"comment,omitempty"`
-	Name    TelegrafPluginInputNetName `json:"name"`
-	Type    TelegrafPluginInputNetType `json:"type"`
-}
-
-// TelegrafPluginInputNetName defines model for TelegrafPluginInputNet.Name.
-type TelegrafPluginInputNetName string
-
-// TelegrafPluginInputNetType defines model for TelegrafPluginInputNet.Type.
-type TelegrafPluginInputNetType string
-
-// TelegrafPluginInputNetResponse defines model for TelegrafPluginInputNetResponse.
-type TelegrafPluginInputNetResponse struct {
-	Comment *string                            `json:"comment,omitempty"`
-	Name    TelegrafPluginInputNetResponseName `json:"name"`
-	Type    TelegrafPluginInputNetResponseType `json:"type"`
-}
-
-// TelegrafPluginInputNetResponseName defines model for TelegrafPluginInputNetResponse.Name.
-type TelegrafPluginInputNetResponseName string
-
-// TelegrafPluginInputNetResponseType defines model for TelegrafPluginInputNetResponse.Type.
-type TelegrafPluginInputNetResponseType string
-
-// TelegrafPluginInputNginx defines model for TelegrafPluginInputNginx.
-type TelegrafPluginInputNginx struct {
-	Comment *string                      `json:"comment,omitempty"`
-	Name    TelegrafPluginInputNginxName `json:"name"`
-	Type    TelegrafPluginInputNginxType `json:"type"`
-}
-
-// TelegrafPluginInputNginxName defines model for TelegrafPluginInputNginx.Name.
-type TelegrafPluginInputNginxName string
-
-// TelegrafPluginInputNginxType defines model for TelegrafPluginInputNginx.Type.
-type TelegrafPluginInputNginxType string
-
-// TelegrafPluginInputProcesses defines model for TelegrafPluginInputProcesses.
-type TelegrafPluginInputProcesses struct {
-	Comment *string                          `json:"comment,omitempty"`
-	Name    TelegrafPluginInputProcessesName `json:"name"`
-	Type    TelegrafPluginInputProcessesType `json:"type"`
-}
-
-// TelegrafPluginInputProcessesName defines model for TelegrafPluginInputProcesses.Name.
-type TelegrafPluginInputProcessesName string
-
-// TelegrafPluginInputProcessesType defines model for TelegrafPluginInputProcesses.Type.
-type TelegrafPluginInputProcessesType string
-
-// TelegrafPluginInputProcstat defines model for TelegrafPluginInputProcstat.
-type TelegrafPluginInputProcstat struct {
-	Comment *string                           `json:"comment,omitempty"`
-	Config  TelegrafPluginInputProcstatConfig `json:"config"`
-	Name    TelegrafPluginInputProcstatName   `json:"name"`
-	Type    TelegrafPluginInputProcstatType   `json:"type"`
-}
-
-// TelegrafPluginInputProcstatName defines model for TelegrafPluginInputProcstat.Name.
-type TelegrafPluginInputProcstatName string
-
-// TelegrafPluginInputProcstatType defines model for TelegrafPluginInputProcstat.Type.
-type TelegrafPluginInputProcstatType string
-
-// TelegrafPluginInputProcstatConfig defines model for TelegrafPluginInputProcstatConfig.
-type TelegrafPluginInputProcstatConfig struct {
-	Exe *string `json:"exe,omitempty"`
-}
-
-// TelegrafPluginInputPrometheus defines model for TelegrafPluginInputPrometheus.
-type TelegrafPluginInputPrometheus struct {
-	Comment *string                             `json:"comment,omitempty"`
-	Config  TelegrafPluginInputPrometheusConfig `json:"config"`
-	Name    TelegrafPluginInputPrometheusName   `json:"name"`
-	Type    TelegrafPluginInputPrometheusType   `json:"type"`
-}
-
-// TelegrafPluginInputPrometheusName defines model for TelegrafPluginInputPrometheus.Name.
-type TelegrafPluginInputPrometheusName string
-
-// TelegrafPluginInputPrometheusType defines model for TelegrafPluginInputPrometheus.Type.
-type TelegrafPluginInputPrometheusType string
-
-// TelegrafPluginInputPrometheusConfig defines model for TelegrafPluginInputPrometheusConfig.
-type TelegrafPluginInputPrometheusConfig struct {
-	Urls *[]string `json:"urls,omitempty"`
-}
-
-// TelegrafPluginInputRedis defines model for TelegrafPluginInputRedis.
-type TelegrafPluginInputRedis struct {
-	Comment *string                        `json:"comment,omitempty"`
-	Config  TelegrafPluginInputRedisConfig `json:"config"`
-	Name    TelegrafPluginInputRedisName   `json:"name"`
-	Type    TelegrafPluginInputRedisType   `json:"type"`
-}
-
-// TelegrafPluginInputRedisName defines model for TelegrafPluginInputRedis.Name.
-type TelegrafPluginInputRedisName string
-
-// TelegrafPluginInputRedisType defines model for TelegrafPluginInputRedis.Type.
-type TelegrafPluginInputRedisType string
-
-// TelegrafPluginInputRedisConfig defines model for TelegrafPluginInputRedisConfig.
-type TelegrafPluginInputRedisConfig struct {
-	Password *string   `json:"password,omitempty"`
-	Servers  *[]string `json:"servers,omitempty"`
-}
-
-// TelegrafPluginInputSwap defines model for TelegrafPluginInputSwap.
-type TelegrafPluginInputSwap struct {
-	Comment *string                     `json:"comment,omitempty"`
-	Name    TelegrafPluginInputSwapName `json:"name"`
-	Type    TelegrafPluginInputSwapType `json:"type"`
-}
-
-// TelegrafPluginInputSwapName defines model for TelegrafPluginInputSwap.Name.
-type TelegrafPluginInputSwapName string
-
-// TelegrafPluginInputSwapType defines model for TelegrafPluginInputSwap.Type.
-type TelegrafPluginInputSwapType string
-
-// TelegrafPluginInputSyslog defines model for TelegrafPluginInputSyslog.
-type TelegrafPluginInputSyslog struct {
-	Comment *string                         `json:"comment,omitempty"`
-	Config  TelegrafPluginInputSyslogConfig `json:"config"`
-	Name    TelegrafPluginInputSyslogName   `json:"name"`
-	Type    TelegrafPluginInputSyslogType   `json:"type"`
-}
-
-// TelegrafPluginInputSyslogName defines model for TelegrafPluginInputSyslog.Name.
-type TelegrafPluginInputSyslogName string
-
-// TelegrafPluginInputSyslogType defines model for TelegrafPluginInputSyslog.Type.
-type TelegrafPluginInputSyslogType string
-
-// TelegrafPluginInputSyslogConfig defines model for TelegrafPluginInputSyslogConfig.
-type TelegrafPluginInputSyslogConfig struct {
-	Server *string `json:"server,omitempty"`
-}
-
-// TelegrafPluginInputSystem defines model for TelegrafPluginInputSystem.
-type TelegrafPluginInputSystem struct {
-	Comment *string                       `json:"comment,omitempty"`
-	Name    TelegrafPluginInputSystemName `json:"name"`
-	Type    TelegrafPluginInputSystemType `json:"type"`
-}
-
-// TelegrafPluginInputSystemName defines model for TelegrafPluginInputSystem.Name.
-type TelegrafPluginInputSystemName string
-
-// TelegrafPluginInputSystemType defines model for TelegrafPluginInputSystem.Type.
-type TelegrafPluginInputSystemType string
-
-// TelegrafPluginInputTail defines model for TelegrafPluginInputTail.
-type TelegrafPluginInputTail struct {
-	Comment *string                     `json:"comment,omitempty"`
-	Name    TelegrafPluginInputTailName `json:"name"`
-	Type    TelegrafPluginInputTailType `json:"type"`
-}
-
-// TelegrafPluginInputTailName defines model for TelegrafPluginInputTail.Name.
-type TelegrafPluginInputTailName string
-
-// TelegrafPluginInputTailType defines model for TelegrafPluginInputTail.Type.
-type TelegrafPluginInputTailType string
-
-// TelegrafPluginOutputFile defines model for TelegrafPluginOutputFile.
-type TelegrafPluginOutputFile struct {
-	Comment *string                        `json:"comment,omitempty"`
-	Config  TelegrafPluginOutputFileConfig `json:"config"`
-	Name    TelegrafPluginOutputFileName   `json:"name"`
-	Type    TelegrafPluginOutputFileType   `json:"type"`
-}
-
-// TelegrafPluginOutputFileName defines model for TelegrafPluginOutputFile.Name.
-type TelegrafPluginOutputFileName string
-
-// TelegrafPluginOutputFileType defines model for TelegrafPluginOutputFile.Type.
-type TelegrafPluginOutputFileType string
-
-// TelegrafPluginOutputFileConfig defines model for TelegrafPluginOutputFileConfig.
-type TelegrafPluginOutputFileConfig struct {
-	Files []struct {
-		Path *string                                  `json:"path,omitempty"`
-		Type *TelegrafPluginOutputFileConfigFilesType `json:"type,omitempty"`
-	} `json:"files"`
-}
-
-// TelegrafPluginOutputFileConfigFilesType defines model for TelegrafPluginOutputFileConfig.Files.Type.
-type TelegrafPluginOutputFileConfigFilesType string
-
-// TelegrafPluginOutputInfluxDBV2 defines model for TelegrafPluginOutputInfluxDBV2.
-type TelegrafPluginOutputInfluxDBV2 struct {
-	Comment *string                              `json:"comment,omitempty"`
-	Config  TelegrafPluginOutputInfluxDBV2Config `json:"config"`
-	Name    TelegrafPluginOutputInfluxDBV2Name   `json:"name"`
-	Type    TelegrafPluginOutputInfluxDBV2Type   `json:"type"`
-}
-
-// TelegrafPluginOutputInfluxDBV2Name defines model for TelegrafPluginOutputInfluxDBV2.Name.
-type TelegrafPluginOutputInfluxDBV2Name string
-
-// TelegrafPluginOutputInfluxDBV2Type defines model for TelegrafPluginOutputInfluxDBV2.Type.
-type TelegrafPluginOutputInfluxDBV2Type string
-
-// TelegrafPluginOutputInfluxDBV2Config defines model for TelegrafPluginOutputInfluxDBV2Config.
-type TelegrafPluginOutputInfluxDBV2Config struct {
-	Bucket       string   `json:"bucket"`
-	Organization string   `json:"organization"`
-	Token        string   `json:"token"`
-	Urls         []string `json:"urls"`
-}
-
 // TelegrafPlugins defines model for TelegrafPlugins.
 type TelegrafPlugins struct {
 	Os      *string           `json:"os,omitempty"`
@@ -3922,9 +3125,6 @@ type TelegrafRequest struct {
 	Name  *string `json:"name,omitempty"`
 	OrgID *string `json:"orgID,omitempty"`
 }
-
-// TelegrafRequestPlugin defines model for TelegrafRequestPlugin.
-type TelegrafRequestPlugin interface{}
 
 // Telegrafs defines model for Telegrafs.
 type Telegrafs struct {
@@ -4031,7 +3231,7 @@ type TemplateChart struct {
 type TemplateEnvReferences []struct {
 
 	// Default value that will be provided for the reference when no value is provided
-	DefaultValue *interface{} `json:"defaultValue,omitempty"`
+	DefaultValue *interface{} `json:"defaultValue"`
 
 	// Key identified as environment reference and is the key identified in the template
 	EnvRefKey string `json:"envRefKey"`
@@ -4040,7 +3240,7 @@ type TemplateEnvReferences []struct {
 	ResourceField string `json:"resourceField"`
 
 	// Value provided to fulfill reference
-	Value *interface{} `json:"value,omitempty"`
+	Value *interface{} `json:"value"`
 }
 
 // TemplateExport defines model for TemplateExport.
@@ -4516,14 +3716,6 @@ type View struct {
 // ViewProperties defines model for ViewProperties.
 type ViewProperties interface{}
 
-// Views defines model for Views.
-type Views struct {
-	Links *struct {
-		Self *string `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-	Views *[]View `json:"views,omitempty"`
-}
-
 // WritePrecision defines model for WritePrecision.
 type WritePrecision string
 
@@ -4582,9 +3774,6 @@ type Limit int
 
 // Offset defines model for Offset.
 type Offset int
-
-// SortBy defines model for SortBy.
-type SortBy string
 
 // TraceSpan defines model for TraceSpan.
 type TraceSpan string
@@ -5911,9 +5100,9 @@ type UpdateStackJSONBody struct {
 		ResourceID       string  `json:"resourceID"`
 		TemplateMetaName *string `json:"templateMetaName,omitempty"`
 	} `json:"additionalResources,omitempty"`
-	Description  *string   `json:"description,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	TemplateURLs *[]string `json:"templateURLs,omitempty"`
+	Description  *string   `json:"description"`
+	Name         *string   `json:"name"`
+	TemplateURLs *[]string `json:"templateURLs"`
 }
 
 // GetTasksParams defines parameters for GetTasks.

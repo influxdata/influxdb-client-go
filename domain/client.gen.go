@@ -8,14 +8,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 
+	"gopkg.in/yaml.v2"
+
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	ihttp "github.com/influxdata/influxdb-client-go/v2/api/http"
 )
 
@@ -14297,14 +14298,765 @@ func NewClientWithResponses(service ihttp.Service) *ClientWithResponses {
 	return &ClientWithResponses{client}
 }
 
-type getRoutesResponse struct {
+// ClientWithResponsesInterface is the interface specification for the client with responses above.
+type ClientWithResponsesInterface interface {
+	// GetRoutes request
+	GetRoutesWithResponse(ctx context.Context, params *GetRoutesParams) (*GetRoutesResponse, error)
+
+	// GetAuthorizations request
+	GetAuthorizationsWithResponse(ctx context.Context, params *GetAuthorizationsParams) (*GetAuthorizationsResponse, error)
+
+	// PostAuthorizations request  with any body
+	PostAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostAuthorizationsParams, contentType string, body io.Reader) (*PostAuthorizationsResponse, error)
+
+	PostAuthorizationsWithResponse(ctx context.Context, params *PostAuthorizationsParams, body PostAuthorizationsJSONRequestBody) (*PostAuthorizationsResponse, error)
+
+	// DeleteAuthorizationsID request
+	DeleteAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteAuthorizationsIDParams) (*DeleteAuthorizationsIDResponse, error)
+
+	// GetAuthorizationsID request
+	GetAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetAuthorizationsIDParams) (*GetAuthorizationsIDResponse, error)
+
+	// PatchAuthorizationsID request  with any body
+	PatchAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, contentType string, body io.Reader) (*PatchAuthorizationsIDResponse, error)
+
+	PatchAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*PatchAuthorizationsIDResponse, error)
+
+	// GetBuckets request
+	GetBucketsWithResponse(ctx context.Context, params *GetBucketsParams) (*GetBucketsResponse, error)
+
+	// PostBuckets request  with any body
+	PostBucketsWithBodyWithResponse(ctx context.Context, params *PostBucketsParams, contentType string, body io.Reader) (*PostBucketsResponse, error)
+
+	PostBucketsWithResponse(ctx context.Context, params *PostBucketsParams, body PostBucketsJSONRequestBody) (*PostBucketsResponse, error)
+
+	// DeleteBucketsID request
+	DeleteBucketsIDWithResponse(ctx context.Context, bucketID string, params *DeleteBucketsIDParams) (*DeleteBucketsIDResponse, error)
+
+	// GetBucketsID request
+	GetBucketsIDWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDParams) (*GetBucketsIDResponse, error)
+
+	// PatchBucketsID request  with any body
+	PatchBucketsIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, contentType string, body io.Reader) (*PatchBucketsIDResponse, error)
+
+	PatchBucketsIDWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, body PatchBucketsIDJSONRequestBody) (*PatchBucketsIDResponse, error)
+
+	// GetBucketsIDLabels request
+	GetBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDLabelsParams) (*GetBucketsIDLabelsResponse, error)
+
+	// PostBucketsIDLabels request  with any body
+	PostBucketsIDLabelsWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, contentType string, body io.Reader) (*PostBucketsIDLabelsResponse, error)
+
+	PostBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, body PostBucketsIDLabelsJSONRequestBody) (*PostBucketsIDLabelsResponse, error)
+
+	// DeleteBucketsIDLabelsID request
+	DeleteBucketsIDLabelsIDWithResponse(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*DeleteBucketsIDLabelsIDResponse, error)
+
+	// GetBucketsIDMembers request
+	GetBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*GetBucketsIDMembersResponse, error)
+
+	// PostBucketsIDMembers request  with any body
+	PostBucketsIDMembersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, contentType string, body io.Reader) (*PostBucketsIDMembersResponse, error)
+
+	PostBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, body PostBucketsIDMembersJSONRequestBody) (*PostBucketsIDMembersResponse, error)
+
+	// DeleteBucketsIDMembersID request
+	DeleteBucketsIDMembersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDMembersIDParams) (*DeleteBucketsIDMembersIDResponse, error)
+
+	// GetBucketsIDOwners request
+	GetBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDOwnersParams) (*GetBucketsIDOwnersResponse, error)
+
+	// PostBucketsIDOwners request  with any body
+	PostBucketsIDOwnersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, contentType string, body io.Reader) (*PostBucketsIDOwnersResponse, error)
+
+	PostBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, body PostBucketsIDOwnersJSONRequestBody) (*PostBucketsIDOwnersResponse, error)
+
+	// DeleteBucketsIDOwnersID request
+	DeleteBucketsIDOwnersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDOwnersIDParams) (*DeleteBucketsIDOwnersIDResponse, error)
+
+	// GetChecks request
+	GetChecksWithResponse(ctx context.Context, params *GetChecksParams) (*GetChecksResponse, error)
+
+	// CreateCheck request  with any body
+	CreateCheckWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateCheckResponse, error)
+
+	CreateCheckWithResponse(ctx context.Context, body CreateCheckJSONRequestBody) (*CreateCheckResponse, error)
+
+	// DeleteChecksID request
+	DeleteChecksIDWithResponse(ctx context.Context, checkID string, params *DeleteChecksIDParams) (*DeleteChecksIDResponse, error)
+
+	// GetChecksID request
+	GetChecksIDWithResponse(ctx context.Context, checkID string, params *GetChecksIDParams) (*GetChecksIDResponse, error)
+
+	// PatchChecksID request  with any body
+	PatchChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, contentType string, body io.Reader) (*PatchChecksIDResponse, error)
+
+	PatchChecksIDWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, body PatchChecksIDJSONRequestBody) (*PatchChecksIDResponse, error)
+
+	// PutChecksID request  with any body
+	PutChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, contentType string, body io.Reader) (*PutChecksIDResponse, error)
+
+	PutChecksIDWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, body PutChecksIDJSONRequestBody) (*PutChecksIDResponse, error)
+
+	// GetChecksIDLabels request
+	GetChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *GetChecksIDLabelsParams) (*GetChecksIDLabelsResponse, error)
+
+	// PostChecksIDLabels request  with any body
+	PostChecksIDLabelsWithBodyWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, contentType string, body io.Reader) (*PostChecksIDLabelsResponse, error)
+
+	PostChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, body PostChecksIDLabelsJSONRequestBody) (*PostChecksIDLabelsResponse, error)
+
+	// DeleteChecksIDLabelsID request
+	DeleteChecksIDLabelsIDWithResponse(ctx context.Context, checkID string, labelID string, params *DeleteChecksIDLabelsIDParams) (*DeleteChecksIDLabelsIDResponse, error)
+
+	// GetChecksIDQuery request
+	GetChecksIDQueryWithResponse(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*GetChecksIDQueryResponse, error)
+
+	// GetDashboards request
+	GetDashboardsWithResponse(ctx context.Context, params *GetDashboardsParams) (*GetDashboardsResponse, error)
+
+	// PostDashboards request  with any body
+	PostDashboardsWithBodyWithResponse(ctx context.Context, params *PostDashboardsParams, contentType string, body io.Reader) (*PostDashboardsResponse, error)
+
+	PostDashboardsWithResponse(ctx context.Context, params *PostDashboardsParams, body PostDashboardsJSONRequestBody) (*PostDashboardsResponse, error)
+
+	// DeleteDashboardsID request
+	DeleteDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *DeleteDashboardsIDParams) (*DeleteDashboardsIDResponse, error)
+
+	// GetDashboardsID request
+	GetDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDParams) (*GetDashboardsIDResponse, error)
+
+	// PatchDashboardsID request  with any body
+	PatchDashboardsIDWithBodyWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, contentType string, body io.Reader) (*PatchDashboardsIDResponse, error)
+
+	PatchDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, body PatchDashboardsIDJSONRequestBody) (*PatchDashboardsIDResponse, error)
+
+	// PostDashboardsIDCells request  with any body
+	PostDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, contentType string, body io.Reader) (*PostDashboardsIDCellsResponse, error)
+
+	PostDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, body PostDashboardsIDCellsJSONRequestBody) (*PostDashboardsIDCellsResponse, error)
+
+	// PutDashboardsIDCells request  with any body
+	PutDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, contentType string, body io.Reader) (*PutDashboardsIDCellsResponse, error)
+
+	PutDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, body PutDashboardsIDCellsJSONRequestBody) (*PutDashboardsIDCellsResponse, error)
+
+	// DeleteDashboardsIDCellsID request
+	DeleteDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *DeleteDashboardsIDCellsIDParams) (*DeleteDashboardsIDCellsIDResponse, error)
+
+	// PatchDashboardsIDCellsID request  with any body
+	PatchDashboardsIDCellsIDWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, contentType string, body io.Reader) (*PatchDashboardsIDCellsIDResponse, error)
+
+	PatchDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, body PatchDashboardsIDCellsIDJSONRequestBody) (*PatchDashboardsIDCellsIDResponse, error)
+
+	// GetDashboardsIDCellsIDView request
+	GetDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *GetDashboardsIDCellsIDViewParams) (*GetDashboardsIDCellsIDViewResponse, error)
+
+	// PatchDashboardsIDCellsIDView request  with any body
+	PatchDashboardsIDCellsIDViewWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, contentType string, body io.Reader) (*PatchDashboardsIDCellsIDViewResponse, error)
+
+	PatchDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, body PatchDashboardsIDCellsIDViewJSONRequestBody) (*PatchDashboardsIDCellsIDViewResponse, error)
+
+	// GetDashboardsIDLabels request
+	GetDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDLabelsParams) (*GetDashboardsIDLabelsResponse, error)
+
+	// PostDashboardsIDLabels request  with any body
+	PostDashboardsIDLabelsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, contentType string, body io.Reader) (*PostDashboardsIDLabelsResponse, error)
+
+	PostDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, body PostDashboardsIDLabelsJSONRequestBody) (*PostDashboardsIDLabelsResponse, error)
+
+	// DeleteDashboardsIDLabelsID request
+	DeleteDashboardsIDLabelsIDWithResponse(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*DeleteDashboardsIDLabelsIDResponse, error)
+
+	// GetDashboardsIDMembers request
+	GetDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams) (*GetDashboardsIDMembersResponse, error)
+
+	// PostDashboardsIDMembers request  with any body
+	PostDashboardsIDMembersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, contentType string, body io.Reader) (*PostDashboardsIDMembersResponse, error)
+
+	PostDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, body PostDashboardsIDMembersJSONRequestBody) (*PostDashboardsIDMembersResponse, error)
+
+	// DeleteDashboardsIDMembersID request
+	DeleteDashboardsIDMembersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDMembersIDParams) (*DeleteDashboardsIDMembersIDResponse, error)
+
+	// GetDashboardsIDOwners request
+	GetDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDOwnersParams) (*GetDashboardsIDOwnersResponse, error)
+
+	// PostDashboardsIDOwners request  with any body
+	PostDashboardsIDOwnersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, contentType string, body io.Reader) (*PostDashboardsIDOwnersResponse, error)
+
+	PostDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, body PostDashboardsIDOwnersJSONRequestBody) (*PostDashboardsIDOwnersResponse, error)
+
+	// DeleteDashboardsIDOwnersID request
+	DeleteDashboardsIDOwnersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams) (*DeleteDashboardsIDOwnersIDResponse, error)
+
+	// GetDBRPs request
+	GetDBRPsWithResponse(ctx context.Context, params *GetDBRPsParams) (*GetDBRPsResponse, error)
+
+	// PostDBRP request  with any body
+	PostDBRPWithBodyWithResponse(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*PostDBRPResponse, error)
+
+	PostDBRPWithResponse(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*PostDBRPResponse, error)
+
+	// DeleteDBRPID request
+	DeleteDBRPIDWithResponse(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*DeleteDBRPIDResponse, error)
+
+	// GetDBRPsID request
+	GetDBRPsIDWithResponse(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*GetDBRPsIDResponse, error)
+
+	// PatchDBRPID request  with any body
+	PatchDBRPIDWithBodyWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*PatchDBRPIDResponse, error)
+
+	PatchDBRPIDWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*PatchDBRPIDResponse, error)
+
+	// PostDelete request  with any body
+	PostDeleteWithBodyWithResponse(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*PostDeleteResponse, error)
+
+	PostDeleteWithResponse(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*PostDeleteResponse, error)
+
+	// GetDocumentsTemplates request
+	GetDocumentsTemplatesWithResponse(ctx context.Context, params *GetDocumentsTemplatesParams) (*GetDocumentsTemplatesResponse, error)
+
+	// PostDocumentsTemplates request  with any body
+	PostDocumentsTemplatesWithBodyWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*PostDocumentsTemplatesResponse, error)
+
+	PostDocumentsTemplatesWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*PostDocumentsTemplatesResponse, error)
+
+	// DeleteDocumentsTemplatesID request
+	DeleteDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*DeleteDocumentsTemplatesIDResponse, error)
+
+	// GetDocumentsTemplatesID request
+	GetDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*GetDocumentsTemplatesIDResponse, error)
+
+	// PutDocumentsTemplatesID request  with any body
+	PutDocumentsTemplatesIDWithBodyWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*PutDocumentsTemplatesIDResponse, error)
+
+	PutDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*PutDocumentsTemplatesIDResponse, error)
+
+	// GetDocumentsTemplatesIDLabels request
+	GetDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*GetDocumentsTemplatesIDLabelsResponse, error)
+
+	// PostDocumentsTemplatesIDLabels request  with any body
+	PostDocumentsTemplatesIDLabelsWithBodyWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*PostDocumentsTemplatesIDLabelsResponse, error)
+
+	PostDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*PostDocumentsTemplatesIDLabelsResponse, error)
+
+	// DeleteDocumentsTemplatesIDLabelsID request
+	DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error)
+
+	// GetFlags request
+	GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams) (*GetFlagsResponse, error)
+
+	// GetHealth request
+	GetHealthWithResponse(ctx context.Context, params *GetHealthParams) (*GetHealthResponse, error)
+
+	// GetLabels request
+	GetLabelsWithResponse(ctx context.Context, params *GetLabelsParams) (*GetLabelsResponse, error)
+
+	// PostLabels request  with any body
+	PostLabelsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*PostLabelsResponse, error)
+
+	PostLabelsWithResponse(ctx context.Context, body PostLabelsJSONRequestBody) (*PostLabelsResponse, error)
+
+	// DeleteLabelsID request
+	DeleteLabelsIDWithResponse(ctx context.Context, labelID string, params *DeleteLabelsIDParams) (*DeleteLabelsIDResponse, error)
+
+	// GetLabelsID request
+	GetLabelsIDWithResponse(ctx context.Context, labelID string, params *GetLabelsIDParams) (*GetLabelsIDResponse, error)
+
+	// PatchLabelsID request  with any body
+	PatchLabelsIDWithBodyWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, contentType string, body io.Reader) (*PatchLabelsIDResponse, error)
+
+	PatchLabelsIDWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*PatchLabelsIDResponse, error)
+
+	// GetMe request
+	GetMeWithResponse(ctx context.Context, params *GetMeParams) (*GetMeResponse, error)
+
+	// PutMePassword request  with any body
+	PutMePasswordWithBodyWithResponse(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*PutMePasswordResponse, error)
+
+	PutMePasswordWithResponse(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*PutMePasswordResponse, error)
+
+	// GetNotificationEndpoints request
+	GetNotificationEndpointsWithResponse(ctx context.Context, params *GetNotificationEndpointsParams) (*GetNotificationEndpointsResponse, error)
+
+	// CreateNotificationEndpoint request  with any body
+	CreateNotificationEndpointWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateNotificationEndpointResponse, error)
+
+	CreateNotificationEndpointWithResponse(ctx context.Context, body CreateNotificationEndpointJSONRequestBody) (*CreateNotificationEndpointResponse, error)
+
+	// DeleteNotificationEndpointsID request
+	DeleteNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *DeleteNotificationEndpointsIDParams) (*DeleteNotificationEndpointsIDResponse, error)
+
+	// GetNotificationEndpointsID request
+	GetNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDParams) (*GetNotificationEndpointsIDResponse, error)
+
+	// PatchNotificationEndpointsID request  with any body
+	PatchNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, contentType string, body io.Reader) (*PatchNotificationEndpointsIDResponse, error)
+
+	PatchNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, body PatchNotificationEndpointsIDJSONRequestBody) (*PatchNotificationEndpointsIDResponse, error)
+
+	// PutNotificationEndpointsID request  with any body
+	PutNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, contentType string, body io.Reader) (*PutNotificationEndpointsIDResponse, error)
+
+	PutNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, body PutNotificationEndpointsIDJSONRequestBody) (*PutNotificationEndpointsIDResponse, error)
+
+	// GetNotificationEndpointsIDLabels request
+	GetNotificationEndpointsIDLabelsWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDLabelsParams) (*GetNotificationEndpointsIDLabelsResponse, error)
+
+	// PostNotificationEndpointIDLabels request  with any body
+	PostNotificationEndpointIDLabelsWithBodyWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, contentType string, body io.Reader) (*PostNotificationEndpointIDLabelsResponse, error)
+
+	PostNotificationEndpointIDLabelsWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, body PostNotificationEndpointIDLabelsJSONRequestBody) (*PostNotificationEndpointIDLabelsResponse, error)
+
+	// DeleteNotificationEndpointsIDLabelsID request
+	DeleteNotificationEndpointsIDLabelsIDWithResponse(ctx context.Context, endpointID string, labelID string, params *DeleteNotificationEndpointsIDLabelsIDParams) (*DeleteNotificationEndpointsIDLabelsIDResponse, error)
+
+	// GetNotificationRules request
+	GetNotificationRulesWithResponse(ctx context.Context, params *GetNotificationRulesParams) (*GetNotificationRulesResponse, error)
+
+	// CreateNotificationRule request  with any body
+	CreateNotificationRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateNotificationRuleResponse, error)
+
+	CreateNotificationRuleWithResponse(ctx context.Context, body CreateNotificationRuleJSONRequestBody) (*CreateNotificationRuleResponse, error)
+
+	// DeleteNotificationRulesID request
+	DeleteNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *DeleteNotificationRulesIDParams) (*DeleteNotificationRulesIDResponse, error)
+
+	// GetNotificationRulesID request
+	GetNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDParams) (*GetNotificationRulesIDResponse, error)
+
+	// PatchNotificationRulesID request  with any body
+	PatchNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, contentType string, body io.Reader) (*PatchNotificationRulesIDResponse, error)
+
+	PatchNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, body PatchNotificationRulesIDJSONRequestBody) (*PatchNotificationRulesIDResponse, error)
+
+	// PutNotificationRulesID request  with any body
+	PutNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, contentType string, body io.Reader) (*PutNotificationRulesIDResponse, error)
+
+	PutNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, body PutNotificationRulesIDJSONRequestBody) (*PutNotificationRulesIDResponse, error)
+
+	// GetNotificationRulesIDLabels request
+	GetNotificationRulesIDLabelsWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDLabelsParams) (*GetNotificationRulesIDLabelsResponse, error)
+
+	// PostNotificationRuleIDLabels request  with any body
+	PostNotificationRuleIDLabelsWithBodyWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, contentType string, body io.Reader) (*PostNotificationRuleIDLabelsResponse, error)
+
+	PostNotificationRuleIDLabelsWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, body PostNotificationRuleIDLabelsJSONRequestBody) (*PostNotificationRuleIDLabelsResponse, error)
+
+	// DeleteNotificationRulesIDLabelsID request
+	DeleteNotificationRulesIDLabelsIDWithResponse(ctx context.Context, ruleID string, labelID string, params *DeleteNotificationRulesIDLabelsIDParams) (*DeleteNotificationRulesIDLabelsIDResponse, error)
+
+	// GetNotificationRulesIDQuery request
+	GetNotificationRulesIDQueryWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDQueryParams) (*GetNotificationRulesIDQueryResponse, error)
+
+	// GetOrgs request
+	GetOrgsWithResponse(ctx context.Context, params *GetOrgsParams) (*GetOrgsResponse, error)
+
+	// PostOrgs request  with any body
+	PostOrgsWithBodyWithResponse(ctx context.Context, params *PostOrgsParams, contentType string, body io.Reader) (*PostOrgsResponse, error)
+
+	PostOrgsWithResponse(ctx context.Context, params *PostOrgsParams, body PostOrgsJSONRequestBody) (*PostOrgsResponse, error)
+
+	// DeleteOrgsID request
+	DeleteOrgsIDWithResponse(ctx context.Context, orgID string, params *DeleteOrgsIDParams) (*DeleteOrgsIDResponse, error)
+
+	// GetOrgsID request
+	GetOrgsIDWithResponse(ctx context.Context, orgID string, params *GetOrgsIDParams) (*GetOrgsIDResponse, error)
+
+	// PatchOrgsID request  with any body
+	PatchOrgsIDWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, contentType string, body io.Reader) (*PatchOrgsIDResponse, error)
+
+	PatchOrgsIDWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*PatchOrgsIDResponse, error)
+
+	// GetOrgsIDMembers request
+	GetOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*GetOrgsIDMembersResponse, error)
+
+	// PostOrgsIDMembers request  with any body
+	PostOrgsIDMembersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, contentType string, body io.Reader) (*PostOrgsIDMembersResponse, error)
+
+	PostOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, body PostOrgsIDMembersJSONRequestBody) (*PostOrgsIDMembersResponse, error)
+
+	// DeleteOrgsIDMembersID request
+	DeleteOrgsIDMembersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDMembersIDParams) (*DeleteOrgsIDMembersIDResponse, error)
+
+	// GetOrgsIDOwners request
+	GetOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDOwnersParams) (*GetOrgsIDOwnersResponse, error)
+
+	// PostOrgsIDOwners request  with any body
+	PostOrgsIDOwnersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, contentType string, body io.Reader) (*PostOrgsIDOwnersResponse, error)
+
+	PostOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, body PostOrgsIDOwnersJSONRequestBody) (*PostOrgsIDOwnersResponse, error)
+
+	// DeleteOrgsIDOwnersID request
+	DeleteOrgsIDOwnersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDOwnersIDParams) (*DeleteOrgsIDOwnersIDResponse, error)
+
+	// GetOrgsIDSecrets request
+	GetOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDSecretsParams) (*GetOrgsIDSecretsResponse, error)
+
+	// PatchOrgsIDSecrets request  with any body
+	PatchOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, contentType string, body io.Reader) (*PatchOrgsIDSecretsResponse, error)
+
+	PatchOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, body PatchOrgsIDSecretsJSONRequestBody) (*PatchOrgsIDSecretsResponse, error)
+
+	// PostOrgsIDSecrets request  with any body
+	PostOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader) (*PostOrgsIDSecretsResponse, error)
+
+	PostOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*PostOrgsIDSecretsResponse, error)
+
+	// PostQuery request  with any body
+	PostQueryWithBodyWithResponse(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*PostQueryResponse, error)
+
+	PostQueryWithResponse(ctx context.Context, params *PostQueryParams, body PostQueryJSONRequestBody) (*PostQueryResponse, error)
+
+	// PostQueryAnalyze request  with any body
+	PostQueryAnalyzeWithBodyWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, contentType string, body io.Reader) (*PostQueryAnalyzeResponse, error)
+
+	PostQueryAnalyzeWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, body PostQueryAnalyzeJSONRequestBody) (*PostQueryAnalyzeResponse, error)
+
+	// PostQueryAst request  with any body
+	PostQueryAstWithBodyWithResponse(ctx context.Context, params *PostQueryAstParams, contentType string, body io.Reader) (*PostQueryAstResponse, error)
+
+	PostQueryAstWithResponse(ctx context.Context, params *PostQueryAstParams, body PostQueryAstJSONRequestBody) (*PostQueryAstResponse, error)
+
+	// GetQuerySuggestions request
+	GetQuerySuggestionsWithResponse(ctx context.Context, params *GetQuerySuggestionsParams) (*GetQuerySuggestionsResponse, error)
+
+	// GetQuerySuggestionsName request
+	GetQuerySuggestionsNameWithResponse(ctx context.Context, name string, params *GetQuerySuggestionsNameParams) (*GetQuerySuggestionsNameResponse, error)
+
+	// GetReady request
+	GetReadyWithResponse(ctx context.Context, params *GetReadyParams) (*GetReadyResponse, error)
+
+	// GetScrapers request
+	GetScrapersWithResponse(ctx context.Context, params *GetScrapersParams) (*GetScrapersResponse, error)
+
+	// PostScrapers request  with any body
+	PostScrapersWithBodyWithResponse(ctx context.Context, params *PostScrapersParams, contentType string, body io.Reader) (*PostScrapersResponse, error)
+
+	PostScrapersWithResponse(ctx context.Context, params *PostScrapersParams, body PostScrapersJSONRequestBody) (*PostScrapersResponse, error)
+
+	// DeleteScrapersID request
+	DeleteScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *DeleteScrapersIDParams) (*DeleteScrapersIDResponse, error)
+
+	// GetScrapersID request
+	GetScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDParams) (*GetScrapersIDResponse, error)
+
+	// PatchScrapersID request  with any body
+	PatchScrapersIDWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, contentType string, body io.Reader) (*PatchScrapersIDResponse, error)
+
+	PatchScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, body PatchScrapersIDJSONRequestBody) (*PatchScrapersIDResponse, error)
+
+	// GetScrapersIDLabels request
+	GetScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDLabelsParams) (*GetScrapersIDLabelsResponse, error)
+
+	// PostScrapersIDLabels request  with any body
+	PostScrapersIDLabelsWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, contentType string, body io.Reader) (*PostScrapersIDLabelsResponse, error)
+
+	PostScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, body PostScrapersIDLabelsJSONRequestBody) (*PostScrapersIDLabelsResponse, error)
+
+	// DeleteScrapersIDLabelsID request
+	DeleteScrapersIDLabelsIDWithResponse(ctx context.Context, scraperTargetID string, labelID string, params *DeleteScrapersIDLabelsIDParams) (*DeleteScrapersIDLabelsIDResponse, error)
+
+	// GetScrapersIDMembers request
+	GetScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDMembersParams) (*GetScrapersIDMembersResponse, error)
+
+	// PostScrapersIDMembers request  with any body
+	PostScrapersIDMembersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, contentType string, body io.Reader) (*PostScrapersIDMembersResponse, error)
+
+	PostScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, body PostScrapersIDMembersJSONRequestBody) (*PostScrapersIDMembersResponse, error)
+
+	// DeleteScrapersIDMembersID request
+	DeleteScrapersIDMembersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDMembersIDParams) (*DeleteScrapersIDMembersIDResponse, error)
+
+	// GetScrapersIDOwners request
+	GetScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDOwnersParams) (*GetScrapersIDOwnersResponse, error)
+
+	// PostScrapersIDOwners request  with any body
+	PostScrapersIDOwnersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, contentType string, body io.Reader) (*PostScrapersIDOwnersResponse, error)
+
+	PostScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, body PostScrapersIDOwnersJSONRequestBody) (*PostScrapersIDOwnersResponse, error)
+
+	// DeleteScrapersIDOwnersID request
+	DeleteScrapersIDOwnersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDOwnersIDParams) (*DeleteScrapersIDOwnersIDResponse, error)
+
+	// GetSetup request
+	GetSetupWithResponse(ctx context.Context, params *GetSetupParams) (*GetSetupResponse, error)
+
+	// PostSetup request  with any body
+	PostSetupWithBodyWithResponse(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*PostSetupResponse, error)
+
+	PostSetupWithResponse(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*PostSetupResponse, error)
+
+	// PostSetupUser request  with any body
+	PostSetupUserWithBodyWithResponse(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*PostSetupUserResponse, error)
+
+	PostSetupUserWithResponse(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*PostSetupUserResponse, error)
+
+	// PostSignin request
+	PostSigninWithResponse(ctx context.Context, params *PostSigninParams) (*PostSigninResponse, error)
+
+	// PostSignout request
+	PostSignoutWithResponse(ctx context.Context, params *PostSignoutParams) (*PostSignoutResponse, error)
+
+	// GetSources request
+	GetSourcesWithResponse(ctx context.Context, params *GetSourcesParams) (*GetSourcesResponse, error)
+
+	// PostSources request  with any body
+	PostSourcesWithBodyWithResponse(ctx context.Context, params *PostSourcesParams, contentType string, body io.Reader) (*PostSourcesResponse, error)
+
+	PostSourcesWithResponse(ctx context.Context, params *PostSourcesParams, body PostSourcesJSONRequestBody) (*PostSourcesResponse, error)
+
+	// DeleteSourcesID request
+	DeleteSourcesIDWithResponse(ctx context.Context, sourceID string, params *DeleteSourcesIDParams) (*DeleteSourcesIDResponse, error)
+
+	// GetSourcesID request
+	GetSourcesIDWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDParams) (*GetSourcesIDResponse, error)
+
+	// PatchSourcesID request  with any body
+	PatchSourcesIDWithBodyWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, contentType string, body io.Reader) (*PatchSourcesIDResponse, error)
+
+	PatchSourcesIDWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, body PatchSourcesIDJSONRequestBody) (*PatchSourcesIDResponse, error)
+
+	// GetSourcesIDBuckets request
+	GetSourcesIDBucketsWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDBucketsParams) (*GetSourcesIDBucketsResponse, error)
+
+	// GetSourcesIDHealth request
+	GetSourcesIDHealthWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*GetSourcesIDHealthResponse, error)
+
+	// ListStacks request
+	ListStacksWithResponse(ctx context.Context, params *ListStacksParams) (*ListStacksResponse, error)
+
+	// CreateStack request  with any body
+	CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateStackResponse, error)
+
+	CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody) (*CreateStackResponse, error)
+
+	// DeleteStack request
+	DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams) (*DeleteStackResponse, error)
+
+	// ReadStack request
+	ReadStackWithResponse(ctx context.Context, stackId string) (*ReadStackResponse, error)
+
+	// UpdateStack request  with any body
+	UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader) (*UpdateStackResponse, error)
+
+	UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*UpdateStackResponse, error)
+
+	// UninstallStack request
+	UninstallStackWithResponse(ctx context.Context, stackId string) (*UninstallStackResponse, error)
+
+	// GetTasks request
+	GetTasksWithResponse(ctx context.Context, params *GetTasksParams) (*GetTasksResponse, error)
+
+	// PostTasks request  with any body
+	PostTasksWithBodyWithResponse(ctx context.Context, params *PostTasksParams, contentType string, body io.Reader) (*PostTasksResponse, error)
+
+	PostTasksWithResponse(ctx context.Context, params *PostTasksParams, body PostTasksJSONRequestBody) (*PostTasksResponse, error)
+
+	// DeleteTasksID request
+	DeleteTasksIDWithResponse(ctx context.Context, taskID string, params *DeleteTasksIDParams) (*DeleteTasksIDResponse, error)
+
+	// GetTasksID request
+	GetTasksIDWithResponse(ctx context.Context, taskID string, params *GetTasksIDParams) (*GetTasksIDResponse, error)
+
+	// PatchTasksID request  with any body
+	PatchTasksIDWithBodyWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, contentType string, body io.Reader) (*PatchTasksIDResponse, error)
+
+	PatchTasksIDWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, body PatchTasksIDJSONRequestBody) (*PatchTasksIDResponse, error)
+
+	// GetTasksIDLabels request
+	GetTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLabelsParams) (*GetTasksIDLabelsResponse, error)
+
+	// PostTasksIDLabels request  with any body
+	PostTasksIDLabelsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, contentType string, body io.Reader) (*PostTasksIDLabelsResponse, error)
+
+	PostTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, body PostTasksIDLabelsJSONRequestBody) (*PostTasksIDLabelsResponse, error)
+
+	// DeleteTasksIDLabelsID request
+	DeleteTasksIDLabelsIDWithResponse(ctx context.Context, taskID string, labelID string, params *DeleteTasksIDLabelsIDParams) (*DeleteTasksIDLabelsIDResponse, error)
+
+	// GetTasksIDLogs request
+	GetTasksIDLogsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLogsParams) (*GetTasksIDLogsResponse, error)
+
+	// GetTasksIDMembers request
+	GetTasksIDMembersWithResponse(ctx context.Context, taskID string, params *GetTasksIDMembersParams) (*GetTasksIDMembersResponse, error)
+
+	// PostTasksIDMembers request  with any body
+	PostTasksIDMembersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, contentType string, body io.Reader) (*PostTasksIDMembersResponse, error)
+
+	PostTasksIDMembersWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, body PostTasksIDMembersJSONRequestBody) (*PostTasksIDMembersResponse, error)
+
+	// DeleteTasksIDMembersID request
+	DeleteTasksIDMembersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDMembersIDParams) (*DeleteTasksIDMembersIDResponse, error)
+
+	// GetTasksIDOwners request
+	GetTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *GetTasksIDOwnersParams) (*GetTasksIDOwnersResponse, error)
+
+	// PostTasksIDOwners request  with any body
+	PostTasksIDOwnersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, contentType string, body io.Reader) (*PostTasksIDOwnersResponse, error)
+
+	PostTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, body PostTasksIDOwnersJSONRequestBody) (*PostTasksIDOwnersResponse, error)
+
+	// DeleteTasksIDOwnersID request
+	DeleteTasksIDOwnersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDOwnersIDParams) (*DeleteTasksIDOwnersIDResponse, error)
+
+	// GetTasksIDRuns request
+	GetTasksIDRunsWithResponse(ctx context.Context, taskID string, params *GetTasksIDRunsParams) (*GetTasksIDRunsResponse, error)
+
+	// PostTasksIDRuns request  with any body
+	PostTasksIDRunsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, contentType string, body io.Reader) (*PostTasksIDRunsResponse, error)
+
+	PostTasksIDRunsWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, body PostTasksIDRunsJSONRequestBody) (*PostTasksIDRunsResponse, error)
+
+	// DeleteTasksIDRunsID request
+	DeleteTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *DeleteTasksIDRunsIDParams) (*DeleteTasksIDRunsIDResponse, error)
+
+	// GetTasksIDRunsID request
+	GetTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDParams) (*GetTasksIDRunsIDResponse, error)
+
+	// GetTasksIDRunsIDLogs request
+	GetTasksIDRunsIDLogsWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*GetTasksIDRunsIDLogsResponse, error)
+
+	// PostTasksIDRunsIDRetry request
+	PostTasksIDRunsIDRetryWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*PostTasksIDRunsIDRetryResponse, error)
+
+	// GetTelegrafPlugins request
+	GetTelegrafPluginsWithResponse(ctx context.Context, params *GetTelegrafPluginsParams) (*GetTelegrafPluginsResponse, error)
+
+	// GetTelegrafs request
+	GetTelegrafsWithResponse(ctx context.Context, params *GetTelegrafsParams) (*GetTelegrafsResponse, error)
+
+	// PostTelegrafs request  with any body
+	PostTelegrafsWithBodyWithResponse(ctx context.Context, params *PostTelegrafsParams, contentType string, body io.Reader) (*PostTelegrafsResponse, error)
+
+	PostTelegrafsWithResponse(ctx context.Context, params *PostTelegrafsParams, body PostTelegrafsJSONRequestBody) (*PostTelegrafsResponse, error)
+
+	// DeleteTelegrafsID request
+	DeleteTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *DeleteTelegrafsIDParams) (*DeleteTelegrafsIDResponse, error)
+
+	// GetTelegrafsID request
+	GetTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDParams) (*GetTelegrafsIDResponse, error)
+
+	// PutTelegrafsID request  with any body
+	PutTelegrafsIDWithBodyWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, contentType string, body io.Reader) (*PutTelegrafsIDResponse, error)
+
+	PutTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, body PutTelegrafsIDJSONRequestBody) (*PutTelegrafsIDResponse, error)
+
+	// GetTelegrafsIDLabels request
+	GetTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDLabelsParams) (*GetTelegrafsIDLabelsResponse, error)
+
+	// PostTelegrafsIDLabels request  with any body
+	PostTelegrafsIDLabelsWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, contentType string, body io.Reader) (*PostTelegrafsIDLabelsResponse, error)
+
+	PostTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, body PostTelegrafsIDLabelsJSONRequestBody) (*PostTelegrafsIDLabelsResponse, error)
+
+	// DeleteTelegrafsIDLabelsID request
+	DeleteTelegrafsIDLabelsIDWithResponse(ctx context.Context, telegrafID string, labelID string, params *DeleteTelegrafsIDLabelsIDParams) (*DeleteTelegrafsIDLabelsIDResponse, error)
+
+	// GetTelegrafsIDMembers request
+	GetTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDMembersParams) (*GetTelegrafsIDMembersResponse, error)
+
+	// PostTelegrafsIDMembers request  with any body
+	PostTelegrafsIDMembersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, contentType string, body io.Reader) (*PostTelegrafsIDMembersResponse, error)
+
+	PostTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, body PostTelegrafsIDMembersJSONRequestBody) (*PostTelegrafsIDMembersResponse, error)
+
+	// DeleteTelegrafsIDMembersID request
+	DeleteTelegrafsIDMembersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDMembersIDParams) (*DeleteTelegrafsIDMembersIDResponse, error)
+
+	// GetTelegrafsIDOwners request
+	GetTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDOwnersParams) (*GetTelegrafsIDOwnersResponse, error)
+
+	// PostTelegrafsIDOwners request  with any body
+	PostTelegrafsIDOwnersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, contentType string, body io.Reader) (*PostTelegrafsIDOwnersResponse, error)
+
+	PostTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, body PostTelegrafsIDOwnersJSONRequestBody) (*PostTelegrafsIDOwnersResponse, error)
+
+	// DeleteTelegrafsIDOwnersID request
+	DeleteTelegrafsIDOwnersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*DeleteTelegrafsIDOwnersIDResponse, error)
+
+	// ApplyTemplate request  with any body
+	ApplyTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*ApplyTemplateResponse, error)
+
+	ApplyTemplateWithResponse(ctx context.Context, body ApplyTemplateJSONRequestBody) (*ApplyTemplateResponse, error)
+
+	// ExportTemplate request  with any body
+	ExportTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*ExportTemplateResponse, error)
+
+	ExportTemplateWithResponse(ctx context.Context, body ExportTemplateJSONRequestBody) (*ExportTemplateResponse, error)
+
+	// GetUsers request
+	GetUsersWithResponse(ctx context.Context, params *GetUsersParams) (*GetUsersResponse, error)
+
+	// PostUsers request  with any body
+	PostUsersWithBodyWithResponse(ctx context.Context, params *PostUsersParams, contentType string, body io.Reader) (*PostUsersResponse, error)
+
+	PostUsersWithResponse(ctx context.Context, params *PostUsersParams, body PostUsersJSONRequestBody) (*PostUsersResponse, error)
+
+	// DeleteUsersID request
+	DeleteUsersIDWithResponse(ctx context.Context, userID string, params *DeleteUsersIDParams) (*DeleteUsersIDResponse, error)
+
+	// GetUsersID request
+	GetUsersIDWithResponse(ctx context.Context, userID string, params *GetUsersIDParams) (*GetUsersIDResponse, error)
+
+	// PatchUsersID request  with any body
+	PatchUsersIDWithBodyWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, contentType string, body io.Reader) (*PatchUsersIDResponse, error)
+
+	PatchUsersIDWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*PatchUsersIDResponse, error)
+
+	// PostUsersIDPassword request  with any body
+	PostUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*PostUsersIDPasswordResponse, error)
+
+	PostUsersIDPasswordWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*PostUsersIDPasswordResponse, error)
+
+	// GetVariables request
+	GetVariablesWithResponse(ctx context.Context, params *GetVariablesParams) (*GetVariablesResponse, error)
+
+	// PostVariables request  with any body
+	PostVariablesWithBodyWithResponse(ctx context.Context, params *PostVariablesParams, contentType string, body io.Reader) (*PostVariablesResponse, error)
+
+	PostVariablesWithResponse(ctx context.Context, params *PostVariablesParams, body PostVariablesJSONRequestBody) (*PostVariablesResponse, error)
+
+	// DeleteVariablesID request
+	DeleteVariablesIDWithResponse(ctx context.Context, variableID string, params *DeleteVariablesIDParams) (*DeleteVariablesIDResponse, error)
+
+	// GetVariablesID request
+	GetVariablesIDWithResponse(ctx context.Context, variableID string, params *GetVariablesIDParams) (*GetVariablesIDResponse, error)
+
+	// PatchVariablesID request  with any body
+	PatchVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, contentType string, body io.Reader) (*PatchVariablesIDResponse, error)
+
+	PatchVariablesIDWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, body PatchVariablesIDJSONRequestBody) (*PatchVariablesIDResponse, error)
+
+	// PutVariablesID request  with any body
+	PutVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, contentType string, body io.Reader) (*PutVariablesIDResponse, error)
+
+	PutVariablesIDWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, body PutVariablesIDJSONRequestBody) (*PutVariablesIDResponse, error)
+
+	// GetVariablesIDLabels request
+	GetVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *GetVariablesIDLabelsParams) (*GetVariablesIDLabelsResponse, error)
+
+	// PostVariablesIDLabels request  with any body
+	PostVariablesIDLabelsWithBodyWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, contentType string, body io.Reader) (*PostVariablesIDLabelsResponse, error)
+
+	PostVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, body PostVariablesIDLabelsJSONRequestBody) (*PostVariablesIDLabelsResponse, error)
+
+	// DeleteVariablesIDLabelsID request
+	DeleteVariablesIDLabelsIDWithResponse(ctx context.Context, variableID string, labelID string, params *DeleteVariablesIDLabelsIDParams) (*DeleteVariablesIDLabelsIDResponse, error)
+
+	// PostWrite request  with any body
+	PostWriteWithBodyWithResponse(ctx context.Context, params *PostWriteParams, contentType string, body io.Reader) (*PostWriteResponse, error)
+}
+
+type GetRoutesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Routes
 }
 
 // Status returns HTTPResponse.Status
-func (r getRoutesResponse) Status() string {
+func (r GetRoutesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14312,14 +15064,14 @@ func (r getRoutesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getRoutesResponse) StatusCode() int {
+func (r GetRoutesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getAuthorizationsResponse struct {
+type GetAuthorizationsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Authorizations
@@ -14327,7 +15079,7 @@ type getAuthorizationsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getAuthorizationsResponse) Status() string {
+func (r GetAuthorizationsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14335,14 +15087,14 @@ func (r getAuthorizationsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getAuthorizationsResponse) StatusCode() int {
+func (r GetAuthorizationsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postAuthorizationsResponse struct {
+type PostAuthorizationsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Authorization
@@ -14351,7 +15103,7 @@ type postAuthorizationsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postAuthorizationsResponse) Status() string {
+func (r PostAuthorizationsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14359,21 +15111,21 @@ func (r postAuthorizationsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postAuthorizationsResponse) StatusCode() int {
+func (r PostAuthorizationsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteAuthorizationsIDResponse struct {
+type DeleteAuthorizationsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteAuthorizationsIDResponse) Status() string {
+func (r DeleteAuthorizationsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14381,37 +15133,14 @@ func (r deleteAuthorizationsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteAuthorizationsIDResponse) StatusCode() int {
+func (r DeleteAuthorizationsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getAuthorizationsIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Authorization
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getAuthorizationsIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getAuthorizationsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type patchAuthorizationsIDResponse struct {
+type GetAuthorizationsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Authorization
@@ -14419,7 +15148,7 @@ type patchAuthorizationsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchAuthorizationsIDResponse) Status() string {
+func (r GetAuthorizationsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14427,14 +15156,37 @@ func (r patchAuthorizationsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchAuthorizationsIDResponse) StatusCode() int {
+func (r GetAuthorizationsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getBucketsResponse struct {
+type PatchAuthorizationsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Authorization
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchAuthorizationsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchAuthorizationsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBucketsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Buckets
@@ -14442,7 +15194,7 @@ type getBucketsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getBucketsResponse) Status() string {
+func (r GetBucketsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14450,14 +15202,14 @@ func (r getBucketsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getBucketsResponse) StatusCode() int {
+func (r GetBucketsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postBucketsResponse struct {
+type PostBucketsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Bucket
@@ -14466,7 +15218,7 @@ type postBucketsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postBucketsResponse) Status() string {
+func (r PostBucketsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14474,14 +15226,14 @@ func (r postBucketsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postBucketsResponse) StatusCode() int {
+func (r PostBucketsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteBucketsIDResponse struct {
+type DeleteBucketsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -14489,7 +15241,7 @@ type deleteBucketsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteBucketsIDResponse) Status() string {
+func (r DeleteBucketsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14497,14 +15249,14 @@ func (r deleteBucketsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteBucketsIDResponse) StatusCode() int {
+func (r DeleteBucketsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getBucketsIDResponse struct {
+type GetBucketsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Bucket
@@ -14512,7 +15264,7 @@ type getBucketsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getBucketsIDResponse) Status() string {
+func (r GetBucketsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14520,14 +15272,14 @@ func (r getBucketsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getBucketsIDResponse) StatusCode() int {
+func (r GetBucketsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchBucketsIDResponse struct {
+type PatchBucketsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Bucket
@@ -14535,7 +15287,7 @@ type patchBucketsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchBucketsIDResponse) Status() string {
+func (r PatchBucketsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14543,14 +15295,14 @@ func (r patchBucketsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchBucketsIDResponse) StatusCode() int {
+func (r PatchBucketsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getBucketsIDLabelsResponse struct {
+type GetBucketsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -14558,7 +15310,7 @@ type getBucketsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getBucketsIDLabelsResponse) Status() string {
+func (r GetBucketsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14566,14 +15318,14 @@ func (r getBucketsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getBucketsIDLabelsResponse) StatusCode() int {
+func (r GetBucketsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postBucketsIDLabelsResponse struct {
+type PostBucketsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -14581,7 +15333,7 @@ type postBucketsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postBucketsIDLabelsResponse) Status() string {
+func (r PostBucketsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14589,14 +15341,14 @@ func (r postBucketsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postBucketsIDLabelsResponse) StatusCode() int {
+func (r PostBucketsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteBucketsIDLabelsIDResponse struct {
+type DeleteBucketsIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -14604,7 +15356,7 @@ type deleteBucketsIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteBucketsIDLabelsIDResponse) Status() string {
+func (r DeleteBucketsIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14612,14 +15364,14 @@ func (r deleteBucketsIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteBucketsIDLabelsIDResponse) StatusCode() int {
+func (r DeleteBucketsIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getBucketsIDMembersResponse struct {
+type GetBucketsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceMembers
@@ -14627,7 +15379,7 @@ type getBucketsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getBucketsIDMembersResponse) Status() string {
+func (r GetBucketsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14635,14 +15387,14 @@ func (r getBucketsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getBucketsIDMembersResponse) StatusCode() int {
+func (r GetBucketsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postBucketsIDMembersResponse struct {
+type PostBucketsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceMember
@@ -14650,7 +15402,7 @@ type postBucketsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postBucketsIDMembersResponse) Status() string {
+func (r PostBucketsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14658,21 +15410,21 @@ func (r postBucketsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postBucketsIDMembersResponse) StatusCode() int {
+func (r PostBucketsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteBucketsIDMembersIDResponse struct {
+type DeleteBucketsIDMembersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteBucketsIDMembersIDResponse) Status() string {
+func (r DeleteBucketsIDMembersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14680,14 +15432,14 @@ func (r deleteBucketsIDMembersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteBucketsIDMembersIDResponse) StatusCode() int {
+func (r DeleteBucketsIDMembersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getBucketsIDOwnersResponse struct {
+type GetBucketsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceOwners
@@ -14695,7 +15447,7 @@ type getBucketsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getBucketsIDOwnersResponse) Status() string {
+func (r GetBucketsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14703,14 +15455,14 @@ func (r getBucketsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getBucketsIDOwnersResponse) StatusCode() int {
+func (r GetBucketsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postBucketsIDOwnersResponse struct {
+type PostBucketsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceOwner
@@ -14718,7 +15470,7 @@ type postBucketsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postBucketsIDOwnersResponse) Status() string {
+func (r PostBucketsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14726,21 +15478,21 @@ func (r postBucketsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postBucketsIDOwnersResponse) StatusCode() int {
+func (r PostBucketsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteBucketsIDOwnersIDResponse struct {
+type DeleteBucketsIDOwnersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteBucketsIDOwnersIDResponse) Status() string {
+func (r DeleteBucketsIDOwnersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14748,14 +15500,14 @@ func (r deleteBucketsIDOwnersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteBucketsIDOwnersIDResponse) StatusCode() int {
+func (r DeleteBucketsIDOwnersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getChecksResponse struct {
+type GetChecksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Checks
@@ -14763,7 +15515,7 @@ type getChecksResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getChecksResponse) Status() string {
+func (r GetChecksResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14771,14 +15523,14 @@ func (r getChecksResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getChecksResponse) StatusCode() int {
+func (r GetChecksResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type createCheckResponse struct {
+type CreateCheckResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Check
@@ -14786,7 +15538,7 @@ type createCheckResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r createCheckResponse) Status() string {
+func (r CreateCheckResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14794,14 +15546,14 @@ func (r createCheckResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r createCheckResponse) StatusCode() int {
+func (r CreateCheckResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteChecksIDResponse struct {
+type DeleteChecksIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -14809,7 +15561,7 @@ type deleteChecksIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteChecksIDResponse) Status() string {
+func (r DeleteChecksIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14817,14 +15569,14 @@ func (r deleteChecksIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteChecksIDResponse) StatusCode() int {
+func (r DeleteChecksIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getChecksIDResponse struct {
+type GetChecksIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Check
@@ -14832,7 +15584,7 @@ type getChecksIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getChecksIDResponse) Status() string {
+func (r GetChecksIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14840,38 +15592,14 @@ func (r getChecksIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getChecksIDResponse) StatusCode() int {
+func (r GetChecksIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchChecksIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Check
-	JSON404      *Error
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r patchChecksIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r patchChecksIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type putChecksIDResponse struct {
+type PatchChecksIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Check
@@ -14880,7 +15608,7 @@ type putChecksIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putChecksIDResponse) Status() string {
+func (r PatchChecksIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14888,14 +15616,38 @@ func (r putChecksIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putChecksIDResponse) StatusCode() int {
+func (r PatchChecksIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getChecksIDLabelsResponse struct {
+type PutChecksIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Check
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PutChecksIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutChecksIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetChecksIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -14903,7 +15655,7 @@ type getChecksIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getChecksIDLabelsResponse) Status() string {
+func (r GetChecksIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14911,14 +15663,14 @@ func (r getChecksIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getChecksIDLabelsResponse) StatusCode() int {
+func (r GetChecksIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postChecksIDLabelsResponse struct {
+type PostChecksIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -14926,7 +15678,7 @@ type postChecksIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postChecksIDLabelsResponse) Status() string {
+func (r PostChecksIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14934,14 +15686,14 @@ func (r postChecksIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postChecksIDLabelsResponse) StatusCode() int {
+func (r PostChecksIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteChecksIDLabelsIDResponse struct {
+type DeleteChecksIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -14949,7 +15701,7 @@ type deleteChecksIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteChecksIDLabelsIDResponse) Status() string {
+func (r DeleteChecksIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14957,14 +15709,14 @@ func (r deleteChecksIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteChecksIDLabelsIDResponse) StatusCode() int {
+func (r DeleteChecksIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getChecksIDQueryResponse struct {
+type GetChecksIDQueryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *FluxResponse
@@ -14974,7 +15726,7 @@ type getChecksIDQueryResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getChecksIDQueryResponse) Status() string {
+func (r GetChecksIDQueryResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -14982,14 +15734,14 @@ func (r getChecksIDQueryResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getChecksIDQueryResponse) StatusCode() int {
+func (r GetChecksIDQueryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDashboardsResponse struct {
+type GetDashboardsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Dashboards
@@ -14997,7 +15749,7 @@ type getDashboardsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDashboardsResponse) Status() string {
+func (r GetDashboardsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15005,14 +15757,14 @@ func (r getDashboardsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsResponse) StatusCode() int {
+func (r GetDashboardsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDashboardsResponse struct {
+type PostDashboardsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *interface{}
@@ -15020,7 +15772,7 @@ type postDashboardsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDashboardsResponse) Status() string {
+func (r PostDashboardsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15028,14 +15780,14 @@ func (r postDashboardsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDashboardsResponse) StatusCode() int {
+func (r PostDashboardsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDashboardsIDResponse struct {
+type DeleteDashboardsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -15043,7 +15795,7 @@ type deleteDashboardsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDashboardsIDResponse) Status() string {
+func (r DeleteDashboardsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15051,14 +15803,14 @@ func (r deleteDashboardsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDashboardsIDResponse) StatusCode() int {
+func (r DeleteDashboardsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDashboardsIDResponse struct {
+type GetDashboardsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *interface{}
@@ -15067,7 +15819,7 @@ type getDashboardsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDashboardsIDResponse) Status() string {
+func (r GetDashboardsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15075,14 +15827,14 @@ func (r getDashboardsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsIDResponse) StatusCode() int {
+func (r GetDashboardsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchDashboardsIDResponse struct {
+type PatchDashboardsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Dashboard
@@ -15091,7 +15843,7 @@ type patchDashboardsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchDashboardsIDResponse) Status() string {
+func (r PatchDashboardsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15099,14 +15851,14 @@ func (r patchDashboardsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchDashboardsIDResponse) StatusCode() int {
+func (r PatchDashboardsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDashboardsIDCellsResponse struct {
+type PostDashboardsIDCellsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Cell
@@ -15115,7 +15867,7 @@ type postDashboardsIDCellsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDashboardsIDCellsResponse) Status() string {
+func (r PostDashboardsIDCellsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15123,14 +15875,14 @@ func (r postDashboardsIDCellsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDashboardsIDCellsResponse) StatusCode() int {
+func (r PostDashboardsIDCellsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type putDashboardsIDCellsResponse struct {
+type PutDashboardsIDCellsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Dashboard
@@ -15139,7 +15891,7 @@ type putDashboardsIDCellsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putDashboardsIDCellsResponse) Status() string {
+func (r PutDashboardsIDCellsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15147,14 +15899,14 @@ func (r putDashboardsIDCellsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putDashboardsIDCellsResponse) StatusCode() int {
+func (r PutDashboardsIDCellsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDashboardsIDCellsIDResponse struct {
+type DeleteDashboardsIDCellsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -15162,7 +15914,7 @@ type deleteDashboardsIDCellsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDashboardsIDCellsIDResponse) Status() string {
+func (r DeleteDashboardsIDCellsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15170,14 +15922,14 @@ func (r deleteDashboardsIDCellsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDashboardsIDCellsIDResponse) StatusCode() int {
+func (r DeleteDashboardsIDCellsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchDashboardsIDCellsIDResponse struct {
+type PatchDashboardsIDCellsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Cell
@@ -15186,7 +15938,7 @@ type patchDashboardsIDCellsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchDashboardsIDCellsIDResponse) Status() string {
+func (r PatchDashboardsIDCellsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15194,14 +15946,14 @@ func (r patchDashboardsIDCellsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchDashboardsIDCellsIDResponse) StatusCode() int {
+func (r PatchDashboardsIDCellsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDashboardsIDCellsIDViewResponse struct {
+type GetDashboardsIDCellsIDViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *View
@@ -15210,7 +15962,7 @@ type getDashboardsIDCellsIDViewResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDashboardsIDCellsIDViewResponse) Status() string {
+func (r GetDashboardsIDCellsIDViewResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15218,14 +15970,14 @@ func (r getDashboardsIDCellsIDViewResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsIDCellsIDViewResponse) StatusCode() int {
+func (r GetDashboardsIDCellsIDViewResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchDashboardsIDCellsIDViewResponse struct {
+type PatchDashboardsIDCellsIDViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *View
@@ -15234,7 +15986,7 @@ type patchDashboardsIDCellsIDViewResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchDashboardsIDCellsIDViewResponse) Status() string {
+func (r PatchDashboardsIDCellsIDViewResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15242,14 +15994,14 @@ func (r patchDashboardsIDCellsIDViewResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchDashboardsIDCellsIDViewResponse) StatusCode() int {
+func (r PatchDashboardsIDCellsIDViewResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDashboardsIDLabelsResponse struct {
+type GetDashboardsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -15257,7 +16009,7 @@ type getDashboardsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDashboardsIDLabelsResponse) Status() string {
+func (r GetDashboardsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15265,14 +16017,14 @@ func (r getDashboardsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsIDLabelsResponse) StatusCode() int {
+func (r GetDashboardsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDashboardsIDLabelsResponse struct {
+type PostDashboardsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -15280,7 +16032,7 @@ type postDashboardsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDashboardsIDLabelsResponse) Status() string {
+func (r PostDashboardsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15288,14 +16040,14 @@ func (r postDashboardsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDashboardsIDLabelsResponse) StatusCode() int {
+func (r PostDashboardsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDashboardsIDLabelsIDResponse struct {
+type DeleteDashboardsIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -15303,7 +16055,7 @@ type deleteDashboardsIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDashboardsIDLabelsIDResponse) Status() string {
+func (r DeleteDashboardsIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15311,14 +16063,14 @@ func (r deleteDashboardsIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDashboardsIDLabelsIDResponse) StatusCode() int {
+func (r DeleteDashboardsIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDashboardsIDMembersResponse struct {
+type GetDashboardsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceMembers
@@ -15326,7 +16078,7 @@ type getDashboardsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDashboardsIDMembersResponse) Status() string {
+func (r GetDashboardsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15334,14 +16086,14 @@ func (r getDashboardsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsIDMembersResponse) StatusCode() int {
+func (r GetDashboardsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDashboardsIDMembersResponse struct {
+type PostDashboardsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceMember
@@ -15349,7 +16101,7 @@ type postDashboardsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDashboardsIDMembersResponse) Status() string {
+func (r PostDashboardsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15357,21 +16109,21 @@ func (r postDashboardsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDashboardsIDMembersResponse) StatusCode() int {
+func (r PostDashboardsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDashboardsIDMembersIDResponse struct {
+type DeleteDashboardsIDMembersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDashboardsIDMembersIDResponse) Status() string {
+func (r DeleteDashboardsIDMembersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15379,14 +16131,14 @@ func (r deleteDashboardsIDMembersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDashboardsIDMembersIDResponse) StatusCode() int {
+func (r DeleteDashboardsIDMembersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDashboardsIDOwnersResponse struct {
+type GetDashboardsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceOwners
@@ -15394,7 +16146,7 @@ type getDashboardsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDashboardsIDOwnersResponse) Status() string {
+func (r GetDashboardsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15402,14 +16154,14 @@ func (r getDashboardsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDashboardsIDOwnersResponse) StatusCode() int {
+func (r GetDashboardsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDashboardsIDOwnersResponse struct {
+type PostDashboardsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceOwner
@@ -15417,7 +16169,7 @@ type postDashboardsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDashboardsIDOwnersResponse) Status() string {
+func (r PostDashboardsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15425,21 +16177,21 @@ func (r postDashboardsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDashboardsIDOwnersResponse) StatusCode() int {
+func (r PostDashboardsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDashboardsIDOwnersIDResponse struct {
+type DeleteDashboardsIDOwnersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDashboardsIDOwnersIDResponse) Status() string {
+func (r DeleteDashboardsIDOwnersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15447,14 +16199,14 @@ func (r deleteDashboardsIDOwnersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDashboardsIDOwnersIDResponse) StatusCode() int {
+func (r DeleteDashboardsIDOwnersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDBRPsResponse struct {
+type GetDBRPsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *DBRPs
@@ -15463,7 +16215,7 @@ type getDBRPsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDBRPsResponse) Status() string {
+func (r GetDBRPsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15471,14 +16223,14 @@ func (r getDBRPsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDBRPsResponse) StatusCode() int {
+func (r GetDBRPsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDBRPResponse struct {
+type PostDBRPResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *DBRP
@@ -15487,7 +16239,7 @@ type postDBRPResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDBRPResponse) Status() string {
+func (r PostDBRPResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15495,14 +16247,14 @@ func (r postDBRPResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDBRPResponse) StatusCode() int {
+func (r PostDBRPResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDBRPIDResponse struct {
+type DeleteDBRPIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON400      *Error
@@ -15510,7 +16262,7 @@ type deleteDBRPIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDBRPIDResponse) Status() string {
+func (r DeleteDBRPIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15518,14 +16270,14 @@ func (r deleteDBRPIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDBRPIDResponse) StatusCode() int {
+func (r DeleteDBRPIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDBRPsIDResponse struct {
+type GetDBRPsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *DBRP
@@ -15534,7 +16286,7 @@ type getDBRPsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDBRPsIDResponse) Status() string {
+func (r GetDBRPsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15542,14 +16294,14 @@ func (r getDBRPsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDBRPsIDResponse) StatusCode() int {
+func (r GetDBRPsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchDBRPIDResponse struct {
+type PatchDBRPIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *DBRP
@@ -15559,7 +16311,7 @@ type patchDBRPIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchDBRPIDResponse) Status() string {
+func (r PatchDBRPIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15567,14 +16319,14 @@ func (r patchDBRPIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchDBRPIDResponse) StatusCode() int {
+func (r PatchDBRPIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDeleteResponse struct {
+type PostDeleteResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON400      *Error
@@ -15584,7 +16336,7 @@ type postDeleteResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDeleteResponse) Status() string {
+func (r PostDeleteResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15592,14 +16344,14 @@ func (r postDeleteResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDeleteResponse) StatusCode() int {
+func (r PostDeleteResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDocumentsTemplatesResponse struct {
+type GetDocumentsTemplatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Documents
@@ -15607,7 +16359,7 @@ type getDocumentsTemplatesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDocumentsTemplatesResponse) Status() string {
+func (r GetDocumentsTemplatesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15615,14 +16367,14 @@ func (r getDocumentsTemplatesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDocumentsTemplatesResponse) StatusCode() int {
+func (r GetDocumentsTemplatesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDocumentsTemplatesResponse struct {
+type PostDocumentsTemplatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Document
@@ -15630,7 +16382,7 @@ type postDocumentsTemplatesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDocumentsTemplatesResponse) Status() string {
+func (r PostDocumentsTemplatesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15638,21 +16390,21 @@ func (r postDocumentsTemplatesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDocumentsTemplatesResponse) StatusCode() int {
+func (r PostDocumentsTemplatesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDocumentsTemplatesIDResponse struct {
+type DeleteDocumentsTemplatesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDocumentsTemplatesIDResponse) Status() string {
+func (r DeleteDocumentsTemplatesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15660,37 +16412,14 @@ func (r deleteDocumentsTemplatesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDocumentsTemplatesIDResponse) StatusCode() int {
+func (r DeleteDocumentsTemplatesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDocumentsTemplatesIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Document
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getDocumentsTemplatesIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getDocumentsTemplatesIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type putDocumentsTemplatesIDResponse struct {
+type GetDocumentsTemplatesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Document
@@ -15698,7 +16427,7 @@ type putDocumentsTemplatesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putDocumentsTemplatesIDResponse) Status() string {
+func (r GetDocumentsTemplatesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15706,14 +16435,37 @@ func (r putDocumentsTemplatesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putDocumentsTemplatesIDResponse) StatusCode() int {
+func (r GetDocumentsTemplatesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getDocumentsTemplatesIDLabelsResponse struct {
+type PutDocumentsTemplatesIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Document
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PutDocumentsTemplatesIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutDocumentsTemplatesIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDocumentsTemplatesIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -15721,7 +16473,7 @@ type getDocumentsTemplatesIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getDocumentsTemplatesIDLabelsResponse) Status() string {
+func (r GetDocumentsTemplatesIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15729,14 +16481,14 @@ func (r getDocumentsTemplatesIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getDocumentsTemplatesIDLabelsResponse) StatusCode() int {
+func (r GetDocumentsTemplatesIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postDocumentsTemplatesIDLabelsResponse struct {
+type PostDocumentsTemplatesIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -15744,7 +16496,7 @@ type postDocumentsTemplatesIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postDocumentsTemplatesIDLabelsResponse) Status() string {
+func (r PostDocumentsTemplatesIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15752,14 +16504,14 @@ func (r postDocumentsTemplatesIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postDocumentsTemplatesIDLabelsResponse) StatusCode() int {
+func (r PostDocumentsTemplatesIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteDocumentsTemplatesIDLabelsIDResponse struct {
+type DeleteDocumentsTemplatesIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -15767,7 +16519,7 @@ type deleteDocumentsTemplatesIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteDocumentsTemplatesIDLabelsIDResponse) Status() string {
+func (r DeleteDocumentsTemplatesIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15775,14 +16527,14 @@ func (r deleteDocumentsTemplatesIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteDocumentsTemplatesIDLabelsIDResponse) StatusCode() int {
+func (r DeleteDocumentsTemplatesIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getFlagsResponse struct {
+type GetFlagsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Flags
@@ -15790,7 +16542,7 @@ type getFlagsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getFlagsResponse) Status() string {
+func (r GetFlagsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15798,14 +16550,14 @@ func (r getFlagsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getFlagsResponse) StatusCode() int {
+func (r GetFlagsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getHealthResponse struct {
+type GetHealthResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *HealthCheck
@@ -15814,7 +16566,7 @@ type getHealthResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getHealthResponse) Status() string {
+func (r GetHealthResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15822,14 +16574,14 @@ func (r getHealthResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getHealthResponse) StatusCode() int {
+func (r GetHealthResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getLabelsResponse struct {
+type GetLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -15837,7 +16589,7 @@ type getLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getLabelsResponse) Status() string {
+func (r GetLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15845,14 +16597,14 @@ func (r getLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getLabelsResponse) StatusCode() int {
+func (r GetLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postLabelsResponse struct {
+type PostLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -15860,7 +16612,7 @@ type postLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postLabelsResponse) Status() string {
+func (r PostLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15868,14 +16620,14 @@ func (r postLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postLabelsResponse) StatusCode() int {
+func (r PostLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteLabelsIDResponse struct {
+type DeleteLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -15883,7 +16635,7 @@ type deleteLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteLabelsIDResponse) Status() string {
+func (r DeleteLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15891,14 +16643,14 @@ func (r deleteLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteLabelsIDResponse) StatusCode() int {
+func (r DeleteLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getLabelsIDResponse struct {
+type GetLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelResponse
@@ -15906,7 +16658,7 @@ type getLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getLabelsIDResponse) Status() string {
+func (r GetLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15914,14 +16666,14 @@ func (r getLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getLabelsIDResponse) StatusCode() int {
+func (r GetLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchLabelsIDResponse struct {
+type PatchLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelResponse
@@ -15930,7 +16682,7 @@ type patchLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchLabelsIDResponse) Status() string {
+func (r PatchLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15938,14 +16690,14 @@ func (r patchLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchLabelsIDResponse) StatusCode() int {
+func (r PatchLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getMeResponse struct {
+type GetMeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *User
@@ -15953,7 +16705,7 @@ type getMeResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getMeResponse) Status() string {
+func (r GetMeResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15961,21 +16713,21 @@ func (r getMeResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getMeResponse) StatusCode() int {
+func (r GetMeResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type putMePasswordResponse struct {
+type PutMePasswordResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r putMePasswordResponse) Status() string {
+func (r PutMePasswordResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -15983,14 +16735,14 @@ func (r putMePasswordResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putMePasswordResponse) StatusCode() int {
+func (r PutMePasswordResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationEndpointsResponse struct {
+type GetNotificationEndpointsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *NotificationEndpoints
@@ -15998,7 +16750,7 @@ type getNotificationEndpointsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationEndpointsResponse) Status() string {
+func (r GetNotificationEndpointsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16006,14 +16758,14 @@ func (r getNotificationEndpointsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationEndpointsResponse) StatusCode() int {
+func (r GetNotificationEndpointsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type createNotificationEndpointResponse struct {
+type CreateNotificationEndpointResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *NotificationEndpoint
@@ -16021,7 +16773,7 @@ type createNotificationEndpointResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r createNotificationEndpointResponse) Status() string {
+func (r CreateNotificationEndpointResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16029,14 +16781,14 @@ func (r createNotificationEndpointResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r createNotificationEndpointResponse) StatusCode() int {
+func (r CreateNotificationEndpointResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteNotificationEndpointsIDResponse struct {
+type DeleteNotificationEndpointsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -16044,7 +16796,7 @@ type deleteNotificationEndpointsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteNotificationEndpointsIDResponse) Status() string {
+func (r DeleteNotificationEndpointsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16052,14 +16804,14 @@ func (r deleteNotificationEndpointsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteNotificationEndpointsIDResponse) StatusCode() int {
+func (r DeleteNotificationEndpointsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationEndpointsIDResponse struct {
+type GetNotificationEndpointsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *NotificationEndpoint
@@ -16067,7 +16819,7 @@ type getNotificationEndpointsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationEndpointsIDResponse) Status() string {
+func (r GetNotificationEndpointsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16075,38 +16827,14 @@ func (r getNotificationEndpointsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationEndpointsIDResponse) StatusCode() int {
+func (r GetNotificationEndpointsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchNotificationEndpointsIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *NotificationEndpoint
-	JSON404      *Error
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r patchNotificationEndpointsIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r patchNotificationEndpointsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type putNotificationEndpointsIDResponse struct {
+type PatchNotificationEndpointsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *NotificationEndpoint
@@ -16115,7 +16843,7 @@ type putNotificationEndpointsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putNotificationEndpointsIDResponse) Status() string {
+func (r PatchNotificationEndpointsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16123,14 +16851,38 @@ func (r putNotificationEndpointsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putNotificationEndpointsIDResponse) StatusCode() int {
+func (r PatchNotificationEndpointsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationEndpointsIDLabelsResponse struct {
+type PutNotificationEndpointsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *NotificationEndpoint
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PutNotificationEndpointsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutNotificationEndpointsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetNotificationEndpointsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -16138,7 +16890,7 @@ type getNotificationEndpointsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationEndpointsIDLabelsResponse) Status() string {
+func (r GetNotificationEndpointsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16146,14 +16898,14 @@ func (r getNotificationEndpointsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationEndpointsIDLabelsResponse) StatusCode() int {
+func (r GetNotificationEndpointsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postNotificationEndpointIDLabelsResponse struct {
+type PostNotificationEndpointIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -16161,7 +16913,7 @@ type postNotificationEndpointIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postNotificationEndpointIDLabelsResponse) Status() string {
+func (r PostNotificationEndpointIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16169,14 +16921,14 @@ func (r postNotificationEndpointIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postNotificationEndpointIDLabelsResponse) StatusCode() int {
+func (r PostNotificationEndpointIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteNotificationEndpointsIDLabelsIDResponse struct {
+type DeleteNotificationEndpointsIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -16184,7 +16936,7 @@ type deleteNotificationEndpointsIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteNotificationEndpointsIDLabelsIDResponse) Status() string {
+func (r DeleteNotificationEndpointsIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16192,14 +16944,14 @@ func (r deleteNotificationEndpointsIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteNotificationEndpointsIDLabelsIDResponse) StatusCode() int {
+func (r DeleteNotificationEndpointsIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationRulesResponse struct {
+type GetNotificationRulesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *NotificationRules
@@ -16207,7 +16959,7 @@ type getNotificationRulesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationRulesResponse) Status() string {
+func (r GetNotificationRulesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16215,14 +16967,14 @@ func (r getNotificationRulesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationRulesResponse) StatusCode() int {
+func (r GetNotificationRulesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type createNotificationRuleResponse struct {
+type CreateNotificationRuleResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *NotificationRule
@@ -16230,7 +16982,7 @@ type createNotificationRuleResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r createNotificationRuleResponse) Status() string {
+func (r CreateNotificationRuleResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16238,14 +16990,14 @@ func (r createNotificationRuleResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r createNotificationRuleResponse) StatusCode() int {
+func (r CreateNotificationRuleResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteNotificationRulesIDResponse struct {
+type DeleteNotificationRulesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -16253,7 +17005,7 @@ type deleteNotificationRulesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteNotificationRulesIDResponse) Status() string {
+func (r DeleteNotificationRulesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16261,14 +17013,14 @@ func (r deleteNotificationRulesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteNotificationRulesIDResponse) StatusCode() int {
+func (r DeleteNotificationRulesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationRulesIDResponse struct {
+type GetNotificationRulesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *NotificationRule
@@ -16276,7 +17028,7 @@ type getNotificationRulesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationRulesIDResponse) Status() string {
+func (r GetNotificationRulesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16284,38 +17036,14 @@ func (r getNotificationRulesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationRulesIDResponse) StatusCode() int {
+func (r GetNotificationRulesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchNotificationRulesIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *NotificationRule
-	JSON404      *Error
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r patchNotificationRulesIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r patchNotificationRulesIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type putNotificationRulesIDResponse struct {
+type PatchNotificationRulesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *NotificationRule
@@ -16324,7 +17052,7 @@ type putNotificationRulesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putNotificationRulesIDResponse) Status() string {
+func (r PatchNotificationRulesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16332,14 +17060,38 @@ func (r putNotificationRulesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putNotificationRulesIDResponse) StatusCode() int {
+func (r PatchNotificationRulesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationRulesIDLabelsResponse struct {
+type PutNotificationRulesIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *NotificationRule
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PutNotificationRulesIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutNotificationRulesIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetNotificationRulesIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -16347,7 +17099,7 @@ type getNotificationRulesIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationRulesIDLabelsResponse) Status() string {
+func (r GetNotificationRulesIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16355,14 +17107,14 @@ func (r getNotificationRulesIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationRulesIDLabelsResponse) StatusCode() int {
+func (r GetNotificationRulesIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postNotificationRuleIDLabelsResponse struct {
+type PostNotificationRuleIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -16370,7 +17122,7 @@ type postNotificationRuleIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postNotificationRuleIDLabelsResponse) Status() string {
+func (r PostNotificationRuleIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16378,14 +17130,14 @@ func (r postNotificationRuleIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postNotificationRuleIDLabelsResponse) StatusCode() int {
+func (r PostNotificationRuleIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteNotificationRulesIDLabelsIDResponse struct {
+type DeleteNotificationRulesIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -16393,7 +17145,7 @@ type deleteNotificationRulesIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteNotificationRulesIDLabelsIDResponse) Status() string {
+func (r DeleteNotificationRulesIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16401,14 +17153,14 @@ func (r deleteNotificationRulesIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteNotificationRulesIDLabelsIDResponse) StatusCode() int {
+func (r DeleteNotificationRulesIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getNotificationRulesIDQueryResponse struct {
+type GetNotificationRulesIDQueryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *FluxResponse
@@ -16418,7 +17170,7 @@ type getNotificationRulesIDQueryResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getNotificationRulesIDQueryResponse) Status() string {
+func (r GetNotificationRulesIDQueryResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16426,14 +17178,14 @@ func (r getNotificationRulesIDQueryResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getNotificationRulesIDQueryResponse) StatusCode() int {
+func (r GetNotificationRulesIDQueryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getOrgsResponse struct {
+type GetOrgsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Organizations
@@ -16441,7 +17193,7 @@ type getOrgsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getOrgsResponse) Status() string {
+func (r GetOrgsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16449,14 +17201,14 @@ func (r getOrgsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsResponse) StatusCode() int {
+func (r GetOrgsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postOrgsResponse struct {
+type PostOrgsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Organization
@@ -16464,7 +17216,7 @@ type postOrgsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postOrgsResponse) Status() string {
+func (r PostOrgsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16472,14 +17224,14 @@ func (r postOrgsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsResponse) StatusCode() int {
+func (r PostOrgsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteOrgsIDResponse struct {
+type DeleteOrgsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -16487,7 +17239,7 @@ type deleteOrgsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteOrgsIDResponse) Status() string {
+func (r DeleteOrgsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16495,14 +17247,14 @@ func (r deleteOrgsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteOrgsIDResponse) StatusCode() int {
+func (r DeleteOrgsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getOrgsIDResponse struct {
+type GetOrgsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Organization
@@ -16510,7 +17262,7 @@ type getOrgsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getOrgsIDResponse) Status() string {
+func (r GetOrgsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16518,14 +17270,14 @@ func (r getOrgsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsIDResponse) StatusCode() int {
+func (r GetOrgsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchOrgsIDResponse struct {
+type PatchOrgsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Organization
@@ -16533,7 +17285,7 @@ type patchOrgsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchOrgsIDResponse) Status() string {
+func (r PatchOrgsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16541,14 +17293,14 @@ func (r patchOrgsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchOrgsIDResponse) StatusCode() int {
+func (r PatchOrgsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getOrgsIDMembersResponse struct {
+type GetOrgsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceMembers
@@ -16557,7 +17309,7 @@ type getOrgsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getOrgsIDMembersResponse) Status() string {
+func (r GetOrgsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16565,14 +17317,14 @@ func (r getOrgsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsIDMembersResponse) StatusCode() int {
+func (r GetOrgsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postOrgsIDMembersResponse struct {
+type PostOrgsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceMember
@@ -16580,7 +17332,7 @@ type postOrgsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postOrgsIDMembersResponse) Status() string {
+func (r PostOrgsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16588,21 +17340,21 @@ func (r postOrgsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDMembersResponse) StatusCode() int {
+func (r PostOrgsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteOrgsIDMembersIDResponse struct {
+type DeleteOrgsIDMembersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteOrgsIDMembersIDResponse) Status() string {
+func (r DeleteOrgsIDMembersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16610,14 +17362,14 @@ func (r deleteOrgsIDMembersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteOrgsIDMembersIDResponse) StatusCode() int {
+func (r DeleteOrgsIDMembersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getOrgsIDOwnersResponse struct {
+type GetOrgsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceOwners
@@ -16626,7 +17378,7 @@ type getOrgsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getOrgsIDOwnersResponse) Status() string {
+func (r GetOrgsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16634,14 +17386,14 @@ func (r getOrgsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsIDOwnersResponse) StatusCode() int {
+func (r GetOrgsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postOrgsIDOwnersResponse struct {
+type PostOrgsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceOwner
@@ -16649,7 +17401,7 @@ type postOrgsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postOrgsIDOwnersResponse) Status() string {
+func (r PostOrgsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16657,21 +17409,21 @@ func (r postOrgsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDOwnersResponse) StatusCode() int {
+func (r PostOrgsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteOrgsIDOwnersIDResponse struct {
+type DeleteOrgsIDOwnersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteOrgsIDOwnersIDResponse) Status() string {
+func (r DeleteOrgsIDOwnersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16679,14 +17431,14 @@ func (r deleteOrgsIDOwnersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteOrgsIDOwnersIDResponse) StatusCode() int {
+func (r DeleteOrgsIDOwnersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getOrgsIDSecretsResponse struct {
+type GetOrgsIDSecretsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *SecretKeysResponse
@@ -16694,7 +17446,7 @@ type getOrgsIDSecretsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getOrgsIDSecretsResponse) Status() string {
+func (r GetOrgsIDSecretsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16702,21 +17454,21 @@ func (r getOrgsIDSecretsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getOrgsIDSecretsResponse) StatusCode() int {
+func (r GetOrgsIDSecretsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchOrgsIDSecretsResponse struct {
+type PatchOrgsIDSecretsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r patchOrgsIDSecretsResponse) Status() string {
+func (r PatchOrgsIDSecretsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16724,21 +17476,21 @@ func (r patchOrgsIDSecretsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchOrgsIDSecretsResponse) StatusCode() int {
+func (r PatchOrgsIDSecretsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postOrgsIDSecretsResponse struct {
+type PostOrgsIDSecretsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r postOrgsIDSecretsResponse) Status() string {
+func (r PostOrgsIDSecretsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16746,21 +17498,21 @@ func (r postOrgsIDSecretsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postOrgsIDSecretsResponse) StatusCode() int {
+func (r PostOrgsIDSecretsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postQueryResponse struct {
+type PostQueryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r postQueryResponse) Status() string {
+func (r PostQueryResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16768,14 +17520,14 @@ func (r postQueryResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postQueryResponse) StatusCode() int {
+func (r PostQueryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postQueryAnalyzeResponse struct {
+type PostQueryAnalyzeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AnalyzeQueryResponse
@@ -16783,7 +17535,7 @@ type postQueryAnalyzeResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postQueryAnalyzeResponse) Status() string {
+func (r PostQueryAnalyzeResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16791,14 +17543,14 @@ func (r postQueryAnalyzeResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postQueryAnalyzeResponse) StatusCode() int {
+func (r PostQueryAnalyzeResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postQueryAstResponse struct {
+type PostQueryAstResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ASTResponse
@@ -16806,7 +17558,7 @@ type postQueryAstResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postQueryAstResponse) Status() string {
+func (r PostQueryAstResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16814,14 +17566,14 @@ func (r postQueryAstResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postQueryAstResponse) StatusCode() int {
+func (r PostQueryAstResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getQuerySuggestionsResponse struct {
+type GetQuerySuggestionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *FluxSuggestions
@@ -16829,7 +17581,7 @@ type getQuerySuggestionsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getQuerySuggestionsResponse) Status() string {
+func (r GetQuerySuggestionsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16837,14 +17589,14 @@ func (r getQuerySuggestionsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getQuerySuggestionsResponse) StatusCode() int {
+func (r GetQuerySuggestionsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getQuerySuggestionsNameResponse struct {
+type GetQuerySuggestionsNameResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *FluxSuggestion
@@ -16852,7 +17604,7 @@ type getQuerySuggestionsNameResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getQuerySuggestionsNameResponse) Status() string {
+func (r GetQuerySuggestionsNameResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16860,14 +17612,14 @@ func (r getQuerySuggestionsNameResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getQuerySuggestionsNameResponse) StatusCode() int {
+func (r GetQuerySuggestionsNameResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getReadyResponse struct {
+type GetReadyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Ready
@@ -16875,7 +17627,7 @@ type getReadyResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getReadyResponse) Status() string {
+func (r GetReadyResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16883,21 +17635,21 @@ func (r getReadyResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getReadyResponse) StatusCode() int {
+func (r GetReadyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getScrapersResponse struct {
+type GetScrapersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ScraperTargetResponses
 }
 
 // Status returns HTTPResponse.Status
-func (r getScrapersResponse) Status() string {
+func (r GetScrapersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16905,14 +17657,14 @@ func (r getScrapersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getScrapersResponse) StatusCode() int {
+func (r GetScrapersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postScrapersResponse struct {
+type PostScrapersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ScraperTargetResponse
@@ -16920,7 +17672,7 @@ type postScrapersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postScrapersResponse) Status() string {
+func (r PostScrapersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16928,21 +17680,21 @@ func (r postScrapersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postScrapersResponse) StatusCode() int {
+func (r PostScrapersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteScrapersIDResponse struct {
+type DeleteScrapersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteScrapersIDResponse) Status() string {
+func (r DeleteScrapersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16950,37 +17702,14 @@ func (r deleteScrapersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteScrapersIDResponse) StatusCode() int {
+func (r DeleteScrapersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getScrapersIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ScraperTargetResponse
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getScrapersIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getScrapersIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type patchScrapersIDResponse struct {
+type GetScrapersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ScraperTargetResponse
@@ -16988,7 +17717,7 @@ type patchScrapersIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchScrapersIDResponse) Status() string {
+func (r GetScrapersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -16996,14 +17725,37 @@ func (r patchScrapersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchScrapersIDResponse) StatusCode() int {
+func (r GetScrapersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getScrapersIDLabelsResponse struct {
+type PatchScrapersIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ScraperTargetResponse
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchScrapersIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchScrapersIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetScrapersIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -17011,7 +17763,7 @@ type getScrapersIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getScrapersIDLabelsResponse) Status() string {
+func (r GetScrapersIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17019,14 +17771,14 @@ func (r getScrapersIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getScrapersIDLabelsResponse) StatusCode() int {
+func (r GetScrapersIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postScrapersIDLabelsResponse struct {
+type PostScrapersIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -17034,7 +17786,7 @@ type postScrapersIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postScrapersIDLabelsResponse) Status() string {
+func (r PostScrapersIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17042,14 +17794,14 @@ func (r postScrapersIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postScrapersIDLabelsResponse) StatusCode() int {
+func (r PostScrapersIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteScrapersIDLabelsIDResponse struct {
+type DeleteScrapersIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -17057,7 +17809,7 @@ type deleteScrapersIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteScrapersIDLabelsIDResponse) Status() string {
+func (r DeleteScrapersIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17065,14 +17817,14 @@ func (r deleteScrapersIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteScrapersIDLabelsIDResponse) StatusCode() int {
+func (r DeleteScrapersIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getScrapersIDMembersResponse struct {
+type GetScrapersIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceMembers
@@ -17080,7 +17832,7 @@ type getScrapersIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getScrapersIDMembersResponse) Status() string {
+func (r GetScrapersIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17088,14 +17840,14 @@ func (r getScrapersIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getScrapersIDMembersResponse) StatusCode() int {
+func (r GetScrapersIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postScrapersIDMembersResponse struct {
+type PostScrapersIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceMember
@@ -17103,7 +17855,7 @@ type postScrapersIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postScrapersIDMembersResponse) Status() string {
+func (r PostScrapersIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17111,21 +17863,21 @@ func (r postScrapersIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postScrapersIDMembersResponse) StatusCode() int {
+func (r PostScrapersIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteScrapersIDMembersIDResponse struct {
+type DeleteScrapersIDMembersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteScrapersIDMembersIDResponse) Status() string {
+func (r DeleteScrapersIDMembersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17133,14 +17885,14 @@ func (r deleteScrapersIDMembersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteScrapersIDMembersIDResponse) StatusCode() int {
+func (r DeleteScrapersIDMembersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getScrapersIDOwnersResponse struct {
+type GetScrapersIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceOwners
@@ -17148,7 +17900,7 @@ type getScrapersIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getScrapersIDOwnersResponse) Status() string {
+func (r GetScrapersIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17156,14 +17908,14 @@ func (r getScrapersIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getScrapersIDOwnersResponse) StatusCode() int {
+func (r GetScrapersIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postScrapersIDOwnersResponse struct {
+type PostScrapersIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceOwner
@@ -17171,7 +17923,7 @@ type postScrapersIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postScrapersIDOwnersResponse) Status() string {
+func (r PostScrapersIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17179,21 +17931,21 @@ func (r postScrapersIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postScrapersIDOwnersResponse) StatusCode() int {
+func (r PostScrapersIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteScrapersIDOwnersIDResponse struct {
+type DeleteScrapersIDOwnersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteScrapersIDOwnersIDResponse) Status() string {
+func (r DeleteScrapersIDOwnersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17201,21 +17953,21 @@ func (r deleteScrapersIDOwnersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteScrapersIDOwnersIDResponse) StatusCode() int {
+func (r DeleteScrapersIDOwnersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getSetupResponse struct {
+type GetSetupResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *IsOnboarding
 }
 
 // Status returns HTTPResponse.Status
-func (r getSetupResponse) Status() string {
+func (r GetSetupResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17223,14 +17975,14 @@ func (r getSetupResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getSetupResponse) StatusCode() int {
+func (r GetSetupResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postSetupResponse struct {
+type PostSetupResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *OnboardingResponse
@@ -17238,7 +17990,7 @@ type postSetupResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postSetupResponse) Status() string {
+func (r PostSetupResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17246,14 +17998,14 @@ func (r postSetupResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postSetupResponse) StatusCode() int {
+func (r PostSetupResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postSetupUserResponse struct {
+type PostSetupUserResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *OnboardingResponse
@@ -17261,7 +18013,7 @@ type postSetupUserResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postSetupUserResponse) Status() string {
+func (r PostSetupUserResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17269,14 +18021,14 @@ func (r postSetupUserResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postSetupUserResponse) StatusCode() int {
+func (r PostSetupUserResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postSigninResponse struct {
+type PostSigninResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON401      *Error
@@ -17285,7 +18037,7 @@ type postSigninResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postSigninResponse) Status() string {
+func (r PostSigninResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17293,14 +18045,14 @@ func (r postSigninResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postSigninResponse) StatusCode() int {
+func (r PostSigninResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postSignoutResponse struct {
+type PostSignoutResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON401      *Error
@@ -17308,7 +18060,7 @@ type postSignoutResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postSignoutResponse) Status() string {
+func (r PostSignoutResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17316,14 +18068,14 @@ func (r postSignoutResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postSignoutResponse) StatusCode() int {
+func (r PostSignoutResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getSourcesResponse struct {
+type GetSourcesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Sources
@@ -17331,7 +18083,7 @@ type getSourcesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getSourcesResponse) Status() string {
+func (r GetSourcesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17339,14 +18091,14 @@ func (r getSourcesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getSourcesResponse) StatusCode() int {
+func (r GetSourcesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postSourcesResponse struct {
+type PostSourcesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Source
@@ -17354,7 +18106,7 @@ type postSourcesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postSourcesResponse) Status() string {
+func (r PostSourcesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17362,14 +18114,14 @@ func (r postSourcesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postSourcesResponse) StatusCode() int {
+func (r PostSourcesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteSourcesIDResponse struct {
+type DeleteSourcesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -17377,7 +18129,7 @@ type deleteSourcesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteSourcesIDResponse) Status() string {
+func (r DeleteSourcesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17385,38 +18137,14 @@ func (r deleteSourcesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteSourcesIDResponse) StatusCode() int {
+func (r DeleteSourcesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getSourcesIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Source
-	JSON404      *Error
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getSourcesIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getSourcesIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type patchSourcesIDResponse struct {
+type GetSourcesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Source
@@ -17425,7 +18153,7 @@ type patchSourcesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchSourcesIDResponse) Status() string {
+func (r GetSourcesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17433,14 +18161,38 @@ func (r patchSourcesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchSourcesIDResponse) StatusCode() int {
+func (r GetSourcesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getSourcesIDBucketsResponse struct {
+type PatchSourcesIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Source
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSourcesIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSourcesIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSourcesIDBucketsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Buckets
@@ -17449,7 +18201,7 @@ type getSourcesIDBucketsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getSourcesIDBucketsResponse) Status() string {
+func (r GetSourcesIDBucketsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17457,14 +18209,14 @@ func (r getSourcesIDBucketsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getSourcesIDBucketsResponse) StatusCode() int {
+func (r GetSourcesIDBucketsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getSourcesIDHealthResponse struct {
+type GetSourcesIDHealthResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *HealthCheck
@@ -17473,7 +18225,7 @@ type getSourcesIDHealthResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getSourcesIDHealthResponse) Status() string {
+func (r GetSourcesIDHealthResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17481,14 +18233,14 @@ func (r getSourcesIDHealthResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getSourcesIDHealthResponse) StatusCode() int {
+func (r GetSourcesIDHealthResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type listStacksResponse struct {
+type ListStacksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
@@ -17498,7 +18250,7 @@ type listStacksResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r listStacksResponse) Status() string {
+func (r ListStacksResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17506,14 +18258,14 @@ func (r listStacksResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r listStacksResponse) StatusCode() int {
+func (r ListStacksResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type createStackResponse struct {
+type CreateStackResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Stack
@@ -17521,7 +18273,7 @@ type createStackResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r createStackResponse) Status() string {
+func (r CreateStackResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17529,21 +18281,21 @@ func (r createStackResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r createStackResponse) StatusCode() int {
+func (r CreateStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteStackResponse struct {
+type DeleteStackResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteStackResponse) Status() string {
+func (r DeleteStackResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17551,37 +18303,14 @@ func (r deleteStackResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteStackResponse) StatusCode() int {
+func (r DeleteStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type readStackResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Stack
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r readStackResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r readStackResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type updateStackResponse struct {
+type ReadStackResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Stack
@@ -17589,7 +18318,7 @@ type updateStackResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r updateStackResponse) Status() string {
+func (r ReadStackResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17597,14 +18326,14 @@ func (r updateStackResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r updateStackResponse) StatusCode() int {
+func (r ReadStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type uninstallStackResponse struct {
+type UpdateStackResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Stack
@@ -17612,7 +18341,7 @@ type uninstallStackResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r uninstallStackResponse) Status() string {
+func (r UpdateStackResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17620,14 +18349,37 @@ func (r uninstallStackResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r uninstallStackResponse) StatusCode() int {
+func (r UpdateStackResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksResponse struct {
+type UninstallStackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Stack
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r UninstallStackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UninstallStackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetTasksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Tasks
@@ -17635,7 +18387,7 @@ type getTasksResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksResponse) Status() string {
+func (r GetTasksResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17643,14 +18395,14 @@ func (r getTasksResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksResponse) StatusCode() int {
+func (r GetTasksResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTasksResponse struct {
+type PostTasksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Task
@@ -17658,7 +18410,7 @@ type postTasksResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTasksResponse) Status() string {
+func (r PostTasksResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17666,21 +18418,21 @@ func (r postTasksResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTasksResponse) StatusCode() int {
+func (r PostTasksResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTasksIDResponse struct {
+type DeleteTasksIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTasksIDResponse) Status() string {
+func (r DeleteTasksIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17688,37 +18440,14 @@ func (r deleteTasksIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTasksIDResponse) StatusCode() int {
+func (r DeleteTasksIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Task
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getTasksIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type patchTasksIDResponse struct {
+type GetTasksIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Task
@@ -17726,7 +18455,7 @@ type patchTasksIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchTasksIDResponse) Status() string {
+func (r GetTasksIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17734,14 +18463,37 @@ func (r patchTasksIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchTasksIDResponse) StatusCode() int {
+func (r GetTasksIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDLabelsResponse struct {
+type PatchTasksIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Task
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchTasksIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchTasksIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetTasksIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -17749,7 +18501,7 @@ type getTasksIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDLabelsResponse) Status() string {
+func (r GetTasksIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17757,14 +18509,14 @@ func (r getTasksIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDLabelsResponse) StatusCode() int {
+func (r GetTasksIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTasksIDLabelsResponse struct {
+type PostTasksIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -17772,7 +18524,7 @@ type postTasksIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTasksIDLabelsResponse) Status() string {
+func (r PostTasksIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17780,14 +18532,14 @@ func (r postTasksIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTasksIDLabelsResponse) StatusCode() int {
+func (r PostTasksIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTasksIDLabelsIDResponse struct {
+type DeleteTasksIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -17795,7 +18547,7 @@ type deleteTasksIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTasksIDLabelsIDResponse) Status() string {
+func (r DeleteTasksIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17803,14 +18555,14 @@ func (r deleteTasksIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTasksIDLabelsIDResponse) StatusCode() int {
+func (r DeleteTasksIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDLogsResponse struct {
+type GetTasksIDLogsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Logs
@@ -17818,7 +18570,7 @@ type getTasksIDLogsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDLogsResponse) Status() string {
+func (r GetTasksIDLogsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17826,14 +18578,14 @@ func (r getTasksIDLogsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDLogsResponse) StatusCode() int {
+func (r GetTasksIDLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDMembersResponse struct {
+type GetTasksIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceMembers
@@ -17841,7 +18593,7 @@ type getTasksIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDMembersResponse) Status() string {
+func (r GetTasksIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17849,14 +18601,14 @@ func (r getTasksIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDMembersResponse) StatusCode() int {
+func (r GetTasksIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTasksIDMembersResponse struct {
+type PostTasksIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceMember
@@ -17864,7 +18616,7 @@ type postTasksIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTasksIDMembersResponse) Status() string {
+func (r PostTasksIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17872,21 +18624,21 @@ func (r postTasksIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTasksIDMembersResponse) StatusCode() int {
+func (r PostTasksIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTasksIDMembersIDResponse struct {
+type DeleteTasksIDMembersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTasksIDMembersIDResponse) Status() string {
+func (r DeleteTasksIDMembersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17894,14 +18646,14 @@ func (r deleteTasksIDMembersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTasksIDMembersIDResponse) StatusCode() int {
+func (r DeleteTasksIDMembersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDOwnersResponse struct {
+type GetTasksIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceOwners
@@ -17909,7 +18661,7 @@ type getTasksIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDOwnersResponse) Status() string {
+func (r GetTasksIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17917,14 +18669,14 @@ func (r getTasksIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDOwnersResponse) StatusCode() int {
+func (r GetTasksIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTasksIDOwnersResponse struct {
+type PostTasksIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceOwner
@@ -17932,7 +18684,7 @@ type postTasksIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTasksIDOwnersResponse) Status() string {
+func (r PostTasksIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17940,21 +18692,21 @@ func (r postTasksIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTasksIDOwnersResponse) StatusCode() int {
+func (r PostTasksIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTasksIDOwnersIDResponse struct {
+type DeleteTasksIDOwnersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTasksIDOwnersIDResponse) Status() string {
+func (r DeleteTasksIDOwnersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17962,14 +18714,14 @@ func (r deleteTasksIDOwnersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTasksIDOwnersIDResponse) StatusCode() int {
+func (r DeleteTasksIDOwnersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDRunsResponse struct {
+type GetTasksIDRunsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Runs
@@ -17977,7 +18729,7 @@ type getTasksIDRunsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDRunsResponse) Status() string {
+func (r GetTasksIDRunsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -17985,14 +18737,14 @@ func (r getTasksIDRunsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDRunsResponse) StatusCode() int {
+func (r GetTasksIDRunsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTasksIDRunsResponse struct {
+type PostTasksIDRunsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Run
@@ -18000,7 +18752,7 @@ type postTasksIDRunsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTasksIDRunsResponse) Status() string {
+func (r PostTasksIDRunsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18008,21 +18760,21 @@ func (r postTasksIDRunsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTasksIDRunsResponse) StatusCode() int {
+func (r PostTasksIDRunsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTasksIDRunsIDResponse struct {
+type DeleteTasksIDRunsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTasksIDRunsIDResponse) Status() string {
+func (r DeleteTasksIDRunsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18030,14 +18782,14 @@ func (r deleteTasksIDRunsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTasksIDRunsIDResponse) StatusCode() int {
+func (r DeleteTasksIDRunsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDRunsIDResponse struct {
+type GetTasksIDRunsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Run
@@ -18045,7 +18797,7 @@ type getTasksIDRunsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDRunsIDResponse) Status() string {
+func (r GetTasksIDRunsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18053,14 +18805,14 @@ func (r getTasksIDRunsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDRunsIDResponse) StatusCode() int {
+func (r GetTasksIDRunsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTasksIDRunsIDLogsResponse struct {
+type GetTasksIDRunsIDLogsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Logs
@@ -18068,7 +18820,7 @@ type getTasksIDRunsIDLogsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTasksIDRunsIDLogsResponse) Status() string {
+func (r GetTasksIDRunsIDLogsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18076,14 +18828,14 @@ func (r getTasksIDRunsIDLogsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTasksIDRunsIDLogsResponse) StatusCode() int {
+func (r GetTasksIDRunsIDLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTasksIDRunsIDRetryResponse struct {
+type PostTasksIDRunsIDRetryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Run
@@ -18091,7 +18843,7 @@ type postTasksIDRunsIDRetryResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTasksIDRunsIDRetryResponse) Status() string {
+func (r PostTasksIDRunsIDRetryResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18099,14 +18851,14 @@ func (r postTasksIDRunsIDRetryResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTasksIDRunsIDRetryResponse) StatusCode() int {
+func (r PostTasksIDRunsIDRetryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTelegrafPluginsResponse struct {
+type GetTelegrafPluginsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *TelegrafPlugins
@@ -18114,7 +18866,7 @@ type getTelegrafPluginsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTelegrafPluginsResponse) Status() string {
+func (r GetTelegrafPluginsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18122,14 +18874,14 @@ func (r getTelegrafPluginsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTelegrafPluginsResponse) StatusCode() int {
+func (r GetTelegrafPluginsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTelegrafsResponse struct {
+type GetTelegrafsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Telegrafs
@@ -18137,7 +18889,7 @@ type getTelegrafsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTelegrafsResponse) Status() string {
+func (r GetTelegrafsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18145,14 +18897,14 @@ func (r getTelegrafsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTelegrafsResponse) StatusCode() int {
+func (r GetTelegrafsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTelegrafsResponse struct {
+type PostTelegrafsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Telegraf
@@ -18160,7 +18912,7 @@ type postTelegrafsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTelegrafsResponse) Status() string {
+func (r PostTelegrafsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18168,21 +18920,21 @@ func (r postTelegrafsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTelegrafsResponse) StatusCode() int {
+func (r PostTelegrafsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTelegrafsIDResponse struct {
+type DeleteTelegrafsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTelegrafsIDResponse) Status() string {
+func (r DeleteTelegrafsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18190,37 +18942,14 @@ func (r deleteTelegrafsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTelegrafsIDResponse) StatusCode() int {
+func (r DeleteTelegrafsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTelegrafsIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Telegraf
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getTelegrafsIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getTelegrafsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type putTelegrafsIDResponse struct {
+type GetTelegrafsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Telegraf
@@ -18228,7 +18957,7 @@ type putTelegrafsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putTelegrafsIDResponse) Status() string {
+func (r GetTelegrafsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18236,14 +18965,37 @@ func (r putTelegrafsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putTelegrafsIDResponse) StatusCode() int {
+func (r GetTelegrafsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTelegrafsIDLabelsResponse struct {
+type PutTelegrafsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Telegraf
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PutTelegrafsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutTelegrafsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetTelegrafsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -18251,7 +19003,7 @@ type getTelegrafsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTelegrafsIDLabelsResponse) Status() string {
+func (r GetTelegrafsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18259,14 +19011,14 @@ func (r getTelegrafsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTelegrafsIDLabelsResponse) StatusCode() int {
+func (r GetTelegrafsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTelegrafsIDLabelsResponse struct {
+type PostTelegrafsIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -18274,7 +19026,7 @@ type postTelegrafsIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTelegrafsIDLabelsResponse) Status() string {
+func (r PostTelegrafsIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18282,14 +19034,14 @@ func (r postTelegrafsIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTelegrafsIDLabelsResponse) StatusCode() int {
+func (r PostTelegrafsIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTelegrafsIDLabelsIDResponse struct {
+type DeleteTelegrafsIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -18297,7 +19049,7 @@ type deleteTelegrafsIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTelegrafsIDLabelsIDResponse) Status() string {
+func (r DeleteTelegrafsIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18305,14 +19057,14 @@ func (r deleteTelegrafsIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTelegrafsIDLabelsIDResponse) StatusCode() int {
+func (r DeleteTelegrafsIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTelegrafsIDMembersResponse struct {
+type GetTelegrafsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceMembers
@@ -18320,7 +19072,7 @@ type getTelegrafsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTelegrafsIDMembersResponse) Status() string {
+func (r GetTelegrafsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18328,14 +19080,14 @@ func (r getTelegrafsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTelegrafsIDMembersResponse) StatusCode() int {
+func (r GetTelegrafsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTelegrafsIDMembersResponse struct {
+type PostTelegrafsIDMembersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceMember
@@ -18343,7 +19095,7 @@ type postTelegrafsIDMembersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTelegrafsIDMembersResponse) Status() string {
+func (r PostTelegrafsIDMembersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18351,21 +19103,21 @@ func (r postTelegrafsIDMembersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTelegrafsIDMembersResponse) StatusCode() int {
+func (r PostTelegrafsIDMembersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTelegrafsIDMembersIDResponse struct {
+type DeleteTelegrafsIDMembersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTelegrafsIDMembersIDResponse) Status() string {
+func (r DeleteTelegrafsIDMembersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18373,14 +19125,14 @@ func (r deleteTelegrafsIDMembersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTelegrafsIDMembersIDResponse) StatusCode() int {
+func (r DeleteTelegrafsIDMembersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getTelegrafsIDOwnersResponse struct {
+type GetTelegrafsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ResourceOwners
@@ -18388,7 +19140,7 @@ type getTelegrafsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getTelegrafsIDOwnersResponse) Status() string {
+func (r GetTelegrafsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18396,14 +19148,14 @@ func (r getTelegrafsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getTelegrafsIDOwnersResponse) StatusCode() int {
+func (r GetTelegrafsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postTelegrafsIDOwnersResponse struct {
+type PostTelegrafsIDOwnersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *ResourceOwner
@@ -18411,7 +19163,7 @@ type postTelegrafsIDOwnersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postTelegrafsIDOwnersResponse) Status() string {
+func (r PostTelegrafsIDOwnersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18419,21 +19171,21 @@ func (r postTelegrafsIDOwnersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postTelegrafsIDOwnersResponse) StatusCode() int {
+func (r PostTelegrafsIDOwnersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteTelegrafsIDOwnersIDResponse struct {
+type DeleteTelegrafsIDOwnersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteTelegrafsIDOwnersIDResponse) Status() string {
+func (r DeleteTelegrafsIDOwnersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18441,14 +19193,14 @@ func (r deleteTelegrafsIDOwnersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteTelegrafsIDOwnersIDResponse) StatusCode() int {
+func (r DeleteTelegrafsIDOwnersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type applyTemplateResponse struct {
+type ApplyTemplateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *TemplateSummary
@@ -18457,7 +19209,7 @@ type applyTemplateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r applyTemplateResponse) Status() string {
+func (r ApplyTemplateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18465,14 +19217,14 @@ func (r applyTemplateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r applyTemplateResponse) StatusCode() int {
+func (r ApplyTemplateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type exportTemplateResponse struct {
+type ExportTemplateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Template
@@ -18481,7 +19233,7 @@ type exportTemplateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r exportTemplateResponse) Status() string {
+func (r ExportTemplateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18489,14 +19241,14 @@ func (r exportTemplateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r exportTemplateResponse) StatusCode() int {
+func (r ExportTemplateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getUsersResponse struct {
+type GetUsersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Users
@@ -18504,7 +19256,7 @@ type getUsersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getUsersResponse) Status() string {
+func (r GetUsersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18512,14 +19264,14 @@ func (r getUsersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getUsersResponse) StatusCode() int {
+func (r GetUsersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postUsersResponse struct {
+type PostUsersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *User
@@ -18527,7 +19279,7 @@ type postUsersResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postUsersResponse) Status() string {
+func (r PostUsersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18535,21 +19287,21 @@ func (r postUsersResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postUsersResponse) StatusCode() int {
+func (r PostUsersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteUsersIDResponse struct {
+type DeleteUsersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteUsersIDResponse) Status() string {
+func (r DeleteUsersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18557,37 +19309,14 @@ func (r deleteUsersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteUsersIDResponse) StatusCode() int {
+func (r DeleteUsersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getUsersIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *User
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r getUsersIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r getUsersIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type patchUsersIDResponse struct {
+type GetUsersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *User
@@ -18595,7 +19324,7 @@ type patchUsersIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchUsersIDResponse) Status() string {
+func (r GetUsersIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18603,21 +19332,44 @@ func (r patchUsersIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchUsersIDResponse) StatusCode() int {
+func (r GetUsersIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postUsersIDPasswordResponse struct {
+type PatchUsersIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *User
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchUsersIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchUsersIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostUsersIDPasswordResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r postUsersIDPasswordResponse) Status() string {
+func (r PostUsersIDPasswordResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18625,14 +19377,14 @@ func (r postUsersIDPasswordResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postUsersIDPasswordResponse) StatusCode() int {
+func (r PostUsersIDPasswordResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getVariablesResponse struct {
+type GetVariablesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Variables
@@ -18641,7 +19393,7 @@ type getVariablesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getVariablesResponse) Status() string {
+func (r GetVariablesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18649,14 +19401,14 @@ func (r getVariablesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getVariablesResponse) StatusCode() int {
+func (r GetVariablesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postVariablesResponse struct {
+type PostVariablesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *Variable
@@ -18664,7 +19416,7 @@ type postVariablesResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postVariablesResponse) Status() string {
+func (r PostVariablesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18672,21 +19424,21 @@ func (r postVariablesResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postVariablesResponse) StatusCode() int {
+func (r PostVariablesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteVariablesIDResponse struct {
+type DeleteVariablesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteVariablesIDResponse) Status() string {
+func (r DeleteVariablesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18694,14 +19446,14 @@ func (r deleteVariablesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteVariablesIDResponse) StatusCode() int {
+func (r DeleteVariablesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getVariablesIDResponse struct {
+type GetVariablesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Variable
@@ -18710,7 +19462,7 @@ type getVariablesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getVariablesIDResponse) Status() string {
+func (r GetVariablesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18718,14 +19470,14 @@ func (r getVariablesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getVariablesIDResponse) StatusCode() int {
+func (r GetVariablesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type patchVariablesIDResponse struct {
+type PatchVariablesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Variable
@@ -18733,7 +19485,7 @@ type patchVariablesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r patchVariablesIDResponse) Status() string {
+func (r PatchVariablesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18741,14 +19493,14 @@ func (r patchVariablesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r patchVariablesIDResponse) StatusCode() int {
+func (r PatchVariablesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type putVariablesIDResponse struct {
+type PutVariablesIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Variable
@@ -18756,7 +19508,7 @@ type putVariablesIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r putVariablesIDResponse) Status() string {
+func (r PutVariablesIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18764,14 +19516,14 @@ func (r putVariablesIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r putVariablesIDResponse) StatusCode() int {
+func (r PutVariablesIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type getVariablesIDLabelsResponse struct {
+type GetVariablesIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LabelsResponse
@@ -18779,7 +19531,7 @@ type getVariablesIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r getVariablesIDLabelsResponse) Status() string {
+func (r GetVariablesIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18787,14 +19539,14 @@ func (r getVariablesIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r getVariablesIDLabelsResponse) StatusCode() int {
+func (r GetVariablesIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postVariablesIDLabelsResponse struct {
+type PostVariablesIDLabelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *LabelResponse
@@ -18802,7 +19554,7 @@ type postVariablesIDLabelsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postVariablesIDLabelsResponse) Status() string {
+func (r PostVariablesIDLabelsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18810,14 +19562,14 @@ func (r postVariablesIDLabelsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postVariablesIDLabelsResponse) StatusCode() int {
+func (r PostVariablesIDLabelsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type deleteVariablesIDLabelsIDResponse struct {
+type DeleteVariablesIDLabelsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON404      *Error
@@ -18825,7 +19577,7 @@ type deleteVariablesIDLabelsIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r deleteVariablesIDLabelsIDResponse) Status() string {
+func (r DeleteVariablesIDLabelsIDResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18833,14 +19585,14 @@ func (r deleteVariablesIDLabelsIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r deleteVariablesIDLabelsIDResponse) StatusCode() int {
+func (r DeleteVariablesIDLabelsIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type postWriteResponse struct {
+type PostWriteResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON400      *LineProtocolError
@@ -18851,7 +19603,7 @@ type postWriteResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r postWriteResponse) Status() string {
+func (r PostWriteResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -18859,7 +19611,7 @@ func (r postWriteResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r postWriteResponse) StatusCode() int {
+func (r PostWriteResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18867,7 +19619,7 @@ func (r postWriteResponse) StatusCode() int {
 }
 
 // GetRoutesWithResponse request returning *GetRoutesResponse
-func (c *ClientWithResponses) GetRoutesWithResponse(ctx context.Context, params *GetRoutesParams) (*getRoutesResponse, error) {
+func (c *ClientWithResponses) GetRoutesWithResponse(ctx context.Context, params *GetRoutesParams) (*GetRoutesResponse, error) {
 	rsp, err := c.GetRoutes(ctx, params)
 	if err != nil {
 		return nil, err
@@ -18876,7 +19628,7 @@ func (c *ClientWithResponses) GetRoutesWithResponse(ctx context.Context, params 
 }
 
 // GetAuthorizationsWithResponse request returning *GetAuthorizationsResponse
-func (c *ClientWithResponses) GetAuthorizationsWithResponse(ctx context.Context, params *GetAuthorizationsParams) (*getAuthorizationsResponse, error) {
+func (c *ClientWithResponses) GetAuthorizationsWithResponse(ctx context.Context, params *GetAuthorizationsParams) (*GetAuthorizationsResponse, error) {
 	rsp, err := c.GetAuthorizations(ctx, params)
 	if err != nil {
 		return nil, err
@@ -18885,7 +19637,7 @@ func (c *ClientWithResponses) GetAuthorizationsWithResponse(ctx context.Context,
 }
 
 // PostAuthorizationsWithBodyWithResponse request with arbitrary body returning *PostAuthorizationsResponse
-func (c *ClientWithResponses) PostAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostAuthorizationsParams, contentType string, body io.Reader) (*postAuthorizationsResponse, error) {
+func (c *ClientWithResponses) PostAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostAuthorizationsParams, contentType string, body io.Reader) (*PostAuthorizationsResponse, error) {
 	rsp, err := c.PostAuthorizationsWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -18893,7 +19645,7 @@ func (c *ClientWithResponses) PostAuthorizationsWithBodyWithResponse(ctx context
 	return ParsePostAuthorizationsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostAuthorizationsWithResponse(ctx context.Context, params *PostAuthorizationsParams, body PostAuthorizationsJSONRequestBody) (*postAuthorizationsResponse, error) {
+func (c *ClientWithResponses) PostAuthorizationsWithResponse(ctx context.Context, params *PostAuthorizationsParams, body PostAuthorizationsJSONRequestBody) (*PostAuthorizationsResponse, error) {
 	rsp, err := c.PostAuthorizations(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -18902,7 +19654,7 @@ func (c *ClientWithResponses) PostAuthorizationsWithResponse(ctx context.Context
 }
 
 // DeleteAuthorizationsIDWithResponse request returning *DeleteAuthorizationsIDResponse
-func (c *ClientWithResponses) DeleteAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteAuthorizationsIDParams) (*deleteAuthorizationsIDResponse, error) {
+func (c *ClientWithResponses) DeleteAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteAuthorizationsIDParams) (*DeleteAuthorizationsIDResponse, error) {
 	rsp, err := c.DeleteAuthorizationsID(ctx, authID, params)
 	if err != nil {
 		return nil, err
@@ -18911,7 +19663,7 @@ func (c *ClientWithResponses) DeleteAuthorizationsIDWithResponse(ctx context.Con
 }
 
 // GetAuthorizationsIDWithResponse request returning *GetAuthorizationsIDResponse
-func (c *ClientWithResponses) GetAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetAuthorizationsIDParams) (*getAuthorizationsIDResponse, error) {
+func (c *ClientWithResponses) GetAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetAuthorizationsIDParams) (*GetAuthorizationsIDResponse, error) {
 	rsp, err := c.GetAuthorizationsID(ctx, authID, params)
 	if err != nil {
 		return nil, err
@@ -18920,7 +19672,7 @@ func (c *ClientWithResponses) GetAuthorizationsIDWithResponse(ctx context.Contex
 }
 
 // PatchAuthorizationsIDWithBodyWithResponse request with arbitrary body returning *PatchAuthorizationsIDResponse
-func (c *ClientWithResponses) PatchAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, contentType string, body io.Reader) (*patchAuthorizationsIDResponse, error) {
+func (c *ClientWithResponses) PatchAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, contentType string, body io.Reader) (*PatchAuthorizationsIDResponse, error) {
 	rsp, err := c.PatchAuthorizationsIDWithBody(ctx, authID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -18928,7 +19680,7 @@ func (c *ClientWithResponses) PatchAuthorizationsIDWithBodyWithResponse(ctx cont
 	return ParsePatchAuthorizationsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*patchAuthorizationsIDResponse, error) {
+func (c *ClientWithResponses) PatchAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*PatchAuthorizationsIDResponse, error) {
 	rsp, err := c.PatchAuthorizationsID(ctx, authID, params, body)
 	if err != nil {
 		return nil, err
@@ -18937,7 +19689,7 @@ func (c *ClientWithResponses) PatchAuthorizationsIDWithResponse(ctx context.Cont
 }
 
 // GetBucketsWithResponse request returning *GetBucketsResponse
-func (c *ClientWithResponses) GetBucketsWithResponse(ctx context.Context, params *GetBucketsParams) (*getBucketsResponse, error) {
+func (c *ClientWithResponses) GetBucketsWithResponse(ctx context.Context, params *GetBucketsParams) (*GetBucketsResponse, error) {
 	rsp, err := c.GetBuckets(ctx, params)
 	if err != nil {
 		return nil, err
@@ -18946,7 +19698,7 @@ func (c *ClientWithResponses) GetBucketsWithResponse(ctx context.Context, params
 }
 
 // PostBucketsWithBodyWithResponse request with arbitrary body returning *PostBucketsResponse
-func (c *ClientWithResponses) PostBucketsWithBodyWithResponse(ctx context.Context, params *PostBucketsParams, contentType string, body io.Reader) (*postBucketsResponse, error) {
+func (c *ClientWithResponses) PostBucketsWithBodyWithResponse(ctx context.Context, params *PostBucketsParams, contentType string, body io.Reader) (*PostBucketsResponse, error) {
 	rsp, err := c.PostBucketsWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -18954,7 +19706,7 @@ func (c *ClientWithResponses) PostBucketsWithBodyWithResponse(ctx context.Contex
 	return ParsePostBucketsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostBucketsWithResponse(ctx context.Context, params *PostBucketsParams, body PostBucketsJSONRequestBody) (*postBucketsResponse, error) {
+func (c *ClientWithResponses) PostBucketsWithResponse(ctx context.Context, params *PostBucketsParams, body PostBucketsJSONRequestBody) (*PostBucketsResponse, error) {
 	rsp, err := c.PostBuckets(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -18963,7 +19715,7 @@ func (c *ClientWithResponses) PostBucketsWithResponse(ctx context.Context, param
 }
 
 // DeleteBucketsIDWithResponse request returning *DeleteBucketsIDResponse
-func (c *ClientWithResponses) DeleteBucketsIDWithResponse(ctx context.Context, bucketID string, params *DeleteBucketsIDParams) (*deleteBucketsIDResponse, error) {
+func (c *ClientWithResponses) DeleteBucketsIDWithResponse(ctx context.Context, bucketID string, params *DeleteBucketsIDParams) (*DeleteBucketsIDResponse, error) {
 	rsp, err := c.DeleteBucketsID(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
@@ -18972,7 +19724,7 @@ func (c *ClientWithResponses) DeleteBucketsIDWithResponse(ctx context.Context, b
 }
 
 // GetBucketsIDWithResponse request returning *GetBucketsIDResponse
-func (c *ClientWithResponses) GetBucketsIDWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDParams) (*getBucketsIDResponse, error) {
+func (c *ClientWithResponses) GetBucketsIDWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDParams) (*GetBucketsIDResponse, error) {
 	rsp, err := c.GetBucketsID(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
@@ -18981,7 +19733,7 @@ func (c *ClientWithResponses) GetBucketsIDWithResponse(ctx context.Context, buck
 }
 
 // PatchBucketsIDWithBodyWithResponse request with arbitrary body returning *PatchBucketsIDResponse
-func (c *ClientWithResponses) PatchBucketsIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, contentType string, body io.Reader) (*patchBucketsIDResponse, error) {
+func (c *ClientWithResponses) PatchBucketsIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, contentType string, body io.Reader) (*PatchBucketsIDResponse, error) {
 	rsp, err := c.PatchBucketsIDWithBody(ctx, bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -18989,7 +19741,7 @@ func (c *ClientWithResponses) PatchBucketsIDWithBodyWithResponse(ctx context.Con
 	return ParsePatchBucketsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchBucketsIDWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, body PatchBucketsIDJSONRequestBody) (*patchBucketsIDResponse, error) {
+func (c *ClientWithResponses) PatchBucketsIDWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, body PatchBucketsIDJSONRequestBody) (*PatchBucketsIDResponse, error) {
 	rsp, err := c.PatchBucketsID(ctx, bucketID, params, body)
 	if err != nil {
 		return nil, err
@@ -18998,7 +19750,7 @@ func (c *ClientWithResponses) PatchBucketsIDWithResponse(ctx context.Context, bu
 }
 
 // GetBucketsIDLabelsWithResponse request returning *GetBucketsIDLabelsResponse
-func (c *ClientWithResponses) GetBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDLabelsParams) (*getBucketsIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDLabelsParams) (*GetBucketsIDLabelsResponse, error) {
 	rsp, err := c.GetBucketsIDLabels(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
@@ -19007,7 +19759,7 @@ func (c *ClientWithResponses) GetBucketsIDLabelsWithResponse(ctx context.Context
 }
 
 // PostBucketsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostBucketsIDLabelsResponse
-func (c *ClientWithResponses) PostBucketsIDLabelsWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, contentType string, body io.Reader) (*postBucketsIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostBucketsIDLabelsWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, contentType string, body io.Reader) (*PostBucketsIDLabelsResponse, error) {
 	rsp, err := c.PostBucketsIDLabelsWithBody(ctx, bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19015,7 +19767,7 @@ func (c *ClientWithResponses) PostBucketsIDLabelsWithBodyWithResponse(ctx contex
 	return ParsePostBucketsIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, body PostBucketsIDLabelsJSONRequestBody) (*postBucketsIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, body PostBucketsIDLabelsJSONRequestBody) (*PostBucketsIDLabelsResponse, error) {
 	rsp, err := c.PostBucketsIDLabels(ctx, bucketID, params, body)
 	if err != nil {
 		return nil, err
@@ -19024,7 +19776,7 @@ func (c *ClientWithResponses) PostBucketsIDLabelsWithResponse(ctx context.Contex
 }
 
 // DeleteBucketsIDLabelsIDWithResponse request returning *DeleteBucketsIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteBucketsIDLabelsIDWithResponse(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*deleteBucketsIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteBucketsIDLabelsIDWithResponse(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams) (*DeleteBucketsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteBucketsIDLabelsID(ctx, bucketID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19033,7 +19785,7 @@ func (c *ClientWithResponses) DeleteBucketsIDLabelsIDWithResponse(ctx context.Co
 }
 
 // GetBucketsIDMembersWithResponse request returning *GetBucketsIDMembersResponse
-func (c *ClientWithResponses) GetBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*getBucketsIDMembersResponse, error) {
+func (c *ClientWithResponses) GetBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams) (*GetBucketsIDMembersResponse, error) {
 	rsp, err := c.GetBucketsIDMembers(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
@@ -19042,7 +19794,7 @@ func (c *ClientWithResponses) GetBucketsIDMembersWithResponse(ctx context.Contex
 }
 
 // PostBucketsIDMembersWithBodyWithResponse request with arbitrary body returning *PostBucketsIDMembersResponse
-func (c *ClientWithResponses) PostBucketsIDMembersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, contentType string, body io.Reader) (*postBucketsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostBucketsIDMembersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, contentType string, body io.Reader) (*PostBucketsIDMembersResponse, error) {
 	rsp, err := c.PostBucketsIDMembersWithBody(ctx, bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19050,7 +19802,7 @@ func (c *ClientWithResponses) PostBucketsIDMembersWithBodyWithResponse(ctx conte
 	return ParsePostBucketsIDMembersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, body PostBucketsIDMembersJSONRequestBody) (*postBucketsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, body PostBucketsIDMembersJSONRequestBody) (*PostBucketsIDMembersResponse, error) {
 	rsp, err := c.PostBucketsIDMembers(ctx, bucketID, params, body)
 	if err != nil {
 		return nil, err
@@ -19059,7 +19811,7 @@ func (c *ClientWithResponses) PostBucketsIDMembersWithResponse(ctx context.Conte
 }
 
 // DeleteBucketsIDMembersIDWithResponse request returning *DeleteBucketsIDMembersIDResponse
-func (c *ClientWithResponses) DeleteBucketsIDMembersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDMembersIDParams) (*deleteBucketsIDMembersIDResponse, error) {
+func (c *ClientWithResponses) DeleteBucketsIDMembersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDMembersIDParams) (*DeleteBucketsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteBucketsIDMembersID(ctx, bucketID, userID, params)
 	if err != nil {
 		return nil, err
@@ -19068,7 +19820,7 @@ func (c *ClientWithResponses) DeleteBucketsIDMembersIDWithResponse(ctx context.C
 }
 
 // GetBucketsIDOwnersWithResponse request returning *GetBucketsIDOwnersResponse
-func (c *ClientWithResponses) GetBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDOwnersParams) (*getBucketsIDOwnersResponse, error) {
+func (c *ClientWithResponses) GetBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDOwnersParams) (*GetBucketsIDOwnersResponse, error) {
 	rsp, err := c.GetBucketsIDOwners(ctx, bucketID, params)
 	if err != nil {
 		return nil, err
@@ -19077,7 +19829,7 @@ func (c *ClientWithResponses) GetBucketsIDOwnersWithResponse(ctx context.Context
 }
 
 // PostBucketsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostBucketsIDOwnersResponse
-func (c *ClientWithResponses) PostBucketsIDOwnersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, contentType string, body io.Reader) (*postBucketsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostBucketsIDOwnersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, contentType string, body io.Reader) (*PostBucketsIDOwnersResponse, error) {
 	rsp, err := c.PostBucketsIDOwnersWithBody(ctx, bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19085,7 +19837,7 @@ func (c *ClientWithResponses) PostBucketsIDOwnersWithBodyWithResponse(ctx contex
 	return ParsePostBucketsIDOwnersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, body PostBucketsIDOwnersJSONRequestBody) (*postBucketsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, body PostBucketsIDOwnersJSONRequestBody) (*PostBucketsIDOwnersResponse, error) {
 	rsp, err := c.PostBucketsIDOwners(ctx, bucketID, params, body)
 	if err != nil {
 		return nil, err
@@ -19094,7 +19846,7 @@ func (c *ClientWithResponses) PostBucketsIDOwnersWithResponse(ctx context.Contex
 }
 
 // DeleteBucketsIDOwnersIDWithResponse request returning *DeleteBucketsIDOwnersIDResponse
-func (c *ClientWithResponses) DeleteBucketsIDOwnersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDOwnersIDParams) (*deleteBucketsIDOwnersIDResponse, error) {
+func (c *ClientWithResponses) DeleteBucketsIDOwnersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDOwnersIDParams) (*DeleteBucketsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteBucketsIDOwnersID(ctx, bucketID, userID, params)
 	if err != nil {
 		return nil, err
@@ -19103,7 +19855,7 @@ func (c *ClientWithResponses) DeleteBucketsIDOwnersIDWithResponse(ctx context.Co
 }
 
 // GetChecksWithResponse request returning *GetChecksResponse
-func (c *ClientWithResponses) GetChecksWithResponse(ctx context.Context, params *GetChecksParams) (*getChecksResponse, error) {
+func (c *ClientWithResponses) GetChecksWithResponse(ctx context.Context, params *GetChecksParams) (*GetChecksResponse, error) {
 	rsp, err := c.GetChecks(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19112,7 +19864,7 @@ func (c *ClientWithResponses) GetChecksWithResponse(ctx context.Context, params 
 }
 
 // CreateCheckWithBodyWithResponse request with arbitrary body returning *CreateCheckResponse
-func (c *ClientWithResponses) CreateCheckWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createCheckResponse, error) {
+func (c *ClientWithResponses) CreateCheckWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateCheckResponse, error) {
 	rsp, err := c.CreateCheckWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19120,7 +19872,7 @@ func (c *ClientWithResponses) CreateCheckWithBodyWithResponse(ctx context.Contex
 	return ParseCreateCheckResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateCheckWithResponse(ctx context.Context, body CreateCheckJSONRequestBody) (*createCheckResponse, error) {
+func (c *ClientWithResponses) CreateCheckWithResponse(ctx context.Context, body CreateCheckJSONRequestBody) (*CreateCheckResponse, error) {
 	rsp, err := c.CreateCheck(ctx, body)
 	if err != nil {
 		return nil, err
@@ -19129,7 +19881,7 @@ func (c *ClientWithResponses) CreateCheckWithResponse(ctx context.Context, body 
 }
 
 // DeleteChecksIDWithResponse request returning *DeleteChecksIDResponse
-func (c *ClientWithResponses) DeleteChecksIDWithResponse(ctx context.Context, checkID string, params *DeleteChecksIDParams) (*deleteChecksIDResponse, error) {
+func (c *ClientWithResponses) DeleteChecksIDWithResponse(ctx context.Context, checkID string, params *DeleteChecksIDParams) (*DeleteChecksIDResponse, error) {
 	rsp, err := c.DeleteChecksID(ctx, checkID, params)
 	if err != nil {
 		return nil, err
@@ -19138,7 +19890,7 @@ func (c *ClientWithResponses) DeleteChecksIDWithResponse(ctx context.Context, ch
 }
 
 // GetChecksIDWithResponse request returning *GetChecksIDResponse
-func (c *ClientWithResponses) GetChecksIDWithResponse(ctx context.Context, checkID string, params *GetChecksIDParams) (*getChecksIDResponse, error) {
+func (c *ClientWithResponses) GetChecksIDWithResponse(ctx context.Context, checkID string, params *GetChecksIDParams) (*GetChecksIDResponse, error) {
 	rsp, err := c.GetChecksID(ctx, checkID, params)
 	if err != nil {
 		return nil, err
@@ -19147,7 +19899,7 @@ func (c *ClientWithResponses) GetChecksIDWithResponse(ctx context.Context, check
 }
 
 // PatchChecksIDWithBodyWithResponse request with arbitrary body returning *PatchChecksIDResponse
-func (c *ClientWithResponses) PatchChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, contentType string, body io.Reader) (*patchChecksIDResponse, error) {
+func (c *ClientWithResponses) PatchChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, contentType string, body io.Reader) (*PatchChecksIDResponse, error) {
 	rsp, err := c.PatchChecksIDWithBody(ctx, checkID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19155,7 +19907,7 @@ func (c *ClientWithResponses) PatchChecksIDWithBodyWithResponse(ctx context.Cont
 	return ParsePatchChecksIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchChecksIDWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, body PatchChecksIDJSONRequestBody) (*patchChecksIDResponse, error) {
+func (c *ClientWithResponses) PatchChecksIDWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, body PatchChecksIDJSONRequestBody) (*PatchChecksIDResponse, error) {
 	rsp, err := c.PatchChecksID(ctx, checkID, params, body)
 	if err != nil {
 		return nil, err
@@ -19164,7 +19916,7 @@ func (c *ClientWithResponses) PatchChecksIDWithResponse(ctx context.Context, che
 }
 
 // PutChecksIDWithBodyWithResponse request with arbitrary body returning *PutChecksIDResponse
-func (c *ClientWithResponses) PutChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, contentType string, body io.Reader) (*putChecksIDResponse, error) {
+func (c *ClientWithResponses) PutChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, contentType string, body io.Reader) (*PutChecksIDResponse, error) {
 	rsp, err := c.PutChecksIDWithBody(ctx, checkID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19172,7 +19924,7 @@ func (c *ClientWithResponses) PutChecksIDWithBodyWithResponse(ctx context.Contex
 	return ParsePutChecksIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutChecksIDWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, body PutChecksIDJSONRequestBody) (*putChecksIDResponse, error) {
+func (c *ClientWithResponses) PutChecksIDWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, body PutChecksIDJSONRequestBody) (*PutChecksIDResponse, error) {
 	rsp, err := c.PutChecksID(ctx, checkID, params, body)
 	if err != nil {
 		return nil, err
@@ -19181,7 +19933,7 @@ func (c *ClientWithResponses) PutChecksIDWithResponse(ctx context.Context, check
 }
 
 // GetChecksIDLabelsWithResponse request returning *GetChecksIDLabelsResponse
-func (c *ClientWithResponses) GetChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *GetChecksIDLabelsParams) (*getChecksIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *GetChecksIDLabelsParams) (*GetChecksIDLabelsResponse, error) {
 	rsp, err := c.GetChecksIDLabels(ctx, checkID, params)
 	if err != nil {
 		return nil, err
@@ -19190,7 +19942,7 @@ func (c *ClientWithResponses) GetChecksIDLabelsWithResponse(ctx context.Context,
 }
 
 // PostChecksIDLabelsWithBodyWithResponse request with arbitrary body returning *PostChecksIDLabelsResponse
-func (c *ClientWithResponses) PostChecksIDLabelsWithBodyWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, contentType string, body io.Reader) (*postChecksIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostChecksIDLabelsWithBodyWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, contentType string, body io.Reader) (*PostChecksIDLabelsResponse, error) {
 	rsp, err := c.PostChecksIDLabelsWithBody(ctx, checkID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19198,7 +19950,7 @@ func (c *ClientWithResponses) PostChecksIDLabelsWithBodyWithResponse(ctx context
 	return ParsePostChecksIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, body PostChecksIDLabelsJSONRequestBody) (*postChecksIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, body PostChecksIDLabelsJSONRequestBody) (*PostChecksIDLabelsResponse, error) {
 	rsp, err := c.PostChecksIDLabels(ctx, checkID, params, body)
 	if err != nil {
 		return nil, err
@@ -19207,7 +19959,7 @@ func (c *ClientWithResponses) PostChecksIDLabelsWithResponse(ctx context.Context
 }
 
 // DeleteChecksIDLabelsIDWithResponse request returning *DeleteChecksIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteChecksIDLabelsIDWithResponse(ctx context.Context, checkID string, labelID string, params *DeleteChecksIDLabelsIDParams) (*deleteChecksIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteChecksIDLabelsIDWithResponse(ctx context.Context, checkID string, labelID string, params *DeleteChecksIDLabelsIDParams) (*DeleteChecksIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteChecksIDLabelsID(ctx, checkID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19216,7 +19968,7 @@ func (c *ClientWithResponses) DeleteChecksIDLabelsIDWithResponse(ctx context.Con
 }
 
 // GetChecksIDQueryWithResponse request returning *GetChecksIDQueryResponse
-func (c *ClientWithResponses) GetChecksIDQueryWithResponse(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*getChecksIDQueryResponse, error) {
+func (c *ClientWithResponses) GetChecksIDQueryWithResponse(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*GetChecksIDQueryResponse, error) {
 	rsp, err := c.GetChecksIDQuery(ctx, checkID, params)
 	if err != nil {
 		return nil, err
@@ -19225,7 +19977,7 @@ func (c *ClientWithResponses) GetChecksIDQueryWithResponse(ctx context.Context, 
 }
 
 // GetDashboardsWithResponse request returning *GetDashboardsResponse
-func (c *ClientWithResponses) GetDashboardsWithResponse(ctx context.Context, params *GetDashboardsParams) (*getDashboardsResponse, error) {
+func (c *ClientWithResponses) GetDashboardsWithResponse(ctx context.Context, params *GetDashboardsParams) (*GetDashboardsResponse, error) {
 	rsp, err := c.GetDashboards(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19234,7 +19986,7 @@ func (c *ClientWithResponses) GetDashboardsWithResponse(ctx context.Context, par
 }
 
 // PostDashboardsWithBodyWithResponse request with arbitrary body returning *PostDashboardsResponse
-func (c *ClientWithResponses) PostDashboardsWithBodyWithResponse(ctx context.Context, params *PostDashboardsParams, contentType string, body io.Reader) (*postDashboardsResponse, error) {
+func (c *ClientWithResponses) PostDashboardsWithBodyWithResponse(ctx context.Context, params *PostDashboardsParams, contentType string, body io.Reader) (*PostDashboardsResponse, error) {
 	rsp, err := c.PostDashboardsWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19242,7 +19994,7 @@ func (c *ClientWithResponses) PostDashboardsWithBodyWithResponse(ctx context.Con
 	return ParsePostDashboardsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDashboardsWithResponse(ctx context.Context, params *PostDashboardsParams, body PostDashboardsJSONRequestBody) (*postDashboardsResponse, error) {
+func (c *ClientWithResponses) PostDashboardsWithResponse(ctx context.Context, params *PostDashboardsParams, body PostDashboardsJSONRequestBody) (*PostDashboardsResponse, error) {
 	rsp, err := c.PostDashboards(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -19251,7 +20003,7 @@ func (c *ClientWithResponses) PostDashboardsWithResponse(ctx context.Context, pa
 }
 
 // DeleteDashboardsIDWithResponse request returning *DeleteDashboardsIDResponse
-func (c *ClientWithResponses) DeleteDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *DeleteDashboardsIDParams) (*deleteDashboardsIDResponse, error) {
+func (c *ClientWithResponses) DeleteDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *DeleteDashboardsIDParams) (*DeleteDashboardsIDResponse, error) {
 	rsp, err := c.DeleteDashboardsID(ctx, dashboardID, params)
 	if err != nil {
 		return nil, err
@@ -19260,7 +20012,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDWithResponse(ctx context.Context
 }
 
 // GetDashboardsIDWithResponse request returning *GetDashboardsIDResponse
-func (c *ClientWithResponses) GetDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDParams) (*getDashboardsIDResponse, error) {
+func (c *ClientWithResponses) GetDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDParams) (*GetDashboardsIDResponse, error) {
 	rsp, err := c.GetDashboardsID(ctx, dashboardID, params)
 	if err != nil {
 		return nil, err
@@ -19269,7 +20021,7 @@ func (c *ClientWithResponses) GetDashboardsIDWithResponse(ctx context.Context, d
 }
 
 // PatchDashboardsIDWithBodyWithResponse request with arbitrary body returning *PatchDashboardsIDResponse
-func (c *ClientWithResponses) PatchDashboardsIDWithBodyWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, contentType string, body io.Reader) (*patchDashboardsIDResponse, error) {
+func (c *ClientWithResponses) PatchDashboardsIDWithBodyWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, contentType string, body io.Reader) (*PatchDashboardsIDResponse, error) {
 	rsp, err := c.PatchDashboardsIDWithBody(ctx, dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19277,7 +20029,7 @@ func (c *ClientWithResponses) PatchDashboardsIDWithBodyWithResponse(ctx context.
 	return ParsePatchDashboardsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, body PatchDashboardsIDJSONRequestBody) (*patchDashboardsIDResponse, error) {
+func (c *ClientWithResponses) PatchDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, body PatchDashboardsIDJSONRequestBody) (*PatchDashboardsIDResponse, error) {
 	rsp, err := c.PatchDashboardsID(ctx, dashboardID, params, body)
 	if err != nil {
 		return nil, err
@@ -19286,7 +20038,7 @@ func (c *ClientWithResponses) PatchDashboardsIDWithResponse(ctx context.Context,
 }
 
 // PostDashboardsIDCellsWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDCellsResponse
-func (c *ClientWithResponses) PostDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, contentType string, body io.Reader) (*postDashboardsIDCellsResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, contentType string, body io.Reader) (*PostDashboardsIDCellsResponse, error) {
 	rsp, err := c.PostDashboardsIDCellsWithBody(ctx, dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19294,7 +20046,7 @@ func (c *ClientWithResponses) PostDashboardsIDCellsWithBodyWithResponse(ctx cont
 	return ParsePostDashboardsIDCellsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, body PostDashboardsIDCellsJSONRequestBody) (*postDashboardsIDCellsResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, body PostDashboardsIDCellsJSONRequestBody) (*PostDashboardsIDCellsResponse, error) {
 	rsp, err := c.PostDashboardsIDCells(ctx, dashboardID, params, body)
 	if err != nil {
 		return nil, err
@@ -19303,7 +20055,7 @@ func (c *ClientWithResponses) PostDashboardsIDCellsWithResponse(ctx context.Cont
 }
 
 // PutDashboardsIDCellsWithBodyWithResponse request with arbitrary body returning *PutDashboardsIDCellsResponse
-func (c *ClientWithResponses) PutDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, contentType string, body io.Reader) (*putDashboardsIDCellsResponse, error) {
+func (c *ClientWithResponses) PutDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, contentType string, body io.Reader) (*PutDashboardsIDCellsResponse, error) {
 	rsp, err := c.PutDashboardsIDCellsWithBody(ctx, dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19311,7 +20063,7 @@ func (c *ClientWithResponses) PutDashboardsIDCellsWithBodyWithResponse(ctx conte
 	return ParsePutDashboardsIDCellsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, body PutDashboardsIDCellsJSONRequestBody) (*putDashboardsIDCellsResponse, error) {
+func (c *ClientWithResponses) PutDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, body PutDashboardsIDCellsJSONRequestBody) (*PutDashboardsIDCellsResponse, error) {
 	rsp, err := c.PutDashboardsIDCells(ctx, dashboardID, params, body)
 	if err != nil {
 		return nil, err
@@ -19320,7 +20072,7 @@ func (c *ClientWithResponses) PutDashboardsIDCellsWithResponse(ctx context.Conte
 }
 
 // DeleteDashboardsIDCellsIDWithResponse request returning *DeleteDashboardsIDCellsIDResponse
-func (c *ClientWithResponses) DeleteDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *DeleteDashboardsIDCellsIDParams) (*deleteDashboardsIDCellsIDResponse, error) {
+func (c *ClientWithResponses) DeleteDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *DeleteDashboardsIDCellsIDParams) (*DeleteDashboardsIDCellsIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDCellsID(ctx, dashboardID, cellID, params)
 	if err != nil {
 		return nil, err
@@ -19329,7 +20081,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDCellsIDWithResponse(ctx context.
 }
 
 // PatchDashboardsIDCellsIDWithBodyWithResponse request with arbitrary body returning *PatchDashboardsIDCellsIDResponse
-func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, contentType string, body io.Reader) (*patchDashboardsIDCellsIDResponse, error) {
+func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, contentType string, body io.Reader) (*PatchDashboardsIDCellsIDResponse, error) {
 	rsp, err := c.PatchDashboardsIDCellsIDWithBody(ctx, dashboardID, cellID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19337,7 +20089,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithBodyWithResponse(ctx c
 	return ParsePatchDashboardsIDCellsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, body PatchDashboardsIDCellsIDJSONRequestBody) (*patchDashboardsIDCellsIDResponse, error) {
+func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, body PatchDashboardsIDCellsIDJSONRequestBody) (*PatchDashboardsIDCellsIDResponse, error) {
 	rsp, err := c.PatchDashboardsIDCellsID(ctx, dashboardID, cellID, params, body)
 	if err != nil {
 		return nil, err
@@ -19346,7 +20098,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithResponse(ctx context.C
 }
 
 // GetDashboardsIDCellsIDViewWithResponse request returning *GetDashboardsIDCellsIDViewResponse
-func (c *ClientWithResponses) GetDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *GetDashboardsIDCellsIDViewParams) (*getDashboardsIDCellsIDViewResponse, error) {
+func (c *ClientWithResponses) GetDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *GetDashboardsIDCellsIDViewParams) (*GetDashboardsIDCellsIDViewResponse, error) {
 	rsp, err := c.GetDashboardsIDCellsIDView(ctx, dashboardID, cellID, params)
 	if err != nil {
 		return nil, err
@@ -19355,7 +20107,7 @@ func (c *ClientWithResponses) GetDashboardsIDCellsIDViewWithResponse(ctx context
 }
 
 // PatchDashboardsIDCellsIDViewWithBodyWithResponse request with arbitrary body returning *PatchDashboardsIDCellsIDViewResponse
-func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, contentType string, body io.Reader) (*patchDashboardsIDCellsIDViewResponse, error) {
+func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, contentType string, body io.Reader) (*PatchDashboardsIDCellsIDViewResponse, error) {
 	rsp, err := c.PatchDashboardsIDCellsIDViewWithBody(ctx, dashboardID, cellID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19363,7 +20115,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithBodyWithResponse(c
 	return ParsePatchDashboardsIDCellsIDViewResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, body PatchDashboardsIDCellsIDViewJSONRequestBody) (*patchDashboardsIDCellsIDViewResponse, error) {
+func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, body PatchDashboardsIDCellsIDViewJSONRequestBody) (*PatchDashboardsIDCellsIDViewResponse, error) {
 	rsp, err := c.PatchDashboardsIDCellsIDView(ctx, dashboardID, cellID, params, body)
 	if err != nil {
 		return nil, err
@@ -19372,7 +20124,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithResponse(ctx conte
 }
 
 // GetDashboardsIDLabelsWithResponse request returning *GetDashboardsIDLabelsResponse
-func (c *ClientWithResponses) GetDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDLabelsParams) (*getDashboardsIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDLabelsParams) (*GetDashboardsIDLabelsResponse, error) {
 	rsp, err := c.GetDashboardsIDLabels(ctx, dashboardID, params)
 	if err != nil {
 		return nil, err
@@ -19381,7 +20133,7 @@ func (c *ClientWithResponses) GetDashboardsIDLabelsWithResponse(ctx context.Cont
 }
 
 // PostDashboardsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDLabelsResponse
-func (c *ClientWithResponses) PostDashboardsIDLabelsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, contentType string, body io.Reader) (*postDashboardsIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDLabelsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, contentType string, body io.Reader) (*PostDashboardsIDLabelsResponse, error) {
 	rsp, err := c.PostDashboardsIDLabelsWithBody(ctx, dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19389,7 +20141,7 @@ func (c *ClientWithResponses) PostDashboardsIDLabelsWithBodyWithResponse(ctx con
 	return ParsePostDashboardsIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, body PostDashboardsIDLabelsJSONRequestBody) (*postDashboardsIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, body PostDashboardsIDLabelsJSONRequestBody) (*PostDashboardsIDLabelsResponse, error) {
 	rsp, err := c.PostDashboardsIDLabels(ctx, dashboardID, params, body)
 	if err != nil {
 		return nil, err
@@ -19398,7 +20150,7 @@ func (c *ClientWithResponses) PostDashboardsIDLabelsWithResponse(ctx context.Con
 }
 
 // DeleteDashboardsIDLabelsIDWithResponse request returning *DeleteDashboardsIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteDashboardsIDLabelsIDWithResponse(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*deleteDashboardsIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteDashboardsIDLabelsIDWithResponse(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams) (*DeleteDashboardsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDLabelsID(ctx, dashboardID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19407,7 +20159,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDLabelsIDWithResponse(ctx context
 }
 
 // GetDashboardsIDMembersWithResponse request returning *GetDashboardsIDMembersResponse
-func (c *ClientWithResponses) GetDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams) (*getDashboardsIDMembersResponse, error) {
+func (c *ClientWithResponses) GetDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams) (*GetDashboardsIDMembersResponse, error) {
 	rsp, err := c.GetDashboardsIDMembers(ctx, dashboardID, params)
 	if err != nil {
 		return nil, err
@@ -19416,7 +20168,7 @@ func (c *ClientWithResponses) GetDashboardsIDMembersWithResponse(ctx context.Con
 }
 
 // PostDashboardsIDMembersWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDMembersResponse
-func (c *ClientWithResponses) PostDashboardsIDMembersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, contentType string, body io.Reader) (*postDashboardsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDMembersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, contentType string, body io.Reader) (*PostDashboardsIDMembersResponse, error) {
 	rsp, err := c.PostDashboardsIDMembersWithBody(ctx, dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19424,7 +20176,7 @@ func (c *ClientWithResponses) PostDashboardsIDMembersWithBodyWithResponse(ctx co
 	return ParsePostDashboardsIDMembersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, body PostDashboardsIDMembersJSONRequestBody) (*postDashboardsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, body PostDashboardsIDMembersJSONRequestBody) (*PostDashboardsIDMembersResponse, error) {
 	rsp, err := c.PostDashboardsIDMembers(ctx, dashboardID, params, body)
 	if err != nil {
 		return nil, err
@@ -19433,7 +20185,7 @@ func (c *ClientWithResponses) PostDashboardsIDMembersWithResponse(ctx context.Co
 }
 
 // DeleteDashboardsIDMembersIDWithResponse request returning *DeleteDashboardsIDMembersIDResponse
-func (c *ClientWithResponses) DeleteDashboardsIDMembersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDMembersIDParams) (*deleteDashboardsIDMembersIDResponse, error) {
+func (c *ClientWithResponses) DeleteDashboardsIDMembersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDMembersIDParams) (*DeleteDashboardsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDMembersID(ctx, dashboardID, userID, params)
 	if err != nil {
 		return nil, err
@@ -19442,7 +20194,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDMembersIDWithResponse(ctx contex
 }
 
 // GetDashboardsIDOwnersWithResponse request returning *GetDashboardsIDOwnersResponse
-func (c *ClientWithResponses) GetDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDOwnersParams) (*getDashboardsIDOwnersResponse, error) {
+func (c *ClientWithResponses) GetDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDOwnersParams) (*GetDashboardsIDOwnersResponse, error) {
 	rsp, err := c.GetDashboardsIDOwners(ctx, dashboardID, params)
 	if err != nil {
 		return nil, err
@@ -19451,7 +20203,7 @@ func (c *ClientWithResponses) GetDashboardsIDOwnersWithResponse(ctx context.Cont
 }
 
 // PostDashboardsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDOwnersResponse
-func (c *ClientWithResponses) PostDashboardsIDOwnersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, contentType string, body io.Reader) (*postDashboardsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDOwnersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, contentType string, body io.Reader) (*PostDashboardsIDOwnersResponse, error) {
 	rsp, err := c.PostDashboardsIDOwnersWithBody(ctx, dashboardID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19459,7 +20211,7 @@ func (c *ClientWithResponses) PostDashboardsIDOwnersWithBodyWithResponse(ctx con
 	return ParsePostDashboardsIDOwnersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, body PostDashboardsIDOwnersJSONRequestBody) (*postDashboardsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, body PostDashboardsIDOwnersJSONRequestBody) (*PostDashboardsIDOwnersResponse, error) {
 	rsp, err := c.PostDashboardsIDOwners(ctx, dashboardID, params, body)
 	if err != nil {
 		return nil, err
@@ -19468,7 +20220,7 @@ func (c *ClientWithResponses) PostDashboardsIDOwnersWithResponse(ctx context.Con
 }
 
 // DeleteDashboardsIDOwnersIDWithResponse request returning *DeleteDashboardsIDOwnersIDResponse
-func (c *ClientWithResponses) DeleteDashboardsIDOwnersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams) (*deleteDashboardsIDOwnersIDResponse, error) {
+func (c *ClientWithResponses) DeleteDashboardsIDOwnersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams) (*DeleteDashboardsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDOwnersID(ctx, dashboardID, userID, params)
 	if err != nil {
 		return nil, err
@@ -19477,7 +20229,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDOwnersIDWithResponse(ctx context
 }
 
 // GetDBRPsWithResponse request returning *GetDBRPsResponse
-func (c *ClientWithResponses) GetDBRPsWithResponse(ctx context.Context, params *GetDBRPsParams) (*getDBRPsResponse, error) {
+func (c *ClientWithResponses) GetDBRPsWithResponse(ctx context.Context, params *GetDBRPsParams) (*GetDBRPsResponse, error) {
 	rsp, err := c.GetDBRPs(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19486,7 +20238,7 @@ func (c *ClientWithResponses) GetDBRPsWithResponse(ctx context.Context, params *
 }
 
 // PostDBRPWithBodyWithResponse request with arbitrary body returning *PostDBRPResponse
-func (c *ClientWithResponses) PostDBRPWithBodyWithResponse(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*postDBRPResponse, error) {
+func (c *ClientWithResponses) PostDBRPWithBodyWithResponse(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader) (*PostDBRPResponse, error) {
 	rsp, err := c.PostDBRPWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19494,7 +20246,7 @@ func (c *ClientWithResponses) PostDBRPWithBodyWithResponse(ctx context.Context, 
 	return ParsePostDBRPResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDBRPWithResponse(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*postDBRPResponse, error) {
+func (c *ClientWithResponses) PostDBRPWithResponse(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody) (*PostDBRPResponse, error) {
 	rsp, err := c.PostDBRP(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -19503,7 +20255,7 @@ func (c *ClientWithResponses) PostDBRPWithResponse(ctx context.Context, params *
 }
 
 // DeleteDBRPIDWithResponse request returning *DeleteDBRPIDResponse
-func (c *ClientWithResponses) DeleteDBRPIDWithResponse(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*deleteDBRPIDResponse, error) {
+func (c *ClientWithResponses) DeleteDBRPIDWithResponse(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams) (*DeleteDBRPIDResponse, error) {
 	rsp, err := c.DeleteDBRPID(ctx, dbrpID, params)
 	if err != nil {
 		return nil, err
@@ -19512,7 +20264,7 @@ func (c *ClientWithResponses) DeleteDBRPIDWithResponse(ctx context.Context, dbrp
 }
 
 // GetDBRPsIDWithResponse request returning *GetDBRPsIDResponse
-func (c *ClientWithResponses) GetDBRPsIDWithResponse(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*getDBRPsIDResponse, error) {
+func (c *ClientWithResponses) GetDBRPsIDWithResponse(ctx context.Context, dbrpID string, params *GetDBRPsIDParams) (*GetDBRPsIDResponse, error) {
 	rsp, err := c.GetDBRPsID(ctx, dbrpID, params)
 	if err != nil {
 		return nil, err
@@ -19521,7 +20273,7 @@ func (c *ClientWithResponses) GetDBRPsIDWithResponse(ctx context.Context, dbrpID
 }
 
 // PatchDBRPIDWithBodyWithResponse request with arbitrary body returning *PatchDBRPIDResponse
-func (c *ClientWithResponses) PatchDBRPIDWithBodyWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*patchDBRPIDResponse, error) {
+func (c *ClientWithResponses) PatchDBRPIDWithBodyWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader) (*PatchDBRPIDResponse, error) {
 	rsp, err := c.PatchDBRPIDWithBody(ctx, dbrpID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19529,7 +20281,7 @@ func (c *ClientWithResponses) PatchDBRPIDWithBodyWithResponse(ctx context.Contex
 	return ParsePatchDBRPIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchDBRPIDWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*patchDBRPIDResponse, error) {
+func (c *ClientWithResponses) PatchDBRPIDWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody) (*PatchDBRPIDResponse, error) {
 	rsp, err := c.PatchDBRPID(ctx, dbrpID, params, body)
 	if err != nil {
 		return nil, err
@@ -19538,7 +20290,7 @@ func (c *ClientWithResponses) PatchDBRPIDWithResponse(ctx context.Context, dbrpI
 }
 
 // PostDeleteWithBodyWithResponse request with arbitrary body returning *PostDeleteResponse
-func (c *ClientWithResponses) PostDeleteWithBodyWithResponse(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*postDeleteResponse, error) {
+func (c *ClientWithResponses) PostDeleteWithBodyWithResponse(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader) (*PostDeleteResponse, error) {
 	rsp, err := c.PostDeleteWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19546,7 +20298,7 @@ func (c *ClientWithResponses) PostDeleteWithBodyWithResponse(ctx context.Context
 	return ParsePostDeleteResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDeleteWithResponse(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*postDeleteResponse, error) {
+func (c *ClientWithResponses) PostDeleteWithResponse(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*PostDeleteResponse, error) {
 	rsp, err := c.PostDelete(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -19555,7 +20307,7 @@ func (c *ClientWithResponses) PostDeleteWithResponse(ctx context.Context, params
 }
 
 // GetDocumentsTemplatesWithResponse request returning *GetDocumentsTemplatesResponse
-func (c *ClientWithResponses) GetDocumentsTemplatesWithResponse(ctx context.Context, params *GetDocumentsTemplatesParams) (*getDocumentsTemplatesResponse, error) {
+func (c *ClientWithResponses) GetDocumentsTemplatesWithResponse(ctx context.Context, params *GetDocumentsTemplatesParams) (*GetDocumentsTemplatesResponse, error) {
 	rsp, err := c.GetDocumentsTemplates(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19564,7 +20316,7 @@ func (c *ClientWithResponses) GetDocumentsTemplatesWithResponse(ctx context.Cont
 }
 
 // PostDocumentsTemplatesWithBodyWithResponse request with arbitrary body returning *PostDocumentsTemplatesResponse
-func (c *ClientWithResponses) PostDocumentsTemplatesWithBodyWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*postDocumentsTemplatesResponse, error) {
+func (c *ClientWithResponses) PostDocumentsTemplatesWithBodyWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*PostDocumentsTemplatesResponse, error) {
 	rsp, err := c.PostDocumentsTemplatesWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19572,7 +20324,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesWithBodyWithResponse(ctx con
 	return ParsePostDocumentsTemplatesResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDocumentsTemplatesWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*postDocumentsTemplatesResponse, error) {
+func (c *ClientWithResponses) PostDocumentsTemplatesWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*PostDocumentsTemplatesResponse, error) {
 	rsp, err := c.PostDocumentsTemplates(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -19581,7 +20333,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesWithResponse(ctx context.Con
 }
 
 // DeleteDocumentsTemplatesIDWithResponse request returning *DeleteDocumentsTemplatesIDResponse
-func (c *ClientWithResponses) DeleteDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*deleteDocumentsTemplatesIDResponse, error) {
+func (c *ClientWithResponses) DeleteDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*DeleteDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.DeleteDocumentsTemplatesID(ctx, templateID, params)
 	if err != nil {
 		return nil, err
@@ -19590,7 +20342,7 @@ func (c *ClientWithResponses) DeleteDocumentsTemplatesIDWithResponse(ctx context
 }
 
 // GetDocumentsTemplatesIDWithResponse request returning *GetDocumentsTemplatesIDResponse
-func (c *ClientWithResponses) GetDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*getDocumentsTemplatesIDResponse, error) {
+func (c *ClientWithResponses) GetDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*GetDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.GetDocumentsTemplatesID(ctx, templateID, params)
 	if err != nil {
 		return nil, err
@@ -19599,7 +20351,7 @@ func (c *ClientWithResponses) GetDocumentsTemplatesIDWithResponse(ctx context.Co
 }
 
 // PutDocumentsTemplatesIDWithBodyWithResponse request with arbitrary body returning *PutDocumentsTemplatesIDResponse
-func (c *ClientWithResponses) PutDocumentsTemplatesIDWithBodyWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*putDocumentsTemplatesIDResponse, error) {
+func (c *ClientWithResponses) PutDocumentsTemplatesIDWithBodyWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*PutDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.PutDocumentsTemplatesIDWithBody(ctx, templateID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19607,7 +20359,7 @@ func (c *ClientWithResponses) PutDocumentsTemplatesIDWithBodyWithResponse(ctx co
 	return ParsePutDocumentsTemplatesIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*putDocumentsTemplatesIDResponse, error) {
+func (c *ClientWithResponses) PutDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*PutDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.PutDocumentsTemplatesID(ctx, templateID, params, body)
 	if err != nil {
 		return nil, err
@@ -19616,7 +20368,7 @@ func (c *ClientWithResponses) PutDocumentsTemplatesIDWithResponse(ctx context.Co
 }
 
 // GetDocumentsTemplatesIDLabelsWithResponse request returning *GetDocumentsTemplatesIDLabelsResponse
-func (c *ClientWithResponses) GetDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*getDocumentsTemplatesIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*GetDocumentsTemplatesIDLabelsResponse, error) {
 	rsp, err := c.GetDocumentsTemplatesIDLabels(ctx, templateID, params)
 	if err != nil {
 		return nil, err
@@ -19625,7 +20377,7 @@ func (c *ClientWithResponses) GetDocumentsTemplatesIDLabelsWithResponse(ctx cont
 }
 
 // PostDocumentsTemplatesIDLabelsWithBodyWithResponse request with arbitrary body returning *PostDocumentsTemplatesIDLabelsResponse
-func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithBodyWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*postDocumentsTemplatesIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithBodyWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*PostDocumentsTemplatesIDLabelsResponse, error) {
 	rsp, err := c.PostDocumentsTemplatesIDLabelsWithBody(ctx, templateID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19633,7 +20385,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithBodyWithResponse
 	return ParsePostDocumentsTemplatesIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*postDocumentsTemplatesIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*PostDocumentsTemplatesIDLabelsResponse, error) {
 	rsp, err := c.PostDocumentsTemplatesIDLabels(ctx, templateID, params, body)
 	if err != nil {
 		return nil, err
@@ -19642,7 +20394,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithResponse(ctx con
 }
 
 // DeleteDocumentsTemplatesIDLabelsIDWithResponse request returning *DeleteDocumentsTemplatesIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*deleteDocumentsTemplatesIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteDocumentsTemplatesIDLabelsID(ctx, templateID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19651,7 +20403,7 @@ func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx
 }
 
 // GetFlagsWithResponse request returning *GetFlagsResponse
-func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams) (*getFlagsResponse, error) {
+func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams) (*GetFlagsResponse, error) {
 	rsp, err := c.GetFlags(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19660,7 +20412,7 @@ func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *
 }
 
 // GetHealthWithResponse request returning *GetHealthResponse
-func (c *ClientWithResponses) GetHealthWithResponse(ctx context.Context, params *GetHealthParams) (*getHealthResponse, error) {
+func (c *ClientWithResponses) GetHealthWithResponse(ctx context.Context, params *GetHealthParams) (*GetHealthResponse, error) {
 	rsp, err := c.GetHealth(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19669,7 +20421,7 @@ func (c *ClientWithResponses) GetHealthWithResponse(ctx context.Context, params 
 }
 
 // GetLabelsWithResponse request returning *GetLabelsResponse
-func (c *ClientWithResponses) GetLabelsWithResponse(ctx context.Context, params *GetLabelsParams) (*getLabelsResponse, error) {
+func (c *ClientWithResponses) GetLabelsWithResponse(ctx context.Context, params *GetLabelsParams) (*GetLabelsResponse, error) {
 	rsp, err := c.GetLabels(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19678,7 +20430,7 @@ func (c *ClientWithResponses) GetLabelsWithResponse(ctx context.Context, params 
 }
 
 // PostLabelsWithBodyWithResponse request with arbitrary body returning *PostLabelsResponse
-func (c *ClientWithResponses) PostLabelsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*postLabelsResponse, error) {
+func (c *ClientWithResponses) PostLabelsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*PostLabelsResponse, error) {
 	rsp, err := c.PostLabelsWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19686,7 +20438,7 @@ func (c *ClientWithResponses) PostLabelsWithBodyWithResponse(ctx context.Context
 	return ParsePostLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostLabelsWithResponse(ctx context.Context, body PostLabelsJSONRequestBody) (*postLabelsResponse, error) {
+func (c *ClientWithResponses) PostLabelsWithResponse(ctx context.Context, body PostLabelsJSONRequestBody) (*PostLabelsResponse, error) {
 	rsp, err := c.PostLabels(ctx, body)
 	if err != nil {
 		return nil, err
@@ -19695,7 +20447,7 @@ func (c *ClientWithResponses) PostLabelsWithResponse(ctx context.Context, body P
 }
 
 // DeleteLabelsIDWithResponse request returning *DeleteLabelsIDResponse
-func (c *ClientWithResponses) DeleteLabelsIDWithResponse(ctx context.Context, labelID string, params *DeleteLabelsIDParams) (*deleteLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteLabelsIDWithResponse(ctx context.Context, labelID string, params *DeleteLabelsIDParams) (*DeleteLabelsIDResponse, error) {
 	rsp, err := c.DeleteLabelsID(ctx, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19704,7 +20456,7 @@ func (c *ClientWithResponses) DeleteLabelsIDWithResponse(ctx context.Context, la
 }
 
 // GetLabelsIDWithResponse request returning *GetLabelsIDResponse
-func (c *ClientWithResponses) GetLabelsIDWithResponse(ctx context.Context, labelID string, params *GetLabelsIDParams) (*getLabelsIDResponse, error) {
+func (c *ClientWithResponses) GetLabelsIDWithResponse(ctx context.Context, labelID string, params *GetLabelsIDParams) (*GetLabelsIDResponse, error) {
 	rsp, err := c.GetLabelsID(ctx, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19713,7 +20465,7 @@ func (c *ClientWithResponses) GetLabelsIDWithResponse(ctx context.Context, label
 }
 
 // PatchLabelsIDWithBodyWithResponse request with arbitrary body returning *PatchLabelsIDResponse
-func (c *ClientWithResponses) PatchLabelsIDWithBodyWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, contentType string, body io.Reader) (*patchLabelsIDResponse, error) {
+func (c *ClientWithResponses) PatchLabelsIDWithBodyWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, contentType string, body io.Reader) (*PatchLabelsIDResponse, error) {
 	rsp, err := c.PatchLabelsIDWithBody(ctx, labelID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19721,7 +20473,7 @@ func (c *ClientWithResponses) PatchLabelsIDWithBodyWithResponse(ctx context.Cont
 	return ParsePatchLabelsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchLabelsIDWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*patchLabelsIDResponse, error) {
+func (c *ClientWithResponses) PatchLabelsIDWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*PatchLabelsIDResponse, error) {
 	rsp, err := c.PatchLabelsID(ctx, labelID, params, body)
 	if err != nil {
 		return nil, err
@@ -19730,7 +20482,7 @@ func (c *ClientWithResponses) PatchLabelsIDWithResponse(ctx context.Context, lab
 }
 
 // GetMeWithResponse request returning *GetMeResponse
-func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, params *GetMeParams) (*getMeResponse, error) {
+func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, params *GetMeParams) (*GetMeResponse, error) {
 	rsp, err := c.GetMe(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19739,7 +20491,7 @@ func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, params *Get
 }
 
 // PutMePasswordWithBodyWithResponse request with arbitrary body returning *PutMePasswordResponse
-func (c *ClientWithResponses) PutMePasswordWithBodyWithResponse(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*putMePasswordResponse, error) {
+func (c *ClientWithResponses) PutMePasswordWithBodyWithResponse(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*PutMePasswordResponse, error) {
 	rsp, err := c.PutMePasswordWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19747,7 +20499,7 @@ func (c *ClientWithResponses) PutMePasswordWithBodyWithResponse(ctx context.Cont
 	return ParsePutMePasswordResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutMePasswordWithResponse(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*putMePasswordResponse, error) {
+func (c *ClientWithResponses) PutMePasswordWithResponse(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*PutMePasswordResponse, error) {
 	rsp, err := c.PutMePassword(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -19756,7 +20508,7 @@ func (c *ClientWithResponses) PutMePasswordWithResponse(ctx context.Context, par
 }
 
 // GetNotificationEndpointsWithResponse request returning *GetNotificationEndpointsResponse
-func (c *ClientWithResponses) GetNotificationEndpointsWithResponse(ctx context.Context, params *GetNotificationEndpointsParams) (*getNotificationEndpointsResponse, error) {
+func (c *ClientWithResponses) GetNotificationEndpointsWithResponse(ctx context.Context, params *GetNotificationEndpointsParams) (*GetNotificationEndpointsResponse, error) {
 	rsp, err := c.GetNotificationEndpoints(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19765,7 +20517,7 @@ func (c *ClientWithResponses) GetNotificationEndpointsWithResponse(ctx context.C
 }
 
 // CreateNotificationEndpointWithBodyWithResponse request with arbitrary body returning *CreateNotificationEndpointResponse
-func (c *ClientWithResponses) CreateNotificationEndpointWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createNotificationEndpointResponse, error) {
+func (c *ClientWithResponses) CreateNotificationEndpointWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateNotificationEndpointResponse, error) {
 	rsp, err := c.CreateNotificationEndpointWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19773,7 +20525,7 @@ func (c *ClientWithResponses) CreateNotificationEndpointWithBodyWithResponse(ctx
 	return ParseCreateNotificationEndpointResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateNotificationEndpointWithResponse(ctx context.Context, body CreateNotificationEndpointJSONRequestBody) (*createNotificationEndpointResponse, error) {
+func (c *ClientWithResponses) CreateNotificationEndpointWithResponse(ctx context.Context, body CreateNotificationEndpointJSONRequestBody) (*CreateNotificationEndpointResponse, error) {
 	rsp, err := c.CreateNotificationEndpoint(ctx, body)
 	if err != nil {
 		return nil, err
@@ -19782,7 +20534,7 @@ func (c *ClientWithResponses) CreateNotificationEndpointWithResponse(ctx context
 }
 
 // DeleteNotificationEndpointsIDWithResponse request returning *DeleteNotificationEndpointsIDResponse
-func (c *ClientWithResponses) DeleteNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *DeleteNotificationEndpointsIDParams) (*deleteNotificationEndpointsIDResponse, error) {
+func (c *ClientWithResponses) DeleteNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *DeleteNotificationEndpointsIDParams) (*DeleteNotificationEndpointsIDResponse, error) {
 	rsp, err := c.DeleteNotificationEndpointsID(ctx, endpointID, params)
 	if err != nil {
 		return nil, err
@@ -19791,7 +20543,7 @@ func (c *ClientWithResponses) DeleteNotificationEndpointsIDWithResponse(ctx cont
 }
 
 // GetNotificationEndpointsIDWithResponse request returning *GetNotificationEndpointsIDResponse
-func (c *ClientWithResponses) GetNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDParams) (*getNotificationEndpointsIDResponse, error) {
+func (c *ClientWithResponses) GetNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDParams) (*GetNotificationEndpointsIDResponse, error) {
 	rsp, err := c.GetNotificationEndpointsID(ctx, endpointID, params)
 	if err != nil {
 		return nil, err
@@ -19800,7 +20552,7 @@ func (c *ClientWithResponses) GetNotificationEndpointsIDWithResponse(ctx context
 }
 
 // PatchNotificationEndpointsIDWithBodyWithResponse request with arbitrary body returning *PatchNotificationEndpointsIDResponse
-func (c *ClientWithResponses) PatchNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, contentType string, body io.Reader) (*patchNotificationEndpointsIDResponse, error) {
+func (c *ClientWithResponses) PatchNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, contentType string, body io.Reader) (*PatchNotificationEndpointsIDResponse, error) {
 	rsp, err := c.PatchNotificationEndpointsIDWithBody(ctx, endpointID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19808,7 +20560,7 @@ func (c *ClientWithResponses) PatchNotificationEndpointsIDWithBodyWithResponse(c
 	return ParsePatchNotificationEndpointsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, body PatchNotificationEndpointsIDJSONRequestBody) (*patchNotificationEndpointsIDResponse, error) {
+func (c *ClientWithResponses) PatchNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, body PatchNotificationEndpointsIDJSONRequestBody) (*PatchNotificationEndpointsIDResponse, error) {
 	rsp, err := c.PatchNotificationEndpointsID(ctx, endpointID, params, body)
 	if err != nil {
 		return nil, err
@@ -19817,7 +20569,7 @@ func (c *ClientWithResponses) PatchNotificationEndpointsIDWithResponse(ctx conte
 }
 
 // PutNotificationEndpointsIDWithBodyWithResponse request with arbitrary body returning *PutNotificationEndpointsIDResponse
-func (c *ClientWithResponses) PutNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, contentType string, body io.Reader) (*putNotificationEndpointsIDResponse, error) {
+func (c *ClientWithResponses) PutNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, contentType string, body io.Reader) (*PutNotificationEndpointsIDResponse, error) {
 	rsp, err := c.PutNotificationEndpointsIDWithBody(ctx, endpointID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19825,7 +20577,7 @@ func (c *ClientWithResponses) PutNotificationEndpointsIDWithBodyWithResponse(ctx
 	return ParsePutNotificationEndpointsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, body PutNotificationEndpointsIDJSONRequestBody) (*putNotificationEndpointsIDResponse, error) {
+func (c *ClientWithResponses) PutNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, body PutNotificationEndpointsIDJSONRequestBody) (*PutNotificationEndpointsIDResponse, error) {
 	rsp, err := c.PutNotificationEndpointsID(ctx, endpointID, params, body)
 	if err != nil {
 		return nil, err
@@ -19834,7 +20586,7 @@ func (c *ClientWithResponses) PutNotificationEndpointsIDWithResponse(ctx context
 }
 
 // GetNotificationEndpointsIDLabelsWithResponse request returning *GetNotificationEndpointsIDLabelsResponse
-func (c *ClientWithResponses) GetNotificationEndpointsIDLabelsWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDLabelsParams) (*getNotificationEndpointsIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetNotificationEndpointsIDLabelsWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDLabelsParams) (*GetNotificationEndpointsIDLabelsResponse, error) {
 	rsp, err := c.GetNotificationEndpointsIDLabels(ctx, endpointID, params)
 	if err != nil {
 		return nil, err
@@ -19843,7 +20595,7 @@ func (c *ClientWithResponses) GetNotificationEndpointsIDLabelsWithResponse(ctx c
 }
 
 // PostNotificationEndpointIDLabelsWithBodyWithResponse request with arbitrary body returning *PostNotificationEndpointIDLabelsResponse
-func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithBodyWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, contentType string, body io.Reader) (*postNotificationEndpointIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithBodyWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, contentType string, body io.Reader) (*PostNotificationEndpointIDLabelsResponse, error) {
 	rsp, err := c.PostNotificationEndpointIDLabelsWithBody(ctx, endpointID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19851,7 +20603,7 @@ func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithBodyWithRespon
 	return ParsePostNotificationEndpointIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, body PostNotificationEndpointIDLabelsJSONRequestBody) (*postNotificationEndpointIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, body PostNotificationEndpointIDLabelsJSONRequestBody) (*PostNotificationEndpointIDLabelsResponse, error) {
 	rsp, err := c.PostNotificationEndpointIDLabels(ctx, endpointID, params, body)
 	if err != nil {
 		return nil, err
@@ -19860,7 +20612,7 @@ func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithResponse(ctx c
 }
 
 // DeleteNotificationEndpointsIDLabelsIDWithResponse request returning *DeleteNotificationEndpointsIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteNotificationEndpointsIDLabelsIDWithResponse(ctx context.Context, endpointID string, labelID string, params *DeleteNotificationEndpointsIDLabelsIDParams) (*deleteNotificationEndpointsIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteNotificationEndpointsIDLabelsIDWithResponse(ctx context.Context, endpointID string, labelID string, params *DeleteNotificationEndpointsIDLabelsIDParams) (*DeleteNotificationEndpointsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteNotificationEndpointsIDLabelsID(ctx, endpointID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19869,7 +20621,7 @@ func (c *ClientWithResponses) DeleteNotificationEndpointsIDLabelsIDWithResponse(
 }
 
 // GetNotificationRulesWithResponse request returning *GetNotificationRulesResponse
-func (c *ClientWithResponses) GetNotificationRulesWithResponse(ctx context.Context, params *GetNotificationRulesParams) (*getNotificationRulesResponse, error) {
+func (c *ClientWithResponses) GetNotificationRulesWithResponse(ctx context.Context, params *GetNotificationRulesParams) (*GetNotificationRulesResponse, error) {
 	rsp, err := c.GetNotificationRules(ctx, params)
 	if err != nil {
 		return nil, err
@@ -19878,7 +20630,7 @@ func (c *ClientWithResponses) GetNotificationRulesWithResponse(ctx context.Conte
 }
 
 // CreateNotificationRuleWithBodyWithResponse request with arbitrary body returning *CreateNotificationRuleResponse
-func (c *ClientWithResponses) CreateNotificationRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createNotificationRuleResponse, error) {
+func (c *ClientWithResponses) CreateNotificationRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateNotificationRuleResponse, error) {
 	rsp, err := c.CreateNotificationRuleWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19886,7 +20638,7 @@ func (c *ClientWithResponses) CreateNotificationRuleWithBodyWithResponse(ctx con
 	return ParseCreateNotificationRuleResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateNotificationRuleWithResponse(ctx context.Context, body CreateNotificationRuleJSONRequestBody) (*createNotificationRuleResponse, error) {
+func (c *ClientWithResponses) CreateNotificationRuleWithResponse(ctx context.Context, body CreateNotificationRuleJSONRequestBody) (*CreateNotificationRuleResponse, error) {
 	rsp, err := c.CreateNotificationRule(ctx, body)
 	if err != nil {
 		return nil, err
@@ -19895,7 +20647,7 @@ func (c *ClientWithResponses) CreateNotificationRuleWithResponse(ctx context.Con
 }
 
 // DeleteNotificationRulesIDWithResponse request returning *DeleteNotificationRulesIDResponse
-func (c *ClientWithResponses) DeleteNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *DeleteNotificationRulesIDParams) (*deleteNotificationRulesIDResponse, error) {
+func (c *ClientWithResponses) DeleteNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *DeleteNotificationRulesIDParams) (*DeleteNotificationRulesIDResponse, error) {
 	rsp, err := c.DeleteNotificationRulesID(ctx, ruleID, params)
 	if err != nil {
 		return nil, err
@@ -19904,7 +20656,7 @@ func (c *ClientWithResponses) DeleteNotificationRulesIDWithResponse(ctx context.
 }
 
 // GetNotificationRulesIDWithResponse request returning *GetNotificationRulesIDResponse
-func (c *ClientWithResponses) GetNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDParams) (*getNotificationRulesIDResponse, error) {
+func (c *ClientWithResponses) GetNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDParams) (*GetNotificationRulesIDResponse, error) {
 	rsp, err := c.GetNotificationRulesID(ctx, ruleID, params)
 	if err != nil {
 		return nil, err
@@ -19913,7 +20665,7 @@ func (c *ClientWithResponses) GetNotificationRulesIDWithResponse(ctx context.Con
 }
 
 // PatchNotificationRulesIDWithBodyWithResponse request with arbitrary body returning *PatchNotificationRulesIDResponse
-func (c *ClientWithResponses) PatchNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, contentType string, body io.Reader) (*patchNotificationRulesIDResponse, error) {
+func (c *ClientWithResponses) PatchNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, contentType string, body io.Reader) (*PatchNotificationRulesIDResponse, error) {
 	rsp, err := c.PatchNotificationRulesIDWithBody(ctx, ruleID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19921,7 +20673,7 @@ func (c *ClientWithResponses) PatchNotificationRulesIDWithBodyWithResponse(ctx c
 	return ParsePatchNotificationRulesIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, body PatchNotificationRulesIDJSONRequestBody) (*patchNotificationRulesIDResponse, error) {
+func (c *ClientWithResponses) PatchNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, body PatchNotificationRulesIDJSONRequestBody) (*PatchNotificationRulesIDResponse, error) {
 	rsp, err := c.PatchNotificationRulesID(ctx, ruleID, params, body)
 	if err != nil {
 		return nil, err
@@ -19930,7 +20682,7 @@ func (c *ClientWithResponses) PatchNotificationRulesIDWithResponse(ctx context.C
 }
 
 // PutNotificationRulesIDWithBodyWithResponse request with arbitrary body returning *PutNotificationRulesIDResponse
-func (c *ClientWithResponses) PutNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, contentType string, body io.Reader) (*putNotificationRulesIDResponse, error) {
+func (c *ClientWithResponses) PutNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, contentType string, body io.Reader) (*PutNotificationRulesIDResponse, error) {
 	rsp, err := c.PutNotificationRulesIDWithBody(ctx, ruleID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19938,7 +20690,7 @@ func (c *ClientWithResponses) PutNotificationRulesIDWithBodyWithResponse(ctx con
 	return ParsePutNotificationRulesIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, body PutNotificationRulesIDJSONRequestBody) (*putNotificationRulesIDResponse, error) {
+func (c *ClientWithResponses) PutNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, body PutNotificationRulesIDJSONRequestBody) (*PutNotificationRulesIDResponse, error) {
 	rsp, err := c.PutNotificationRulesID(ctx, ruleID, params, body)
 	if err != nil {
 		return nil, err
@@ -19947,7 +20699,7 @@ func (c *ClientWithResponses) PutNotificationRulesIDWithResponse(ctx context.Con
 }
 
 // GetNotificationRulesIDLabelsWithResponse request returning *GetNotificationRulesIDLabelsResponse
-func (c *ClientWithResponses) GetNotificationRulesIDLabelsWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDLabelsParams) (*getNotificationRulesIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetNotificationRulesIDLabelsWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDLabelsParams) (*GetNotificationRulesIDLabelsResponse, error) {
 	rsp, err := c.GetNotificationRulesIDLabels(ctx, ruleID, params)
 	if err != nil {
 		return nil, err
@@ -19956,7 +20708,7 @@ func (c *ClientWithResponses) GetNotificationRulesIDLabelsWithResponse(ctx conte
 }
 
 // PostNotificationRuleIDLabelsWithBodyWithResponse request with arbitrary body returning *PostNotificationRuleIDLabelsResponse
-func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithBodyWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, contentType string, body io.Reader) (*postNotificationRuleIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithBodyWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, contentType string, body io.Reader) (*PostNotificationRuleIDLabelsResponse, error) {
 	rsp, err := c.PostNotificationRuleIDLabelsWithBody(ctx, ruleID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -19964,7 +20716,7 @@ func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithBodyWithResponse(c
 	return ParsePostNotificationRuleIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, body PostNotificationRuleIDLabelsJSONRequestBody) (*postNotificationRuleIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, body PostNotificationRuleIDLabelsJSONRequestBody) (*PostNotificationRuleIDLabelsResponse, error) {
 	rsp, err := c.PostNotificationRuleIDLabels(ctx, ruleID, params, body)
 	if err != nil {
 		return nil, err
@@ -19973,7 +20725,7 @@ func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithResponse(ctx conte
 }
 
 // DeleteNotificationRulesIDLabelsIDWithResponse request returning *DeleteNotificationRulesIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteNotificationRulesIDLabelsIDWithResponse(ctx context.Context, ruleID string, labelID string, params *DeleteNotificationRulesIDLabelsIDParams) (*deleteNotificationRulesIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteNotificationRulesIDLabelsIDWithResponse(ctx context.Context, ruleID string, labelID string, params *DeleteNotificationRulesIDLabelsIDParams) (*DeleteNotificationRulesIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteNotificationRulesIDLabelsID(ctx, ruleID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -19982,7 +20734,7 @@ func (c *ClientWithResponses) DeleteNotificationRulesIDLabelsIDWithResponse(ctx 
 }
 
 // GetNotificationRulesIDQueryWithResponse request returning *GetNotificationRulesIDQueryResponse
-func (c *ClientWithResponses) GetNotificationRulesIDQueryWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDQueryParams) (*getNotificationRulesIDQueryResponse, error) {
+func (c *ClientWithResponses) GetNotificationRulesIDQueryWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDQueryParams) (*GetNotificationRulesIDQueryResponse, error) {
 	rsp, err := c.GetNotificationRulesIDQuery(ctx, ruleID, params)
 	if err != nil {
 		return nil, err
@@ -19991,7 +20743,7 @@ func (c *ClientWithResponses) GetNotificationRulesIDQueryWithResponse(ctx contex
 }
 
 // GetOrgsWithResponse request returning *GetOrgsResponse
-func (c *ClientWithResponses) GetOrgsWithResponse(ctx context.Context, params *GetOrgsParams) (*getOrgsResponse, error) {
+func (c *ClientWithResponses) GetOrgsWithResponse(ctx context.Context, params *GetOrgsParams) (*GetOrgsResponse, error) {
 	rsp, err := c.GetOrgs(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20000,7 +20752,7 @@ func (c *ClientWithResponses) GetOrgsWithResponse(ctx context.Context, params *G
 }
 
 // PostOrgsWithBodyWithResponse request with arbitrary body returning *PostOrgsResponse
-func (c *ClientWithResponses) PostOrgsWithBodyWithResponse(ctx context.Context, params *PostOrgsParams, contentType string, body io.Reader) (*postOrgsResponse, error) {
+func (c *ClientWithResponses) PostOrgsWithBodyWithResponse(ctx context.Context, params *PostOrgsParams, contentType string, body io.Reader) (*PostOrgsResponse, error) {
 	rsp, err := c.PostOrgsWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20008,7 +20760,7 @@ func (c *ClientWithResponses) PostOrgsWithBodyWithResponse(ctx context.Context, 
 	return ParsePostOrgsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostOrgsWithResponse(ctx context.Context, params *PostOrgsParams, body PostOrgsJSONRequestBody) (*postOrgsResponse, error) {
+func (c *ClientWithResponses) PostOrgsWithResponse(ctx context.Context, params *PostOrgsParams, body PostOrgsJSONRequestBody) (*PostOrgsResponse, error) {
 	rsp, err := c.PostOrgs(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20017,7 +20769,7 @@ func (c *ClientWithResponses) PostOrgsWithResponse(ctx context.Context, params *
 }
 
 // DeleteOrgsIDWithResponse request returning *DeleteOrgsIDResponse
-func (c *ClientWithResponses) DeleteOrgsIDWithResponse(ctx context.Context, orgID string, params *DeleteOrgsIDParams) (*deleteOrgsIDResponse, error) {
+func (c *ClientWithResponses) DeleteOrgsIDWithResponse(ctx context.Context, orgID string, params *DeleteOrgsIDParams) (*DeleteOrgsIDResponse, error) {
 	rsp, err := c.DeleteOrgsID(ctx, orgID, params)
 	if err != nil {
 		return nil, err
@@ -20026,7 +20778,7 @@ func (c *ClientWithResponses) DeleteOrgsIDWithResponse(ctx context.Context, orgI
 }
 
 // GetOrgsIDWithResponse request returning *GetOrgsIDResponse
-func (c *ClientWithResponses) GetOrgsIDWithResponse(ctx context.Context, orgID string, params *GetOrgsIDParams) (*getOrgsIDResponse, error) {
+func (c *ClientWithResponses) GetOrgsIDWithResponse(ctx context.Context, orgID string, params *GetOrgsIDParams) (*GetOrgsIDResponse, error) {
 	rsp, err := c.GetOrgsID(ctx, orgID, params)
 	if err != nil {
 		return nil, err
@@ -20035,7 +20787,7 @@ func (c *ClientWithResponses) GetOrgsIDWithResponse(ctx context.Context, orgID s
 }
 
 // PatchOrgsIDWithBodyWithResponse request with arbitrary body returning *PatchOrgsIDResponse
-func (c *ClientWithResponses) PatchOrgsIDWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, contentType string, body io.Reader) (*patchOrgsIDResponse, error) {
+func (c *ClientWithResponses) PatchOrgsIDWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, contentType string, body io.Reader) (*PatchOrgsIDResponse, error) {
 	rsp, err := c.PatchOrgsIDWithBody(ctx, orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20043,7 +20795,7 @@ func (c *ClientWithResponses) PatchOrgsIDWithBodyWithResponse(ctx context.Contex
 	return ParsePatchOrgsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*patchOrgsIDResponse, error) {
+func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody) (*PatchOrgsIDResponse, error) {
 	rsp, err := c.PatchOrgsID(ctx, orgID, params, body)
 	if err != nil {
 		return nil, err
@@ -20052,7 +20804,7 @@ func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID
 }
 
 // GetOrgsIDMembersWithResponse request returning *GetOrgsIDMembersResponse
-func (c *ClientWithResponses) GetOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*getOrgsIDMembersResponse, error) {
+func (c *ClientWithResponses) GetOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDMembersParams) (*GetOrgsIDMembersResponse, error) {
 	rsp, err := c.GetOrgsIDMembers(ctx, orgID, params)
 	if err != nil {
 		return nil, err
@@ -20061,7 +20813,7 @@ func (c *ClientWithResponses) GetOrgsIDMembersWithResponse(ctx context.Context, 
 }
 
 // PostOrgsIDMembersWithBodyWithResponse request with arbitrary body returning *PostOrgsIDMembersResponse
-func (c *ClientWithResponses) PostOrgsIDMembersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, contentType string, body io.Reader) (*postOrgsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostOrgsIDMembersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, contentType string, body io.Reader) (*PostOrgsIDMembersResponse, error) {
 	rsp, err := c.PostOrgsIDMembersWithBody(ctx, orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20069,7 +20821,7 @@ func (c *ClientWithResponses) PostOrgsIDMembersWithBodyWithResponse(ctx context.
 	return ParsePostOrgsIDMembersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, body PostOrgsIDMembersJSONRequestBody) (*postOrgsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, body PostOrgsIDMembersJSONRequestBody) (*PostOrgsIDMembersResponse, error) {
 	rsp, err := c.PostOrgsIDMembers(ctx, orgID, params, body)
 	if err != nil {
 		return nil, err
@@ -20078,7 +20830,7 @@ func (c *ClientWithResponses) PostOrgsIDMembersWithResponse(ctx context.Context,
 }
 
 // DeleteOrgsIDMembersIDWithResponse request returning *DeleteOrgsIDMembersIDResponse
-func (c *ClientWithResponses) DeleteOrgsIDMembersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDMembersIDParams) (*deleteOrgsIDMembersIDResponse, error) {
+func (c *ClientWithResponses) DeleteOrgsIDMembersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDMembersIDParams) (*DeleteOrgsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteOrgsIDMembersID(ctx, orgID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20087,7 +20839,7 @@ func (c *ClientWithResponses) DeleteOrgsIDMembersIDWithResponse(ctx context.Cont
 }
 
 // GetOrgsIDOwnersWithResponse request returning *GetOrgsIDOwnersResponse
-func (c *ClientWithResponses) GetOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDOwnersParams) (*getOrgsIDOwnersResponse, error) {
+func (c *ClientWithResponses) GetOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDOwnersParams) (*GetOrgsIDOwnersResponse, error) {
 	rsp, err := c.GetOrgsIDOwners(ctx, orgID, params)
 	if err != nil {
 		return nil, err
@@ -20096,7 +20848,7 @@ func (c *ClientWithResponses) GetOrgsIDOwnersWithResponse(ctx context.Context, o
 }
 
 // PostOrgsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostOrgsIDOwnersResponse
-func (c *ClientWithResponses) PostOrgsIDOwnersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, contentType string, body io.Reader) (*postOrgsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostOrgsIDOwnersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, contentType string, body io.Reader) (*PostOrgsIDOwnersResponse, error) {
 	rsp, err := c.PostOrgsIDOwnersWithBody(ctx, orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20104,7 +20856,7 @@ func (c *ClientWithResponses) PostOrgsIDOwnersWithBodyWithResponse(ctx context.C
 	return ParsePostOrgsIDOwnersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, body PostOrgsIDOwnersJSONRequestBody) (*postOrgsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, body PostOrgsIDOwnersJSONRequestBody) (*PostOrgsIDOwnersResponse, error) {
 	rsp, err := c.PostOrgsIDOwners(ctx, orgID, params, body)
 	if err != nil {
 		return nil, err
@@ -20113,7 +20865,7 @@ func (c *ClientWithResponses) PostOrgsIDOwnersWithResponse(ctx context.Context, 
 }
 
 // DeleteOrgsIDOwnersIDWithResponse request returning *DeleteOrgsIDOwnersIDResponse
-func (c *ClientWithResponses) DeleteOrgsIDOwnersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDOwnersIDParams) (*deleteOrgsIDOwnersIDResponse, error) {
+func (c *ClientWithResponses) DeleteOrgsIDOwnersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDOwnersIDParams) (*DeleteOrgsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteOrgsIDOwnersID(ctx, orgID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20122,7 +20874,7 @@ func (c *ClientWithResponses) DeleteOrgsIDOwnersIDWithResponse(ctx context.Conte
 }
 
 // GetOrgsIDSecretsWithResponse request returning *GetOrgsIDSecretsResponse
-func (c *ClientWithResponses) GetOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDSecretsParams) (*getOrgsIDSecretsResponse, error) {
+func (c *ClientWithResponses) GetOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDSecretsParams) (*GetOrgsIDSecretsResponse, error) {
 	rsp, err := c.GetOrgsIDSecrets(ctx, orgID, params)
 	if err != nil {
 		return nil, err
@@ -20131,7 +20883,7 @@ func (c *ClientWithResponses) GetOrgsIDSecretsWithResponse(ctx context.Context, 
 }
 
 // PatchOrgsIDSecretsWithBodyWithResponse request with arbitrary body returning *PatchOrgsIDSecretsResponse
-func (c *ClientWithResponses) PatchOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, contentType string, body io.Reader) (*patchOrgsIDSecretsResponse, error) {
+func (c *ClientWithResponses) PatchOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, contentType string, body io.Reader) (*PatchOrgsIDSecretsResponse, error) {
 	rsp, err := c.PatchOrgsIDSecretsWithBody(ctx, orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20139,7 +20891,7 @@ func (c *ClientWithResponses) PatchOrgsIDSecretsWithBodyWithResponse(ctx context
 	return ParsePatchOrgsIDSecretsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, body PatchOrgsIDSecretsJSONRequestBody) (*patchOrgsIDSecretsResponse, error) {
+func (c *ClientWithResponses) PatchOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, body PatchOrgsIDSecretsJSONRequestBody) (*PatchOrgsIDSecretsResponse, error) {
 	rsp, err := c.PatchOrgsIDSecrets(ctx, orgID, params, body)
 	if err != nil {
 		return nil, err
@@ -20148,7 +20900,7 @@ func (c *ClientWithResponses) PatchOrgsIDSecretsWithResponse(ctx context.Context
 }
 
 // PostOrgsIDSecretsWithBodyWithResponse request with arbitrary body returning *PostOrgsIDSecretsResponse
-func (c *ClientWithResponses) PostOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader) (*postOrgsIDSecretsResponse, error) {
+func (c *ClientWithResponses) PostOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader) (*PostOrgsIDSecretsResponse, error) {
 	rsp, err := c.PostOrgsIDSecretsWithBody(ctx, orgID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20156,7 +20908,7 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithBodyWithResponse(ctx context.
 	return ParsePostOrgsIDSecretsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*postOrgsIDSecretsResponse, error) {
+func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*PostOrgsIDSecretsResponse, error) {
 	rsp, err := c.PostOrgsIDSecrets(ctx, orgID, params, body)
 	if err != nil {
 		return nil, err
@@ -20165,7 +20917,7 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context,
 }
 
 // PostQueryWithBodyWithResponse request with arbitrary body returning *PostQueryResponse
-func (c *ClientWithResponses) PostQueryWithBodyWithResponse(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*postQueryResponse, error) {
+func (c *ClientWithResponses) PostQueryWithBodyWithResponse(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*PostQueryResponse, error) {
 	rsp, err := c.PostQueryWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20173,7 +20925,7 @@ func (c *ClientWithResponses) PostQueryWithBodyWithResponse(ctx context.Context,
 	return ParsePostQueryResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostQueryWithResponse(ctx context.Context, params *PostQueryParams, body PostQueryJSONRequestBody) (*postQueryResponse, error) {
+func (c *ClientWithResponses) PostQueryWithResponse(ctx context.Context, params *PostQueryParams, body PostQueryJSONRequestBody) (*PostQueryResponse, error) {
 	rsp, err := c.PostQuery(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20182,7 +20934,7 @@ func (c *ClientWithResponses) PostQueryWithResponse(ctx context.Context, params 
 }
 
 // PostQueryAnalyzeWithBodyWithResponse request with arbitrary body returning *PostQueryAnalyzeResponse
-func (c *ClientWithResponses) PostQueryAnalyzeWithBodyWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, contentType string, body io.Reader) (*postQueryAnalyzeResponse, error) {
+func (c *ClientWithResponses) PostQueryAnalyzeWithBodyWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, contentType string, body io.Reader) (*PostQueryAnalyzeResponse, error) {
 	rsp, err := c.PostQueryAnalyzeWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20190,7 +20942,7 @@ func (c *ClientWithResponses) PostQueryAnalyzeWithBodyWithResponse(ctx context.C
 	return ParsePostQueryAnalyzeResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostQueryAnalyzeWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, body PostQueryAnalyzeJSONRequestBody) (*postQueryAnalyzeResponse, error) {
+func (c *ClientWithResponses) PostQueryAnalyzeWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, body PostQueryAnalyzeJSONRequestBody) (*PostQueryAnalyzeResponse, error) {
 	rsp, err := c.PostQueryAnalyze(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20199,7 +20951,7 @@ func (c *ClientWithResponses) PostQueryAnalyzeWithResponse(ctx context.Context, 
 }
 
 // PostQueryAstWithBodyWithResponse request with arbitrary body returning *PostQueryAstResponse
-func (c *ClientWithResponses) PostQueryAstWithBodyWithResponse(ctx context.Context, params *PostQueryAstParams, contentType string, body io.Reader) (*postQueryAstResponse, error) {
+func (c *ClientWithResponses) PostQueryAstWithBodyWithResponse(ctx context.Context, params *PostQueryAstParams, contentType string, body io.Reader) (*PostQueryAstResponse, error) {
 	rsp, err := c.PostQueryAstWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20207,7 +20959,7 @@ func (c *ClientWithResponses) PostQueryAstWithBodyWithResponse(ctx context.Conte
 	return ParsePostQueryAstResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostQueryAstWithResponse(ctx context.Context, params *PostQueryAstParams, body PostQueryAstJSONRequestBody) (*postQueryAstResponse, error) {
+func (c *ClientWithResponses) PostQueryAstWithResponse(ctx context.Context, params *PostQueryAstParams, body PostQueryAstJSONRequestBody) (*PostQueryAstResponse, error) {
 	rsp, err := c.PostQueryAst(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20216,7 +20968,7 @@ func (c *ClientWithResponses) PostQueryAstWithResponse(ctx context.Context, para
 }
 
 // GetQuerySuggestionsWithResponse request returning *GetQuerySuggestionsResponse
-func (c *ClientWithResponses) GetQuerySuggestionsWithResponse(ctx context.Context, params *GetQuerySuggestionsParams) (*getQuerySuggestionsResponse, error) {
+func (c *ClientWithResponses) GetQuerySuggestionsWithResponse(ctx context.Context, params *GetQuerySuggestionsParams) (*GetQuerySuggestionsResponse, error) {
 	rsp, err := c.GetQuerySuggestions(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20225,7 +20977,7 @@ func (c *ClientWithResponses) GetQuerySuggestionsWithResponse(ctx context.Contex
 }
 
 // GetQuerySuggestionsNameWithResponse request returning *GetQuerySuggestionsNameResponse
-func (c *ClientWithResponses) GetQuerySuggestionsNameWithResponse(ctx context.Context, name string, params *GetQuerySuggestionsNameParams) (*getQuerySuggestionsNameResponse, error) {
+func (c *ClientWithResponses) GetQuerySuggestionsNameWithResponse(ctx context.Context, name string, params *GetQuerySuggestionsNameParams) (*GetQuerySuggestionsNameResponse, error) {
 	rsp, err := c.GetQuerySuggestionsName(ctx, name, params)
 	if err != nil {
 		return nil, err
@@ -20234,7 +20986,7 @@ func (c *ClientWithResponses) GetQuerySuggestionsNameWithResponse(ctx context.Co
 }
 
 // GetReadyWithResponse request returning *GetReadyResponse
-func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *GetReadyParams) (*getReadyResponse, error) {
+func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *GetReadyParams) (*GetReadyResponse, error) {
 	rsp, err := c.GetReady(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20243,7 +20995,7 @@ func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *
 }
 
 // GetScrapersWithResponse request returning *GetScrapersResponse
-func (c *ClientWithResponses) GetScrapersWithResponse(ctx context.Context, params *GetScrapersParams) (*getScrapersResponse, error) {
+func (c *ClientWithResponses) GetScrapersWithResponse(ctx context.Context, params *GetScrapersParams) (*GetScrapersResponse, error) {
 	rsp, err := c.GetScrapers(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20252,7 +21004,7 @@ func (c *ClientWithResponses) GetScrapersWithResponse(ctx context.Context, param
 }
 
 // PostScrapersWithBodyWithResponse request with arbitrary body returning *PostScrapersResponse
-func (c *ClientWithResponses) PostScrapersWithBodyWithResponse(ctx context.Context, params *PostScrapersParams, contentType string, body io.Reader) (*postScrapersResponse, error) {
+func (c *ClientWithResponses) PostScrapersWithBodyWithResponse(ctx context.Context, params *PostScrapersParams, contentType string, body io.Reader) (*PostScrapersResponse, error) {
 	rsp, err := c.PostScrapersWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20260,7 +21012,7 @@ func (c *ClientWithResponses) PostScrapersWithBodyWithResponse(ctx context.Conte
 	return ParsePostScrapersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostScrapersWithResponse(ctx context.Context, params *PostScrapersParams, body PostScrapersJSONRequestBody) (*postScrapersResponse, error) {
+func (c *ClientWithResponses) PostScrapersWithResponse(ctx context.Context, params *PostScrapersParams, body PostScrapersJSONRequestBody) (*PostScrapersResponse, error) {
 	rsp, err := c.PostScrapers(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20269,7 +21021,7 @@ func (c *ClientWithResponses) PostScrapersWithResponse(ctx context.Context, para
 }
 
 // DeleteScrapersIDWithResponse request returning *DeleteScrapersIDResponse
-func (c *ClientWithResponses) DeleteScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *DeleteScrapersIDParams) (*deleteScrapersIDResponse, error) {
+func (c *ClientWithResponses) DeleteScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *DeleteScrapersIDParams) (*DeleteScrapersIDResponse, error) {
 	rsp, err := c.DeleteScrapersID(ctx, scraperTargetID, params)
 	if err != nil {
 		return nil, err
@@ -20278,7 +21030,7 @@ func (c *ClientWithResponses) DeleteScrapersIDWithResponse(ctx context.Context, 
 }
 
 // GetScrapersIDWithResponse request returning *GetScrapersIDResponse
-func (c *ClientWithResponses) GetScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDParams) (*getScrapersIDResponse, error) {
+func (c *ClientWithResponses) GetScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDParams) (*GetScrapersIDResponse, error) {
 	rsp, err := c.GetScrapersID(ctx, scraperTargetID, params)
 	if err != nil {
 		return nil, err
@@ -20287,7 +21039,7 @@ func (c *ClientWithResponses) GetScrapersIDWithResponse(ctx context.Context, scr
 }
 
 // PatchScrapersIDWithBodyWithResponse request with arbitrary body returning *PatchScrapersIDResponse
-func (c *ClientWithResponses) PatchScrapersIDWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, contentType string, body io.Reader) (*patchScrapersIDResponse, error) {
+func (c *ClientWithResponses) PatchScrapersIDWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, contentType string, body io.Reader) (*PatchScrapersIDResponse, error) {
 	rsp, err := c.PatchScrapersIDWithBody(ctx, scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20295,7 +21047,7 @@ func (c *ClientWithResponses) PatchScrapersIDWithBodyWithResponse(ctx context.Co
 	return ParsePatchScrapersIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, body PatchScrapersIDJSONRequestBody) (*patchScrapersIDResponse, error) {
+func (c *ClientWithResponses) PatchScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, body PatchScrapersIDJSONRequestBody) (*PatchScrapersIDResponse, error) {
 	rsp, err := c.PatchScrapersID(ctx, scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
@@ -20304,7 +21056,7 @@ func (c *ClientWithResponses) PatchScrapersIDWithResponse(ctx context.Context, s
 }
 
 // GetScrapersIDLabelsWithResponse request returning *GetScrapersIDLabelsResponse
-func (c *ClientWithResponses) GetScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDLabelsParams) (*getScrapersIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDLabelsParams) (*GetScrapersIDLabelsResponse, error) {
 	rsp, err := c.GetScrapersIDLabels(ctx, scraperTargetID, params)
 	if err != nil {
 		return nil, err
@@ -20313,7 +21065,7 @@ func (c *ClientWithResponses) GetScrapersIDLabelsWithResponse(ctx context.Contex
 }
 
 // PostScrapersIDLabelsWithBodyWithResponse request with arbitrary body returning *PostScrapersIDLabelsResponse
-func (c *ClientWithResponses) PostScrapersIDLabelsWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, contentType string, body io.Reader) (*postScrapersIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostScrapersIDLabelsWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, contentType string, body io.Reader) (*PostScrapersIDLabelsResponse, error) {
 	rsp, err := c.PostScrapersIDLabelsWithBody(ctx, scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20321,7 +21073,7 @@ func (c *ClientWithResponses) PostScrapersIDLabelsWithBodyWithResponse(ctx conte
 	return ParsePostScrapersIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, body PostScrapersIDLabelsJSONRequestBody) (*postScrapersIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, body PostScrapersIDLabelsJSONRequestBody) (*PostScrapersIDLabelsResponse, error) {
 	rsp, err := c.PostScrapersIDLabels(ctx, scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
@@ -20330,7 +21082,7 @@ func (c *ClientWithResponses) PostScrapersIDLabelsWithResponse(ctx context.Conte
 }
 
 // DeleteScrapersIDLabelsIDWithResponse request returning *DeleteScrapersIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteScrapersIDLabelsIDWithResponse(ctx context.Context, scraperTargetID string, labelID string, params *DeleteScrapersIDLabelsIDParams) (*deleteScrapersIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteScrapersIDLabelsIDWithResponse(ctx context.Context, scraperTargetID string, labelID string, params *DeleteScrapersIDLabelsIDParams) (*DeleteScrapersIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteScrapersIDLabelsID(ctx, scraperTargetID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -20339,7 +21091,7 @@ func (c *ClientWithResponses) DeleteScrapersIDLabelsIDWithResponse(ctx context.C
 }
 
 // GetScrapersIDMembersWithResponse request returning *GetScrapersIDMembersResponse
-func (c *ClientWithResponses) GetScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDMembersParams) (*getScrapersIDMembersResponse, error) {
+func (c *ClientWithResponses) GetScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDMembersParams) (*GetScrapersIDMembersResponse, error) {
 	rsp, err := c.GetScrapersIDMembers(ctx, scraperTargetID, params)
 	if err != nil {
 		return nil, err
@@ -20348,7 +21100,7 @@ func (c *ClientWithResponses) GetScrapersIDMembersWithResponse(ctx context.Conte
 }
 
 // PostScrapersIDMembersWithBodyWithResponse request with arbitrary body returning *PostScrapersIDMembersResponse
-func (c *ClientWithResponses) PostScrapersIDMembersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, contentType string, body io.Reader) (*postScrapersIDMembersResponse, error) {
+func (c *ClientWithResponses) PostScrapersIDMembersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, contentType string, body io.Reader) (*PostScrapersIDMembersResponse, error) {
 	rsp, err := c.PostScrapersIDMembersWithBody(ctx, scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20356,7 +21108,7 @@ func (c *ClientWithResponses) PostScrapersIDMembersWithBodyWithResponse(ctx cont
 	return ParsePostScrapersIDMembersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, body PostScrapersIDMembersJSONRequestBody) (*postScrapersIDMembersResponse, error) {
+func (c *ClientWithResponses) PostScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, body PostScrapersIDMembersJSONRequestBody) (*PostScrapersIDMembersResponse, error) {
 	rsp, err := c.PostScrapersIDMembers(ctx, scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
@@ -20365,7 +21117,7 @@ func (c *ClientWithResponses) PostScrapersIDMembersWithResponse(ctx context.Cont
 }
 
 // DeleteScrapersIDMembersIDWithResponse request returning *DeleteScrapersIDMembersIDResponse
-func (c *ClientWithResponses) DeleteScrapersIDMembersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDMembersIDParams) (*deleteScrapersIDMembersIDResponse, error) {
+func (c *ClientWithResponses) DeleteScrapersIDMembersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDMembersIDParams) (*DeleteScrapersIDMembersIDResponse, error) {
 	rsp, err := c.DeleteScrapersIDMembersID(ctx, scraperTargetID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20374,7 +21126,7 @@ func (c *ClientWithResponses) DeleteScrapersIDMembersIDWithResponse(ctx context.
 }
 
 // GetScrapersIDOwnersWithResponse request returning *GetScrapersIDOwnersResponse
-func (c *ClientWithResponses) GetScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDOwnersParams) (*getScrapersIDOwnersResponse, error) {
+func (c *ClientWithResponses) GetScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDOwnersParams) (*GetScrapersIDOwnersResponse, error) {
 	rsp, err := c.GetScrapersIDOwners(ctx, scraperTargetID, params)
 	if err != nil {
 		return nil, err
@@ -20383,7 +21135,7 @@ func (c *ClientWithResponses) GetScrapersIDOwnersWithResponse(ctx context.Contex
 }
 
 // PostScrapersIDOwnersWithBodyWithResponse request with arbitrary body returning *PostScrapersIDOwnersResponse
-func (c *ClientWithResponses) PostScrapersIDOwnersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, contentType string, body io.Reader) (*postScrapersIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostScrapersIDOwnersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, contentType string, body io.Reader) (*PostScrapersIDOwnersResponse, error) {
 	rsp, err := c.PostScrapersIDOwnersWithBody(ctx, scraperTargetID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20391,7 +21143,7 @@ func (c *ClientWithResponses) PostScrapersIDOwnersWithBodyWithResponse(ctx conte
 	return ParsePostScrapersIDOwnersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, body PostScrapersIDOwnersJSONRequestBody) (*postScrapersIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, body PostScrapersIDOwnersJSONRequestBody) (*PostScrapersIDOwnersResponse, error) {
 	rsp, err := c.PostScrapersIDOwners(ctx, scraperTargetID, params, body)
 	if err != nil {
 		return nil, err
@@ -20400,7 +21152,7 @@ func (c *ClientWithResponses) PostScrapersIDOwnersWithResponse(ctx context.Conte
 }
 
 // DeleteScrapersIDOwnersIDWithResponse request returning *DeleteScrapersIDOwnersIDResponse
-func (c *ClientWithResponses) DeleteScrapersIDOwnersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDOwnersIDParams) (*deleteScrapersIDOwnersIDResponse, error) {
+func (c *ClientWithResponses) DeleteScrapersIDOwnersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDOwnersIDParams) (*DeleteScrapersIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteScrapersIDOwnersID(ctx, scraperTargetID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20409,7 +21161,7 @@ func (c *ClientWithResponses) DeleteScrapersIDOwnersIDWithResponse(ctx context.C
 }
 
 // GetSetupWithResponse request returning *GetSetupResponse
-func (c *ClientWithResponses) GetSetupWithResponse(ctx context.Context, params *GetSetupParams) (*getSetupResponse, error) {
+func (c *ClientWithResponses) GetSetupWithResponse(ctx context.Context, params *GetSetupParams) (*GetSetupResponse, error) {
 	rsp, err := c.GetSetup(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20418,7 +21170,7 @@ func (c *ClientWithResponses) GetSetupWithResponse(ctx context.Context, params *
 }
 
 // PostSetupWithBodyWithResponse request with arbitrary body returning *PostSetupResponse
-func (c *ClientWithResponses) PostSetupWithBodyWithResponse(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*postSetupResponse, error) {
+func (c *ClientWithResponses) PostSetupWithBodyWithResponse(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*PostSetupResponse, error) {
 	rsp, err := c.PostSetupWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20426,7 +21178,7 @@ func (c *ClientWithResponses) PostSetupWithBodyWithResponse(ctx context.Context,
 	return ParsePostSetupResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*postSetupResponse, error) {
+func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*PostSetupResponse, error) {
 	rsp, err := c.PostSetup(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20435,7 +21187,7 @@ func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params 
 }
 
 // PostSetupUserWithBodyWithResponse request with arbitrary body returning *PostSetupUserResponse
-func (c *ClientWithResponses) PostSetupUserWithBodyWithResponse(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*postSetupUserResponse, error) {
+func (c *ClientWithResponses) PostSetupUserWithBodyWithResponse(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*PostSetupUserResponse, error) {
 	rsp, err := c.PostSetupUserWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20443,7 +21195,7 @@ func (c *ClientWithResponses) PostSetupUserWithBodyWithResponse(ctx context.Cont
 	return ParsePostSetupUserResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostSetupUserWithResponse(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*postSetupUserResponse, error) {
+func (c *ClientWithResponses) PostSetupUserWithResponse(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*PostSetupUserResponse, error) {
 	rsp, err := c.PostSetupUser(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20452,7 +21204,7 @@ func (c *ClientWithResponses) PostSetupUserWithResponse(ctx context.Context, par
 }
 
 // PostSigninWithResponse request returning *PostSigninResponse
-func (c *ClientWithResponses) PostSigninWithResponse(ctx context.Context, params *PostSigninParams) (*postSigninResponse, error) {
+func (c *ClientWithResponses) PostSigninWithResponse(ctx context.Context, params *PostSigninParams) (*PostSigninResponse, error) {
 	rsp, err := c.PostSignin(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20461,7 +21213,7 @@ func (c *ClientWithResponses) PostSigninWithResponse(ctx context.Context, params
 }
 
 // PostSignoutWithResponse request returning *PostSignoutResponse
-func (c *ClientWithResponses) PostSignoutWithResponse(ctx context.Context, params *PostSignoutParams) (*postSignoutResponse, error) {
+func (c *ClientWithResponses) PostSignoutWithResponse(ctx context.Context, params *PostSignoutParams) (*PostSignoutResponse, error) {
 	rsp, err := c.PostSignout(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20470,7 +21222,7 @@ func (c *ClientWithResponses) PostSignoutWithResponse(ctx context.Context, param
 }
 
 // GetSourcesWithResponse request returning *GetSourcesResponse
-func (c *ClientWithResponses) GetSourcesWithResponse(ctx context.Context, params *GetSourcesParams) (*getSourcesResponse, error) {
+func (c *ClientWithResponses) GetSourcesWithResponse(ctx context.Context, params *GetSourcesParams) (*GetSourcesResponse, error) {
 	rsp, err := c.GetSources(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20479,7 +21231,7 @@ func (c *ClientWithResponses) GetSourcesWithResponse(ctx context.Context, params
 }
 
 // PostSourcesWithBodyWithResponse request with arbitrary body returning *PostSourcesResponse
-func (c *ClientWithResponses) PostSourcesWithBodyWithResponse(ctx context.Context, params *PostSourcesParams, contentType string, body io.Reader) (*postSourcesResponse, error) {
+func (c *ClientWithResponses) PostSourcesWithBodyWithResponse(ctx context.Context, params *PostSourcesParams, contentType string, body io.Reader) (*PostSourcesResponse, error) {
 	rsp, err := c.PostSourcesWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20487,7 +21239,7 @@ func (c *ClientWithResponses) PostSourcesWithBodyWithResponse(ctx context.Contex
 	return ParsePostSourcesResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostSourcesWithResponse(ctx context.Context, params *PostSourcesParams, body PostSourcesJSONRequestBody) (*postSourcesResponse, error) {
+func (c *ClientWithResponses) PostSourcesWithResponse(ctx context.Context, params *PostSourcesParams, body PostSourcesJSONRequestBody) (*PostSourcesResponse, error) {
 	rsp, err := c.PostSources(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20496,7 +21248,7 @@ func (c *ClientWithResponses) PostSourcesWithResponse(ctx context.Context, param
 }
 
 // DeleteSourcesIDWithResponse request returning *DeleteSourcesIDResponse
-func (c *ClientWithResponses) DeleteSourcesIDWithResponse(ctx context.Context, sourceID string, params *DeleteSourcesIDParams) (*deleteSourcesIDResponse, error) {
+func (c *ClientWithResponses) DeleteSourcesIDWithResponse(ctx context.Context, sourceID string, params *DeleteSourcesIDParams) (*DeleteSourcesIDResponse, error) {
 	rsp, err := c.DeleteSourcesID(ctx, sourceID, params)
 	if err != nil {
 		return nil, err
@@ -20505,7 +21257,7 @@ func (c *ClientWithResponses) DeleteSourcesIDWithResponse(ctx context.Context, s
 }
 
 // GetSourcesIDWithResponse request returning *GetSourcesIDResponse
-func (c *ClientWithResponses) GetSourcesIDWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDParams) (*getSourcesIDResponse, error) {
+func (c *ClientWithResponses) GetSourcesIDWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDParams) (*GetSourcesIDResponse, error) {
 	rsp, err := c.GetSourcesID(ctx, sourceID, params)
 	if err != nil {
 		return nil, err
@@ -20514,7 +21266,7 @@ func (c *ClientWithResponses) GetSourcesIDWithResponse(ctx context.Context, sour
 }
 
 // PatchSourcesIDWithBodyWithResponse request with arbitrary body returning *PatchSourcesIDResponse
-func (c *ClientWithResponses) PatchSourcesIDWithBodyWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, contentType string, body io.Reader) (*patchSourcesIDResponse, error) {
+func (c *ClientWithResponses) PatchSourcesIDWithBodyWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, contentType string, body io.Reader) (*PatchSourcesIDResponse, error) {
 	rsp, err := c.PatchSourcesIDWithBody(ctx, sourceID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20522,7 +21274,7 @@ func (c *ClientWithResponses) PatchSourcesIDWithBodyWithResponse(ctx context.Con
 	return ParsePatchSourcesIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchSourcesIDWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, body PatchSourcesIDJSONRequestBody) (*patchSourcesIDResponse, error) {
+func (c *ClientWithResponses) PatchSourcesIDWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, body PatchSourcesIDJSONRequestBody) (*PatchSourcesIDResponse, error) {
 	rsp, err := c.PatchSourcesID(ctx, sourceID, params, body)
 	if err != nil {
 		return nil, err
@@ -20531,7 +21283,7 @@ func (c *ClientWithResponses) PatchSourcesIDWithResponse(ctx context.Context, so
 }
 
 // GetSourcesIDBucketsWithResponse request returning *GetSourcesIDBucketsResponse
-func (c *ClientWithResponses) GetSourcesIDBucketsWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDBucketsParams) (*getSourcesIDBucketsResponse, error) {
+func (c *ClientWithResponses) GetSourcesIDBucketsWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDBucketsParams) (*GetSourcesIDBucketsResponse, error) {
 	rsp, err := c.GetSourcesIDBuckets(ctx, sourceID, params)
 	if err != nil {
 		return nil, err
@@ -20540,7 +21292,7 @@ func (c *ClientWithResponses) GetSourcesIDBucketsWithResponse(ctx context.Contex
 }
 
 // GetSourcesIDHealthWithResponse request returning *GetSourcesIDHealthResponse
-func (c *ClientWithResponses) GetSourcesIDHealthWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*getSourcesIDHealthResponse, error) {
+func (c *ClientWithResponses) GetSourcesIDHealthWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams) (*GetSourcesIDHealthResponse, error) {
 	rsp, err := c.GetSourcesIDHealth(ctx, sourceID, params)
 	if err != nil {
 		return nil, err
@@ -20549,7 +21301,7 @@ func (c *ClientWithResponses) GetSourcesIDHealthWithResponse(ctx context.Context
 }
 
 // ListStacksWithResponse request returning *ListStacksResponse
-func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params *ListStacksParams) (*listStacksResponse, error) {
+func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params *ListStacksParams) (*ListStacksResponse, error) {
 	rsp, err := c.ListStacks(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20558,7 +21310,7 @@ func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params
 }
 
 // CreateStackWithBodyWithResponse request with arbitrary body returning *CreateStackResponse
-func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*createStackResponse, error) {
+func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateStackResponse, error) {
 	rsp, err := c.CreateStackWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20566,7 +21318,7 @@ func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Contex
 	return ParseCreateStackResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody) (*createStackResponse, error) {
+func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody) (*CreateStackResponse, error) {
 	rsp, err := c.CreateStack(ctx, body)
 	if err != nil {
 		return nil, err
@@ -20575,7 +21327,7 @@ func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body 
 }
 
 // DeleteStackWithResponse request returning *DeleteStackResponse
-func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams) (*deleteStackResponse, error) {
+func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams) (*DeleteStackResponse, error) {
 	rsp, err := c.DeleteStack(ctx, stackId, params)
 	if err != nil {
 		return nil, err
@@ -20584,7 +21336,7 @@ func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stack
 }
 
 // ReadStackWithResponse request returning *ReadStackResponse
-func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId string) (*readStackResponse, error) {
+func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId string) (*ReadStackResponse, error) {
 	rsp, err := c.ReadStack(ctx, stackId)
 	if err != nil {
 		return nil, err
@@ -20593,7 +21345,7 @@ func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId
 }
 
 // UpdateStackWithBodyWithResponse request with arbitrary body returning *UpdateStackResponse
-func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader) (*updateStackResponse, error) {
+func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader) (*UpdateStackResponse, error) {
 	rsp, err := c.UpdateStackWithBody(ctx, stackId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20601,7 +21353,7 @@ func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Contex
 	return ParseUpdateStackResponse(rsp)
 }
 
-func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*updateStackResponse, error) {
+func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody) (*UpdateStackResponse, error) {
 	rsp, err := c.UpdateStack(ctx, stackId, body)
 	if err != nil {
 		return nil, err
@@ -20610,7 +21362,7 @@ func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stack
 }
 
 // UninstallStackWithResponse request returning *UninstallStackResponse
-func (c *ClientWithResponses) UninstallStackWithResponse(ctx context.Context, stackId string) (*uninstallStackResponse, error) {
+func (c *ClientWithResponses) UninstallStackWithResponse(ctx context.Context, stackId string) (*UninstallStackResponse, error) {
 	rsp, err := c.UninstallStack(ctx, stackId)
 	if err != nil {
 		return nil, err
@@ -20619,7 +21371,7 @@ func (c *ClientWithResponses) UninstallStackWithResponse(ctx context.Context, st
 }
 
 // GetTasksWithResponse request returning *GetTasksResponse
-func (c *ClientWithResponses) GetTasksWithResponse(ctx context.Context, params *GetTasksParams) (*getTasksResponse, error) {
+func (c *ClientWithResponses) GetTasksWithResponse(ctx context.Context, params *GetTasksParams) (*GetTasksResponse, error) {
 	rsp, err := c.GetTasks(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20628,7 +21380,7 @@ func (c *ClientWithResponses) GetTasksWithResponse(ctx context.Context, params *
 }
 
 // PostTasksWithBodyWithResponse request with arbitrary body returning *PostTasksResponse
-func (c *ClientWithResponses) PostTasksWithBodyWithResponse(ctx context.Context, params *PostTasksParams, contentType string, body io.Reader) (*postTasksResponse, error) {
+func (c *ClientWithResponses) PostTasksWithBodyWithResponse(ctx context.Context, params *PostTasksParams, contentType string, body io.Reader) (*PostTasksResponse, error) {
 	rsp, err := c.PostTasksWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20636,7 +21388,7 @@ func (c *ClientWithResponses) PostTasksWithBodyWithResponse(ctx context.Context,
 	return ParsePostTasksResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTasksWithResponse(ctx context.Context, params *PostTasksParams, body PostTasksJSONRequestBody) (*postTasksResponse, error) {
+func (c *ClientWithResponses) PostTasksWithResponse(ctx context.Context, params *PostTasksParams, body PostTasksJSONRequestBody) (*PostTasksResponse, error) {
 	rsp, err := c.PostTasks(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20645,7 +21397,7 @@ func (c *ClientWithResponses) PostTasksWithResponse(ctx context.Context, params 
 }
 
 // DeleteTasksIDWithResponse request returning *DeleteTasksIDResponse
-func (c *ClientWithResponses) DeleteTasksIDWithResponse(ctx context.Context, taskID string, params *DeleteTasksIDParams) (*deleteTasksIDResponse, error) {
+func (c *ClientWithResponses) DeleteTasksIDWithResponse(ctx context.Context, taskID string, params *DeleteTasksIDParams) (*DeleteTasksIDResponse, error) {
 	rsp, err := c.DeleteTasksID(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20654,7 +21406,7 @@ func (c *ClientWithResponses) DeleteTasksIDWithResponse(ctx context.Context, tas
 }
 
 // GetTasksIDWithResponse request returning *GetTasksIDResponse
-func (c *ClientWithResponses) GetTasksIDWithResponse(ctx context.Context, taskID string, params *GetTasksIDParams) (*getTasksIDResponse, error) {
+func (c *ClientWithResponses) GetTasksIDWithResponse(ctx context.Context, taskID string, params *GetTasksIDParams) (*GetTasksIDResponse, error) {
 	rsp, err := c.GetTasksID(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20663,7 +21415,7 @@ func (c *ClientWithResponses) GetTasksIDWithResponse(ctx context.Context, taskID
 }
 
 // PatchTasksIDWithBodyWithResponse request with arbitrary body returning *PatchTasksIDResponse
-func (c *ClientWithResponses) PatchTasksIDWithBodyWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, contentType string, body io.Reader) (*patchTasksIDResponse, error) {
+func (c *ClientWithResponses) PatchTasksIDWithBodyWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, contentType string, body io.Reader) (*PatchTasksIDResponse, error) {
 	rsp, err := c.PatchTasksIDWithBody(ctx, taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20671,7 +21423,7 @@ func (c *ClientWithResponses) PatchTasksIDWithBodyWithResponse(ctx context.Conte
 	return ParsePatchTasksIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchTasksIDWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, body PatchTasksIDJSONRequestBody) (*patchTasksIDResponse, error) {
+func (c *ClientWithResponses) PatchTasksIDWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, body PatchTasksIDJSONRequestBody) (*PatchTasksIDResponse, error) {
 	rsp, err := c.PatchTasksID(ctx, taskID, params, body)
 	if err != nil {
 		return nil, err
@@ -20680,7 +21432,7 @@ func (c *ClientWithResponses) PatchTasksIDWithResponse(ctx context.Context, task
 }
 
 // GetTasksIDLabelsWithResponse request returning *GetTasksIDLabelsResponse
-func (c *ClientWithResponses) GetTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLabelsParams) (*getTasksIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLabelsParams) (*GetTasksIDLabelsResponse, error) {
 	rsp, err := c.GetTasksIDLabels(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20689,7 +21441,7 @@ func (c *ClientWithResponses) GetTasksIDLabelsWithResponse(ctx context.Context, 
 }
 
 // PostTasksIDLabelsWithBodyWithResponse request with arbitrary body returning *PostTasksIDLabelsResponse
-func (c *ClientWithResponses) PostTasksIDLabelsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, contentType string, body io.Reader) (*postTasksIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostTasksIDLabelsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, contentType string, body io.Reader) (*PostTasksIDLabelsResponse, error) {
 	rsp, err := c.PostTasksIDLabelsWithBody(ctx, taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20697,7 +21449,7 @@ func (c *ClientWithResponses) PostTasksIDLabelsWithBodyWithResponse(ctx context.
 	return ParsePostTasksIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, body PostTasksIDLabelsJSONRequestBody) (*postTasksIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, body PostTasksIDLabelsJSONRequestBody) (*PostTasksIDLabelsResponse, error) {
 	rsp, err := c.PostTasksIDLabels(ctx, taskID, params, body)
 	if err != nil {
 		return nil, err
@@ -20706,7 +21458,7 @@ func (c *ClientWithResponses) PostTasksIDLabelsWithResponse(ctx context.Context,
 }
 
 // DeleteTasksIDLabelsIDWithResponse request returning *DeleteTasksIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteTasksIDLabelsIDWithResponse(ctx context.Context, taskID string, labelID string, params *DeleteTasksIDLabelsIDParams) (*deleteTasksIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteTasksIDLabelsIDWithResponse(ctx context.Context, taskID string, labelID string, params *DeleteTasksIDLabelsIDParams) (*DeleteTasksIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteTasksIDLabelsID(ctx, taskID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -20715,7 +21467,7 @@ func (c *ClientWithResponses) DeleteTasksIDLabelsIDWithResponse(ctx context.Cont
 }
 
 // GetTasksIDLogsWithResponse request returning *GetTasksIDLogsResponse
-func (c *ClientWithResponses) GetTasksIDLogsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLogsParams) (*getTasksIDLogsResponse, error) {
+func (c *ClientWithResponses) GetTasksIDLogsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLogsParams) (*GetTasksIDLogsResponse, error) {
 	rsp, err := c.GetTasksIDLogs(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20724,7 +21476,7 @@ func (c *ClientWithResponses) GetTasksIDLogsWithResponse(ctx context.Context, ta
 }
 
 // GetTasksIDMembersWithResponse request returning *GetTasksIDMembersResponse
-func (c *ClientWithResponses) GetTasksIDMembersWithResponse(ctx context.Context, taskID string, params *GetTasksIDMembersParams) (*getTasksIDMembersResponse, error) {
+func (c *ClientWithResponses) GetTasksIDMembersWithResponse(ctx context.Context, taskID string, params *GetTasksIDMembersParams) (*GetTasksIDMembersResponse, error) {
 	rsp, err := c.GetTasksIDMembers(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20733,7 +21485,7 @@ func (c *ClientWithResponses) GetTasksIDMembersWithResponse(ctx context.Context,
 }
 
 // PostTasksIDMembersWithBodyWithResponse request with arbitrary body returning *PostTasksIDMembersResponse
-func (c *ClientWithResponses) PostTasksIDMembersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, contentType string, body io.Reader) (*postTasksIDMembersResponse, error) {
+func (c *ClientWithResponses) PostTasksIDMembersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, contentType string, body io.Reader) (*PostTasksIDMembersResponse, error) {
 	rsp, err := c.PostTasksIDMembersWithBody(ctx, taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20741,7 +21493,7 @@ func (c *ClientWithResponses) PostTasksIDMembersWithBodyWithResponse(ctx context
 	return ParsePostTasksIDMembersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTasksIDMembersWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, body PostTasksIDMembersJSONRequestBody) (*postTasksIDMembersResponse, error) {
+func (c *ClientWithResponses) PostTasksIDMembersWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, body PostTasksIDMembersJSONRequestBody) (*PostTasksIDMembersResponse, error) {
 	rsp, err := c.PostTasksIDMembers(ctx, taskID, params, body)
 	if err != nil {
 		return nil, err
@@ -20750,7 +21502,7 @@ func (c *ClientWithResponses) PostTasksIDMembersWithResponse(ctx context.Context
 }
 
 // DeleteTasksIDMembersIDWithResponse request returning *DeleteTasksIDMembersIDResponse
-func (c *ClientWithResponses) DeleteTasksIDMembersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDMembersIDParams) (*deleteTasksIDMembersIDResponse, error) {
+func (c *ClientWithResponses) DeleteTasksIDMembersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDMembersIDParams) (*DeleteTasksIDMembersIDResponse, error) {
 	rsp, err := c.DeleteTasksIDMembersID(ctx, taskID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20759,7 +21511,7 @@ func (c *ClientWithResponses) DeleteTasksIDMembersIDWithResponse(ctx context.Con
 }
 
 // GetTasksIDOwnersWithResponse request returning *GetTasksIDOwnersResponse
-func (c *ClientWithResponses) GetTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *GetTasksIDOwnersParams) (*getTasksIDOwnersResponse, error) {
+func (c *ClientWithResponses) GetTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *GetTasksIDOwnersParams) (*GetTasksIDOwnersResponse, error) {
 	rsp, err := c.GetTasksIDOwners(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20768,7 +21520,7 @@ func (c *ClientWithResponses) GetTasksIDOwnersWithResponse(ctx context.Context, 
 }
 
 // PostTasksIDOwnersWithBodyWithResponse request with arbitrary body returning *PostTasksIDOwnersResponse
-func (c *ClientWithResponses) PostTasksIDOwnersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, contentType string, body io.Reader) (*postTasksIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostTasksIDOwnersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, contentType string, body io.Reader) (*PostTasksIDOwnersResponse, error) {
 	rsp, err := c.PostTasksIDOwnersWithBody(ctx, taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20776,7 +21528,7 @@ func (c *ClientWithResponses) PostTasksIDOwnersWithBodyWithResponse(ctx context.
 	return ParsePostTasksIDOwnersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, body PostTasksIDOwnersJSONRequestBody) (*postTasksIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, body PostTasksIDOwnersJSONRequestBody) (*PostTasksIDOwnersResponse, error) {
 	rsp, err := c.PostTasksIDOwners(ctx, taskID, params, body)
 	if err != nil {
 		return nil, err
@@ -20785,7 +21537,7 @@ func (c *ClientWithResponses) PostTasksIDOwnersWithResponse(ctx context.Context,
 }
 
 // DeleteTasksIDOwnersIDWithResponse request returning *DeleteTasksIDOwnersIDResponse
-func (c *ClientWithResponses) DeleteTasksIDOwnersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDOwnersIDParams) (*deleteTasksIDOwnersIDResponse, error) {
+func (c *ClientWithResponses) DeleteTasksIDOwnersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDOwnersIDParams) (*DeleteTasksIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteTasksIDOwnersID(ctx, taskID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20794,7 +21546,7 @@ func (c *ClientWithResponses) DeleteTasksIDOwnersIDWithResponse(ctx context.Cont
 }
 
 // GetTasksIDRunsWithResponse request returning *GetTasksIDRunsResponse
-func (c *ClientWithResponses) GetTasksIDRunsWithResponse(ctx context.Context, taskID string, params *GetTasksIDRunsParams) (*getTasksIDRunsResponse, error) {
+func (c *ClientWithResponses) GetTasksIDRunsWithResponse(ctx context.Context, taskID string, params *GetTasksIDRunsParams) (*GetTasksIDRunsResponse, error) {
 	rsp, err := c.GetTasksIDRuns(ctx, taskID, params)
 	if err != nil {
 		return nil, err
@@ -20803,7 +21555,7 @@ func (c *ClientWithResponses) GetTasksIDRunsWithResponse(ctx context.Context, ta
 }
 
 // PostTasksIDRunsWithBodyWithResponse request with arbitrary body returning *PostTasksIDRunsResponse
-func (c *ClientWithResponses) PostTasksIDRunsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, contentType string, body io.Reader) (*postTasksIDRunsResponse, error) {
+func (c *ClientWithResponses) PostTasksIDRunsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, contentType string, body io.Reader) (*PostTasksIDRunsResponse, error) {
 	rsp, err := c.PostTasksIDRunsWithBody(ctx, taskID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20811,7 +21563,7 @@ func (c *ClientWithResponses) PostTasksIDRunsWithBodyWithResponse(ctx context.Co
 	return ParsePostTasksIDRunsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTasksIDRunsWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, body PostTasksIDRunsJSONRequestBody) (*postTasksIDRunsResponse, error) {
+func (c *ClientWithResponses) PostTasksIDRunsWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, body PostTasksIDRunsJSONRequestBody) (*PostTasksIDRunsResponse, error) {
 	rsp, err := c.PostTasksIDRuns(ctx, taskID, params, body)
 	if err != nil {
 		return nil, err
@@ -20820,7 +21572,7 @@ func (c *ClientWithResponses) PostTasksIDRunsWithResponse(ctx context.Context, t
 }
 
 // DeleteTasksIDRunsIDWithResponse request returning *DeleteTasksIDRunsIDResponse
-func (c *ClientWithResponses) DeleteTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *DeleteTasksIDRunsIDParams) (*deleteTasksIDRunsIDResponse, error) {
+func (c *ClientWithResponses) DeleteTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *DeleteTasksIDRunsIDParams) (*DeleteTasksIDRunsIDResponse, error) {
 	rsp, err := c.DeleteTasksIDRunsID(ctx, taskID, runID, params)
 	if err != nil {
 		return nil, err
@@ -20829,7 +21581,7 @@ func (c *ClientWithResponses) DeleteTasksIDRunsIDWithResponse(ctx context.Contex
 }
 
 // GetTasksIDRunsIDWithResponse request returning *GetTasksIDRunsIDResponse
-func (c *ClientWithResponses) GetTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDParams) (*getTasksIDRunsIDResponse, error) {
+func (c *ClientWithResponses) GetTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDParams) (*GetTasksIDRunsIDResponse, error) {
 	rsp, err := c.GetTasksIDRunsID(ctx, taskID, runID, params)
 	if err != nil {
 		return nil, err
@@ -20838,7 +21590,7 @@ func (c *ClientWithResponses) GetTasksIDRunsIDWithResponse(ctx context.Context, 
 }
 
 // GetTasksIDRunsIDLogsWithResponse request returning *GetTasksIDRunsIDLogsResponse
-func (c *ClientWithResponses) GetTasksIDRunsIDLogsWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*getTasksIDRunsIDLogsResponse, error) {
+func (c *ClientWithResponses) GetTasksIDRunsIDLogsWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*GetTasksIDRunsIDLogsResponse, error) {
 	rsp, err := c.GetTasksIDRunsIDLogs(ctx, taskID, runID, params)
 	if err != nil {
 		return nil, err
@@ -20847,7 +21599,7 @@ func (c *ClientWithResponses) GetTasksIDRunsIDLogsWithResponse(ctx context.Conte
 }
 
 // PostTasksIDRunsIDRetryWithResponse request returning *PostTasksIDRunsIDRetryResponse
-func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*postTasksIDRunsIDRetryResponse, error) {
+func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*PostTasksIDRunsIDRetryResponse, error) {
 	rsp, err := c.PostTasksIDRunsIDRetry(ctx, taskID, runID, params)
 	if err != nil {
 		return nil, err
@@ -20856,7 +21608,7 @@ func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithResponse(ctx context.Con
 }
 
 // GetTelegrafPluginsWithResponse request returning *GetTelegrafPluginsResponse
-func (c *ClientWithResponses) GetTelegrafPluginsWithResponse(ctx context.Context, params *GetTelegrafPluginsParams) (*getTelegrafPluginsResponse, error) {
+func (c *ClientWithResponses) GetTelegrafPluginsWithResponse(ctx context.Context, params *GetTelegrafPluginsParams) (*GetTelegrafPluginsResponse, error) {
 	rsp, err := c.GetTelegrafPlugins(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20865,7 +21617,7 @@ func (c *ClientWithResponses) GetTelegrafPluginsWithResponse(ctx context.Context
 }
 
 // GetTelegrafsWithResponse request returning *GetTelegrafsResponse
-func (c *ClientWithResponses) GetTelegrafsWithResponse(ctx context.Context, params *GetTelegrafsParams) (*getTelegrafsResponse, error) {
+func (c *ClientWithResponses) GetTelegrafsWithResponse(ctx context.Context, params *GetTelegrafsParams) (*GetTelegrafsResponse, error) {
 	rsp, err := c.GetTelegrafs(ctx, params)
 	if err != nil {
 		return nil, err
@@ -20874,7 +21626,7 @@ func (c *ClientWithResponses) GetTelegrafsWithResponse(ctx context.Context, para
 }
 
 // PostTelegrafsWithBodyWithResponse request with arbitrary body returning *PostTelegrafsResponse
-func (c *ClientWithResponses) PostTelegrafsWithBodyWithResponse(ctx context.Context, params *PostTelegrafsParams, contentType string, body io.Reader) (*postTelegrafsResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsWithBodyWithResponse(ctx context.Context, params *PostTelegrafsParams, contentType string, body io.Reader) (*PostTelegrafsResponse, error) {
 	rsp, err := c.PostTelegrafsWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20882,7 +21634,7 @@ func (c *ClientWithResponses) PostTelegrafsWithBodyWithResponse(ctx context.Cont
 	return ParsePostTelegrafsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTelegrafsWithResponse(ctx context.Context, params *PostTelegrafsParams, body PostTelegrafsJSONRequestBody) (*postTelegrafsResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsWithResponse(ctx context.Context, params *PostTelegrafsParams, body PostTelegrafsJSONRequestBody) (*PostTelegrafsResponse, error) {
 	rsp, err := c.PostTelegrafs(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -20891,7 +21643,7 @@ func (c *ClientWithResponses) PostTelegrafsWithResponse(ctx context.Context, par
 }
 
 // DeleteTelegrafsIDWithResponse request returning *DeleteTelegrafsIDResponse
-func (c *ClientWithResponses) DeleteTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *DeleteTelegrafsIDParams) (*deleteTelegrafsIDResponse, error) {
+func (c *ClientWithResponses) DeleteTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *DeleteTelegrafsIDParams) (*DeleteTelegrafsIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsID(ctx, telegrafID, params)
 	if err != nil {
 		return nil, err
@@ -20900,7 +21652,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDWithResponse(ctx context.Context,
 }
 
 // GetTelegrafsIDWithResponse request returning *GetTelegrafsIDResponse
-func (c *ClientWithResponses) GetTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDParams) (*getTelegrafsIDResponse, error) {
+func (c *ClientWithResponses) GetTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDParams) (*GetTelegrafsIDResponse, error) {
 	rsp, err := c.GetTelegrafsID(ctx, telegrafID, params)
 	if err != nil {
 		return nil, err
@@ -20909,7 +21661,7 @@ func (c *ClientWithResponses) GetTelegrafsIDWithResponse(ctx context.Context, te
 }
 
 // PutTelegrafsIDWithBodyWithResponse request with arbitrary body returning *PutTelegrafsIDResponse
-func (c *ClientWithResponses) PutTelegrafsIDWithBodyWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, contentType string, body io.Reader) (*putTelegrafsIDResponse, error) {
+func (c *ClientWithResponses) PutTelegrafsIDWithBodyWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, contentType string, body io.Reader) (*PutTelegrafsIDResponse, error) {
 	rsp, err := c.PutTelegrafsIDWithBody(ctx, telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20917,7 +21669,7 @@ func (c *ClientWithResponses) PutTelegrafsIDWithBodyWithResponse(ctx context.Con
 	return ParsePutTelegrafsIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, body PutTelegrafsIDJSONRequestBody) (*putTelegrafsIDResponse, error) {
+func (c *ClientWithResponses) PutTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, body PutTelegrafsIDJSONRequestBody) (*PutTelegrafsIDResponse, error) {
 	rsp, err := c.PutTelegrafsID(ctx, telegrafID, params, body)
 	if err != nil {
 		return nil, err
@@ -20926,7 +21678,7 @@ func (c *ClientWithResponses) PutTelegrafsIDWithResponse(ctx context.Context, te
 }
 
 // GetTelegrafsIDLabelsWithResponse request returning *GetTelegrafsIDLabelsResponse
-func (c *ClientWithResponses) GetTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDLabelsParams) (*getTelegrafsIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDLabelsParams) (*GetTelegrafsIDLabelsResponse, error) {
 	rsp, err := c.GetTelegrafsIDLabels(ctx, telegrafID, params)
 	if err != nil {
 		return nil, err
@@ -20935,7 +21687,7 @@ func (c *ClientWithResponses) GetTelegrafsIDLabelsWithResponse(ctx context.Conte
 }
 
 // PostTelegrafsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostTelegrafsIDLabelsResponse
-func (c *ClientWithResponses) PostTelegrafsIDLabelsWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, contentType string, body io.Reader) (*postTelegrafsIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsIDLabelsWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, contentType string, body io.Reader) (*PostTelegrafsIDLabelsResponse, error) {
 	rsp, err := c.PostTelegrafsIDLabelsWithBody(ctx, telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20943,7 +21695,7 @@ func (c *ClientWithResponses) PostTelegrafsIDLabelsWithBodyWithResponse(ctx cont
 	return ParsePostTelegrafsIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, body PostTelegrafsIDLabelsJSONRequestBody) (*postTelegrafsIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, body PostTelegrafsIDLabelsJSONRequestBody) (*PostTelegrafsIDLabelsResponse, error) {
 	rsp, err := c.PostTelegrafsIDLabels(ctx, telegrafID, params, body)
 	if err != nil {
 		return nil, err
@@ -20952,7 +21704,7 @@ func (c *ClientWithResponses) PostTelegrafsIDLabelsWithResponse(ctx context.Cont
 }
 
 // DeleteTelegrafsIDLabelsIDWithResponse request returning *DeleteTelegrafsIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteTelegrafsIDLabelsIDWithResponse(ctx context.Context, telegrafID string, labelID string, params *DeleteTelegrafsIDLabelsIDParams) (*deleteTelegrafsIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteTelegrafsIDLabelsIDWithResponse(ctx context.Context, telegrafID string, labelID string, params *DeleteTelegrafsIDLabelsIDParams) (*DeleteTelegrafsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsIDLabelsID(ctx, telegrafID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -20961,7 +21713,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDLabelsIDWithResponse(ctx context.
 }
 
 // GetTelegrafsIDMembersWithResponse request returning *GetTelegrafsIDMembersResponse
-func (c *ClientWithResponses) GetTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDMembersParams) (*getTelegrafsIDMembersResponse, error) {
+func (c *ClientWithResponses) GetTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDMembersParams) (*GetTelegrafsIDMembersResponse, error) {
 	rsp, err := c.GetTelegrafsIDMembers(ctx, telegrafID, params)
 	if err != nil {
 		return nil, err
@@ -20970,7 +21722,7 @@ func (c *ClientWithResponses) GetTelegrafsIDMembersWithResponse(ctx context.Cont
 }
 
 // PostTelegrafsIDMembersWithBodyWithResponse request with arbitrary body returning *PostTelegrafsIDMembersResponse
-func (c *ClientWithResponses) PostTelegrafsIDMembersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, contentType string, body io.Reader) (*postTelegrafsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsIDMembersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, contentType string, body io.Reader) (*PostTelegrafsIDMembersResponse, error) {
 	rsp, err := c.PostTelegrafsIDMembersWithBody(ctx, telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -20978,7 +21730,7 @@ func (c *ClientWithResponses) PostTelegrafsIDMembersWithBodyWithResponse(ctx con
 	return ParsePostTelegrafsIDMembersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, body PostTelegrafsIDMembersJSONRequestBody) (*postTelegrafsIDMembersResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, body PostTelegrafsIDMembersJSONRequestBody) (*PostTelegrafsIDMembersResponse, error) {
 	rsp, err := c.PostTelegrafsIDMembers(ctx, telegrafID, params, body)
 	if err != nil {
 		return nil, err
@@ -20987,7 +21739,7 @@ func (c *ClientWithResponses) PostTelegrafsIDMembersWithResponse(ctx context.Con
 }
 
 // DeleteTelegrafsIDMembersIDWithResponse request returning *DeleteTelegrafsIDMembersIDResponse
-func (c *ClientWithResponses) DeleteTelegrafsIDMembersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDMembersIDParams) (*deleteTelegrafsIDMembersIDResponse, error) {
+func (c *ClientWithResponses) DeleteTelegrafsIDMembersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDMembersIDParams) (*DeleteTelegrafsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsIDMembersID(ctx, telegrafID, userID, params)
 	if err != nil {
 		return nil, err
@@ -20996,7 +21748,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDMembersIDWithResponse(ctx context
 }
 
 // GetTelegrafsIDOwnersWithResponse request returning *GetTelegrafsIDOwnersResponse
-func (c *ClientWithResponses) GetTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDOwnersParams) (*getTelegrafsIDOwnersResponse, error) {
+func (c *ClientWithResponses) GetTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDOwnersParams) (*GetTelegrafsIDOwnersResponse, error) {
 	rsp, err := c.GetTelegrafsIDOwners(ctx, telegrafID, params)
 	if err != nil {
 		return nil, err
@@ -21005,7 +21757,7 @@ func (c *ClientWithResponses) GetTelegrafsIDOwnersWithResponse(ctx context.Conte
 }
 
 // PostTelegrafsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostTelegrafsIDOwnersResponse
-func (c *ClientWithResponses) PostTelegrafsIDOwnersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, contentType string, body io.Reader) (*postTelegrafsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsIDOwnersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, contentType string, body io.Reader) (*PostTelegrafsIDOwnersResponse, error) {
 	rsp, err := c.PostTelegrafsIDOwnersWithBody(ctx, telegrafID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21013,7 +21765,7 @@ func (c *ClientWithResponses) PostTelegrafsIDOwnersWithBodyWithResponse(ctx cont
 	return ParsePostTelegrafsIDOwnersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, body PostTelegrafsIDOwnersJSONRequestBody) (*postTelegrafsIDOwnersResponse, error) {
+func (c *ClientWithResponses) PostTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, body PostTelegrafsIDOwnersJSONRequestBody) (*PostTelegrafsIDOwnersResponse, error) {
 	rsp, err := c.PostTelegrafsIDOwners(ctx, telegrafID, params, body)
 	if err != nil {
 		return nil, err
@@ -21022,7 +21774,7 @@ func (c *ClientWithResponses) PostTelegrafsIDOwnersWithResponse(ctx context.Cont
 }
 
 // DeleteTelegrafsIDOwnersIDWithResponse request returning *DeleteTelegrafsIDOwnersIDResponse
-func (c *ClientWithResponses) DeleteTelegrafsIDOwnersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*deleteTelegrafsIDOwnersIDResponse, error) {
+func (c *ClientWithResponses) DeleteTelegrafsIDOwnersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams) (*DeleteTelegrafsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsIDOwnersID(ctx, telegrafID, userID, params)
 	if err != nil {
 		return nil, err
@@ -21031,7 +21783,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDOwnersIDWithResponse(ctx context.
 }
 
 // ApplyTemplateWithBodyWithResponse request with arbitrary body returning *ApplyTemplateResponse
-func (c *ClientWithResponses) ApplyTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*applyTemplateResponse, error) {
+func (c *ClientWithResponses) ApplyTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*ApplyTemplateResponse, error) {
 	rsp, err := c.ApplyTemplateWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21039,7 +21791,7 @@ func (c *ClientWithResponses) ApplyTemplateWithBodyWithResponse(ctx context.Cont
 	return ParseApplyTemplateResponse(rsp)
 }
 
-func (c *ClientWithResponses) ApplyTemplateWithResponse(ctx context.Context, body ApplyTemplateJSONRequestBody) (*applyTemplateResponse, error) {
+func (c *ClientWithResponses) ApplyTemplateWithResponse(ctx context.Context, body ApplyTemplateJSONRequestBody) (*ApplyTemplateResponse, error) {
 	rsp, err := c.ApplyTemplate(ctx, body)
 	if err != nil {
 		return nil, err
@@ -21048,7 +21800,7 @@ func (c *ClientWithResponses) ApplyTemplateWithResponse(ctx context.Context, bod
 }
 
 // ExportTemplateWithBodyWithResponse request with arbitrary body returning *ExportTemplateResponse
-func (c *ClientWithResponses) ExportTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*exportTemplateResponse, error) {
+func (c *ClientWithResponses) ExportTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*ExportTemplateResponse, error) {
 	rsp, err := c.ExportTemplateWithBody(ctx, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21056,7 +21808,7 @@ func (c *ClientWithResponses) ExportTemplateWithBodyWithResponse(ctx context.Con
 	return ParseExportTemplateResponse(rsp)
 }
 
-func (c *ClientWithResponses) ExportTemplateWithResponse(ctx context.Context, body ExportTemplateJSONRequestBody) (*exportTemplateResponse, error) {
+func (c *ClientWithResponses) ExportTemplateWithResponse(ctx context.Context, body ExportTemplateJSONRequestBody) (*ExportTemplateResponse, error) {
 	rsp, err := c.ExportTemplate(ctx, body)
 	if err != nil {
 		return nil, err
@@ -21065,7 +21817,7 @@ func (c *ClientWithResponses) ExportTemplateWithResponse(ctx context.Context, bo
 }
 
 // GetUsersWithResponse request returning *GetUsersResponse
-func (c *ClientWithResponses) GetUsersWithResponse(ctx context.Context, params *GetUsersParams) (*getUsersResponse, error) {
+func (c *ClientWithResponses) GetUsersWithResponse(ctx context.Context, params *GetUsersParams) (*GetUsersResponse, error) {
 	rsp, err := c.GetUsers(ctx, params)
 	if err != nil {
 		return nil, err
@@ -21074,7 +21826,7 @@ func (c *ClientWithResponses) GetUsersWithResponse(ctx context.Context, params *
 }
 
 // PostUsersWithBodyWithResponse request with arbitrary body returning *PostUsersResponse
-func (c *ClientWithResponses) PostUsersWithBodyWithResponse(ctx context.Context, params *PostUsersParams, contentType string, body io.Reader) (*postUsersResponse, error) {
+func (c *ClientWithResponses) PostUsersWithBodyWithResponse(ctx context.Context, params *PostUsersParams, contentType string, body io.Reader) (*PostUsersResponse, error) {
 	rsp, err := c.PostUsersWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21082,7 +21834,7 @@ func (c *ClientWithResponses) PostUsersWithBodyWithResponse(ctx context.Context,
 	return ParsePostUsersResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostUsersWithResponse(ctx context.Context, params *PostUsersParams, body PostUsersJSONRequestBody) (*postUsersResponse, error) {
+func (c *ClientWithResponses) PostUsersWithResponse(ctx context.Context, params *PostUsersParams, body PostUsersJSONRequestBody) (*PostUsersResponse, error) {
 	rsp, err := c.PostUsers(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -21091,7 +21843,7 @@ func (c *ClientWithResponses) PostUsersWithResponse(ctx context.Context, params 
 }
 
 // DeleteUsersIDWithResponse request returning *DeleteUsersIDResponse
-func (c *ClientWithResponses) DeleteUsersIDWithResponse(ctx context.Context, userID string, params *DeleteUsersIDParams) (*deleteUsersIDResponse, error) {
+func (c *ClientWithResponses) DeleteUsersIDWithResponse(ctx context.Context, userID string, params *DeleteUsersIDParams) (*DeleteUsersIDResponse, error) {
 	rsp, err := c.DeleteUsersID(ctx, userID, params)
 	if err != nil {
 		return nil, err
@@ -21100,7 +21852,7 @@ func (c *ClientWithResponses) DeleteUsersIDWithResponse(ctx context.Context, use
 }
 
 // GetUsersIDWithResponse request returning *GetUsersIDResponse
-func (c *ClientWithResponses) GetUsersIDWithResponse(ctx context.Context, userID string, params *GetUsersIDParams) (*getUsersIDResponse, error) {
+func (c *ClientWithResponses) GetUsersIDWithResponse(ctx context.Context, userID string, params *GetUsersIDParams) (*GetUsersIDResponse, error) {
 	rsp, err := c.GetUsersID(ctx, userID, params)
 	if err != nil {
 		return nil, err
@@ -21109,7 +21861,7 @@ func (c *ClientWithResponses) GetUsersIDWithResponse(ctx context.Context, userID
 }
 
 // PatchUsersIDWithBodyWithResponse request with arbitrary body returning *PatchUsersIDResponse
-func (c *ClientWithResponses) PatchUsersIDWithBodyWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, contentType string, body io.Reader) (*patchUsersIDResponse, error) {
+func (c *ClientWithResponses) PatchUsersIDWithBodyWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, contentType string, body io.Reader) (*PatchUsersIDResponse, error) {
 	rsp, err := c.PatchUsersIDWithBody(ctx, userID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21117,7 +21869,7 @@ func (c *ClientWithResponses) PatchUsersIDWithBodyWithResponse(ctx context.Conte
 	return ParsePatchUsersIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchUsersIDWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*patchUsersIDResponse, error) {
+func (c *ClientWithResponses) PatchUsersIDWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody) (*PatchUsersIDResponse, error) {
 	rsp, err := c.PatchUsersID(ctx, userID, params, body)
 	if err != nil {
 		return nil, err
@@ -21126,7 +21878,7 @@ func (c *ClientWithResponses) PatchUsersIDWithResponse(ctx context.Context, user
 }
 
 // PostUsersIDPasswordWithBodyWithResponse request with arbitrary body returning *PostUsersIDPasswordResponse
-func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*postUsersIDPasswordResponse, error) {
+func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader) (*PostUsersIDPasswordResponse, error) {
 	rsp, err := c.PostUsersIDPasswordWithBody(ctx, userID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21134,7 +21886,7 @@ func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx contex
 	return ParsePostUsersIDPasswordResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostUsersIDPasswordWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*postUsersIDPasswordResponse, error) {
+func (c *ClientWithResponses) PostUsersIDPasswordWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody) (*PostUsersIDPasswordResponse, error) {
 	rsp, err := c.PostUsersIDPassword(ctx, userID, params, body)
 	if err != nil {
 		return nil, err
@@ -21143,7 +21895,7 @@ func (c *ClientWithResponses) PostUsersIDPasswordWithResponse(ctx context.Contex
 }
 
 // GetVariablesWithResponse request returning *GetVariablesResponse
-func (c *ClientWithResponses) GetVariablesWithResponse(ctx context.Context, params *GetVariablesParams) (*getVariablesResponse, error) {
+func (c *ClientWithResponses) GetVariablesWithResponse(ctx context.Context, params *GetVariablesParams) (*GetVariablesResponse, error) {
 	rsp, err := c.GetVariables(ctx, params)
 	if err != nil {
 		return nil, err
@@ -21152,7 +21904,7 @@ func (c *ClientWithResponses) GetVariablesWithResponse(ctx context.Context, para
 }
 
 // PostVariablesWithBodyWithResponse request with arbitrary body returning *PostVariablesResponse
-func (c *ClientWithResponses) PostVariablesWithBodyWithResponse(ctx context.Context, params *PostVariablesParams, contentType string, body io.Reader) (*postVariablesResponse, error) {
+func (c *ClientWithResponses) PostVariablesWithBodyWithResponse(ctx context.Context, params *PostVariablesParams, contentType string, body io.Reader) (*PostVariablesResponse, error) {
 	rsp, err := c.PostVariablesWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21160,7 +21912,7 @@ func (c *ClientWithResponses) PostVariablesWithBodyWithResponse(ctx context.Cont
 	return ParsePostVariablesResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostVariablesWithResponse(ctx context.Context, params *PostVariablesParams, body PostVariablesJSONRequestBody) (*postVariablesResponse, error) {
+func (c *ClientWithResponses) PostVariablesWithResponse(ctx context.Context, params *PostVariablesParams, body PostVariablesJSONRequestBody) (*PostVariablesResponse, error) {
 	rsp, err := c.PostVariables(ctx, params, body)
 	if err != nil {
 		return nil, err
@@ -21169,7 +21921,7 @@ func (c *ClientWithResponses) PostVariablesWithResponse(ctx context.Context, par
 }
 
 // DeleteVariablesIDWithResponse request returning *DeleteVariablesIDResponse
-func (c *ClientWithResponses) DeleteVariablesIDWithResponse(ctx context.Context, variableID string, params *DeleteVariablesIDParams) (*deleteVariablesIDResponse, error) {
+func (c *ClientWithResponses) DeleteVariablesIDWithResponse(ctx context.Context, variableID string, params *DeleteVariablesIDParams) (*DeleteVariablesIDResponse, error) {
 	rsp, err := c.DeleteVariablesID(ctx, variableID, params)
 	if err != nil {
 		return nil, err
@@ -21178,7 +21930,7 @@ func (c *ClientWithResponses) DeleteVariablesIDWithResponse(ctx context.Context,
 }
 
 // GetVariablesIDWithResponse request returning *GetVariablesIDResponse
-func (c *ClientWithResponses) GetVariablesIDWithResponse(ctx context.Context, variableID string, params *GetVariablesIDParams) (*getVariablesIDResponse, error) {
+func (c *ClientWithResponses) GetVariablesIDWithResponse(ctx context.Context, variableID string, params *GetVariablesIDParams) (*GetVariablesIDResponse, error) {
 	rsp, err := c.GetVariablesID(ctx, variableID, params)
 	if err != nil {
 		return nil, err
@@ -21187,7 +21939,7 @@ func (c *ClientWithResponses) GetVariablesIDWithResponse(ctx context.Context, va
 }
 
 // PatchVariablesIDWithBodyWithResponse request with arbitrary body returning *PatchVariablesIDResponse
-func (c *ClientWithResponses) PatchVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, contentType string, body io.Reader) (*patchVariablesIDResponse, error) {
+func (c *ClientWithResponses) PatchVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, contentType string, body io.Reader) (*PatchVariablesIDResponse, error) {
 	rsp, err := c.PatchVariablesIDWithBody(ctx, variableID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21195,7 +21947,7 @@ func (c *ClientWithResponses) PatchVariablesIDWithBodyWithResponse(ctx context.C
 	return ParsePatchVariablesIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PatchVariablesIDWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, body PatchVariablesIDJSONRequestBody) (*patchVariablesIDResponse, error) {
+func (c *ClientWithResponses) PatchVariablesIDWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, body PatchVariablesIDJSONRequestBody) (*PatchVariablesIDResponse, error) {
 	rsp, err := c.PatchVariablesID(ctx, variableID, params, body)
 	if err != nil {
 		return nil, err
@@ -21204,7 +21956,7 @@ func (c *ClientWithResponses) PatchVariablesIDWithResponse(ctx context.Context, 
 }
 
 // PutVariablesIDWithBodyWithResponse request with arbitrary body returning *PutVariablesIDResponse
-func (c *ClientWithResponses) PutVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, contentType string, body io.Reader) (*putVariablesIDResponse, error) {
+func (c *ClientWithResponses) PutVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, contentType string, body io.Reader) (*PutVariablesIDResponse, error) {
 	rsp, err := c.PutVariablesIDWithBody(ctx, variableID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21212,7 +21964,7 @@ func (c *ClientWithResponses) PutVariablesIDWithBodyWithResponse(ctx context.Con
 	return ParsePutVariablesIDResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutVariablesIDWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, body PutVariablesIDJSONRequestBody) (*putVariablesIDResponse, error) {
+func (c *ClientWithResponses) PutVariablesIDWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, body PutVariablesIDJSONRequestBody) (*PutVariablesIDResponse, error) {
 	rsp, err := c.PutVariablesID(ctx, variableID, params, body)
 	if err != nil {
 		return nil, err
@@ -21221,7 +21973,7 @@ func (c *ClientWithResponses) PutVariablesIDWithResponse(ctx context.Context, va
 }
 
 // GetVariablesIDLabelsWithResponse request returning *GetVariablesIDLabelsResponse
-func (c *ClientWithResponses) GetVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *GetVariablesIDLabelsParams) (*getVariablesIDLabelsResponse, error) {
+func (c *ClientWithResponses) GetVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *GetVariablesIDLabelsParams) (*GetVariablesIDLabelsResponse, error) {
 	rsp, err := c.GetVariablesIDLabels(ctx, variableID, params)
 	if err != nil {
 		return nil, err
@@ -21230,7 +21982,7 @@ func (c *ClientWithResponses) GetVariablesIDLabelsWithResponse(ctx context.Conte
 }
 
 // PostVariablesIDLabelsWithBodyWithResponse request with arbitrary body returning *PostVariablesIDLabelsResponse
-func (c *ClientWithResponses) PostVariablesIDLabelsWithBodyWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, contentType string, body io.Reader) (*postVariablesIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostVariablesIDLabelsWithBodyWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, contentType string, body io.Reader) (*PostVariablesIDLabelsResponse, error) {
 	rsp, err := c.PostVariablesIDLabelsWithBody(ctx, variableID, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21238,7 +21990,7 @@ func (c *ClientWithResponses) PostVariablesIDLabelsWithBodyWithResponse(ctx cont
 	return ParsePostVariablesIDLabelsResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, body PostVariablesIDLabelsJSONRequestBody) (*postVariablesIDLabelsResponse, error) {
+func (c *ClientWithResponses) PostVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, body PostVariablesIDLabelsJSONRequestBody) (*PostVariablesIDLabelsResponse, error) {
 	rsp, err := c.PostVariablesIDLabels(ctx, variableID, params, body)
 	if err != nil {
 		return nil, err
@@ -21247,7 +21999,7 @@ func (c *ClientWithResponses) PostVariablesIDLabelsWithResponse(ctx context.Cont
 }
 
 // DeleteVariablesIDLabelsIDWithResponse request returning *DeleteVariablesIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteVariablesIDLabelsIDWithResponse(ctx context.Context, variableID string, labelID string, params *DeleteVariablesIDLabelsIDParams) (*deleteVariablesIDLabelsIDResponse, error) {
+func (c *ClientWithResponses) DeleteVariablesIDLabelsIDWithResponse(ctx context.Context, variableID string, labelID string, params *DeleteVariablesIDLabelsIDParams) (*DeleteVariablesIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteVariablesIDLabelsID(ctx, variableID, labelID, params)
 	if err != nil {
 		return nil, err
@@ -21256,7 +22008,7 @@ func (c *ClientWithResponses) DeleteVariablesIDLabelsIDWithResponse(ctx context.
 }
 
 // PostWriteWithBodyWithResponse request with arbitrary body returning *PostWriteResponse
-func (c *ClientWithResponses) PostWriteWithBodyWithResponse(ctx context.Context, params *PostWriteParams, contentType string, body io.Reader) (*postWriteResponse, error) {
+func (c *ClientWithResponses) PostWriteWithBodyWithResponse(ctx context.Context, params *PostWriteParams, contentType string, body io.Reader) (*PostWriteResponse, error) {
 	rsp, err := c.PostWriteWithBody(ctx, params, contentType, body)
 	if err != nil {
 		return nil, err
@@ -21265,20 +22017,20 @@ func (c *ClientWithResponses) PostWriteWithBodyWithResponse(ctx context.Context,
 }
 
 // ParseGetRoutesResponse parses an HTTP response from a GetRoutesWithResponse call
-func ParseGetRoutesResponse(rsp *http.Response) (*getRoutesResponse, error) {
+func ParseGetRoutesResponse(rsp *http.Response) (*GetRoutesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getRoutesResponse{
+	response := &GetRoutesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Routes
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21296,14 +22048,14 @@ func ParseGetRoutesResponse(rsp *http.Response) (*getRoutesResponse, error) {
 }
 
 // ParseGetAuthorizationsResponse parses an HTTP response from a GetAuthorizationsWithResponse call
-func ParseGetAuthorizationsResponse(rsp *http.Response) (*getAuthorizationsResponse, error) {
+func ParseGetAuthorizationsResponse(rsp *http.Response) (*GetAuthorizationsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getAuthorizationsResponse{
+	response := &GetAuthorizationsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21316,7 +22068,7 @@ func ParseGetAuthorizationsResponse(rsp *http.Response) (*getAuthorizationsRespo
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21334,14 +22086,14 @@ func ParseGetAuthorizationsResponse(rsp *http.Response) (*getAuthorizationsRespo
 }
 
 // ParsePostAuthorizationsResponse parses an HTTP response from a PostAuthorizationsWithResponse call
-func ParsePostAuthorizationsResponse(rsp *http.Response) (*postAuthorizationsResponse, error) {
+func ParsePostAuthorizationsResponse(rsp *http.Response) (*PostAuthorizationsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postAuthorizationsResponse{
+	response := &PostAuthorizationsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21361,7 +22113,7 @@ func ParsePostAuthorizationsResponse(rsp *http.Response) (*postAuthorizationsRes
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21379,20 +22131,20 @@ func ParsePostAuthorizationsResponse(rsp *http.Response) (*postAuthorizationsRes
 }
 
 // ParseDeleteAuthorizationsIDResponse parses an HTTP response from a DeleteAuthorizationsIDWithResponse call
-func ParseDeleteAuthorizationsIDResponse(rsp *http.Response) (*deleteAuthorizationsIDResponse, error) {
+func ParseDeleteAuthorizationsIDResponse(rsp *http.Response) (*DeleteAuthorizationsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteAuthorizationsIDResponse{
+	response := &DeleteAuthorizationsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21410,14 +22162,14 @@ func ParseDeleteAuthorizationsIDResponse(rsp *http.Response) (*deleteAuthorizati
 }
 
 // ParseGetAuthorizationsIDResponse parses an HTTP response from a GetAuthorizationsIDWithResponse call
-func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*getAuthorizationsIDResponse, error) {
+func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*GetAuthorizationsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getAuthorizationsIDResponse{
+	response := &GetAuthorizationsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21430,7 +22182,7 @@ func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*getAuthorizationsIDR
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21448,14 +22200,14 @@ func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*getAuthorizationsIDR
 }
 
 // ParsePatchAuthorizationsIDResponse parses an HTTP response from a PatchAuthorizationsIDWithResponse call
-func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*patchAuthorizationsIDResponse, error) {
+func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*PatchAuthorizationsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchAuthorizationsIDResponse{
+	response := &PatchAuthorizationsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21468,7 +22220,7 @@ func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*patchAuthorization
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21486,14 +22238,14 @@ func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*patchAuthorization
 }
 
 // ParseGetBucketsResponse parses an HTTP response from a GetBucketsWithResponse call
-func ParseGetBucketsResponse(rsp *http.Response) (*getBucketsResponse, error) {
+func ParseGetBucketsResponse(rsp *http.Response) (*GetBucketsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getBucketsResponse{
+	response := &GetBucketsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21506,7 +22258,7 @@ func ParseGetBucketsResponse(rsp *http.Response) (*getBucketsResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21524,14 +22276,14 @@ func ParseGetBucketsResponse(rsp *http.Response) (*getBucketsResponse, error) {
 }
 
 // ParsePostBucketsResponse parses an HTTP response from a PostBucketsWithResponse call
-func ParsePostBucketsResponse(rsp *http.Response) (*postBucketsResponse, error) {
+func ParsePostBucketsResponse(rsp *http.Response) (*PostBucketsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postBucketsResponse{
+	response := &PostBucketsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21551,7 +22303,7 @@ func ParsePostBucketsResponse(rsp *http.Response) (*postBucketsResponse, error) 
 		}
 		response.JSON422 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21569,14 +22321,14 @@ func ParsePostBucketsResponse(rsp *http.Response) (*postBucketsResponse, error) 
 }
 
 // ParseDeleteBucketsIDResponse parses an HTTP response from a DeleteBucketsIDWithResponse call
-func ParseDeleteBucketsIDResponse(rsp *http.Response) (*deleteBucketsIDResponse, error) {
+func ParseDeleteBucketsIDResponse(rsp *http.Response) (*DeleteBucketsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteBucketsIDResponse{
+	response := &DeleteBucketsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21589,7 +22341,7 @@ func ParseDeleteBucketsIDResponse(rsp *http.Response) (*deleteBucketsIDResponse,
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21607,14 +22359,14 @@ func ParseDeleteBucketsIDResponse(rsp *http.Response) (*deleteBucketsIDResponse,
 }
 
 // ParseGetBucketsIDResponse parses an HTTP response from a GetBucketsIDWithResponse call
-func ParseGetBucketsIDResponse(rsp *http.Response) (*getBucketsIDResponse, error) {
+func ParseGetBucketsIDResponse(rsp *http.Response) (*GetBucketsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getBucketsIDResponse{
+	response := &GetBucketsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21627,7 +22379,7 @@ func ParseGetBucketsIDResponse(rsp *http.Response) (*getBucketsIDResponse, error
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21645,14 +22397,14 @@ func ParseGetBucketsIDResponse(rsp *http.Response) (*getBucketsIDResponse, error
 }
 
 // ParsePatchBucketsIDResponse parses an HTTP response from a PatchBucketsIDWithResponse call
-func ParsePatchBucketsIDResponse(rsp *http.Response) (*patchBucketsIDResponse, error) {
+func ParsePatchBucketsIDResponse(rsp *http.Response) (*PatchBucketsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchBucketsIDResponse{
+	response := &PatchBucketsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21665,7 +22417,7 @@ func ParsePatchBucketsIDResponse(rsp *http.Response) (*patchBucketsIDResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21683,14 +22435,14 @@ func ParsePatchBucketsIDResponse(rsp *http.Response) (*patchBucketsIDResponse, e
 }
 
 // ParseGetBucketsIDLabelsResponse parses an HTTP response from a GetBucketsIDLabelsWithResponse call
-func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*getBucketsIDLabelsResponse, error) {
+func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*GetBucketsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getBucketsIDLabelsResponse{
+	response := &GetBucketsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21703,7 +22455,7 @@ func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*getBucketsIDLabelsRes
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21721,14 +22473,14 @@ func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*getBucketsIDLabelsRes
 }
 
 // ParsePostBucketsIDLabelsResponse parses an HTTP response from a PostBucketsIDLabelsWithResponse call
-func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*postBucketsIDLabelsResponse, error) {
+func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*PostBucketsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postBucketsIDLabelsResponse{
+	response := &PostBucketsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21741,7 +22493,7 @@ func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*postBucketsIDLabelsR
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21759,14 +22511,14 @@ func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*postBucketsIDLabelsR
 }
 
 // ParseDeleteBucketsIDLabelsIDResponse parses an HTTP response from a DeleteBucketsIDLabelsIDWithResponse call
-func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*deleteBucketsIDLabelsIDResponse, error) {
+func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*DeleteBucketsIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteBucketsIDLabelsIDResponse{
+	response := &DeleteBucketsIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21779,7 +22531,7 @@ func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*deleteBucketsIDL
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21797,14 +22549,14 @@ func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*deleteBucketsIDL
 }
 
 // ParseGetBucketsIDMembersResponse parses an HTTP response from a GetBucketsIDMembersWithResponse call
-func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*getBucketsIDMembersResponse, error) {
+func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*GetBucketsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getBucketsIDMembersResponse{
+	response := &GetBucketsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21817,7 +22569,7 @@ func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*getBucketsIDMembersR
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21835,14 +22587,14 @@ func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*getBucketsIDMembersR
 }
 
 // ParsePostBucketsIDMembersResponse parses an HTTP response from a PostBucketsIDMembersWithResponse call
-func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*postBucketsIDMembersResponse, error) {
+func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*PostBucketsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postBucketsIDMembersResponse{
+	response := &PostBucketsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21855,7 +22607,7 @@ func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*postBucketsIDMember
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21873,20 +22625,20 @@ func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*postBucketsIDMember
 }
 
 // ParseDeleteBucketsIDMembersIDResponse parses an HTTP response from a DeleteBucketsIDMembersIDWithResponse call
-func ParseDeleteBucketsIDMembersIDResponse(rsp *http.Response) (*deleteBucketsIDMembersIDResponse, error) {
+func ParseDeleteBucketsIDMembersIDResponse(rsp *http.Response) (*DeleteBucketsIDMembersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteBucketsIDMembersIDResponse{
+	response := &DeleteBucketsIDMembersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21904,14 +22656,14 @@ func ParseDeleteBucketsIDMembersIDResponse(rsp *http.Response) (*deleteBucketsID
 }
 
 // ParseGetBucketsIDOwnersResponse parses an HTTP response from a GetBucketsIDOwnersWithResponse call
-func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*getBucketsIDOwnersResponse, error) {
+func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*GetBucketsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getBucketsIDOwnersResponse{
+	response := &GetBucketsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21924,7 +22676,7 @@ func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*getBucketsIDOwnersRes
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21942,14 +22694,14 @@ func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*getBucketsIDOwnersRes
 }
 
 // ParsePostBucketsIDOwnersResponse parses an HTTP response from a PostBucketsIDOwnersWithResponse call
-func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*postBucketsIDOwnersResponse, error) {
+func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*PostBucketsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postBucketsIDOwnersResponse{
+	response := &PostBucketsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -21962,7 +22714,7 @@ func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*postBucketsIDOwnersR
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -21980,20 +22732,20 @@ func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*postBucketsIDOwnersR
 }
 
 // ParseDeleteBucketsIDOwnersIDResponse parses an HTTP response from a DeleteBucketsIDOwnersIDWithResponse call
-func ParseDeleteBucketsIDOwnersIDResponse(rsp *http.Response) (*deleteBucketsIDOwnersIDResponse, error) {
+func ParseDeleteBucketsIDOwnersIDResponse(rsp *http.Response) (*DeleteBucketsIDOwnersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteBucketsIDOwnersIDResponse{
+	response := &DeleteBucketsIDOwnersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22011,14 +22763,14 @@ func ParseDeleteBucketsIDOwnersIDResponse(rsp *http.Response) (*deleteBucketsIDO
 }
 
 // ParseGetChecksResponse parses an HTTP response from a GetChecksWithResponse call
-func ParseGetChecksResponse(rsp *http.Response) (*getChecksResponse, error) {
+func ParseGetChecksResponse(rsp *http.Response) (*GetChecksResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getChecksResponse{
+	response := &GetChecksResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22031,7 +22783,7 @@ func ParseGetChecksResponse(rsp *http.Response) (*getChecksResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22049,14 +22801,14 @@ func ParseGetChecksResponse(rsp *http.Response) (*getChecksResponse, error) {
 }
 
 // ParseCreateCheckResponse parses an HTTP response from a CreateCheckWithResponse call
-func ParseCreateCheckResponse(rsp *http.Response) (*createCheckResponse, error) {
+func ParseCreateCheckResponse(rsp *http.Response) (*CreateCheckResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &createCheckResponse{
+	response := &CreateCheckResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22069,7 +22821,7 @@ func ParseCreateCheckResponse(rsp *http.Response) (*createCheckResponse, error) 
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22087,14 +22839,14 @@ func ParseCreateCheckResponse(rsp *http.Response) (*createCheckResponse, error) 
 }
 
 // ParseDeleteChecksIDResponse parses an HTTP response from a DeleteChecksIDWithResponse call
-func ParseDeleteChecksIDResponse(rsp *http.Response) (*deleteChecksIDResponse, error) {
+func ParseDeleteChecksIDResponse(rsp *http.Response) (*DeleteChecksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteChecksIDResponse{
+	response := &DeleteChecksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22107,7 +22859,7 @@ func ParseDeleteChecksIDResponse(rsp *http.Response) (*deleteChecksIDResponse, e
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22125,14 +22877,14 @@ func ParseDeleteChecksIDResponse(rsp *http.Response) (*deleteChecksIDResponse, e
 }
 
 // ParseGetChecksIDResponse parses an HTTP response from a GetChecksIDWithResponse call
-func ParseGetChecksIDResponse(rsp *http.Response) (*getChecksIDResponse, error) {
+func ParseGetChecksIDResponse(rsp *http.Response) (*GetChecksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getChecksIDResponse{
+	response := &GetChecksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22145,7 +22897,7 @@ func ParseGetChecksIDResponse(rsp *http.Response) (*getChecksIDResponse, error) 
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22163,14 +22915,14 @@ func ParseGetChecksIDResponse(rsp *http.Response) (*getChecksIDResponse, error) 
 }
 
 // ParsePatchChecksIDResponse parses an HTTP response from a PatchChecksIDWithResponse call
-func ParsePatchChecksIDResponse(rsp *http.Response) (*patchChecksIDResponse, error) {
+func ParsePatchChecksIDResponse(rsp *http.Response) (*PatchChecksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchChecksIDResponse{
+	response := &PatchChecksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22190,7 +22942,7 @@ func ParsePatchChecksIDResponse(rsp *http.Response) (*patchChecksIDResponse, err
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22208,14 +22960,14 @@ func ParsePatchChecksIDResponse(rsp *http.Response) (*patchChecksIDResponse, err
 }
 
 // ParsePutChecksIDResponse parses an HTTP response from a PutChecksIDWithResponse call
-func ParsePutChecksIDResponse(rsp *http.Response) (*putChecksIDResponse, error) {
+func ParsePutChecksIDResponse(rsp *http.Response) (*PutChecksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putChecksIDResponse{
+	response := &PutChecksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22235,7 +22987,7 @@ func ParsePutChecksIDResponse(rsp *http.Response) (*putChecksIDResponse, error) 
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22253,14 +23005,14 @@ func ParsePutChecksIDResponse(rsp *http.Response) (*putChecksIDResponse, error) 
 }
 
 // ParseGetChecksIDLabelsResponse parses an HTTP response from a GetChecksIDLabelsWithResponse call
-func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*getChecksIDLabelsResponse, error) {
+func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*GetChecksIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getChecksIDLabelsResponse{
+	response := &GetChecksIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22273,7 +23025,7 @@ func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*getChecksIDLabelsRespo
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22291,14 +23043,14 @@ func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*getChecksIDLabelsRespo
 }
 
 // ParsePostChecksIDLabelsResponse parses an HTTP response from a PostChecksIDLabelsWithResponse call
-func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*postChecksIDLabelsResponse, error) {
+func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*PostChecksIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postChecksIDLabelsResponse{
+	response := &PostChecksIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22311,7 +23063,7 @@ func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*postChecksIDLabelsRes
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22329,14 +23081,14 @@ func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*postChecksIDLabelsRes
 }
 
 // ParseDeleteChecksIDLabelsIDResponse parses an HTTP response from a DeleteChecksIDLabelsIDWithResponse call
-func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*deleteChecksIDLabelsIDResponse, error) {
+func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*DeleteChecksIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteChecksIDLabelsIDResponse{
+	response := &DeleteChecksIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22349,7 +23101,7 @@ func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*deleteChecksIDLab
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22367,14 +23119,14 @@ func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*deleteChecksIDLab
 }
 
 // ParseGetChecksIDQueryResponse parses an HTTP response from a GetChecksIDQueryWithResponse call
-func ParseGetChecksIDQueryResponse(rsp *http.Response) (*getChecksIDQueryResponse, error) {
+func ParseGetChecksIDQueryResponse(rsp *http.Response) (*GetChecksIDQueryResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getChecksIDQueryResponse{
+	response := &GetChecksIDQueryResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22401,7 +23153,7 @@ func ParseGetChecksIDQueryResponse(rsp *http.Response) (*getChecksIDQueryRespons
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22419,14 +23171,14 @@ func ParseGetChecksIDQueryResponse(rsp *http.Response) (*getChecksIDQueryRespons
 }
 
 // ParseGetDashboardsResponse parses an HTTP response from a GetDashboardsWithResponse call
-func ParseGetDashboardsResponse(rsp *http.Response) (*getDashboardsResponse, error) {
+func ParseGetDashboardsResponse(rsp *http.Response) (*GetDashboardsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDashboardsResponse{
+	response := &GetDashboardsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22439,7 +23191,7 @@ func ParseGetDashboardsResponse(rsp *http.Response) (*getDashboardsResponse, err
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22457,14 +23209,14 @@ func ParseGetDashboardsResponse(rsp *http.Response) (*getDashboardsResponse, err
 }
 
 // ParsePostDashboardsResponse parses an HTTP response from a PostDashboardsWithResponse call
-func ParsePostDashboardsResponse(rsp *http.Response) (*postDashboardsResponse, error) {
+func ParsePostDashboardsResponse(rsp *http.Response) (*PostDashboardsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDashboardsResponse{
+	response := &PostDashboardsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22477,7 +23229,7 @@ func ParsePostDashboardsResponse(rsp *http.Response) (*postDashboardsResponse, e
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22495,14 +23247,14 @@ func ParsePostDashboardsResponse(rsp *http.Response) (*postDashboardsResponse, e
 }
 
 // ParseDeleteDashboardsIDResponse parses an HTTP response from a DeleteDashboardsIDWithResponse call
-func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*deleteDashboardsIDResponse, error) {
+func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*DeleteDashboardsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDashboardsIDResponse{
+	response := &DeleteDashboardsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22515,7 +23267,7 @@ func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*deleteDashboardsIDRes
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22533,14 +23285,14 @@ func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*deleteDashboardsIDRes
 }
 
 // ParseGetDashboardsIDResponse parses an HTTP response from a GetDashboardsIDWithResponse call
-func ParseGetDashboardsIDResponse(rsp *http.Response) (*getDashboardsIDResponse, error) {
+func ParseGetDashboardsIDResponse(rsp *http.Response) (*GetDashboardsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDashboardsIDResponse{
+	response := &GetDashboardsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22560,7 +23312,7 @@ func ParseGetDashboardsIDResponse(rsp *http.Response) (*getDashboardsIDResponse,
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22578,14 +23330,14 @@ func ParseGetDashboardsIDResponse(rsp *http.Response) (*getDashboardsIDResponse,
 }
 
 // ParsePatchDashboardsIDResponse parses an HTTP response from a PatchDashboardsIDWithResponse call
-func ParsePatchDashboardsIDResponse(rsp *http.Response) (*patchDashboardsIDResponse, error) {
+func ParsePatchDashboardsIDResponse(rsp *http.Response) (*PatchDashboardsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchDashboardsIDResponse{
+	response := &PatchDashboardsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22605,7 +23357,7 @@ func ParsePatchDashboardsIDResponse(rsp *http.Response) (*patchDashboardsIDRespo
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22623,14 +23375,14 @@ func ParsePatchDashboardsIDResponse(rsp *http.Response) (*patchDashboardsIDRespo
 }
 
 // ParsePostDashboardsIDCellsResponse parses an HTTP response from a PostDashboardsIDCellsWithResponse call
-func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*postDashboardsIDCellsResponse, error) {
+func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*PostDashboardsIDCellsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDashboardsIDCellsResponse{
+	response := &PostDashboardsIDCellsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22650,7 +23402,7 @@ func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*postDashboardsIDCe
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22668,14 +23420,14 @@ func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*postDashboardsIDCe
 }
 
 // ParsePutDashboardsIDCellsResponse parses an HTTP response from a PutDashboardsIDCellsWithResponse call
-func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*putDashboardsIDCellsResponse, error) {
+func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*PutDashboardsIDCellsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putDashboardsIDCellsResponse{
+	response := &PutDashboardsIDCellsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22695,7 +23447,7 @@ func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*putDashboardsIDCell
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22713,14 +23465,14 @@ func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*putDashboardsIDCell
 }
 
 // ParseDeleteDashboardsIDCellsIDResponse parses an HTTP response from a DeleteDashboardsIDCellsIDWithResponse call
-func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*deleteDashboardsIDCellsIDResponse, error) {
+func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*DeleteDashboardsIDCellsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDashboardsIDCellsIDResponse{
+	response := &DeleteDashboardsIDCellsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22733,7 +23485,7 @@ func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*deleteDashboar
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22751,14 +23503,14 @@ func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*deleteDashboar
 }
 
 // ParsePatchDashboardsIDCellsIDResponse parses an HTTP response from a PatchDashboardsIDCellsIDWithResponse call
-func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*patchDashboardsIDCellsIDResponse, error) {
+func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*PatchDashboardsIDCellsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchDashboardsIDCellsIDResponse{
+	response := &PatchDashboardsIDCellsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22778,7 +23530,7 @@ func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*patchDashboards
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22796,14 +23548,14 @@ func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*patchDashboards
 }
 
 // ParseGetDashboardsIDCellsIDViewResponse parses an HTTP response from a GetDashboardsIDCellsIDViewWithResponse call
-func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*getDashboardsIDCellsIDViewResponse, error) {
+func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*GetDashboardsIDCellsIDViewResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDashboardsIDCellsIDViewResponse{
+	response := &GetDashboardsIDCellsIDViewResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22823,7 +23575,7 @@ func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*getDashboards
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22841,14 +23593,14 @@ func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*getDashboards
 }
 
 // ParsePatchDashboardsIDCellsIDViewResponse parses an HTTP response from a PatchDashboardsIDCellsIDViewWithResponse call
-func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*patchDashboardsIDCellsIDViewResponse, error) {
+func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*PatchDashboardsIDCellsIDViewResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchDashboardsIDCellsIDViewResponse{
+	response := &PatchDashboardsIDCellsIDViewResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22868,7 +23620,7 @@ func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*patchDashbo
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22886,14 +23638,14 @@ func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*patchDashbo
 }
 
 // ParseGetDashboardsIDLabelsResponse parses an HTTP response from a GetDashboardsIDLabelsWithResponse call
-func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*getDashboardsIDLabelsResponse, error) {
+func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*GetDashboardsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDashboardsIDLabelsResponse{
+	response := &GetDashboardsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22906,7 +23658,7 @@ func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*getDashboardsIDLab
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22924,14 +23676,14 @@ func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*getDashboardsIDLab
 }
 
 // ParsePostDashboardsIDLabelsResponse parses an HTTP response from a PostDashboardsIDLabelsWithResponse call
-func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*postDashboardsIDLabelsResponse, error) {
+func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*PostDashboardsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDashboardsIDLabelsResponse{
+	response := &PostDashboardsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22944,7 +23696,7 @@ func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*postDashboardsIDL
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -22962,14 +23714,14 @@ func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*postDashboardsIDL
 }
 
 // ParseDeleteDashboardsIDLabelsIDResponse parses an HTTP response from a DeleteDashboardsIDLabelsIDWithResponse call
-func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*deleteDashboardsIDLabelsIDResponse, error) {
+func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*DeleteDashboardsIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDashboardsIDLabelsIDResponse{
+	response := &DeleteDashboardsIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22982,7 +23734,7 @@ func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*deleteDashboa
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23000,14 +23752,14 @@ func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*deleteDashboa
 }
 
 // ParseGetDashboardsIDMembersResponse parses an HTTP response from a GetDashboardsIDMembersWithResponse call
-func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*getDashboardsIDMembersResponse, error) {
+func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*GetDashboardsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDashboardsIDMembersResponse{
+	response := &GetDashboardsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23020,7 +23772,7 @@ func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*getDashboardsIDMe
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23038,14 +23790,14 @@ func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*getDashboardsIDMe
 }
 
 // ParsePostDashboardsIDMembersResponse parses an HTTP response from a PostDashboardsIDMembersWithResponse call
-func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*postDashboardsIDMembersResponse, error) {
+func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*PostDashboardsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDashboardsIDMembersResponse{
+	response := &PostDashboardsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23058,7 +23810,7 @@ func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*postDashboardsID
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23076,20 +23828,20 @@ func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*postDashboardsID
 }
 
 // ParseDeleteDashboardsIDMembersIDResponse parses an HTTP response from a DeleteDashboardsIDMembersIDWithResponse call
-func ParseDeleteDashboardsIDMembersIDResponse(rsp *http.Response) (*deleteDashboardsIDMembersIDResponse, error) {
+func ParseDeleteDashboardsIDMembersIDResponse(rsp *http.Response) (*DeleteDashboardsIDMembersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDashboardsIDMembersIDResponse{
+	response := &DeleteDashboardsIDMembersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23107,14 +23859,14 @@ func ParseDeleteDashboardsIDMembersIDResponse(rsp *http.Response) (*deleteDashbo
 }
 
 // ParseGetDashboardsIDOwnersResponse parses an HTTP response from a GetDashboardsIDOwnersWithResponse call
-func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*getDashboardsIDOwnersResponse, error) {
+func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*GetDashboardsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDashboardsIDOwnersResponse{
+	response := &GetDashboardsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23127,7 +23879,7 @@ func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*getDashboardsIDOwn
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23145,14 +23897,14 @@ func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*getDashboardsIDOwn
 }
 
 // ParsePostDashboardsIDOwnersResponse parses an HTTP response from a PostDashboardsIDOwnersWithResponse call
-func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*postDashboardsIDOwnersResponse, error) {
+func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*PostDashboardsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDashboardsIDOwnersResponse{
+	response := &PostDashboardsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23165,7 +23917,7 @@ func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*postDashboardsIDO
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23183,20 +23935,20 @@ func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*postDashboardsIDO
 }
 
 // ParseDeleteDashboardsIDOwnersIDResponse parses an HTTP response from a DeleteDashboardsIDOwnersIDWithResponse call
-func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*deleteDashboardsIDOwnersIDResponse, error) {
+func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*DeleteDashboardsIDOwnersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDashboardsIDOwnersIDResponse{
+	response := &DeleteDashboardsIDOwnersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23214,14 +23966,14 @@ func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*deleteDashboa
 }
 
 // ParseGetDBRPsResponse parses an HTTP response from a GetDBRPsWithResponse call
-func ParseGetDBRPsResponse(rsp *http.Response) (*getDBRPsResponse, error) {
+func ParseGetDBRPsResponse(rsp *http.Response) (*GetDBRPsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDBRPsResponse{
+	response := &GetDBRPsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23241,7 +23993,7 @@ func ParseGetDBRPsResponse(rsp *http.Response) (*getDBRPsResponse, error) {
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23259,14 +24011,14 @@ func ParseGetDBRPsResponse(rsp *http.Response) (*getDBRPsResponse, error) {
 }
 
 // ParsePostDBRPResponse parses an HTTP response from a PostDBRPWithResponse call
-func ParsePostDBRPResponse(rsp *http.Response) (*postDBRPResponse, error) {
+func ParsePostDBRPResponse(rsp *http.Response) (*PostDBRPResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDBRPResponse{
+	response := &PostDBRPResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23286,7 +24038,7 @@ func ParsePostDBRPResponse(rsp *http.Response) (*postDBRPResponse, error) {
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23304,14 +24056,14 @@ func ParsePostDBRPResponse(rsp *http.Response) (*postDBRPResponse, error) {
 }
 
 // ParseDeleteDBRPIDResponse parses an HTTP response from a DeleteDBRPIDWithResponse call
-func ParseDeleteDBRPIDResponse(rsp *http.Response) (*deleteDBRPIDResponse, error) {
+func ParseDeleteDBRPIDResponse(rsp *http.Response) (*DeleteDBRPIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDBRPIDResponse{
+	response := &DeleteDBRPIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23324,7 +24076,7 @@ func ParseDeleteDBRPIDResponse(rsp *http.Response) (*deleteDBRPIDResponse, error
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23342,14 +24094,14 @@ func ParseDeleteDBRPIDResponse(rsp *http.Response) (*deleteDBRPIDResponse, error
 }
 
 // ParseGetDBRPsIDResponse parses an HTTP response from a GetDBRPsIDWithResponse call
-func ParseGetDBRPsIDResponse(rsp *http.Response) (*getDBRPsIDResponse, error) {
+func ParseGetDBRPsIDResponse(rsp *http.Response) (*GetDBRPsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDBRPsIDResponse{
+	response := &GetDBRPsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23369,7 +24121,7 @@ func ParseGetDBRPsIDResponse(rsp *http.Response) (*getDBRPsIDResponse, error) {
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23387,14 +24139,14 @@ func ParseGetDBRPsIDResponse(rsp *http.Response) (*getDBRPsIDResponse, error) {
 }
 
 // ParsePatchDBRPIDResponse parses an HTTP response from a PatchDBRPIDWithResponse call
-func ParsePatchDBRPIDResponse(rsp *http.Response) (*patchDBRPIDResponse, error) {
+func ParsePatchDBRPIDResponse(rsp *http.Response) (*PatchDBRPIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchDBRPIDResponse{
+	response := &PatchDBRPIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23421,7 +24173,7 @@ func ParsePatchDBRPIDResponse(rsp *http.Response) (*patchDBRPIDResponse, error) 
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23439,14 +24191,14 @@ func ParsePatchDBRPIDResponse(rsp *http.Response) (*patchDBRPIDResponse, error) 
 }
 
 // ParsePostDeleteResponse parses an HTTP response from a PostDeleteWithResponse call
-func ParsePostDeleteResponse(rsp *http.Response) (*postDeleteResponse, error) {
+func ParsePostDeleteResponse(rsp *http.Response) (*PostDeleteResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDeleteResponse{
+	response := &PostDeleteResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23473,7 +24225,7 @@ func ParsePostDeleteResponse(rsp *http.Response) (*postDeleteResponse, error) {
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23491,14 +24243,14 @@ func ParsePostDeleteResponse(rsp *http.Response) (*postDeleteResponse, error) {
 }
 
 // ParseGetDocumentsTemplatesResponse parses an HTTP response from a GetDocumentsTemplatesWithResponse call
-func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*getDocumentsTemplatesResponse, error) {
+func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*GetDocumentsTemplatesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDocumentsTemplatesResponse{
+	response := &GetDocumentsTemplatesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23511,7 +24263,7 @@ func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*getDocumentsTempla
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23529,14 +24281,14 @@ func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*getDocumentsTempla
 }
 
 // ParsePostDocumentsTemplatesResponse parses an HTTP response from a PostDocumentsTemplatesWithResponse call
-func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*postDocumentsTemplatesResponse, error) {
+func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*PostDocumentsTemplatesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDocumentsTemplatesResponse{
+	response := &PostDocumentsTemplatesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23549,7 +24301,7 @@ func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*postDocumentsTemp
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23567,20 +24319,20 @@ func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*postDocumentsTemp
 }
 
 // ParseDeleteDocumentsTemplatesIDResponse parses an HTTP response from a DeleteDocumentsTemplatesIDWithResponse call
-func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*deleteDocumentsTemplatesIDResponse, error) {
+func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*DeleteDocumentsTemplatesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDocumentsTemplatesIDResponse{
+	response := &DeleteDocumentsTemplatesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23598,14 +24350,14 @@ func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*deleteDocumen
 }
 
 // ParseGetDocumentsTemplatesIDResponse parses an HTTP response from a GetDocumentsTemplatesIDWithResponse call
-func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*getDocumentsTemplatesIDResponse, error) {
+func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*GetDocumentsTemplatesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDocumentsTemplatesIDResponse{
+	response := &GetDocumentsTemplatesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23618,7 +24370,7 @@ func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*getDocumentsTemp
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23636,14 +24388,14 @@ func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*getDocumentsTemp
 }
 
 // ParsePutDocumentsTemplatesIDResponse parses an HTTP response from a PutDocumentsTemplatesIDWithResponse call
-func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*putDocumentsTemplatesIDResponse, error) {
+func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*PutDocumentsTemplatesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putDocumentsTemplatesIDResponse{
+	response := &PutDocumentsTemplatesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23656,7 +24408,7 @@ func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*putDocumentsTemp
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23674,14 +24426,14 @@ func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*putDocumentsTemp
 }
 
 // ParseGetDocumentsTemplatesIDLabelsResponse parses an HTTP response from a GetDocumentsTemplatesIDLabelsWithResponse call
-func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*getDocumentsTemplatesIDLabelsResponse, error) {
+func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*GetDocumentsTemplatesIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getDocumentsTemplatesIDLabelsResponse{
+	response := &GetDocumentsTemplatesIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23694,7 +24446,7 @@ func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*getDocumen
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23712,14 +24464,14 @@ func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*getDocumen
 }
 
 // ParsePostDocumentsTemplatesIDLabelsResponse parses an HTTP response from a PostDocumentsTemplatesIDLabelsWithResponse call
-func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*postDocumentsTemplatesIDLabelsResponse, error) {
+func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*PostDocumentsTemplatesIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postDocumentsTemplatesIDLabelsResponse{
+	response := &PostDocumentsTemplatesIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23732,7 +24484,7 @@ func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*postDocum
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23750,14 +24502,14 @@ func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*postDocum
 }
 
 // ParseDeleteDocumentsTemplatesIDLabelsIDResponse parses an HTTP response from a DeleteDocumentsTemplatesIDLabelsIDWithResponse call
-func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*deleteDocumentsTemplatesIDLabelsIDResponse, error) {
+func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteDocumentsTemplatesIDLabelsIDResponse{
+	response := &DeleteDocumentsTemplatesIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23770,7 +24522,7 @@ func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*delet
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23788,14 +24540,14 @@ func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*delet
 }
 
 // ParseGetFlagsResponse parses an HTTP response from a GetFlagsWithResponse call
-func ParseGetFlagsResponse(rsp *http.Response) (*getFlagsResponse, error) {
+func ParseGetFlagsResponse(rsp *http.Response) (*GetFlagsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getFlagsResponse{
+	response := &GetFlagsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23808,7 +24560,7 @@ func ParseGetFlagsResponse(rsp *http.Response) (*getFlagsResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23826,14 +24578,14 @@ func ParseGetFlagsResponse(rsp *http.Response) (*getFlagsResponse, error) {
 }
 
 // ParseGetHealthResponse parses an HTTP response from a GetHealthWithResponse call
-func ParseGetHealthResponse(rsp *http.Response) (*getHealthResponse, error) {
+func ParseGetHealthResponse(rsp *http.Response) (*GetHealthResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getHealthResponse{
+	response := &GetHealthResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23853,7 +24605,7 @@ func ParseGetHealthResponse(rsp *http.Response) (*getHealthResponse, error) {
 		}
 		response.JSON503 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23871,14 +24623,14 @@ func ParseGetHealthResponse(rsp *http.Response) (*getHealthResponse, error) {
 }
 
 // ParseGetLabelsResponse parses an HTTP response from a GetLabelsWithResponse call
-func ParseGetLabelsResponse(rsp *http.Response) (*getLabelsResponse, error) {
+func ParseGetLabelsResponse(rsp *http.Response) (*GetLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getLabelsResponse{
+	response := &GetLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23891,7 +24643,7 @@ func ParseGetLabelsResponse(rsp *http.Response) (*getLabelsResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23909,14 +24661,14 @@ func ParseGetLabelsResponse(rsp *http.Response) (*getLabelsResponse, error) {
 }
 
 // ParsePostLabelsResponse parses an HTTP response from a PostLabelsWithResponse call
-func ParsePostLabelsResponse(rsp *http.Response) (*postLabelsResponse, error) {
+func ParsePostLabelsResponse(rsp *http.Response) (*PostLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postLabelsResponse{
+	response := &PostLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23929,7 +24681,7 @@ func ParsePostLabelsResponse(rsp *http.Response) (*postLabelsResponse, error) {
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23947,14 +24699,14 @@ func ParsePostLabelsResponse(rsp *http.Response) (*postLabelsResponse, error) {
 }
 
 // ParseDeleteLabelsIDResponse parses an HTTP response from a DeleteLabelsIDWithResponse call
-func ParseDeleteLabelsIDResponse(rsp *http.Response) (*deleteLabelsIDResponse, error) {
+func ParseDeleteLabelsIDResponse(rsp *http.Response) (*DeleteLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteLabelsIDResponse{
+	response := &DeleteLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -23967,7 +24719,7 @@ func ParseDeleteLabelsIDResponse(rsp *http.Response) (*deleteLabelsIDResponse, e
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -23985,14 +24737,14 @@ func ParseDeleteLabelsIDResponse(rsp *http.Response) (*deleteLabelsIDResponse, e
 }
 
 // ParseGetLabelsIDResponse parses an HTTP response from a GetLabelsIDWithResponse call
-func ParseGetLabelsIDResponse(rsp *http.Response) (*getLabelsIDResponse, error) {
+func ParseGetLabelsIDResponse(rsp *http.Response) (*GetLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getLabelsIDResponse{
+	response := &GetLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24005,7 +24757,7 @@ func ParseGetLabelsIDResponse(rsp *http.Response) (*getLabelsIDResponse, error) 
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24023,14 +24775,14 @@ func ParseGetLabelsIDResponse(rsp *http.Response) (*getLabelsIDResponse, error) 
 }
 
 // ParsePatchLabelsIDResponse parses an HTTP response from a PatchLabelsIDWithResponse call
-func ParsePatchLabelsIDResponse(rsp *http.Response) (*patchLabelsIDResponse, error) {
+func ParsePatchLabelsIDResponse(rsp *http.Response) (*PatchLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchLabelsIDResponse{
+	response := &PatchLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24050,7 +24802,7 @@ func ParsePatchLabelsIDResponse(rsp *http.Response) (*patchLabelsIDResponse, err
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24068,14 +24820,14 @@ func ParsePatchLabelsIDResponse(rsp *http.Response) (*patchLabelsIDResponse, err
 }
 
 // ParseGetMeResponse parses an HTTP response from a GetMeWithResponse call
-func ParseGetMeResponse(rsp *http.Response) (*getMeResponse, error) {
+func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getMeResponse{
+	response := &GetMeResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24088,7 +24840,7 @@ func ParseGetMeResponse(rsp *http.Response) (*getMeResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24106,20 +24858,20 @@ func ParseGetMeResponse(rsp *http.Response) (*getMeResponse, error) {
 }
 
 // ParsePutMePasswordResponse parses an HTTP response from a PutMePasswordWithResponse call
-func ParsePutMePasswordResponse(rsp *http.Response) (*putMePasswordResponse, error) {
+func ParsePutMePasswordResponse(rsp *http.Response) (*PutMePasswordResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putMePasswordResponse{
+	response := &PutMePasswordResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24137,14 +24889,14 @@ func ParsePutMePasswordResponse(rsp *http.Response) (*putMePasswordResponse, err
 }
 
 // ParseGetNotificationEndpointsResponse parses an HTTP response from a GetNotificationEndpointsWithResponse call
-func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*getNotificationEndpointsResponse, error) {
+func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*GetNotificationEndpointsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationEndpointsResponse{
+	response := &GetNotificationEndpointsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24157,7 +24909,7 @@ func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*getNotification
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24175,14 +24927,14 @@ func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*getNotification
 }
 
 // ParseCreateNotificationEndpointResponse parses an HTTP response from a CreateNotificationEndpointWithResponse call
-func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*createNotificationEndpointResponse, error) {
+func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*CreateNotificationEndpointResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &createNotificationEndpointResponse{
+	response := &CreateNotificationEndpointResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24195,7 +24947,7 @@ func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*createNotific
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24213,14 +24965,14 @@ func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*createNotific
 }
 
 // ParseDeleteNotificationEndpointsIDResponse parses an HTTP response from a DeleteNotificationEndpointsIDWithResponse call
-func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*deleteNotificationEndpointsIDResponse, error) {
+func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*DeleteNotificationEndpointsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteNotificationEndpointsIDResponse{
+	response := &DeleteNotificationEndpointsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24233,7 +24985,7 @@ func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*deleteNoti
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24251,14 +25003,14 @@ func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*deleteNoti
 }
 
 // ParseGetNotificationEndpointsIDResponse parses an HTTP response from a GetNotificationEndpointsIDWithResponse call
-func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*getNotificationEndpointsIDResponse, error) {
+func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*GetNotificationEndpointsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationEndpointsIDResponse{
+	response := &GetNotificationEndpointsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24271,7 +25023,7 @@ func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*getNotificati
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24289,14 +25041,14 @@ func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*getNotificati
 }
 
 // ParsePatchNotificationEndpointsIDResponse parses an HTTP response from a PatchNotificationEndpointsIDWithResponse call
-func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*patchNotificationEndpointsIDResponse, error) {
+func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*PatchNotificationEndpointsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchNotificationEndpointsIDResponse{
+	response := &PatchNotificationEndpointsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24316,7 +25068,7 @@ func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*patchNotifi
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24334,14 +25086,14 @@ func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*patchNotifi
 }
 
 // ParsePutNotificationEndpointsIDResponse parses an HTTP response from a PutNotificationEndpointsIDWithResponse call
-func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*putNotificationEndpointsIDResponse, error) {
+func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*PutNotificationEndpointsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putNotificationEndpointsIDResponse{
+	response := &PutNotificationEndpointsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24361,7 +25113,7 @@ func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*putNotificati
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24379,14 +25131,14 @@ func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*putNotificati
 }
 
 // ParseGetNotificationEndpointsIDLabelsResponse parses an HTTP response from a GetNotificationEndpointsIDLabelsWithResponse call
-func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*getNotificationEndpointsIDLabelsResponse, error) {
+func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*GetNotificationEndpointsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationEndpointsIDLabelsResponse{
+	response := &GetNotificationEndpointsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24399,7 +25151,7 @@ func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*getNoti
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24417,14 +25169,14 @@ func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*getNoti
 }
 
 // ParsePostNotificationEndpointIDLabelsResponse parses an HTTP response from a PostNotificationEndpointIDLabelsWithResponse call
-func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*postNotificationEndpointIDLabelsResponse, error) {
+func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*PostNotificationEndpointIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postNotificationEndpointIDLabelsResponse{
+	response := &PostNotificationEndpointIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24437,7 +25189,7 @@ func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*postNot
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24455,14 +25207,14 @@ func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*postNot
 }
 
 // ParseDeleteNotificationEndpointsIDLabelsIDResponse parses an HTTP response from a DeleteNotificationEndpointsIDLabelsIDWithResponse call
-func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*deleteNotificationEndpointsIDLabelsIDResponse, error) {
+func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*DeleteNotificationEndpointsIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteNotificationEndpointsIDLabelsIDResponse{
+	response := &DeleteNotificationEndpointsIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24475,7 +25227,7 @@ func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*de
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24493,14 +25245,14 @@ func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*de
 }
 
 // ParseGetNotificationRulesResponse parses an HTTP response from a GetNotificationRulesWithResponse call
-func ParseGetNotificationRulesResponse(rsp *http.Response) (*getNotificationRulesResponse, error) {
+func ParseGetNotificationRulesResponse(rsp *http.Response) (*GetNotificationRulesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationRulesResponse{
+	response := &GetNotificationRulesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24513,7 +25265,7 @@ func ParseGetNotificationRulesResponse(rsp *http.Response) (*getNotificationRule
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24531,14 +25283,14 @@ func ParseGetNotificationRulesResponse(rsp *http.Response) (*getNotificationRule
 }
 
 // ParseCreateNotificationRuleResponse parses an HTTP response from a CreateNotificationRuleWithResponse call
-func ParseCreateNotificationRuleResponse(rsp *http.Response) (*createNotificationRuleResponse, error) {
+func ParseCreateNotificationRuleResponse(rsp *http.Response) (*CreateNotificationRuleResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &createNotificationRuleResponse{
+	response := &CreateNotificationRuleResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24551,7 +25303,7 @@ func ParseCreateNotificationRuleResponse(rsp *http.Response) (*createNotificatio
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24569,14 +25321,14 @@ func ParseCreateNotificationRuleResponse(rsp *http.Response) (*createNotificatio
 }
 
 // ParseDeleteNotificationRulesIDResponse parses an HTTP response from a DeleteNotificationRulesIDWithResponse call
-func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*deleteNotificationRulesIDResponse, error) {
+func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*DeleteNotificationRulesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteNotificationRulesIDResponse{
+	response := &DeleteNotificationRulesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24589,7 +25341,7 @@ func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*deleteNotifica
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24607,14 +25359,14 @@ func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*deleteNotifica
 }
 
 // ParseGetNotificationRulesIDResponse parses an HTTP response from a GetNotificationRulesIDWithResponse call
-func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*getNotificationRulesIDResponse, error) {
+func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*GetNotificationRulesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationRulesIDResponse{
+	response := &GetNotificationRulesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24627,7 +25379,7 @@ func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*getNotificationRu
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24645,14 +25397,14 @@ func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*getNotificationRu
 }
 
 // ParsePatchNotificationRulesIDResponse parses an HTTP response from a PatchNotificationRulesIDWithResponse call
-func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*patchNotificationRulesIDResponse, error) {
+func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*PatchNotificationRulesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchNotificationRulesIDResponse{
+	response := &PatchNotificationRulesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24672,7 +25424,7 @@ func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*patchNotificati
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24690,14 +25442,14 @@ func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*patchNotificati
 }
 
 // ParsePutNotificationRulesIDResponse parses an HTTP response from a PutNotificationRulesIDWithResponse call
-func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*putNotificationRulesIDResponse, error) {
+func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*PutNotificationRulesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putNotificationRulesIDResponse{
+	response := &PutNotificationRulesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24717,7 +25469,7 @@ func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*putNotificationRu
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24735,14 +25487,14 @@ func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*putNotificationRu
 }
 
 // ParseGetNotificationRulesIDLabelsResponse parses an HTTP response from a GetNotificationRulesIDLabelsWithResponse call
-func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*getNotificationRulesIDLabelsResponse, error) {
+func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*GetNotificationRulesIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationRulesIDLabelsResponse{
+	response := &GetNotificationRulesIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24755,7 +25507,7 @@ func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*getNotifica
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24773,14 +25525,14 @@ func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*getNotifica
 }
 
 // ParsePostNotificationRuleIDLabelsResponse parses an HTTP response from a PostNotificationRuleIDLabelsWithResponse call
-func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*postNotificationRuleIDLabelsResponse, error) {
+func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*PostNotificationRuleIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postNotificationRuleIDLabelsResponse{
+	response := &PostNotificationRuleIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24793,7 +25545,7 @@ func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*postNotific
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24811,14 +25563,14 @@ func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*postNotific
 }
 
 // ParseDeleteNotificationRulesIDLabelsIDResponse parses an HTTP response from a DeleteNotificationRulesIDLabelsIDWithResponse call
-func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*deleteNotificationRulesIDLabelsIDResponse, error) {
+func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*DeleteNotificationRulesIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteNotificationRulesIDLabelsIDResponse{
+	response := &DeleteNotificationRulesIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24831,7 +25583,7 @@ func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*delete
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24849,14 +25601,14 @@ func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*delete
 }
 
 // ParseGetNotificationRulesIDQueryResponse parses an HTTP response from a GetNotificationRulesIDQueryWithResponse call
-func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*getNotificationRulesIDQueryResponse, error) {
+func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*GetNotificationRulesIDQueryResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getNotificationRulesIDQueryResponse{
+	response := &GetNotificationRulesIDQueryResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24883,7 +25635,7 @@ func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*getNotificat
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24901,14 +25653,14 @@ func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*getNotificat
 }
 
 // ParseGetOrgsResponse parses an HTTP response from a GetOrgsWithResponse call
-func ParseGetOrgsResponse(rsp *http.Response) (*getOrgsResponse, error) {
+func ParseGetOrgsResponse(rsp *http.Response) (*GetOrgsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getOrgsResponse{
+	response := &GetOrgsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24921,7 +25673,7 @@ func ParseGetOrgsResponse(rsp *http.Response) (*getOrgsResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24939,14 +25691,14 @@ func ParseGetOrgsResponse(rsp *http.Response) (*getOrgsResponse, error) {
 }
 
 // ParsePostOrgsResponse parses an HTTP response from a PostOrgsWithResponse call
-func ParsePostOrgsResponse(rsp *http.Response) (*postOrgsResponse, error) {
+func ParsePostOrgsResponse(rsp *http.Response) (*PostOrgsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postOrgsResponse{
+	response := &PostOrgsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24959,7 +25711,7 @@ func ParsePostOrgsResponse(rsp *http.Response) (*postOrgsResponse, error) {
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -24977,14 +25729,14 @@ func ParsePostOrgsResponse(rsp *http.Response) (*postOrgsResponse, error) {
 }
 
 // ParseDeleteOrgsIDResponse parses an HTTP response from a DeleteOrgsIDWithResponse call
-func ParseDeleteOrgsIDResponse(rsp *http.Response) (*deleteOrgsIDResponse, error) {
+func ParseDeleteOrgsIDResponse(rsp *http.Response) (*DeleteOrgsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteOrgsIDResponse{
+	response := &DeleteOrgsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -24997,7 +25749,7 @@ func ParseDeleteOrgsIDResponse(rsp *http.Response) (*deleteOrgsIDResponse, error
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25015,14 +25767,14 @@ func ParseDeleteOrgsIDResponse(rsp *http.Response) (*deleteOrgsIDResponse, error
 }
 
 // ParseGetOrgsIDResponse parses an HTTP response from a GetOrgsIDWithResponse call
-func ParseGetOrgsIDResponse(rsp *http.Response) (*getOrgsIDResponse, error) {
+func ParseGetOrgsIDResponse(rsp *http.Response) (*GetOrgsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getOrgsIDResponse{
+	response := &GetOrgsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25035,7 +25787,7 @@ func ParseGetOrgsIDResponse(rsp *http.Response) (*getOrgsIDResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25053,14 +25805,14 @@ func ParseGetOrgsIDResponse(rsp *http.Response) (*getOrgsIDResponse, error) {
 }
 
 // ParsePatchOrgsIDResponse parses an HTTP response from a PatchOrgsIDWithResponse call
-func ParsePatchOrgsIDResponse(rsp *http.Response) (*patchOrgsIDResponse, error) {
+func ParsePatchOrgsIDResponse(rsp *http.Response) (*PatchOrgsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchOrgsIDResponse{
+	response := &PatchOrgsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25073,7 +25825,7 @@ func ParsePatchOrgsIDResponse(rsp *http.Response) (*patchOrgsIDResponse, error) 
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25091,14 +25843,14 @@ func ParsePatchOrgsIDResponse(rsp *http.Response) (*patchOrgsIDResponse, error) 
 }
 
 // ParseGetOrgsIDMembersResponse parses an HTTP response from a GetOrgsIDMembersWithResponse call
-func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*getOrgsIDMembersResponse, error) {
+func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*GetOrgsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getOrgsIDMembersResponse{
+	response := &GetOrgsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25118,7 +25870,7 @@ func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*getOrgsIDMembersRespons
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25136,14 +25888,14 @@ func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*getOrgsIDMembersRespons
 }
 
 // ParsePostOrgsIDMembersResponse parses an HTTP response from a PostOrgsIDMembersWithResponse call
-func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*postOrgsIDMembersResponse, error) {
+func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*PostOrgsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postOrgsIDMembersResponse{
+	response := &PostOrgsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25156,7 +25908,7 @@ func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*postOrgsIDMembersRespo
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25174,20 +25926,20 @@ func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*postOrgsIDMembersRespo
 }
 
 // ParseDeleteOrgsIDMembersIDResponse parses an HTTP response from a DeleteOrgsIDMembersIDWithResponse call
-func ParseDeleteOrgsIDMembersIDResponse(rsp *http.Response) (*deleteOrgsIDMembersIDResponse, error) {
+func ParseDeleteOrgsIDMembersIDResponse(rsp *http.Response) (*DeleteOrgsIDMembersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteOrgsIDMembersIDResponse{
+	response := &DeleteOrgsIDMembersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25205,14 +25957,14 @@ func ParseDeleteOrgsIDMembersIDResponse(rsp *http.Response) (*deleteOrgsIDMember
 }
 
 // ParseGetOrgsIDOwnersResponse parses an HTTP response from a GetOrgsIDOwnersWithResponse call
-func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*getOrgsIDOwnersResponse, error) {
+func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*GetOrgsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getOrgsIDOwnersResponse{
+	response := &GetOrgsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25232,7 +25984,7 @@ func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*getOrgsIDOwnersResponse,
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25250,14 +26002,14 @@ func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*getOrgsIDOwnersResponse,
 }
 
 // ParsePostOrgsIDOwnersResponse parses an HTTP response from a PostOrgsIDOwnersWithResponse call
-func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*postOrgsIDOwnersResponse, error) {
+func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*PostOrgsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postOrgsIDOwnersResponse{
+	response := &PostOrgsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25270,7 +26022,7 @@ func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*postOrgsIDOwnersRespons
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25288,20 +26040,20 @@ func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*postOrgsIDOwnersRespons
 }
 
 // ParseDeleteOrgsIDOwnersIDResponse parses an HTTP response from a DeleteOrgsIDOwnersIDWithResponse call
-func ParseDeleteOrgsIDOwnersIDResponse(rsp *http.Response) (*deleteOrgsIDOwnersIDResponse, error) {
+func ParseDeleteOrgsIDOwnersIDResponse(rsp *http.Response) (*DeleteOrgsIDOwnersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteOrgsIDOwnersIDResponse{
+	response := &DeleteOrgsIDOwnersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25319,14 +26071,14 @@ func ParseDeleteOrgsIDOwnersIDResponse(rsp *http.Response) (*deleteOrgsIDOwnersI
 }
 
 // ParseGetOrgsIDSecretsResponse parses an HTTP response from a GetOrgsIDSecretsWithResponse call
-func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*getOrgsIDSecretsResponse, error) {
+func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*GetOrgsIDSecretsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getOrgsIDSecretsResponse{
+	response := &GetOrgsIDSecretsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25339,7 +26091,7 @@ func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*getOrgsIDSecretsRespons
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25357,20 +26109,20 @@ func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*getOrgsIDSecretsRespons
 }
 
 // ParsePatchOrgsIDSecretsResponse parses an HTTP response from a PatchOrgsIDSecretsWithResponse call
-func ParsePatchOrgsIDSecretsResponse(rsp *http.Response) (*patchOrgsIDSecretsResponse, error) {
+func ParsePatchOrgsIDSecretsResponse(rsp *http.Response) (*PatchOrgsIDSecretsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchOrgsIDSecretsResponse{
+	response := &PatchOrgsIDSecretsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25388,20 +26140,20 @@ func ParsePatchOrgsIDSecretsResponse(rsp *http.Response) (*patchOrgsIDSecretsRes
 }
 
 // ParsePostOrgsIDSecretsResponse parses an HTTP response from a PostOrgsIDSecretsWithResponse call
-func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*postOrgsIDSecretsResponse, error) {
+func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*PostOrgsIDSecretsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postOrgsIDSecretsResponse{
+	response := &PostOrgsIDSecretsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25419,20 +26171,20 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*postOrgsIDSecretsRespo
 }
 
 // ParsePostQueryResponse parses an HTTP response from a PostQueryWithResponse call
-func ParsePostQueryResponse(rsp *http.Response) (*postQueryResponse, error) {
+func ParsePostQueryResponse(rsp *http.Response) (*PostQueryResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postQueryResponse{
+	response := &PostQueryResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25450,14 +26202,14 @@ func ParsePostQueryResponse(rsp *http.Response) (*postQueryResponse, error) {
 }
 
 // ParsePostQueryAnalyzeResponse parses an HTTP response from a PostQueryAnalyzeWithResponse call
-func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*postQueryAnalyzeResponse, error) {
+func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*PostQueryAnalyzeResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postQueryAnalyzeResponse{
+	response := &PostQueryAnalyzeResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25470,7 +26222,7 @@ func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*postQueryAnalyzeRespons
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25488,14 +26240,14 @@ func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*postQueryAnalyzeRespons
 }
 
 // ParsePostQueryAstResponse parses an HTTP response from a PostQueryAstWithResponse call
-func ParsePostQueryAstResponse(rsp *http.Response) (*postQueryAstResponse, error) {
+func ParsePostQueryAstResponse(rsp *http.Response) (*PostQueryAstResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postQueryAstResponse{
+	response := &PostQueryAstResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25508,7 +26260,7 @@ func ParsePostQueryAstResponse(rsp *http.Response) (*postQueryAstResponse, error
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25526,14 +26278,14 @@ func ParsePostQueryAstResponse(rsp *http.Response) (*postQueryAstResponse, error
 }
 
 // ParseGetQuerySuggestionsResponse parses an HTTP response from a GetQuerySuggestionsWithResponse call
-func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*getQuerySuggestionsResponse, error) {
+func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*GetQuerySuggestionsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getQuerySuggestionsResponse{
+	response := &GetQuerySuggestionsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25546,7 +26298,7 @@ func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*getQuerySuggestionsR
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25564,14 +26316,14 @@ func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*getQuerySuggestionsR
 }
 
 // ParseGetQuerySuggestionsNameResponse parses an HTTP response from a GetQuerySuggestionsNameWithResponse call
-func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*getQuerySuggestionsNameResponse, error) {
+func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*GetQuerySuggestionsNameResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getQuerySuggestionsNameResponse{
+	response := &GetQuerySuggestionsNameResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25584,7 +26336,7 @@ func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*getQuerySuggesti
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25602,14 +26354,14 @@ func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*getQuerySuggesti
 }
 
 // ParseGetReadyResponse parses an HTTP response from a GetReadyWithResponse call
-func ParseGetReadyResponse(rsp *http.Response) (*getReadyResponse, error) {
+func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getReadyResponse{
+	response := &GetReadyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25622,7 +26374,7 @@ func ParseGetReadyResponse(rsp *http.Response) (*getReadyResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25640,14 +26392,14 @@ func ParseGetReadyResponse(rsp *http.Response) (*getReadyResponse, error) {
 }
 
 // ParseGetScrapersResponse parses an HTTP response from a GetScrapersWithResponse call
-func ParseGetScrapersResponse(rsp *http.Response) (*getScrapersResponse, error) {
+func ParseGetScrapersResponse(rsp *http.Response) (*GetScrapersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getScrapersResponse{
+	response := &GetScrapersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25671,14 +26423,14 @@ func ParseGetScrapersResponse(rsp *http.Response) (*getScrapersResponse, error) 
 }
 
 // ParsePostScrapersResponse parses an HTTP response from a PostScrapersWithResponse call
-func ParsePostScrapersResponse(rsp *http.Response) (*postScrapersResponse, error) {
+func ParsePostScrapersResponse(rsp *http.Response) (*PostScrapersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postScrapersResponse{
+	response := &PostScrapersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25691,7 +26443,7 @@ func ParsePostScrapersResponse(rsp *http.Response) (*postScrapersResponse, error
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25709,20 +26461,20 @@ func ParsePostScrapersResponse(rsp *http.Response) (*postScrapersResponse, error
 }
 
 // ParseDeleteScrapersIDResponse parses an HTTP response from a DeleteScrapersIDWithResponse call
-func ParseDeleteScrapersIDResponse(rsp *http.Response) (*deleteScrapersIDResponse, error) {
+func ParseDeleteScrapersIDResponse(rsp *http.Response) (*DeleteScrapersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteScrapersIDResponse{
+	response := &DeleteScrapersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25740,14 +26492,14 @@ func ParseDeleteScrapersIDResponse(rsp *http.Response) (*deleteScrapersIDRespons
 }
 
 // ParseGetScrapersIDResponse parses an HTTP response from a GetScrapersIDWithResponse call
-func ParseGetScrapersIDResponse(rsp *http.Response) (*getScrapersIDResponse, error) {
+func ParseGetScrapersIDResponse(rsp *http.Response) (*GetScrapersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getScrapersIDResponse{
+	response := &GetScrapersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25760,7 +26512,7 @@ func ParseGetScrapersIDResponse(rsp *http.Response) (*getScrapersIDResponse, err
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25778,14 +26530,14 @@ func ParseGetScrapersIDResponse(rsp *http.Response) (*getScrapersIDResponse, err
 }
 
 // ParsePatchScrapersIDResponse parses an HTTP response from a PatchScrapersIDWithResponse call
-func ParsePatchScrapersIDResponse(rsp *http.Response) (*patchScrapersIDResponse, error) {
+func ParsePatchScrapersIDResponse(rsp *http.Response) (*PatchScrapersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchScrapersIDResponse{
+	response := &PatchScrapersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25798,7 +26550,7 @@ func ParsePatchScrapersIDResponse(rsp *http.Response) (*patchScrapersIDResponse,
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25816,14 +26568,14 @@ func ParsePatchScrapersIDResponse(rsp *http.Response) (*patchScrapersIDResponse,
 }
 
 // ParseGetScrapersIDLabelsResponse parses an HTTP response from a GetScrapersIDLabelsWithResponse call
-func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*getScrapersIDLabelsResponse, error) {
+func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*GetScrapersIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getScrapersIDLabelsResponse{
+	response := &GetScrapersIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25836,7 +26588,7 @@ func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*getScrapersIDLabelsR
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25854,14 +26606,14 @@ func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*getScrapersIDLabelsR
 }
 
 // ParsePostScrapersIDLabelsResponse parses an HTTP response from a PostScrapersIDLabelsWithResponse call
-func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*postScrapersIDLabelsResponse, error) {
+func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*PostScrapersIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postScrapersIDLabelsResponse{
+	response := &PostScrapersIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25874,7 +26626,7 @@ func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*postScrapersIDLabel
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25892,14 +26644,14 @@ func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*postScrapersIDLabel
 }
 
 // ParseDeleteScrapersIDLabelsIDResponse parses an HTTP response from a DeleteScrapersIDLabelsIDWithResponse call
-func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*deleteScrapersIDLabelsIDResponse, error) {
+func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*DeleteScrapersIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteScrapersIDLabelsIDResponse{
+	response := &DeleteScrapersIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25912,7 +26664,7 @@ func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*deleteScrapersI
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25930,14 +26682,14 @@ func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*deleteScrapersI
 }
 
 // ParseGetScrapersIDMembersResponse parses an HTTP response from a GetScrapersIDMembersWithResponse call
-func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*getScrapersIDMembersResponse, error) {
+func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*GetScrapersIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getScrapersIDMembersResponse{
+	response := &GetScrapersIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25950,7 +26702,7 @@ func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*getScrapersIDMember
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -25968,14 +26720,14 @@ func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*getScrapersIDMember
 }
 
 // ParsePostScrapersIDMembersResponse parses an HTTP response from a PostScrapersIDMembersWithResponse call
-func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*postScrapersIDMembersResponse, error) {
+func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*PostScrapersIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postScrapersIDMembersResponse{
+	response := &PostScrapersIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -25988,7 +26740,7 @@ func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*postScrapersIDMemb
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26006,20 +26758,20 @@ func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*postScrapersIDMemb
 }
 
 // ParseDeleteScrapersIDMembersIDResponse parses an HTTP response from a DeleteScrapersIDMembersIDWithResponse call
-func ParseDeleteScrapersIDMembersIDResponse(rsp *http.Response) (*deleteScrapersIDMembersIDResponse, error) {
+func ParseDeleteScrapersIDMembersIDResponse(rsp *http.Response) (*DeleteScrapersIDMembersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteScrapersIDMembersIDResponse{
+	response := &DeleteScrapersIDMembersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26037,14 +26789,14 @@ func ParseDeleteScrapersIDMembersIDResponse(rsp *http.Response) (*deleteScrapers
 }
 
 // ParseGetScrapersIDOwnersResponse parses an HTTP response from a GetScrapersIDOwnersWithResponse call
-func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*getScrapersIDOwnersResponse, error) {
+func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*GetScrapersIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getScrapersIDOwnersResponse{
+	response := &GetScrapersIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26057,7 +26809,7 @@ func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*getScrapersIDOwnersR
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26075,14 +26827,14 @@ func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*getScrapersIDOwnersR
 }
 
 // ParsePostScrapersIDOwnersResponse parses an HTTP response from a PostScrapersIDOwnersWithResponse call
-func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*postScrapersIDOwnersResponse, error) {
+func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*PostScrapersIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postScrapersIDOwnersResponse{
+	response := &PostScrapersIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26095,7 +26847,7 @@ func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*postScrapersIDOwner
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26113,20 +26865,20 @@ func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*postScrapersIDOwner
 }
 
 // ParseDeleteScrapersIDOwnersIDResponse parses an HTTP response from a DeleteScrapersIDOwnersIDWithResponse call
-func ParseDeleteScrapersIDOwnersIDResponse(rsp *http.Response) (*deleteScrapersIDOwnersIDResponse, error) {
+func ParseDeleteScrapersIDOwnersIDResponse(rsp *http.Response) (*DeleteScrapersIDOwnersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteScrapersIDOwnersIDResponse{
+	response := &DeleteScrapersIDOwnersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26144,14 +26896,14 @@ func ParseDeleteScrapersIDOwnersIDResponse(rsp *http.Response) (*deleteScrapersI
 }
 
 // ParseGetSetupResponse parses an HTTP response from a GetSetupWithResponse call
-func ParseGetSetupResponse(rsp *http.Response) (*getSetupResponse, error) {
+func ParseGetSetupResponse(rsp *http.Response) (*GetSetupResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getSetupResponse{
+	response := &GetSetupResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26175,14 +26927,14 @@ func ParseGetSetupResponse(rsp *http.Response) (*getSetupResponse, error) {
 }
 
 // ParsePostSetupResponse parses an HTTP response from a PostSetupWithResponse call
-func ParsePostSetupResponse(rsp *http.Response) (*postSetupResponse, error) {
+func ParsePostSetupResponse(rsp *http.Response) (*PostSetupResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postSetupResponse{
+	response := &PostSetupResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26195,7 +26947,7 @@ func ParsePostSetupResponse(rsp *http.Response) (*postSetupResponse, error) {
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26213,14 +26965,14 @@ func ParsePostSetupResponse(rsp *http.Response) (*postSetupResponse, error) {
 }
 
 // ParsePostSetupUserResponse parses an HTTP response from a PostSetupUserWithResponse call
-func ParsePostSetupUserResponse(rsp *http.Response) (*postSetupUserResponse, error) {
+func ParsePostSetupUserResponse(rsp *http.Response) (*PostSetupUserResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postSetupUserResponse{
+	response := &PostSetupUserResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26233,7 +26985,7 @@ func ParsePostSetupUserResponse(rsp *http.Response) (*postSetupUserResponse, err
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26251,14 +27003,14 @@ func ParsePostSetupUserResponse(rsp *http.Response) (*postSetupUserResponse, err
 }
 
 // ParsePostSigninResponse parses an HTTP response from a PostSigninWithResponse call
-func ParsePostSigninResponse(rsp *http.Response) (*postSigninResponse, error) {
+func ParsePostSigninResponse(rsp *http.Response) (*PostSigninResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postSigninResponse{
+	response := &PostSigninResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26278,7 +27030,7 @@ func ParsePostSigninResponse(rsp *http.Response) (*postSigninResponse, error) {
 		}
 		response.JSON403 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26296,14 +27048,14 @@ func ParsePostSigninResponse(rsp *http.Response) (*postSigninResponse, error) {
 }
 
 // ParsePostSignoutResponse parses an HTTP response from a PostSignoutWithResponse call
-func ParsePostSignoutResponse(rsp *http.Response) (*postSignoutResponse, error) {
+func ParsePostSignoutResponse(rsp *http.Response) (*PostSignoutResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postSignoutResponse{
+	response := &PostSignoutResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26316,7 +27068,7 @@ func ParsePostSignoutResponse(rsp *http.Response) (*postSignoutResponse, error) 
 		}
 		response.JSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26334,14 +27086,14 @@ func ParsePostSignoutResponse(rsp *http.Response) (*postSignoutResponse, error) 
 }
 
 // ParseGetSourcesResponse parses an HTTP response from a GetSourcesWithResponse call
-func ParseGetSourcesResponse(rsp *http.Response) (*getSourcesResponse, error) {
+func ParseGetSourcesResponse(rsp *http.Response) (*GetSourcesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getSourcesResponse{
+	response := &GetSourcesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26354,7 +27106,7 @@ func ParseGetSourcesResponse(rsp *http.Response) (*getSourcesResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26372,14 +27124,14 @@ func ParseGetSourcesResponse(rsp *http.Response) (*getSourcesResponse, error) {
 }
 
 // ParsePostSourcesResponse parses an HTTP response from a PostSourcesWithResponse call
-func ParsePostSourcesResponse(rsp *http.Response) (*postSourcesResponse, error) {
+func ParsePostSourcesResponse(rsp *http.Response) (*PostSourcesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postSourcesResponse{
+	response := &PostSourcesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26392,7 +27144,7 @@ func ParsePostSourcesResponse(rsp *http.Response) (*postSourcesResponse, error) 
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26410,14 +27162,14 @@ func ParsePostSourcesResponse(rsp *http.Response) (*postSourcesResponse, error) 
 }
 
 // ParseDeleteSourcesIDResponse parses an HTTP response from a DeleteSourcesIDWithResponse call
-func ParseDeleteSourcesIDResponse(rsp *http.Response) (*deleteSourcesIDResponse, error) {
+func ParseDeleteSourcesIDResponse(rsp *http.Response) (*DeleteSourcesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteSourcesIDResponse{
+	response := &DeleteSourcesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26430,7 +27182,7 @@ func ParseDeleteSourcesIDResponse(rsp *http.Response) (*deleteSourcesIDResponse,
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26448,14 +27200,14 @@ func ParseDeleteSourcesIDResponse(rsp *http.Response) (*deleteSourcesIDResponse,
 }
 
 // ParseGetSourcesIDResponse parses an HTTP response from a GetSourcesIDWithResponse call
-func ParseGetSourcesIDResponse(rsp *http.Response) (*getSourcesIDResponse, error) {
+func ParseGetSourcesIDResponse(rsp *http.Response) (*GetSourcesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getSourcesIDResponse{
+	response := &GetSourcesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26475,7 +27227,7 @@ func ParseGetSourcesIDResponse(rsp *http.Response) (*getSourcesIDResponse, error
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26493,14 +27245,14 @@ func ParseGetSourcesIDResponse(rsp *http.Response) (*getSourcesIDResponse, error
 }
 
 // ParsePatchSourcesIDResponse parses an HTTP response from a PatchSourcesIDWithResponse call
-func ParsePatchSourcesIDResponse(rsp *http.Response) (*patchSourcesIDResponse, error) {
+func ParsePatchSourcesIDResponse(rsp *http.Response) (*PatchSourcesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchSourcesIDResponse{
+	response := &PatchSourcesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26520,7 +27272,7 @@ func ParsePatchSourcesIDResponse(rsp *http.Response) (*patchSourcesIDResponse, e
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26538,14 +27290,14 @@ func ParsePatchSourcesIDResponse(rsp *http.Response) (*patchSourcesIDResponse, e
 }
 
 // ParseGetSourcesIDBucketsResponse parses an HTTP response from a GetSourcesIDBucketsWithResponse call
-func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*getSourcesIDBucketsResponse, error) {
+func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*GetSourcesIDBucketsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getSourcesIDBucketsResponse{
+	response := &GetSourcesIDBucketsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26565,7 +27317,7 @@ func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*getSourcesIDBucketsR
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26583,14 +27335,14 @@ func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*getSourcesIDBucketsR
 }
 
 // ParseGetSourcesIDHealthResponse parses an HTTP response from a GetSourcesIDHealthWithResponse call
-func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*getSourcesIDHealthResponse, error) {
+func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*GetSourcesIDHealthResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getSourcesIDHealthResponse{
+	response := &GetSourcesIDHealthResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26610,7 +27362,7 @@ func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*getSourcesIDHealthRes
 		}
 		response.JSON503 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26628,14 +27380,14 @@ func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*getSourcesIDHealthRes
 }
 
 // ParseListStacksResponse parses an HTTP response from a ListStacksWithResponse call
-func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
+func ParseListStacksResponse(rsp *http.Response) (*ListStacksResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &listStacksResponse{
+	response := &ListStacksResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26650,7 +27402,7 @@ func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26668,14 +27420,14 @@ func ParseListStacksResponse(rsp *http.Response) (*listStacksResponse, error) {
 }
 
 // ParseCreateStackResponse parses an HTTP response from a CreateStackWithResponse call
-func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) {
+func ParseCreateStackResponse(rsp *http.Response) (*CreateStackResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &createStackResponse{
+	response := &CreateStackResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26688,7 +27440,7 @@ func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) 
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26706,20 +27458,20 @@ func ParseCreateStackResponse(rsp *http.Response) (*createStackResponse, error) 
 }
 
 // ParseDeleteStackResponse parses an HTTP response from a DeleteStackWithResponse call
-func ParseDeleteStackResponse(rsp *http.Response) (*deleteStackResponse, error) {
+func ParseDeleteStackResponse(rsp *http.Response) (*DeleteStackResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteStackResponse{
+	response := &DeleteStackResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26737,14 +27489,14 @@ func ParseDeleteStackResponse(rsp *http.Response) (*deleteStackResponse, error) 
 }
 
 // ParseReadStackResponse parses an HTTP response from a ReadStackWithResponse call
-func ParseReadStackResponse(rsp *http.Response) (*readStackResponse, error) {
+func ParseReadStackResponse(rsp *http.Response) (*ReadStackResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &readStackResponse{
+	response := &ReadStackResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26757,7 +27509,7 @@ func ParseReadStackResponse(rsp *http.Response) (*readStackResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26775,14 +27527,14 @@ func ParseReadStackResponse(rsp *http.Response) (*readStackResponse, error) {
 }
 
 // ParseUpdateStackResponse parses an HTTP response from a UpdateStackWithResponse call
-func ParseUpdateStackResponse(rsp *http.Response) (*updateStackResponse, error) {
+func ParseUpdateStackResponse(rsp *http.Response) (*UpdateStackResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &updateStackResponse{
+	response := &UpdateStackResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26795,7 +27547,7 @@ func ParseUpdateStackResponse(rsp *http.Response) (*updateStackResponse, error) 
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26813,14 +27565,14 @@ func ParseUpdateStackResponse(rsp *http.Response) (*updateStackResponse, error) 
 }
 
 // ParseUninstallStackResponse parses an HTTP response from a UninstallStackWithResponse call
-func ParseUninstallStackResponse(rsp *http.Response) (*uninstallStackResponse, error) {
+func ParseUninstallStackResponse(rsp *http.Response) (*UninstallStackResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &uninstallStackResponse{
+	response := &UninstallStackResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26833,7 +27585,7 @@ func ParseUninstallStackResponse(rsp *http.Response) (*uninstallStackResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26851,14 +27603,14 @@ func ParseUninstallStackResponse(rsp *http.Response) (*uninstallStackResponse, e
 }
 
 // ParseGetTasksResponse parses an HTTP response from a GetTasksWithResponse call
-func ParseGetTasksResponse(rsp *http.Response) (*getTasksResponse, error) {
+func ParseGetTasksResponse(rsp *http.Response) (*GetTasksResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksResponse{
+	response := &GetTasksResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26871,7 +27623,7 @@ func ParseGetTasksResponse(rsp *http.Response) (*getTasksResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26889,14 +27641,14 @@ func ParseGetTasksResponse(rsp *http.Response) (*getTasksResponse, error) {
 }
 
 // ParsePostTasksResponse parses an HTTP response from a PostTasksWithResponse call
-func ParsePostTasksResponse(rsp *http.Response) (*postTasksResponse, error) {
+func ParsePostTasksResponse(rsp *http.Response) (*PostTasksResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTasksResponse{
+	response := &PostTasksResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26909,7 +27661,7 @@ func ParsePostTasksResponse(rsp *http.Response) (*postTasksResponse, error) {
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26927,20 +27679,20 @@ func ParsePostTasksResponse(rsp *http.Response) (*postTasksResponse, error) {
 }
 
 // ParseDeleteTasksIDResponse parses an HTTP response from a DeleteTasksIDWithResponse call
-func ParseDeleteTasksIDResponse(rsp *http.Response) (*deleteTasksIDResponse, error) {
+func ParseDeleteTasksIDResponse(rsp *http.Response) (*DeleteTasksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTasksIDResponse{
+	response := &DeleteTasksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26958,14 +27710,14 @@ func ParseDeleteTasksIDResponse(rsp *http.Response) (*deleteTasksIDResponse, err
 }
 
 // ParseGetTasksIDResponse parses an HTTP response from a GetTasksIDWithResponse call
-func ParseGetTasksIDResponse(rsp *http.Response) (*getTasksIDResponse, error) {
+func ParseGetTasksIDResponse(rsp *http.Response) (*GetTasksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDResponse{
+	response := &GetTasksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -26978,7 +27730,7 @@ func ParseGetTasksIDResponse(rsp *http.Response) (*getTasksIDResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -26996,14 +27748,14 @@ func ParseGetTasksIDResponse(rsp *http.Response) (*getTasksIDResponse, error) {
 }
 
 // ParsePatchTasksIDResponse parses an HTTP response from a PatchTasksIDWithResponse call
-func ParsePatchTasksIDResponse(rsp *http.Response) (*patchTasksIDResponse, error) {
+func ParsePatchTasksIDResponse(rsp *http.Response) (*PatchTasksIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchTasksIDResponse{
+	response := &PatchTasksIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27016,7 +27768,7 @@ func ParsePatchTasksIDResponse(rsp *http.Response) (*patchTasksIDResponse, error
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27034,14 +27786,14 @@ func ParsePatchTasksIDResponse(rsp *http.Response) (*patchTasksIDResponse, error
 }
 
 // ParseGetTasksIDLabelsResponse parses an HTTP response from a GetTasksIDLabelsWithResponse call
-func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*getTasksIDLabelsResponse, error) {
+func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*GetTasksIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDLabelsResponse{
+	response := &GetTasksIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27054,7 +27806,7 @@ func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*getTasksIDLabelsRespons
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27072,14 +27824,14 @@ func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*getTasksIDLabelsRespons
 }
 
 // ParsePostTasksIDLabelsResponse parses an HTTP response from a PostTasksIDLabelsWithResponse call
-func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*postTasksIDLabelsResponse, error) {
+func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*PostTasksIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTasksIDLabelsResponse{
+	response := &PostTasksIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27092,7 +27844,7 @@ func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*postTasksIDLabelsRespo
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27110,14 +27862,14 @@ func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*postTasksIDLabelsRespo
 }
 
 // ParseDeleteTasksIDLabelsIDResponse parses an HTTP response from a DeleteTasksIDLabelsIDWithResponse call
-func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*deleteTasksIDLabelsIDResponse, error) {
+func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*DeleteTasksIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTasksIDLabelsIDResponse{
+	response := &DeleteTasksIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27130,7 +27882,7 @@ func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*deleteTasksIDLabel
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27148,14 +27900,14 @@ func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*deleteTasksIDLabel
 }
 
 // ParseGetTasksIDLogsResponse parses an HTTP response from a GetTasksIDLogsWithResponse call
-func ParseGetTasksIDLogsResponse(rsp *http.Response) (*getTasksIDLogsResponse, error) {
+func ParseGetTasksIDLogsResponse(rsp *http.Response) (*GetTasksIDLogsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDLogsResponse{
+	response := &GetTasksIDLogsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27168,7 +27920,7 @@ func ParseGetTasksIDLogsResponse(rsp *http.Response) (*getTasksIDLogsResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27186,14 +27938,14 @@ func ParseGetTasksIDLogsResponse(rsp *http.Response) (*getTasksIDLogsResponse, e
 }
 
 // ParseGetTasksIDMembersResponse parses an HTTP response from a GetTasksIDMembersWithResponse call
-func ParseGetTasksIDMembersResponse(rsp *http.Response) (*getTasksIDMembersResponse, error) {
+func ParseGetTasksIDMembersResponse(rsp *http.Response) (*GetTasksIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDMembersResponse{
+	response := &GetTasksIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27206,7 +27958,7 @@ func ParseGetTasksIDMembersResponse(rsp *http.Response) (*getTasksIDMembersRespo
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27224,14 +27976,14 @@ func ParseGetTasksIDMembersResponse(rsp *http.Response) (*getTasksIDMembersRespo
 }
 
 // ParsePostTasksIDMembersResponse parses an HTTP response from a PostTasksIDMembersWithResponse call
-func ParsePostTasksIDMembersResponse(rsp *http.Response) (*postTasksIDMembersResponse, error) {
+func ParsePostTasksIDMembersResponse(rsp *http.Response) (*PostTasksIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTasksIDMembersResponse{
+	response := &PostTasksIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27244,7 +27996,7 @@ func ParsePostTasksIDMembersResponse(rsp *http.Response) (*postTasksIDMembersRes
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27262,20 +28014,20 @@ func ParsePostTasksIDMembersResponse(rsp *http.Response) (*postTasksIDMembersRes
 }
 
 // ParseDeleteTasksIDMembersIDResponse parses an HTTP response from a DeleteTasksIDMembersIDWithResponse call
-func ParseDeleteTasksIDMembersIDResponse(rsp *http.Response) (*deleteTasksIDMembersIDResponse, error) {
+func ParseDeleteTasksIDMembersIDResponse(rsp *http.Response) (*DeleteTasksIDMembersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTasksIDMembersIDResponse{
+	response := &DeleteTasksIDMembersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27293,14 +28045,14 @@ func ParseDeleteTasksIDMembersIDResponse(rsp *http.Response) (*deleteTasksIDMemb
 }
 
 // ParseGetTasksIDOwnersResponse parses an HTTP response from a GetTasksIDOwnersWithResponse call
-func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*getTasksIDOwnersResponse, error) {
+func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*GetTasksIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDOwnersResponse{
+	response := &GetTasksIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27313,7 +28065,7 @@ func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*getTasksIDOwnersRespons
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27331,14 +28083,14 @@ func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*getTasksIDOwnersRespons
 }
 
 // ParsePostTasksIDOwnersResponse parses an HTTP response from a PostTasksIDOwnersWithResponse call
-func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*postTasksIDOwnersResponse, error) {
+func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*PostTasksIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTasksIDOwnersResponse{
+	response := &PostTasksIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27351,7 +28103,7 @@ func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*postTasksIDOwnersRespo
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27369,20 +28121,20 @@ func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*postTasksIDOwnersRespo
 }
 
 // ParseDeleteTasksIDOwnersIDResponse parses an HTTP response from a DeleteTasksIDOwnersIDWithResponse call
-func ParseDeleteTasksIDOwnersIDResponse(rsp *http.Response) (*deleteTasksIDOwnersIDResponse, error) {
+func ParseDeleteTasksIDOwnersIDResponse(rsp *http.Response) (*DeleteTasksIDOwnersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTasksIDOwnersIDResponse{
+	response := &DeleteTasksIDOwnersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27400,14 +28152,14 @@ func ParseDeleteTasksIDOwnersIDResponse(rsp *http.Response) (*deleteTasksIDOwner
 }
 
 // ParseGetTasksIDRunsResponse parses an HTTP response from a GetTasksIDRunsWithResponse call
-func ParseGetTasksIDRunsResponse(rsp *http.Response) (*getTasksIDRunsResponse, error) {
+func ParseGetTasksIDRunsResponse(rsp *http.Response) (*GetTasksIDRunsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDRunsResponse{
+	response := &GetTasksIDRunsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27420,7 +28172,7 @@ func ParseGetTasksIDRunsResponse(rsp *http.Response) (*getTasksIDRunsResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27438,14 +28190,14 @@ func ParseGetTasksIDRunsResponse(rsp *http.Response) (*getTasksIDRunsResponse, e
 }
 
 // ParsePostTasksIDRunsResponse parses an HTTP response from a PostTasksIDRunsWithResponse call
-func ParsePostTasksIDRunsResponse(rsp *http.Response) (*postTasksIDRunsResponse, error) {
+func ParsePostTasksIDRunsResponse(rsp *http.Response) (*PostTasksIDRunsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTasksIDRunsResponse{
+	response := &PostTasksIDRunsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27458,7 +28210,7 @@ func ParsePostTasksIDRunsResponse(rsp *http.Response) (*postTasksIDRunsResponse,
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27476,20 +28228,20 @@ func ParsePostTasksIDRunsResponse(rsp *http.Response) (*postTasksIDRunsResponse,
 }
 
 // ParseDeleteTasksIDRunsIDResponse parses an HTTP response from a DeleteTasksIDRunsIDWithResponse call
-func ParseDeleteTasksIDRunsIDResponse(rsp *http.Response) (*deleteTasksIDRunsIDResponse, error) {
+func ParseDeleteTasksIDRunsIDResponse(rsp *http.Response) (*DeleteTasksIDRunsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTasksIDRunsIDResponse{
+	response := &DeleteTasksIDRunsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27507,14 +28259,14 @@ func ParseDeleteTasksIDRunsIDResponse(rsp *http.Response) (*deleteTasksIDRunsIDR
 }
 
 // ParseGetTasksIDRunsIDResponse parses an HTTP response from a GetTasksIDRunsIDWithResponse call
-func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*getTasksIDRunsIDResponse, error) {
+func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*GetTasksIDRunsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDRunsIDResponse{
+	response := &GetTasksIDRunsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27527,7 +28279,7 @@ func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*getTasksIDRunsIDRespons
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27545,14 +28297,14 @@ func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*getTasksIDRunsIDRespons
 }
 
 // ParseGetTasksIDRunsIDLogsResponse parses an HTTP response from a GetTasksIDRunsIDLogsWithResponse call
-func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*getTasksIDRunsIDLogsResponse, error) {
+func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*GetTasksIDRunsIDLogsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTasksIDRunsIDLogsResponse{
+	response := &GetTasksIDRunsIDLogsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27565,7 +28317,7 @@ func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*getTasksIDRunsIDLog
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27583,14 +28335,14 @@ func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*getTasksIDRunsIDLog
 }
 
 // ParsePostTasksIDRunsIDRetryResponse parses an HTTP response from a PostTasksIDRunsIDRetryWithResponse call
-func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*postTasksIDRunsIDRetryResponse, error) {
+func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*PostTasksIDRunsIDRetryResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTasksIDRunsIDRetryResponse{
+	response := &PostTasksIDRunsIDRetryResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27603,7 +28355,7 @@ func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*postTasksIDRunsID
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27621,14 +28373,14 @@ func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*postTasksIDRunsID
 }
 
 // ParseGetTelegrafPluginsResponse parses an HTTP response from a GetTelegrafPluginsWithResponse call
-func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*getTelegrafPluginsResponse, error) {
+func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*GetTelegrafPluginsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTelegrafPluginsResponse{
+	response := &GetTelegrafPluginsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27641,7 +28393,7 @@ func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*getTelegrafPluginsRes
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27659,14 +28411,14 @@ func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*getTelegrafPluginsRes
 }
 
 // ParseGetTelegrafsResponse parses an HTTP response from a GetTelegrafsWithResponse call
-func ParseGetTelegrafsResponse(rsp *http.Response) (*getTelegrafsResponse, error) {
+func ParseGetTelegrafsResponse(rsp *http.Response) (*GetTelegrafsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTelegrafsResponse{
+	response := &GetTelegrafsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27679,7 +28431,7 @@ func ParseGetTelegrafsResponse(rsp *http.Response) (*getTelegrafsResponse, error
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27697,14 +28449,14 @@ func ParseGetTelegrafsResponse(rsp *http.Response) (*getTelegrafsResponse, error
 }
 
 // ParsePostTelegrafsResponse parses an HTTP response from a PostTelegrafsWithResponse call
-func ParsePostTelegrafsResponse(rsp *http.Response) (*postTelegrafsResponse, error) {
+func ParsePostTelegrafsResponse(rsp *http.Response) (*PostTelegrafsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTelegrafsResponse{
+	response := &PostTelegrafsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27717,7 +28469,7 @@ func ParsePostTelegrafsResponse(rsp *http.Response) (*postTelegrafsResponse, err
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27735,20 +28487,20 @@ func ParsePostTelegrafsResponse(rsp *http.Response) (*postTelegrafsResponse, err
 }
 
 // ParseDeleteTelegrafsIDResponse parses an HTTP response from a DeleteTelegrafsIDWithResponse call
-func ParseDeleteTelegrafsIDResponse(rsp *http.Response) (*deleteTelegrafsIDResponse, error) {
+func ParseDeleteTelegrafsIDResponse(rsp *http.Response) (*DeleteTelegrafsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTelegrafsIDResponse{
+	response := &DeleteTelegrafsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27766,14 +28518,14 @@ func ParseDeleteTelegrafsIDResponse(rsp *http.Response) (*deleteTelegrafsIDRespo
 }
 
 // ParseGetTelegrafsIDResponse parses an HTTP response from a GetTelegrafsIDWithResponse call
-func ParseGetTelegrafsIDResponse(rsp *http.Response) (*getTelegrafsIDResponse, error) {
+func ParseGetTelegrafsIDResponse(rsp *http.Response) (*GetTelegrafsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTelegrafsIDResponse{
+	response := &GetTelegrafsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27786,7 +28538,7 @@ func ParseGetTelegrafsIDResponse(rsp *http.Response) (*getTelegrafsIDResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27807,14 +28559,14 @@ func ParseGetTelegrafsIDResponse(rsp *http.Response) (*getTelegrafsIDResponse, e
 }
 
 // ParsePutTelegrafsIDResponse parses an HTTP response from a PutTelegrafsIDWithResponse call
-func ParsePutTelegrafsIDResponse(rsp *http.Response) (*putTelegrafsIDResponse, error) {
+func ParsePutTelegrafsIDResponse(rsp *http.Response) (*PutTelegrafsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putTelegrafsIDResponse{
+	response := &PutTelegrafsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27827,7 +28579,7 @@ func ParsePutTelegrafsIDResponse(rsp *http.Response) (*putTelegrafsIDResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27845,14 +28597,14 @@ func ParsePutTelegrafsIDResponse(rsp *http.Response) (*putTelegrafsIDResponse, e
 }
 
 // ParseGetTelegrafsIDLabelsResponse parses an HTTP response from a GetTelegrafsIDLabelsWithResponse call
-func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*getTelegrafsIDLabelsResponse, error) {
+func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*GetTelegrafsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTelegrafsIDLabelsResponse{
+	response := &GetTelegrafsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27865,7 +28617,7 @@ func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*getTelegrafsIDLabel
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27883,14 +28635,14 @@ func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*getTelegrafsIDLabel
 }
 
 // ParsePostTelegrafsIDLabelsResponse parses an HTTP response from a PostTelegrafsIDLabelsWithResponse call
-func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*postTelegrafsIDLabelsResponse, error) {
+func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*PostTelegrafsIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTelegrafsIDLabelsResponse{
+	response := &PostTelegrafsIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27903,7 +28655,7 @@ func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*postTelegrafsIDLab
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27921,14 +28673,14 @@ func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*postTelegrafsIDLab
 }
 
 // ParseDeleteTelegrafsIDLabelsIDResponse parses an HTTP response from a DeleteTelegrafsIDLabelsIDWithResponse call
-func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*deleteTelegrafsIDLabelsIDResponse, error) {
+func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*DeleteTelegrafsIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTelegrafsIDLabelsIDResponse{
+	response := &DeleteTelegrafsIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27941,7 +28693,7 @@ func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*deleteTelegraf
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27959,14 +28711,14 @@ func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*deleteTelegraf
 }
 
 // ParseGetTelegrafsIDMembersResponse parses an HTTP response from a GetTelegrafsIDMembersWithResponse call
-func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*getTelegrafsIDMembersResponse, error) {
+func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*GetTelegrafsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTelegrafsIDMembersResponse{
+	response := &GetTelegrafsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -27979,7 +28731,7 @@ func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*getTelegrafsIDMemb
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -27997,14 +28749,14 @@ func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*getTelegrafsIDMemb
 }
 
 // ParsePostTelegrafsIDMembersResponse parses an HTTP response from a PostTelegrafsIDMembersWithResponse call
-func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*postTelegrafsIDMembersResponse, error) {
+func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*PostTelegrafsIDMembersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTelegrafsIDMembersResponse{
+	response := &PostTelegrafsIDMembersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28017,7 +28769,7 @@ func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*postTelegrafsIDMe
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28035,20 +28787,20 @@ func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*postTelegrafsIDMe
 }
 
 // ParseDeleteTelegrafsIDMembersIDResponse parses an HTTP response from a DeleteTelegrafsIDMembersIDWithResponse call
-func ParseDeleteTelegrafsIDMembersIDResponse(rsp *http.Response) (*deleteTelegrafsIDMembersIDResponse, error) {
+func ParseDeleteTelegrafsIDMembersIDResponse(rsp *http.Response) (*DeleteTelegrafsIDMembersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTelegrafsIDMembersIDResponse{
+	response := &DeleteTelegrafsIDMembersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28066,14 +28818,14 @@ func ParseDeleteTelegrafsIDMembersIDResponse(rsp *http.Response) (*deleteTelegra
 }
 
 // ParseGetTelegrafsIDOwnersResponse parses an HTTP response from a GetTelegrafsIDOwnersWithResponse call
-func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*getTelegrafsIDOwnersResponse, error) {
+func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*GetTelegrafsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getTelegrafsIDOwnersResponse{
+	response := &GetTelegrafsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28086,7 +28838,7 @@ func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*getTelegrafsIDOwner
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28104,14 +28856,14 @@ func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*getTelegrafsIDOwner
 }
 
 // ParsePostTelegrafsIDOwnersResponse parses an HTTP response from a PostTelegrafsIDOwnersWithResponse call
-func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*postTelegrafsIDOwnersResponse, error) {
+func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*PostTelegrafsIDOwnersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postTelegrafsIDOwnersResponse{
+	response := &PostTelegrafsIDOwnersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28124,7 +28876,7 @@ func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*postTelegrafsIDOwn
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28142,20 +28894,20 @@ func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*postTelegrafsIDOwn
 }
 
 // ParseDeleteTelegrafsIDOwnersIDResponse parses an HTTP response from a DeleteTelegrafsIDOwnersIDWithResponse call
-func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*deleteTelegrafsIDOwnersIDResponse, error) {
+func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*DeleteTelegrafsIDOwnersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteTelegrafsIDOwnersIDResponse{
+	response := &DeleteTelegrafsIDOwnersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28173,14 +28925,14 @@ func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*deleteTelegraf
 }
 
 // ParseApplyTemplateResponse parses an HTTP response from a ApplyTemplateWithResponse call
-func ParseApplyTemplateResponse(rsp *http.Response) (*applyTemplateResponse, error) {
+func ParseApplyTemplateResponse(rsp *http.Response) (*ApplyTemplateResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &applyTemplateResponse{
+	response := &ApplyTemplateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28200,7 +28952,7 @@ func ParseApplyTemplateResponse(rsp *http.Response) (*applyTemplateResponse, err
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28218,14 +28970,14 @@ func ParseApplyTemplateResponse(rsp *http.Response) (*applyTemplateResponse, err
 }
 
 // ParseExportTemplateResponse parses an HTTP response from a ExportTemplateWithResponse call
-func ParseExportTemplateResponse(rsp *http.Response) (*exportTemplateResponse, error) {
+func ParseExportTemplateResponse(rsp *http.Response) (*ExportTemplateResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &exportTemplateResponse{
+	response := &ExportTemplateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28238,7 +28990,7 @@ func ParseExportTemplateResponse(rsp *http.Response) (*exportTemplateResponse, e
 		}
 		response.YAML200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28263,14 +29015,14 @@ func ParseExportTemplateResponse(rsp *http.Response) (*exportTemplateResponse, e
 }
 
 // ParseGetUsersResponse parses an HTTP response from a GetUsersWithResponse call
-func ParseGetUsersResponse(rsp *http.Response) (*getUsersResponse, error) {
+func ParseGetUsersResponse(rsp *http.Response) (*GetUsersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getUsersResponse{
+	response := &GetUsersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28283,7 +29035,7 @@ func ParseGetUsersResponse(rsp *http.Response) (*getUsersResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28301,14 +29053,14 @@ func ParseGetUsersResponse(rsp *http.Response) (*getUsersResponse, error) {
 }
 
 // ParsePostUsersResponse parses an HTTP response from a PostUsersWithResponse call
-func ParsePostUsersResponse(rsp *http.Response) (*postUsersResponse, error) {
+func ParsePostUsersResponse(rsp *http.Response) (*PostUsersResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postUsersResponse{
+	response := &PostUsersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28321,7 +29073,7 @@ func ParsePostUsersResponse(rsp *http.Response) (*postUsersResponse, error) {
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28339,20 +29091,20 @@ func ParsePostUsersResponse(rsp *http.Response) (*postUsersResponse, error) {
 }
 
 // ParseDeleteUsersIDResponse parses an HTTP response from a DeleteUsersIDWithResponse call
-func ParseDeleteUsersIDResponse(rsp *http.Response) (*deleteUsersIDResponse, error) {
+func ParseDeleteUsersIDResponse(rsp *http.Response) (*DeleteUsersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteUsersIDResponse{
+	response := &DeleteUsersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28370,14 +29122,14 @@ func ParseDeleteUsersIDResponse(rsp *http.Response) (*deleteUsersIDResponse, err
 }
 
 // ParseGetUsersIDResponse parses an HTTP response from a GetUsersIDWithResponse call
-func ParseGetUsersIDResponse(rsp *http.Response) (*getUsersIDResponse, error) {
+func ParseGetUsersIDResponse(rsp *http.Response) (*GetUsersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getUsersIDResponse{
+	response := &GetUsersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28390,7 +29142,7 @@ func ParseGetUsersIDResponse(rsp *http.Response) (*getUsersIDResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28408,14 +29160,14 @@ func ParseGetUsersIDResponse(rsp *http.Response) (*getUsersIDResponse, error) {
 }
 
 // ParsePatchUsersIDResponse parses an HTTP response from a PatchUsersIDWithResponse call
-func ParsePatchUsersIDResponse(rsp *http.Response) (*patchUsersIDResponse, error) {
+func ParsePatchUsersIDResponse(rsp *http.Response) (*PatchUsersIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchUsersIDResponse{
+	response := &PatchUsersIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28428,7 +29180,7 @@ func ParsePatchUsersIDResponse(rsp *http.Response) (*patchUsersIDResponse, error
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28446,20 +29198,20 @@ func ParsePatchUsersIDResponse(rsp *http.Response) (*patchUsersIDResponse, error
 }
 
 // ParsePostUsersIDPasswordResponse parses an HTTP response from a PostUsersIDPasswordWithResponse call
-func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*postUsersIDPasswordResponse, error) {
+func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*PostUsersIDPasswordResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postUsersIDPasswordResponse{
+	response := &PostUsersIDPasswordResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28477,14 +29229,14 @@ func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*postUsersIDPasswordR
 }
 
 // ParseGetVariablesResponse parses an HTTP response from a GetVariablesWithResponse call
-func ParseGetVariablesResponse(rsp *http.Response) (*getVariablesResponse, error) {
+func ParseGetVariablesResponse(rsp *http.Response) (*GetVariablesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getVariablesResponse{
+	response := &GetVariablesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28504,7 +29256,7 @@ func ParseGetVariablesResponse(rsp *http.Response) (*getVariablesResponse, error
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28522,14 +29274,14 @@ func ParseGetVariablesResponse(rsp *http.Response) (*getVariablesResponse, error
 }
 
 // ParsePostVariablesResponse parses an HTTP response from a PostVariablesWithResponse call
-func ParsePostVariablesResponse(rsp *http.Response) (*postVariablesResponse, error) {
+func ParsePostVariablesResponse(rsp *http.Response) (*PostVariablesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postVariablesResponse{
+	response := &PostVariablesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28542,7 +29294,7 @@ func ParsePostVariablesResponse(rsp *http.Response) (*postVariablesResponse, err
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28560,20 +29312,20 @@ func ParsePostVariablesResponse(rsp *http.Response) (*postVariablesResponse, err
 }
 
 // ParseDeleteVariablesIDResponse parses an HTTP response from a DeleteVariablesIDWithResponse call
-func ParseDeleteVariablesIDResponse(rsp *http.Response) (*deleteVariablesIDResponse, error) {
+func ParseDeleteVariablesIDResponse(rsp *http.Response) (*DeleteVariablesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteVariablesIDResponse{
+	response := &DeleteVariablesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28591,14 +29343,14 @@ func ParseDeleteVariablesIDResponse(rsp *http.Response) (*deleteVariablesIDRespo
 }
 
 // ParseGetVariablesIDResponse parses an HTTP response from a GetVariablesIDWithResponse call
-func ParseGetVariablesIDResponse(rsp *http.Response) (*getVariablesIDResponse, error) {
+func ParseGetVariablesIDResponse(rsp *http.Response) (*GetVariablesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getVariablesIDResponse{
+	response := &GetVariablesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28618,7 +29370,7 @@ func ParseGetVariablesIDResponse(rsp *http.Response) (*getVariablesIDResponse, e
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28636,14 +29388,14 @@ func ParseGetVariablesIDResponse(rsp *http.Response) (*getVariablesIDResponse, e
 }
 
 // ParsePatchVariablesIDResponse parses an HTTP response from a PatchVariablesIDWithResponse call
-func ParsePatchVariablesIDResponse(rsp *http.Response) (*patchVariablesIDResponse, error) {
+func ParsePatchVariablesIDResponse(rsp *http.Response) (*PatchVariablesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &patchVariablesIDResponse{
+	response := &PatchVariablesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28656,7 +29408,7 @@ func ParsePatchVariablesIDResponse(rsp *http.Response) (*patchVariablesIDRespons
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28674,14 +29426,14 @@ func ParsePatchVariablesIDResponse(rsp *http.Response) (*patchVariablesIDRespons
 }
 
 // ParsePutVariablesIDResponse parses an HTTP response from a PutVariablesIDWithResponse call
-func ParsePutVariablesIDResponse(rsp *http.Response) (*putVariablesIDResponse, error) {
+func ParsePutVariablesIDResponse(rsp *http.Response) (*PutVariablesIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &putVariablesIDResponse{
+	response := &PutVariablesIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28694,7 +29446,7 @@ func ParsePutVariablesIDResponse(rsp *http.Response) (*putVariablesIDResponse, e
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28712,14 +29464,14 @@ func ParsePutVariablesIDResponse(rsp *http.Response) (*putVariablesIDResponse, e
 }
 
 // ParseGetVariablesIDLabelsResponse parses an HTTP response from a GetVariablesIDLabelsWithResponse call
-func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*getVariablesIDLabelsResponse, error) {
+func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*GetVariablesIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &getVariablesIDLabelsResponse{
+	response := &GetVariablesIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28732,7 +29484,7 @@ func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*getVariablesIDLabel
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28750,14 +29502,14 @@ func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*getVariablesIDLabel
 }
 
 // ParsePostVariablesIDLabelsResponse parses an HTTP response from a PostVariablesIDLabelsWithResponse call
-func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*postVariablesIDLabelsResponse, error) {
+func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*PostVariablesIDLabelsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postVariablesIDLabelsResponse{
+	response := &PostVariablesIDLabelsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28770,7 +29522,7 @@ func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*postVariablesIDLab
 		}
 		response.JSON201 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28788,14 +29540,14 @@ func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*postVariablesIDLab
 }
 
 // ParseDeleteVariablesIDLabelsIDResponse parses an HTTP response from a DeleteVariablesIDLabelsIDWithResponse call
-func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*deleteVariablesIDLabelsIDResponse, error) {
+func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*DeleteVariablesIDLabelsIDResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &deleteVariablesIDLabelsIDResponse{
+	response := &DeleteVariablesIDLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28808,7 +29560,7 @@ func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*deleteVariable
 		}
 		response.JSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -28826,14 +29578,14 @@ func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*deleteVariable
 }
 
 // ParsePostWriteResponse parses an HTTP response from a PostWriteWithResponse call
-func ParsePostWriteResponse(rsp *http.Response) (*postWriteResponse, error) {
+func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &postWriteResponse{
+	response := &PostWriteResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -28867,7 +29619,7 @@ func ParsePostWriteResponse(rsp *http.Response) (*postWriteResponse, error) {
 		}
 		response.JSON413 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json"):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err

@@ -3,6 +3,7 @@
 1. [#206](https://github.com/influxdata/influxdb-client-go/pull/206) Adding TasksAPI for managing tasks and associated logs and runs.
 
 ### Bug fixes
+1. [#209](https://github.com/influxdata/influxdb-client-go/pull/209) Synchronizing access to the write service in WriteAPIBlocking.
 
 ### Documentation
 

@@ -7,6 +7,7 @@ package api
 import (
 	"context"
 	"strings"
+	"sync"
 
 	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
@@ -60,6 +61,7 @@ type WriteAPIBlocking interface {
 type writeAPIBlocking struct {
 	service      *iwrite.Service
 	writeOptions *write.Options
+	lock         sync.Mutex
 }
 
 // NewWriteAPIBlocking creates new WriteAPIBlocking instance for org and bucket with underlying client
@@ -68,6 +70,8 @@ func NewWriteAPIBlocking(org string, bucket string, service http2.Service, write
 }
 
 func (w *writeAPIBlocking) write(ctx context.Context, line string) error {
+	w.lock.Lock()
+	defer w.lock.Unlock()
 	err := w.service.HandleWrite(ctx, iwrite.NewBatch(line, w.writeOptions.RetryInterval()))
 	return err
 }

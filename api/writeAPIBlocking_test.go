@@ -72,3 +72,30 @@ func TestWriteContextCancel(t *testing.T) {
 	require.Equal(t, context.Canceled, err)
 	assert.Len(t, service.Lines(), 0)
 }
+
+func TestWriteParallel(t *testing.T) {
+	service := test.NewTestService(t, "http://localhost:8888")
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	lines := genRecords(1000)
+
+	chanLine := make(chan string)
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			for l := range chanLine {
+				err := writeAPI.WriteRecord(context.Background(), l)
+				assert.Nil(t, err)
+			}
+			wg.Done()
+		}()
+	}
+	for _, l := range lines {
+		chanLine <- l
+	}
+	close(chanLine)
+	wg.Wait()
+	assert.Len(t, service.Lines(), len(lines))
+
+	service.Close()
+}

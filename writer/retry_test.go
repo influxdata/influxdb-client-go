@@ -176,6 +176,58 @@ func Test_RetryWriter_Write(t *testing.T) {
 				5 * time.Second,
 			},
 		},
+		{
+			name: `three "too many requests" errors (max attempts 3) with retry-after and retry limit`,
+			options: []RetryOption{
+				WithMaxAttempts(3),
+				WithRetrySleepLimit(4),
+			},
+			metrics: createTestRowMetrics(t, 3),
+			errors: []error{
+				errTooMany(&three),
+				errTooMany(&three),
+				errTooMany(&three),
+			},
+			count: 0,
+			err:   errTooMany(&three),
+			writes: [][]influxdb.Metric{
+				// three writes all error
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+			},
+			sleeps: []time.Duration{
+				3 * time.Second,
+				1 * time.Second,
+			},
+		},
+		{
+			name: `three "too many requests" errors (max attempts 3) with backoff and retry limit`,
+			options: []RetryOption{
+				WithMaxAttempts(3),
+				WithBackoff(LinearBackoff(time.Second)),
+				WithRetrySleepLimit(4),
+			},
+			metrics: createTestRowMetrics(t, 3),
+			errors: []error{
+				errTooMany(nil),
+				errTooMany(nil),
+				errTooMany(nil),
+			},
+			count: 0,
+			err:   errTooMany(nil),
+			writes: [][]influxdb.Metric{
+				// three writes all error
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+				createTestRowMetrics(t, 3),
+			},
+			sleeps: []time.Duration{
+				1 * time.Second,
+				2 * time.Second,
+				1 * time.Second,
+			},
+		},
 	} {
 		t.Run(test.name, test.Run)
 	}
@@ -203,8 +255,15 @@ func (test *retryWriteCase) Run(t *testing.T) {
 		sleeps []time.Duration
 	)
 
+	now := time.Now()
+
 	retry.sleep = func(d time.Duration) {
 		sleeps = append(sleeps, d)
+		now = now.Add(d)
+	}
+
+	retry.now = func() time.Time {
+		return now
 	}
 
 	count, err := retry.Write(test.metrics...)

@@ -206,6 +206,9 @@ func (w *WriteAPIImpl) WritePoint(point *write.Point) {
 	line, err := w.service.EncodePoints(point)
 	if err != nil {
 		log.Errorf("point encoding error: %s\n", err.Error())
+		if w.errCh != nil {
+			w.errCh <- err
+		}
 	} else {
 		w.bufferCh <- line
 	}

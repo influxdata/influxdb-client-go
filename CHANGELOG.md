@@ -1,3 +1,7 @@
+## 2.2.1 [in progress]
+### Bug fixes
+1. [#220](https://github.com/influxdata/influxdb-client-go/pull/220) Fixed runtime error occurring when calling v2 API on v1 server.
+
 ## 2.2.0 [2020-10-30]
 ### Features
 1. [#206](https://github.com/influxdata/influxdb-client-go/pull/206) Adding TasksAPI for managing tasks and associated logs and runs.

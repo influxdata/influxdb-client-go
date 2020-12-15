@@ -17,6 +17,7 @@ import (
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
+	"github.com/influxdata/influxdb-client-go/v2/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -169,7 +170,7 @@ func TestHealthV1Compatibility(t *testing.T) {
 }
 
 func TestWriteV1Compatibility(t *testing.T) {
-	client := influxdb2.NewClientWithOptions(serverV1URL, "", influxdb2.DefaultOptions().SetLogLevel(3))
+	client := influxdb2.NewClientWithOptions(serverV1URL, "", influxdb2.DefaultOptions().SetLogLevel(log.DebugLevel))
 	writeAPI := client.WriteAPI("", "mydb/autogen")
 	errCh := writeAPI.Errors()
 	errorsCount := 0
@@ -243,8 +244,27 @@ func TestQueryV1Compatibility(t *testing.T) {
 		if result.Err() != nil {
 			t.Error(result.Err())
 		}
-		assert.Equal(t, 42, rows)
+		assert.True(t, rows > 0)
 	}
+}
+
+func TestV2APIAgainstV1Server(t *testing.T) {
+	client := influxdb2.NewClient(serverV1URL, "")
+	ctx := context.Background()
+	_, err := client.AuthorizationsAPI().GetAuthorizations(ctx)
+	require.Error(t, err)
+	_, err = client.UsersAPI().GetUsers(ctx)
+	require.Error(t, err)
+	_, err = client.OrganizationsAPI().GetOrganizations(ctx)
+	require.Error(t, err)
+	_, err = client.TasksAPI().FindTasks(ctx, nil)
+	require.Error(t, err)
+	_, err = client.LabelsAPI().GetLabels(ctx)
+	require.Error(t, err)
+	_, err = client.BucketsAPI().GetBuckets(ctx)
+	require.Error(t, err)
+	err = client.DeleteAPI().DeleteWithName(ctx, "org", "bucket", time.Now(), time.Now(), "")
+	require.Error(t, err)
 }
 
 func TestHTTPService(t *testing.T) {

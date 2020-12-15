@@ -16,19 +16,25 @@ const (
 	AuthorizationUpdateRequestStatusActive AuthorizationUpdateRequestStatus = "active"
 
 	AuthorizationUpdateRequestStatusInactive AuthorizationUpdateRequestStatus = "inactive"
-) // Defines values for AxisBase.
+)
+
+// Defines values for AxisBase.
 const (
 	AxisBase1 AxisBase = "2"
 
 	AxisBaseEmpty AxisBase = ""
 
 	AxisBaseN0 AxisBase = "10"
-) // Defines values for AxisScale.
+)
+
+// Defines values for AxisScale.
 const (
 	AxisScaleLinear AxisScale = "linear"
 
 	AxisScaleLog AxisScale = "log"
-) // Defines values for BandViewPropertiesHoverDimension.
+)
+
+// Defines values for BandViewPropertiesHoverDimension.
 const (
 	BandViewPropertiesHoverDimensionAuto BandViewPropertiesHoverDimension = "auto"
 
@@ -37,35 +43,49 @@ const (
 	BandViewPropertiesHoverDimensionX BandViewPropertiesHoverDimension = "x"
 
 	BandViewPropertiesHoverDimensionXy BandViewPropertiesHoverDimension = "xy"
-) // Defines values for BandViewPropertiesShape.
+)
+
+// Defines values for BandViewPropertiesShape.
 const (
 	BandViewPropertiesShapeChronografV2 BandViewPropertiesShape = "chronograf-v2"
-) // Defines values for BandViewPropertiesType.
+)
+
+// Defines values for BandViewPropertiesType.
 const (
 	BandViewPropertiesTypeBand BandViewPropertiesType = "band"
-) // Defines values for BucketType.
+)
+
+// Defines values for BucketType.
 const (
 	BucketTypeSystem BucketType = "system"
 
 	BucketTypeUser BucketType = "user"
-) // Defines values for BuilderAggregateFunctionType.
+)
+
+// Defines values for BuilderAggregateFunctionType.
 const (
 	BuilderAggregateFunctionTypeFilter BuilderAggregateFunctionType = "filter"
 
 	BuilderAggregateFunctionTypeGroup BuilderAggregateFunctionType = "group"
-) // Defines values for CheckBaseLastRunStatus.
+)
+
+// Defines values for CheckBaseLastRunStatus.
 const (
 	CheckBaseLastRunStatusCanceled CheckBaseLastRunStatus = "canceled"
 
 	CheckBaseLastRunStatusFailed CheckBaseLastRunStatus = "failed"
 
 	CheckBaseLastRunStatusSuccess CheckBaseLastRunStatus = "success"
-) // Defines values for CheckPatchStatus.
+)
+
+// Defines values for CheckPatchStatus.
 const (
 	CheckPatchStatusActive CheckPatchStatus = "active"
 
 	CheckPatchStatusInactive CheckPatchStatus = "inactive"
-) // Defines values for CheckStatusLevel.
+)
+
+// Defines values for CheckStatusLevel.
 const (
 	CheckStatusLevelCRIT CheckStatusLevel = "CRIT"
 
@@ -76,19 +96,29 @@ const (
 	CheckStatusLevelUNKNOWN CheckStatusLevel = "UNKNOWN"
 
 	CheckStatusLevelWARN CheckStatusLevel = "WARN"
-) // Defines values for CheckViewPropertiesShape.
+)
+
+// Defines values for CheckViewPropertiesShape.
 const (
 	CheckViewPropertiesShapeChronografV2 CheckViewPropertiesShape = "chronograf-v2"
-) // Defines values for CheckViewPropertiesType.
+)
+
+// Defines values for CheckViewPropertiesType.
 const (
 	CheckViewPropertiesTypeCheck CheckViewPropertiesType = "check"
-) // Defines values for ConstantVariablePropertiesType.
+)
+
+// Defines values for ConstantVariablePropertiesType.
 const (
 	ConstantVariablePropertiesTypeConstant ConstantVariablePropertiesType = "constant"
-) // Defines values for CustomCheckType.
+)
+
+// Defines values for CustomCheckType.
 const (
 	CustomCheckTypeCustom CustomCheckType = "custom"
-) // Defines values for DashboardColorType.
+)
+
+// Defines values for DashboardColorType.
 const (
 	DashboardColorTypeBackground DashboardColorType = "background"
 
@@ -101,22 +131,30 @@ const (
 	DashboardColorTypeText DashboardColorType = "text"
 
 	DashboardColorTypeThreshold DashboardColorType = "threshold"
-) // Defines values for DeadmanCheckType.
+)
+
+// Defines values for DeadmanCheckType.
 const (
 	DeadmanCheckTypeDeadman DeadmanCheckType = "deadman"
-) // Defines values for DialectAnnotations.
+)
+
+// Defines values for DialectAnnotations.
 const (
 	DialectAnnotationsDatatype DialectAnnotations = "datatype"
 
 	DialectAnnotationsDefault DialectAnnotations = "default"
 
 	DialectAnnotationsGroup DialectAnnotations = "group"
-) // Defines values for DialectDateTimeFormat.
+)
+
+// Defines values for DialectDateTimeFormat.
 const (
 	DialectDateTimeFormatRFC3339 DialectDateTimeFormat = "RFC3339"
 
 	DialectDateTimeFormatRFC3339Nano DialectDateTimeFormat = "RFC3339Nano"
-) // Defines values for ErrorCode.
+)
+
+// Defines values for ErrorCode.
 const (
 	ErrorCodeConflict ErrorCode = "conflict"
 
@@ -139,7 +177,9 @@ const (
 	ErrorCodeUnavailable ErrorCode = "unavailable"
 
 	ErrorCodeUnprocessableEntity ErrorCode = "unprocessable entity"
-) // Defines values for FieldType.
+)
+
+// Defines values for FieldType.
 const (
 	FieldTypeField FieldType = "field"
 
@@ -152,58 +192,86 @@ const (
 	FieldTypeRegex FieldType = "regex"
 
 	FieldTypeWildcard FieldType = "wildcard"
-) // Defines values for GaugeViewPropertiesShape.
+)
+
+// Defines values for GaugeViewPropertiesShape.
 const (
 	GaugeViewPropertiesShapeChronografV2 GaugeViewPropertiesShape = "chronograf-v2"
-) // Defines values for GaugeViewPropertiesType.
+)
+
+// Defines values for GaugeViewPropertiesType.
 const (
 	GaugeViewPropertiesTypeGauge GaugeViewPropertiesType = "gauge"
-) // Defines values for GreaterThresholdType.
+)
+
+// Defines values for GreaterThresholdType.
 const (
 	GreaterThresholdTypeGreater GreaterThresholdType = "greater"
-) // Defines values for HTTPNotificationEndpointAuthMethod.
+)
+
+// Defines values for HTTPNotificationEndpointAuthMethod.
 const (
 	HTTPNotificationEndpointAuthMethodBasic HTTPNotificationEndpointAuthMethod = "basic"
 
 	HTTPNotificationEndpointAuthMethodBearer HTTPNotificationEndpointAuthMethod = "bearer"
 
 	HTTPNotificationEndpointAuthMethodNone HTTPNotificationEndpointAuthMethod = "none"
-) // Defines values for HTTPNotificationEndpointMethod.
+)
+
+// Defines values for HTTPNotificationEndpointMethod.
 const (
 	HTTPNotificationEndpointMethodGET HTTPNotificationEndpointMethod = "GET"
 
 	HTTPNotificationEndpointMethodPOST HTTPNotificationEndpointMethod = "POST"
 
 	HTTPNotificationEndpointMethodPUT HTTPNotificationEndpointMethod = "PUT"
-) // Defines values for HTTPNotificationRuleBaseType.
+)
+
+// Defines values for HTTPNotificationRuleBaseType.
 const (
 	HTTPNotificationRuleBaseTypeHttp HTTPNotificationRuleBaseType = "http"
-) // Defines values for HealthCheckStatus.
+)
+
+// Defines values for HealthCheckStatus.
 const (
 	HealthCheckStatusFail HealthCheckStatus = "fail"
 
 	HealthCheckStatusPass HealthCheckStatus = "pass"
-) // Defines values for HeatmapViewPropertiesShape.
+)
+
+// Defines values for HeatmapViewPropertiesShape.
 const (
 	HeatmapViewPropertiesShapeChronografV2 HeatmapViewPropertiesShape = "chronograf-v2"
-) // Defines values for HeatmapViewPropertiesType.
+)
+
+// Defines values for HeatmapViewPropertiesType.
 const (
 	HeatmapViewPropertiesTypeHeatmap HeatmapViewPropertiesType = "heatmap"
-) // Defines values for HistogramViewPropertiesPosition.
+)
+
+// Defines values for HistogramViewPropertiesPosition.
 const (
 	HistogramViewPropertiesPositionOverlaid HistogramViewPropertiesPosition = "overlaid"
 
 	HistogramViewPropertiesPositionStacked HistogramViewPropertiesPosition = "stacked"
-) // Defines values for HistogramViewPropertiesShape.
+)
+
+// Defines values for HistogramViewPropertiesShape.
 const (
 	HistogramViewPropertiesShapeChronografV2 HistogramViewPropertiesShape = "chronograf-v2"
-) // Defines values for HistogramViewPropertiesType.
+)
+
+// Defines values for HistogramViewPropertiesType.
 const (
 	HistogramViewPropertiesTypeHistogram HistogramViewPropertiesType = "histogram"
-) // Defines values for InfluxQLQueryType.
+)
+
+// Defines values for InfluxQLQueryType.
 const (
 	InfluxQLQueryTypeInfluxql InfluxQLQueryType = "influxql"
-) // Defines values for LegendOrientation.
+)
+
+// Defines values for LegendOrientation.
 const (
 	LegendOrientationBottom LegendOrientation = "bottom"
 
@@ -212,13 +280,19 @@ const (
 	LegendOrientationRight LegendOrientation = "right"
 
 	LegendOrientationTop LegendOrientation = "top"
-) // Defines values for LegendType.
+)
+
+// Defines values for LegendType.
 const (
 	LegendTypeStatic LegendType = "static"
-) // Defines values for LesserThresholdType.
+)
+
+// Defines values for LesserThresholdType.
 const (
 	LesserThresholdTypeLesser LesserThresholdType = "lesser"
-) // Defines values for LinePlusSingleStatPropertiesHoverDimension.
+)
+
+// Defines values for LinePlusSingleStatPropertiesHoverDimension.
 const (
 	LinePlusSingleStatPropertiesHoverDimensionAuto LinePlusSingleStatPropertiesHoverDimension = "auto"
 
@@ -227,18 +301,26 @@ const (
 	LinePlusSingleStatPropertiesHoverDimensionX LinePlusSingleStatPropertiesHoverDimension = "x"
 
 	LinePlusSingleStatPropertiesHoverDimensionXy LinePlusSingleStatPropertiesHoverDimension = "xy"
-) // Defines values for LinePlusSingleStatPropertiesPosition.
+)
+
+// Defines values for LinePlusSingleStatPropertiesPosition.
 const (
 	LinePlusSingleStatPropertiesPositionOverlaid LinePlusSingleStatPropertiesPosition = "overlaid"
 
 	LinePlusSingleStatPropertiesPositionStacked LinePlusSingleStatPropertiesPosition = "stacked"
-) // Defines values for LinePlusSingleStatPropertiesShape.
+)
+
+// Defines values for LinePlusSingleStatPropertiesShape.
 const (
 	LinePlusSingleStatPropertiesShapeChronografV2 LinePlusSingleStatPropertiesShape = "chronograf-v2"
-) // Defines values for LinePlusSingleStatPropertiesType.
+)
+
+// Defines values for LinePlusSingleStatPropertiesType.
 const (
 	LinePlusSingleStatPropertiesTypeLinePlusSingleStat LinePlusSingleStatPropertiesType = "line-plus-single-stat"
-) // Defines values for LineProtocolErrorCode.
+)
+
+// Defines values for LineProtocolErrorCode.
 const (
 	LineProtocolErrorCodeConflict LineProtocolErrorCode = "conflict"
 
@@ -251,30 +333,46 @@ const (
 	LineProtocolErrorCodeNotFound LineProtocolErrorCode = "not found"
 
 	LineProtocolErrorCodeUnavailable LineProtocolErrorCode = "unavailable"
-) // Defines values for LineProtocolLengthErrorCode.
+)
+
+// Defines values for LineProtocolLengthErrorCode.
 const (
 	LineProtocolLengthErrorCodeInvalid LineProtocolLengthErrorCode = "invalid"
-) // Defines values for MapVariablePropertiesType.
+)
+
+// Defines values for MapVariablePropertiesType.
 const (
 	MapVariablePropertiesTypeMap MapVariablePropertiesType = "map"
-) // Defines values for MarkdownViewPropertiesShape.
+)
+
+// Defines values for MarkdownViewPropertiesShape.
 const (
 	MarkdownViewPropertiesShapeChronografV2 MarkdownViewPropertiesShape = "chronograf-v2"
-) // Defines values for MarkdownViewPropertiesType.
+)
+
+// Defines values for MarkdownViewPropertiesType.
 const (
 	MarkdownViewPropertiesTypeMarkdown MarkdownViewPropertiesType = "markdown"
-) // Defines values for MosaicViewPropertiesShape.
+)
+
+// Defines values for MosaicViewPropertiesShape.
 const (
 	MosaicViewPropertiesShapeChronografV2 MosaicViewPropertiesShape = "chronograf-v2"
-) // Defines values for MosaicViewPropertiesType.
+)
+
+// Defines values for MosaicViewPropertiesType.
 const (
 	MosaicViewPropertiesTypeMosaic MosaicViewPropertiesType = "mosaic"
-) // Defines values for NotificationEndpointBaseStatus.
+)
+
+// Defines values for NotificationEndpointBaseStatus.
 const (
 	NotificationEndpointBaseStatusActive NotificationEndpointBaseStatus = "active"
 
 	NotificationEndpointBaseStatusInactive NotificationEndpointBaseStatus = "inactive"
-) // Defines values for NotificationEndpointType.
+)
+
+// Defines values for NotificationEndpointType.
 const (
 	NotificationEndpointTypeHttp NotificationEndpointType = "http"
 
@@ -283,54 +381,78 @@ const (
 	NotificationEndpointTypeSlack NotificationEndpointType = "slack"
 
 	NotificationEndpointTypeTelegram NotificationEndpointType = "telegram"
-) // Defines values for NotificationEndpointUpdateStatus.
+)
+
+// Defines values for NotificationEndpointUpdateStatus.
 const (
 	NotificationEndpointUpdateStatusActive NotificationEndpointUpdateStatus = "active"
 
 	NotificationEndpointUpdateStatusInactive NotificationEndpointUpdateStatus = "inactive"
-) // Defines values for NotificationRuleBaseLastRunStatus.
+)
+
+// Defines values for NotificationRuleBaseLastRunStatus.
 const (
 	NotificationRuleBaseLastRunStatusCanceled NotificationRuleBaseLastRunStatus = "canceled"
 
 	NotificationRuleBaseLastRunStatusFailed NotificationRuleBaseLastRunStatus = "failed"
 
 	NotificationRuleBaseLastRunStatusSuccess NotificationRuleBaseLastRunStatus = "success"
-) // Defines values for NotificationRuleUpdateStatus.
+)
+
+// Defines values for NotificationRuleUpdateStatus.
 const (
 	NotificationRuleUpdateStatusActive NotificationRuleUpdateStatus = "active"
 
 	NotificationRuleUpdateStatusInactive NotificationRuleUpdateStatus = "inactive"
-) // Defines values for OrganizationStatus.
+)
+
+// Defines values for OrganizationStatus.
 const (
 	OrganizationStatusActive OrganizationStatus = "active"
 
 	OrganizationStatusInactive OrganizationStatus = "inactive"
-) // Defines values for PagerDutyNotificationRuleBaseType.
+)
+
+// Defines values for PagerDutyNotificationRuleBaseType.
 const (
 	PagerDutyNotificationRuleBaseTypePagerduty PagerDutyNotificationRuleBaseType = "pagerduty"
-) // Defines values for PermissionAction.
+)
+
+// Defines values for PermissionAction.
 const (
 	PermissionActionRead PermissionAction = "read"
 
 	PermissionActionWrite PermissionAction = "write"
-) // Defines values for QueryType.
+)
+
+// Defines values for QueryType.
 const (
 	QueryTypeFlux QueryType = "flux"
-) // Defines values for QueryEditMode.
+)
+
+// Defines values for QueryEditMode.
 const (
 	QueryEditModeAdvanced QueryEditMode = "advanced"
 
 	QueryEditModeBuilder QueryEditMode = "builder"
-) // Defines values for QueryVariablePropertiesType.
+)
+
+// Defines values for QueryVariablePropertiesType.
 const (
 	QueryVariablePropertiesTypeQuery QueryVariablePropertiesType = "query"
-) // Defines values for RangeThresholdType.
+)
+
+// Defines values for RangeThresholdType.
 const (
 	RangeThresholdTypeRange RangeThresholdType = "range"
-) // Defines values for ReadyStatus.
+)
+
+// Defines values for ReadyStatus.
 const (
 	ReadyStatusReady ReadyStatus = "ready"
-) // Defines values for ResourceType.
+)
+
+// Defines values for ResourceType.
 const (
 	ResourceTypeAuthorizations ResourceType = "authorizations"
 
@@ -367,16 +489,24 @@ const (
 	ResourceTypeVariables ResourceType = "variables"
 
 	ResourceTypeViews ResourceType = "views"
-) // Defines values for ResourceMemberRole.
+)
+
+// Defines values for ResourceMemberRole.
 const (
 	ResourceMemberRoleMember ResourceMemberRole = "member"
-) // Defines values for ResourceOwnerRole.
+)
+
+// Defines values for ResourceOwnerRole.
 const (
 	ResourceOwnerRoleOwner ResourceOwnerRole = "owner"
-) // Defines values for RetentionRuleType.
+)
+
+// Defines values for RetentionRuleType.
 const (
 	RetentionRuleTypeExpire RetentionRuleType = "expire"
-) // Defines values for RuleStatusLevel.
+)
+
+// Defines values for RuleStatusLevel.
 const (
 	RuleStatusLevelANY RuleStatusLevel = "ANY"
 
@@ -389,7 +519,9 @@ const (
 	RuleStatusLevelUNKNOWN RuleStatusLevel = "UNKNOWN"
 
 	RuleStatusLevelWARN RuleStatusLevel = "WARN"
-) // Defines values for RunStatus.
+)
+
+// Defines values for RunStatus.
 const (
 	RunStatusCanceled RunStatus = "canceled"
 
@@ -400,53 +532,79 @@ const (
 	RunStatusStarted RunStatus = "started"
 
 	RunStatusSuccess RunStatus = "success"
-) // Defines values for SMTPNotificationRuleBaseType.
+)
+
+// Defines values for SMTPNotificationRuleBaseType.
 const (
 	SMTPNotificationRuleBaseTypeSmtp SMTPNotificationRuleBaseType = "smtp"
-) // Defines values for ScatterViewPropertiesShape.
+)
+
+// Defines values for ScatterViewPropertiesShape.
 const (
 	ScatterViewPropertiesShapeChronografV2 ScatterViewPropertiesShape = "chronograf-v2"
-) // Defines values for ScatterViewPropertiesType.
+)
+
+// Defines values for ScatterViewPropertiesType.
 const (
 	ScatterViewPropertiesTypeScatter ScatterViewPropertiesType = "scatter"
-) // Defines values for ScraperTargetRequestType.
+)
+
+// Defines values for ScraperTargetRequestType.
 const (
 	ScraperTargetRequestTypePrometheus ScraperTargetRequestType = "prometheus"
-) // Defines values for SingleStatViewPropertiesShape.
+)
+
+// Defines values for SingleStatViewPropertiesShape.
 const (
 	SingleStatViewPropertiesShapeChronografV2 SingleStatViewPropertiesShape = "chronograf-v2"
-) // Defines values for SingleStatViewPropertiesType.
+)
+
+// Defines values for SingleStatViewPropertiesType.
 const (
 	SingleStatViewPropertiesTypeSingleStat SingleStatViewPropertiesType = "single-stat"
-) // Defines values for SlackNotificationRuleBaseType.
+)
+
+// Defines values for SlackNotificationRuleBaseType.
 const (
 	SlackNotificationRuleBaseTypeSlack SlackNotificationRuleBaseType = "slack"
-) // Defines values for SourceLanguages.
+)
+
+// Defines values for SourceLanguages.
 const (
 	SourceLanguagesFlux SourceLanguages = "flux"
 
 	SourceLanguagesInfluxql SourceLanguages = "influxql"
-) // Defines values for SourceType.
+)
+
+// Defines values for SourceType.
 const (
 	SourceTypeSelf SourceType = "self"
 
 	SourceTypeV1 SourceType = "v1"
 
 	SourceTypeV2 SourceType = "v2"
-) // Defines values for TableViewPropertiesShape.
+)
+
+// Defines values for TableViewPropertiesShape.
 const (
 	TableViewPropertiesShapeChronografV2 TableViewPropertiesShape = "chronograf-v2"
-) // Defines values for TableViewPropertiesTableOptionsWrapping.
+)
+
+// Defines values for TableViewPropertiesTableOptionsWrapping.
 const (
 	TableViewPropertiesTableOptionsWrappingSingleLine TableViewPropertiesTableOptionsWrapping = "single-line"
 
 	TableViewPropertiesTableOptionsWrappingTruncate TableViewPropertiesTableOptionsWrapping = "truncate"
 
 	TableViewPropertiesTableOptionsWrappingWrap TableViewPropertiesTableOptionsWrapping = "wrap"
-) // Defines values for TableViewPropertiesType.
+)
+
+// Defines values for TableViewPropertiesType.
 const (
 	TableViewPropertiesTypeTable TableViewPropertiesType = "table"
-) // Defines values for TagRuleOperator.
+)
+
+// Defines values for TagRuleOperator.
 const (
 	TagRuleOperatorEqual TagRuleOperator = "equal"
 
@@ -455,29 +613,39 @@ const (
 	TagRuleOperatorNotequal TagRuleOperator = "notequal"
 
 	TagRuleOperatorNotequalregex TagRuleOperator = "notequalregex"
-) // Defines values for TaskLastRunStatus.
+)
+
+// Defines values for TaskLastRunStatus.
 const (
 	TaskLastRunStatusCanceled TaskLastRunStatus = "canceled"
 
 	TaskLastRunStatusFailed TaskLastRunStatus = "failed"
 
 	TaskLastRunStatusSuccess TaskLastRunStatus = "success"
-) // Defines values for TaskStatusType.
+)
+
+// Defines values for TaskStatusType.
 const (
 	TaskStatusTypeActive TaskStatusType = "active"
 
 	TaskStatusTypeInactive TaskStatusType = "inactive"
-) // Defines values for TelegramNotificationRuleBaseParseMode.
+)
+
+// Defines values for TelegramNotificationRuleBaseParseMode.
 const (
 	TelegramNotificationRuleBaseParseModeHTML TelegramNotificationRuleBaseParseMode = "HTML"
 
 	TelegramNotificationRuleBaseParseModeMarkdown TelegramNotificationRuleBaseParseMode = "Markdown"
 
 	TelegramNotificationRuleBaseParseModeMarkdownV2 TelegramNotificationRuleBaseParseMode = "MarkdownV2"
-) // Defines values for TelegramNotificationRuleBaseType.
+)
+
+// Defines values for TelegramNotificationRuleBaseType.
 const (
 	TelegramNotificationRuleBaseTypeTelegram TelegramNotificationRuleBaseType = "telegram"
-) // Defines values for TemplateKind.
+)
+
+// Defines values for TemplateKind.
 const (
 	TemplateKindBucket TemplateKind = "Bucket"
 
@@ -506,15 +674,21 @@ const (
 	TemplateKindTelegraf TemplateKind = "Telegraf"
 
 	TemplateKindVariable TemplateKind = "Variable"
-) // Defines values for ThresholdCheckType.
+)
+
+// Defines values for ThresholdCheckType.
 const (
 	ThresholdCheckTypeThreshold ThresholdCheckType = "threshold"
-) // Defines values for UserStatus.
+)
+
+// Defines values for UserStatus.
 const (
 	UserStatusActive UserStatus = "active"
 
 	UserStatusInactive UserStatus = "inactive"
-) // Defines values for WritePrecision.
+)
+
+// Defines values for WritePrecision.
 const (
 	WritePrecisionMs WritePrecision = "ms"
 
@@ -523,7 +697,9 @@ const (
 	WritePrecisionS WritePrecision = "s"
 
 	WritePrecisionUs WritePrecision = "us"
-) // Defines values for XYGeom.
+)
+
+// Defines values for XYGeom.
 const (
 	XYGeomBar XYGeom = "bar"
 
@@ -534,7 +710,9 @@ const (
 	XYGeomStacked XYGeom = "stacked"
 
 	XYGeomStep XYGeom = "step"
-) // Defines values for XYViewPropertiesHoverDimension.
+)
+
+// Defines values for XYViewPropertiesHoverDimension.
 const (
 	XYViewPropertiesHoverDimensionAuto XYViewPropertiesHoverDimension = "auto"
 
@@ -543,15 +721,21 @@ const (
 	XYViewPropertiesHoverDimensionX XYViewPropertiesHoverDimension = "x"
 
 	XYViewPropertiesHoverDimensionXy XYViewPropertiesHoverDimension = "xy"
-) // Defines values for XYViewPropertiesPosition.
+)
+
+// Defines values for XYViewPropertiesPosition.
 const (
 	XYViewPropertiesPositionOverlaid XYViewPropertiesPosition = "overlaid"
 
 	XYViewPropertiesPositionStacked XYViewPropertiesPosition = "stacked"
-) // Defines values for XYViewPropertiesShape.
+)
+
+// Defines values for XYViewPropertiesShape.
 const (
 	XYViewPropertiesShapeChronografV2 XYViewPropertiesShape = "chronograf-v2"
-) // Defines values for XYViewPropertiesType.
+)
+
+// Defines values for XYViewPropertiesType.
 const (
 	XYViewPropertiesTypeXy XYViewPropertiesType = "xy"
 )

@@ -470,7 +470,7 @@ func TestTasksAPI_Failures(t *testing.T) {
 	_, err = tasksAPI.GetTaskByID(ctx, notExistingID)
 	assert.NotNil(t, err)
 
-	_, err = tasksAPI.FindTasks(ctx, &api.TaskFilter{OrgID: notExistingID})
+	_, err = tasksAPI.FindTasks(ctx, &api.TaskFilter{OrgID: invalidID})
 	assert.NotNil(t, err)
 
 	//empty name

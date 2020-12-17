@@ -37,6 +37,9 @@ func (o *Options) HTTPClient() *http.Client {
 				}).DialContext,
 				TLSHandshakeTimeout: 5 * time.Second,
 				TLSClientConfig:     o.TLSConfig(),
+				MaxIdleConns:			100,
+				MaxIdleConnsPerHost:	100,
+				IdleConnTimeout:        90 * time.Second,
 			},
 		}
 		o.ownClient = true

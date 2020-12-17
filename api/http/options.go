@@ -39,6 +39,7 @@ func (o *Options) HTTPClient() *http.Client {
 				TLSClientConfig:     o.TLSConfig(),
 				MaxIdleConns:			100,
 				MaxIdleConnsPerHost:	100,
+				IdleConnTimeout:        90 * time.Second,
 			},
 		}
 		o.ownClient = true

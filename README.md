@@ -300,7 +300,7 @@ func main() {
 ```
 
 ### Queries
-Query client offers two ways of retrieving query results, parsed representation in [QueryTableResult](https://github.com/influxdata/influxdb-client-go/blob/master/query.go#L162) and a raw result string. 
+Query client offers retrieving of query results to a parsed representation in a `QueryTableResult` or to a raw string. 
 
 ### QueryTableResult 
 QueryTableResult offers comfortable way how to deal with flux query CSV response. It parses CSV stream into FluxTableMetaData, FluxColumn and FluxRecord objects

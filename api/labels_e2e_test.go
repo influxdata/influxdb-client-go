@@ -92,6 +92,7 @@ func TestLabelsAPI(t *testing.T) {
 
 func TestLabelsAPI_failing(t *testing.T) {
 	client := influxdb2.NewClient(serverURL, authToken)
+	clientUnAuth := influxdb2.NewClient(serverURL, "invalid_token")
 	labelsAPI := client.LabelsAPI()
 	orgAPI := client.OrganizationsAPI()
 	ctx := context.Background()
@@ -115,7 +116,7 @@ func TestLabelsAPI_failing(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Nil(t, label)
 
-	labels, err := labelsAPI.FindLabelsByOrgID(ctx, invalidID)
+	labels, err := clientUnAuth.LabelsAPI().FindLabelsByOrgID(ctx, invalidID)
 	assert.NotNil(t, err)
 	assert.Nil(t, labels)
 

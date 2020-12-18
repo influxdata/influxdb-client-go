@@ -29,8 +29,8 @@ This repository contains the reference Go client for InfluxDB 2.
         - [How to queries](#queries)
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
-        - [Data Point](https://github.com/influxdata/influxdb-client-go/blob/master/point.go)
-        - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/writeAPIBlocking.go) ways
+        - [Data Point](https://github.com/influxdata/influxdb-client-go/blob/master/api/write/point.go)
+        - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/api/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/api/writeAPIBlocking.go) ways
         - [How to writes](#writes)  
     - InfluxDB 2 API
         - setup, ready, health
@@ -148,8 +148,8 @@ written to the underlying buffer and they are automatically sent to a server whe
 Writes are automatically retried on server back pressure.
 
 This write client also offers synchronous blocking method to ensure that write buffer is flushed and all pending writes are finished, 
-see [Flush()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L24) method.
-Always use [Close()](https://github.com/influxdata/influxdb-client-go/blob/master/client.go#L40) method of the client to stop all background processes.
+see [Flush()](https://github.com/influxdata/influxdb-client-go/blob/master/api/write.go#L29) method.
+Always use [Close()](https://github.com/influxdata/influxdb-client-go/blob/master/client.go#L38) method of the client to stop all background processes.
  
 Asynchronous write client is recommended for frequent periodic writes.
 
@@ -200,7 +200,7 @@ func main() {
 ```
 
 ### Reading async errors
-[Error()](https://github.com/influxdata/influxdb-client-go/blob/master/write.go#L24) method returns a channel for reading errors which occurs during async writes. This channel is unbuffered and it 
+[Errors()](https://github.com/influxdata/influxdb-client-go/blob/master/api/write.go#L33) method returns a channel for reading errors which occurs during async writes. This channel is unbuffered and it 
 must be read asynchronously otherwise will block write procedure:
 
 ```go
@@ -346,7 +346,7 @@ func main() {
 ```
 
 ### Raw
-[QueryRaw()](https://github.com/influxdata/influxdb-client-go/blob/master/query.go#L44) returns raw, unparsed, query result string and process it on your own. Returned csv format  
+[QueryRaw()](https://github.com/influxdata/influxdb-client-go/blob/master/api/query.go#L47) returns raw, unparsed, query result string and process it on your own. Returned csv format  
 can be controlled by the third parameter, query dialect.   
 
 ```go

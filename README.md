@@ -29,8 +29,8 @@ This repository contains the reference Go client for InfluxDB 2.
         - [How to queries](#queries)
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
-        - [Data Point](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2@v2.2.0/api/write#Point)
-        - Both [asynchronous](https://github.com/influxdata/influxdb-client-go/blob/master/api/write.go) or [synchronous](https://github.com/influxdata/influxdb-client-go/blob/master/api/writeAPIBlocking.go) ways
+        - [Data Point](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api/write#Point)
+        - Both [asynchronous](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI) or [synchronous](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking) ways
         - [How to writes](#writes)  
     - InfluxDB 2 API
         - setup, ready, health
@@ -40,15 +40,15 @@ This repository contains the reference Go client for InfluxDB 2.
      
 ## Documentation
 
-Go API docs is available at: [https://pkg.go.dev/github.com/influxdata/influxdb-client-go](https://pkg.go.dev/github.com/influxdata/influxdb-client-go)
+Go API docs is available at: [https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2)
 
 ### Examples
 
 Examples for basic writing and querying data are shown below in this document 
 
 There are also other examples in the API docs:
- - [Client usage](https://pkg.go.dev/github.com/influxdata/influxdb-client-go?tab=doc#pkg-examples) 
- - [Management APIs](https://pkg.go.dev/github.com/influxdata/influxdb-client-go@v1.4.0/api?tab=doc#pkg-examples) 
+ - [Client usage](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2?tab=doc#pkg-examples) 
+ - [Management APIs](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api?tab=doc#pkg-examples) 
 
 ## How To Use
 
@@ -121,7 +121,7 @@ func main() {
 }
 ```
 ### Options
-The InfluxDBClient uses set of options to configure behavior. These are available in the [Options](https://github.com/influxdata/influxdb-client-go/blob/master/options.go) object
+The InfluxDBClient uses set of options to configure behavior. These are available in the [Options](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Options) object
 Creating a client instance using
 ```go
 client := influxdb2.NewClient("http://localhost:8086", "my-token")
@@ -148,8 +148,8 @@ written to the underlying buffer and they are automatically sent to a server whe
 Writes are automatically retried on server back pressure.
 
 This write client also offers synchronous blocking method to ensure that write buffer is flushed and all pending writes are finished, 
-see [Flush()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2@v2.2.0/api#WriteAPI.Flush) method.
-Always use [Close()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2@v2.2.0#Client.Close) method of the client to stop all background processes.
+see [Flush()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI.Flush) method.
+Always use [Close()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Close) method of the client to stop all background processes.
  
 Asynchronous write client is recommended for frequent periodic writes.
 
@@ -200,7 +200,7 @@ func main() {
 ```
 
 ### Reading async errors
-[Errors()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2@v2.2.0/api#WriteAPI.Errors) method returns a channel for reading errors which occurs during async writes. This channel is unbuffered and it 
+[Errors()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI.Errors) method returns a channel for reading errors which occurs during async writes. This channel is unbuffered and it 
 must be read asynchronously otherwise will block write procedure:
 
 ```go
@@ -300,7 +300,7 @@ func main() {
 ```
 
 ### Queries
-Query client offers retrieving of query results to a parsed representation in a `QueryTableResult` or to a raw string. 
+Query client offers retrieving of query results to a parsed representation in a [QueryTableResult](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#QueryTableResult) or to a raw string. 
 
 ### QueryTableResult 
 QueryTableResult offers comfortable way how to deal with flux query CSV response. It parses CSV stream into FluxTableMetaData, FluxColumn and FluxRecord objects
@@ -346,7 +346,7 @@ func main() {
 ```
 
 ### Raw
-[QueryRaw()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2@v2.2.0/api#QueryAPI.QueryRaw) returns raw, unparsed, query result string and process it on your own. Returned csv format  
+[QueryRaw()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#QueryAPI.QueryRaw) returns raw, unparsed, query result string and process it on your own. Returned csv format  
 can be controlled by the third parameter, query dialect.   
 
 ```go
@@ -392,9 +392,9 @@ func main() {
   
   | API | Endpoint | Description |
   |:----------|:----------|:----------|
-  | [WriteAPI](write.go) (also [WriteAPIBlocking](writeAPIBlocking.go))| [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
-  | [QueryAPI](query.go) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false)
-  | [Health()](client.go#L55) | [/health](https://docs.influxdata.com/influxdb/latest/tools/api/#health-http-endpoint) | Check the health of your InfluxDB instance |    
+  | [WriteAPI](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI) (also [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking))| [/api/v2/write](https://docs.influxdata.com/influxdb/v2.0/write-data/developer-tools/api/) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
+  | [QueryAPI](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#QueryAPI) | [/api/v2/query](https://docs.influxdata.com/influxdb/v2.0/query-data/execute-queries/influx-api/) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/v1.8/flux/installation/#enable-flux)
+  | [Health()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Health) | [/health](https://docs.influxdata.com/influxdb/v2.0/api/#tag/Health) | Check the health of your InfluxDB instance |    
 
   
 ### Example

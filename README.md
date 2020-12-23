@@ -393,7 +393,7 @@ func main() {
   | API | Endpoint | Description |
   |:----------|:----------|:----------|
   | [WriteAPI](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI) (also [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking))| [/api/v2/write](https://docs.influxdata.com/influxdb/v2.0/write-data/developer-tools/api/) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
-  | [QueryAPI](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#QueryAPI) | [/api/v2/query](https://docs.influxdata.com/influxdb/v2.0/query-data/execute-queries/influx-api/) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/v1.8/flux/installation/#enable-flux)
+  | [QueryAPI](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#QueryAPI) | [/api/v2/query](https://docs.influxdata.com/influxdb/v2.0/query-data/execute-queries/influx-api/) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) endpoint should be enabled by the [`flux-enabled` option](https://docs.influxdata.com/influxdb/v1.8/administration/config/#flux-enabled-false)
   | [Health()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Health) | [/health](https://docs.influxdata.com/influxdb/v2.0/api/#tag/Health) | Check the health of your InfluxDB instance |    
 
   

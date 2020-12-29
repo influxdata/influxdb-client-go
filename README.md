@@ -57,9 +57,9 @@ There are also other examples in the API docs:
 
 1.  Add the client package your to your project dependencies (go.mod).
     ```sh
-    go get github.com/influxdata/influxdb-client-go/v2
+    go get github.com/influxdata/influxdb-client-go
     ```
-1. Add import `github.com/influxdata/influxdb-client-go/v2` to your source code.
+1. Add import `github.com/influxdata/influxdb-client-go` to your source code.
 
 ### Basic Example
 The following example demonstrates how to write data to InfluxDB 2 and read them back using the Flux language:
@@ -71,7 +71,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
@@ -211,7 +211,7 @@ import (
     "math/rand"
     "time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
@@ -262,7 +262,7 @@ import (
     "math/rand"
     "time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
@@ -313,7 +313,7 @@ import (
     "context"
     "fmt"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
@@ -356,7 +356,7 @@ import (
     "context"
     "fmt"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {
@@ -406,7 +406,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+    "github.com/influxdata/influxdb-client-go"
 )
 
 func main() {

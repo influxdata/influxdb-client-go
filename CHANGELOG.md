@@ -1,3 +1,8 @@
+## 2.2.2 [in progress]
+### Bug fixes
+1. [#229](https://github.com/influxdata/influxdb-client-go/pull/229) Connection errors are also subject for retrying.
+
+
 ## 2.2.1 [2020-12-24]
 ### Bug fixes
 1. [#220](https://github.com/influxdata/influxdb-client-go/pull/220) Fixed runtime error occurring when calling v2 API on v1 server.

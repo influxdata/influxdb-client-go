@@ -72,14 +72,14 @@ func TestDefaultRetryDelay(t *testing.T) {
 	assert.Equal(t, uint(5000), b1.retryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 	//wait retry delay + little more
-	time.Sleep(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
 	b2 := NewBatch("", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
 	assert.Equal(t, uint(25000), b1.retryDelay)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	time.Sleep(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
 	b3 := NewBatch("", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
@@ -103,7 +103,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
 	//wait retry delay + little more
-	time.Sleep(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
 	b2 := NewBatch("2\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
@@ -111,7 +111,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
 	//wait retry delay + little more
-	time.Sleep(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
 	b3 := NewBatch("3\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
@@ -119,7 +119,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// let write pass and it will clear queue
-	time.Sleep(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
 	hs.SetReplyError(nil)
 	err = srv.HandleWrite(ctx, NewBatch("4\n", opts.RetryInterval()))
 	assert.Nil(t, err)
@@ -147,14 +147,14 @@ func TestBufferOverwrite(t *testing.T) {
 	assert.Equal(t, uint(1), b1.retryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	b2 := NewBatch("2\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
 	assert.Equal(t, uint(5), b1.retryDelay)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	b3 := NewBatch("3\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
@@ -162,7 +162,7 @@ func TestBufferOverwrite(t *testing.T) {
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// now it should drop b1
-	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	b4 := NewBatch("4\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b4)
 	assert.NotNil(t, err)
@@ -170,7 +170,7 @@ func TestBufferOverwrite(t *testing.T) {
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// let write pass and it will clear queue
-	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	hs.SetReplyError(nil)
 	err = srv.HandleWrite(ctx, NewBatch("5\n", opts.RetryInterval()))
 	assert.Nil(t, err)
@@ -198,14 +198,14 @@ func TestMaxRetryInterval(t *testing.T) {
 	assert.Equal(t, uint(1), b1.retryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	b2 := NewBatch("2\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
 	assert.Equal(t, uint(5), b1.retryDelay)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	time.Sleep(time.Millisecond * time.Duration(b1.retryDelay))
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	b3 := NewBatch("3\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)

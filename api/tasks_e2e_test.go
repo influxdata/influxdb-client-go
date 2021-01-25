@@ -390,7 +390,7 @@ func TestTasksAPI_Runs(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, task)
 	//wait for task to run 10x
-	time.Sleep(time.Second * 10)
+	<-time.After(time.Second * 10)
 
 	logs, err := tasksAPI.FindLogs(ctx, task)
 	require.Nil(t, err)
@@ -431,7 +431,7 @@ func TestTasksAPI_Runs(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, task)
 	//wait for task to start and be running
-	time.Sleep(1500 * time.Millisecond)
+	<-time.After(1500 * time.Millisecond)
 
 	// we should get a running run
 	runs, err = tasksAPI.FindRuns(ctx, task, nil)

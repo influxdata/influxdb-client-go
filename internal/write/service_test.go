@@ -6,6 +6,7 @@ package write
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -211,4 +212,50 @@ func TestMaxRetryInterval(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, uint(10), b1.retryDelay)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
+}
+
+func TestRetryOnConnectionError(t *testing.T) {
+	log.Log.SetLogLevel(log.DebugLevel)
+	hs := test.NewTestService(t, "http://localhost:8086")
+	//
+	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+
+	hs.SetReplyError(&http.Error{
+		Err: errors.New("connection refused"),
+	})
+
+	b1 := NewBatch("1\n", opts.RetryInterval())
+	err := srv.HandleWrite(ctx, b1)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(1), b1.retryDelay)
+	assert.Equal(t, 1, srv.retryQueue.list.Len())
+
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
+	b2 := NewBatch("2\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b2)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(5), b1.retryDelay)
+	assert.Equal(t, 2, srv.retryQueue.list.Len())
+
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
+	b3 := NewBatch("3\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b3)
+	assert.NotNil(t, err)
+	assert.Equal(t, uint(25), b1.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
+
+	// let write pass and it will clear queue
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
+	hs.SetReplyError(nil)
+	err = srv.HandleWrite(ctx, NewBatch("4\n", opts.RetryInterval()))
+	assert.Nil(t, err)
+	assert.Equal(t, 0, srv.retryQueue.list.Len())
+	require.Len(t, hs.Lines(), 4)
+	assert.Equal(t, "1", hs.Lines()[0])
+	assert.Equal(t, "2", hs.Lines()[1])
+	assert.Equal(t, "3", hs.Lines()[2])
+	assert.Equal(t, "4", hs.Lines()[3])
+
 }

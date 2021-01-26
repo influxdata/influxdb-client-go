@@ -47,26 +47,9 @@ const DefaultBatchSize = 2000
 // Params holds the parameters for creating a new client.
 // The only mandatory fields are ServerURL and AuthToken.
 type Params struct {
-	// ServerURL holds the URL of the InfluxDB server to connect to.
-	// This must be non-empty.
-	ServerURL string
-
-	// AuthToken holds the authorization token for the API.
-	// This can be obtained through the GUI web browser interface.
-	AuthToken string
-
 	// DefaultTags specifies a set of tags that will be added to each written
 	// point. Tags specified on points override these.
 	DefaultTags map[string]string
-
-	// HTTPClient is used to make API requests.
-	//
-	// This can be used to specify a custom TLS configuration
-	// (TLSClientConfig), a custom request timeout (Timeout),
-	// or other customization as required.
-	//
-	// It HTTPClient is nil, http.DefaultClient will be used.
-	HTTPClient *http.Client
 
 	// BatchSize holds the default batch size
 	// used by PointWriter. If it's zero, DefaultBatchSize will
@@ -77,11 +60,6 @@ type Params struct {
 	// If it's zero, points must be flushed manually.
 	// Note that this can be overridden with PointWriter.SetFlushInterval.
 	FlushInterval time.Duration
-}
-
-// Client implements an InfluxDB client.
-type Client struct{
-	// unexported fields
 }
 
 // WritePoints writes all the given points to the server with the

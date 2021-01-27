@@ -111,7 +111,7 @@ func (s *service) DoHTTPRequest(req *http.Request, requestCallback RequestCallba
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return s.handleHTTPError(resp)
+		return s.parseHTTPError(resp)
 	}
 	if responseCallback != nil {
 		err := responseCallback(resp)
@@ -134,7 +134,7 @@ func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback R
 	return s.client.Do(req)
 }
 
-func (s *service) handleHTTPError(r *http.Response) *Error {
+func (s *service) parseHTTPError(r *http.Response) *Error {
 	// successful status code range
 	if r.StatusCode >= 200 && r.StatusCode < 300 {
 		return nil

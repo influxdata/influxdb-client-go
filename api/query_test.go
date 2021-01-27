@@ -483,7 +483,7 @@ func TestQueryRawResult(t *testing.T) {
 	csvTable := strings.Join(csvRows, "\r\n")
 	csvTable = fmt.Sprintf("%s\r\n", csvTable)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(100 * time.Millisecond)
+		<-time.After(100 * time.Millisecond)
 		if r.Method == http.MethodPost {
 			rbody, _ := ioutil.ReadAll(r.Body)
 			fmt.Printf("Req: %s\n", string(rbody))
@@ -893,7 +893,7 @@ func TestEmptyValue(t *testing.T) {
 
 func TestFluxError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(100 * time.Millisecond)
+		<-time.After(100 * time.Millisecond)
 		if r.Method == http.MethodPost {
 			_, _ = ioutil.ReadAll(r.Body)
 			w.Header().Set("Content-Type", "application/json")

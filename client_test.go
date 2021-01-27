@@ -79,7 +79,7 @@ func TestWriteAPIManagement(t *testing.T) {
 
 func TestUserAgent(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(100 * time.Millisecond)
+		<-time.After(100 * time.Millisecond)
 		if r.Header.Get("User-Agent") == http2.UserAgent {
 			w.WriteHeader(http.StatusOK)
 		} else {
@@ -99,7 +99,7 @@ func TestUserAgent(t *testing.T) {
 
 func TestServerError429(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(100 * time.Millisecond)
+		<-time.After(100 * time.Millisecond)
 		w.Header().Set("Retry-After", "1")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusTooManyRequests)
@@ -135,7 +135,7 @@ func TestServerOnPath(t *testing.T) {
 
 func TestServerErrorNonJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(100 * time.Millisecond)
+		<-time.After(100 * time.Millisecond)
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write([]byte(`internal server error`))
 	}))

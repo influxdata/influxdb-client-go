@@ -1,4 +1,4 @@
-// Copyright 2020 InfluxData, Inc. All rights reserved.
+// Copyright 2020-2021 InfluxData, Inc. All rights reserved.
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
 
@@ -37,9 +37,9 @@ func (o *Options) HTTPClient() *http.Client {
 				}).DialContext,
 				TLSHandshakeTimeout: 5 * time.Second,
 				TLSClientConfig:     o.TLSConfig(),
-				MaxIdleConns:			100,
-				MaxIdleConnsPerHost:	100,
-				IdleConnTimeout:        90 * time.Second,
+				MaxIdleConns:        100,
+				MaxIdleConnsPerHost: 100,
+				IdleConnTimeout:     90 * time.Second,
 			},
 		}
 		o.ownClient = true

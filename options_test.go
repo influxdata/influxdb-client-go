@@ -80,11 +80,11 @@ func TestTimeout(t *testing.T) {
 		,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
 		`
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(100 * time.Millisecond)
+		<-time.After(100 * time.Millisecond)
 		if r.Method == http.MethodPost {
 			w.Header().Set("Content-Type", "text/csv")
 			w.WriteHeader(http.StatusOK)
-			time.Sleep(2 * time.Second)
+			<-time.After(2 * time.Second)
 			_, err := w.Write([]byte(response))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)

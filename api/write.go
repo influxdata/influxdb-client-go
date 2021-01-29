@@ -95,7 +95,7 @@ func (w *WriteAPIImpl) waitForFlushing() {
 			break
 		}
 		log.Info("Waiting buffer is flushed")
-		time.Sleep(time.Millisecond)
+		<-time.After(time.Millisecond)
 	}
 	for {
 		w.writeInfoCh <- writeBuffInfoReq{}
@@ -104,7 +104,7 @@ func (w *WriteAPIImpl) waitForFlushing() {
 			break
 		}
 		log.Info("Waiting buffer is flushed")
-		time.Sleep(time.Millisecond)
+		<-time.After(time.Millisecond)
 	}
 }
 

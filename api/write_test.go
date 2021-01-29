@@ -133,7 +133,7 @@ func TestFlushInterval(t *testing.T) {
 		writeAPI.WritePoint(p)
 	}
 	require.Len(t, service.Lines(), 0)
-	time.Sleep(time.Millisecond * 600)
+	<-time.After(time.Millisecond * 600)
 	require.Len(t, service.Lines(), 5)
 	writeAPI.Close()
 
@@ -143,7 +143,7 @@ func TestFlushInterval(t *testing.T) {
 		writeAPI.WritePoint(p)
 	}
 	require.Len(t, service.Lines(), 0)
-	time.Sleep(time.Millisecond * 2100)
+	<-time.After(time.Millisecond * 2100)
 	require.Len(t, service.Lines(), 5)
 
 	writeAPI.Close()
@@ -175,7 +175,7 @@ func TestRetry(t *testing.T) {
 	}
 	writeAPI.waitForFlushing()
 	require.Len(t, service.Lines(), 0)
-	time.Sleep(5*time.Second + 50*time.Millisecond)
+	<-time.After(5*time.Second + 50*time.Millisecond)
 	for i := 10; i < 15; i++ {
 		writeAPI.WritePoint(points[i])
 	}

@@ -99,7 +99,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 		if batchToWrite != nil {
 			perror := w.WriteBatch(ctx, batchToWrite)
 			if perror != nil {
-				if perror.StatusCode >= http.StatusTooManyRequests {
+				if perror.StatusCode == 0 || perror.StatusCode >= http.StatusTooManyRequests {
 					log.Errorf("Write error: %s\nBatch kept for retrying\n", perror.Error())
 					if perror.RetryAfter > 0 {
 						batchToWrite.retryDelay = perror.RetryAfter * 1000

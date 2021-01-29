@@ -63,7 +63,7 @@ func TestWriteContextCancel(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
-		time.Sleep(time.Second)
+		<-time.After(time.Second)
 		err = writeAPI.WriteRecord(ctx, lines...)
 		wg.Done()
 	}()

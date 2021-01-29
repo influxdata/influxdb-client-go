@@ -1,7 +1,6 @@
-## 2.2.2 [in progress]
+## 2.2.2 [2021-01-29]
 ### Bug fixes
 1. [#229](https://github.com/influxdata/influxdb-client-go/pull/229) Connection errors are also subject for retrying.
-
 
 ## 2.2.1 [2020-12-24]
 ### Bug fixes

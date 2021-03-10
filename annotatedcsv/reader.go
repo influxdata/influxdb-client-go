@@ -1,0 +1,293 @@
+// Copyright 2021 InfluxData, Inc. All rights reserved.
+// Use of this source code is governed by MIT
+// license that can be found in the LICENSE file.
+
+// Package annotatedcsv provides a reader for annotated CSV sources.
+// Annotated CSV must contain at least an annotation with data types definition.
+// The first row after annotations must be a line with column names.
+//
+// Annotated CSV with multiple sections example:
+//		#datatype,string,long,dateTime:RFC3339,double,string,string
+//		#group,false,false,false,false,true,true
+//		#default,_result,,,,,
+//		,result,table,_time,_value,_field,location
+//		,,0,2020-02-18T10:34:08.135814545Z,23.4,temp,livingroom
+//		,,0,2020-02-18T22:08:44.850214724Z,21.6,temp,livingroom
+//
+//		#datatype,string,long,dateTime:RFC3339,double,string,string,string
+//		#group,false,false,false,false,true,true,true
+//		#default,_result,,,,,,
+//		,result,table,_time,_value,_field,location,sensor
+//		,,0,2020-02-18T10:34:08.135814545Z,20.5,temp,bedroom,SHT31
+//		,,0,2020-02-18T22:08:44.850214724Z,19.7,temp,bedroom,SHT31
+//
+// The set of rows following the annotation header is referred to in this documentation
+// as a "section". A single CSV stream can contain multiple sections, each with its own
+// column metadata.
+// CSV source can contain multiple sections, each section can have different columns (schema).
+//
+// Read more info about annotated CSV at https://docs.influxdata.com/influxdb/v2.0/reference/syntax/annotated-csv/.
+package annotatedcsv
+
+import (
+	"encoding/base64"
+	"fmt"
+	"io"
+	"math"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/influxdata/influxdb-client-go/internal/csv"
+)
+
+// Column represents a column in one section of CSV.
+type Column struct {
+	// Name holds the name of the column.
+	Name string
+	// Group specifies whether this column is a group key.
+	Group bool
+	// Default holds the default value for items in this column.
+	// It will be nil if no default is specified.
+	Default interface{}
+	// Type holds the type of the column.
+	Type string
+}
+
+// NewReader returns new Reader for parsing a stream in annotated CSV format.
+func NewReader(r io.Reader) *Reader {
+	r1 := &Reader{
+		r: csv.NewReader(r),
+	}
+	r1.r.FieldsPerRecord = -1
+	return r1
+}
+
+// Reader parses an annotated CSV stream.
+// Successive calls to NextSection will start reading each section of the CSV in turn.
+// The Columns method returns information on the columns (schema) for the section.
+//
+// Within a section, successive calls to NextRow will advance to each row.
+// If NextRow is called without first calling NextSection, the rows from the first section will be returned.
+//
+// The Row method returns all the data for a given row; ValueByName can be used
+// to get a value for a column with a particular name.
+type Reader struct {
+	cols []Column
+	row  []interface{}
+	err  error
+
+	hasPeeked bool
+	peekRow   []string
+	peekErr   error
+	r         *csv.Reader
+	// columnIndexes maps column names to their indexes.
+	columnIndexes map[string]int
+}
+
+// NextSection advances to the next section in the csv stream and reports whether
+// there is one.
+// Any remaining data in the current section is discarded.
+// When there are no more sections, it returns false.
+func (r *Reader) NextSection() bool {
+	if r.err != nil {
+		return false
+	}
+	// Read all the current rows.
+	for r.NextRow() {
+	}
+	_, err := r.peek()
+	if err != nil {
+		r.err = err
+		return false
+	}
+	cols, err := r.readHeader()
+	if err != nil {
+		r.err = err
+		return false
+	}
+	r.cols = cols
+	return true
+}
+
+// Err returns any error encountered when parsing.
+func (r *Reader) Err() error {
+	if r.err == io.EOF {
+		return nil
+	}
+	return r.err
+}
+
+// Columns returns information on the columns in the current
+// section. It returns nil if there is no current section (for example
+// before NextSection or NextRow has been called, or after NextSection returns false).
+func (r *Reader) Columns() []Column {
+	return r.cols
+}
+
+// NextRow advances to the next row in the current section.
+// When there are no more rows in the current section, it returns false.
+func (r *Reader) NextRow() bool {
+	if r.cols == nil || r.err != nil {
+		return false
+	}
+	row, err := r.readRow()
+	r.row = row
+	if row == nil {
+		r.err = err
+		r.cols = nil
+		r.columnIndexes = nil
+		return false
+	}
+	return true
+}
+
+// Row returns the values in the current row of the current section.
+// It returns nil if there is no current row.
+// All rows in a section have the same number of values.
+func (r *Reader) Row() []interface{} {
+	return r.row
+}
+
+// ValueByName returns the value for the column with the given name.
+// It returns nil if section has no value for such column.
+func (r *Reader) ValueByName(name string) interface{} {
+	if r.columnIndexes != nil {
+		if i, ok := r.columnIndexes[name]; ok {
+			return r.row[i]
+		}
+	}
+	return nil
+}
+
+func (r *Reader) readRow() ([]interface{}, error) {
+	row, err := r.peek()
+	if err != nil {
+		return nil, err
+	}
+	if len(row) > 0 && strings.HasPrefix(row[0], "#") {
+		// Start of next table.
+		return nil, nil
+	}
+	_, _ = r.read()
+	colsCount := len(row) - 1
+	if colsCount != len(r.cols) {
+		return nil, fmt.Errorf("inconsistent number of columns at line %d (got %d items want %d)", r.r.Line(), colsCount, len(r.cols))
+	}
+	rowVals := make([]interface{}, colsCount)
+	for i, val := range row[1:] {
+		col := r.cols[i]
+		if col.Default != nil && val == "" {
+			rowVals[i] = col.Default
+			continue
+		}
+		if val == "" && col.Name == "" {
+			continue
+		}
+		x, err := convertToType(val, col.Type)
+		if err != nil {
+			return nil, fmt.Errorf("cannot convert value %q to type %q at line %d: %v", val, col.Type, r.r.Line(), err)
+		}
+		rowVals[i] = x
+	}
+	return rowVals, nil
+}
+
+func (r *Reader) readHeader() ([]Column, error) {
+	var cols []Column
+	var defaults []string
+	for {
+		row, err := r.read()
+		if err != nil {
+			return cols, err
+		}
+		colsCount := len(row) - 1
+		if cols == nil {
+			cols = make([]Column, colsCount)
+		} else if colsCount != len(cols) {
+			return nil, fmt.Errorf("inconsistent table header (got %d items want %d)", colsCount, len(cols))
+		}
+		r.columnIndexes = map[string]int{}
+		if !strings.HasPrefix(row[0], "#") {
+			for i, col := range row[1:] {
+				cols[i].Name = col
+				r.columnIndexes[col] = i
+			}
+			break
+		}
+		switch row[0] {
+		case "#datatype":
+			for i, t := range row[1:] {
+				cols[i].Type = t
+			}
+		case "#group":
+			for i, c := range row[1:] {
+				cols[i].Group = c == "true"
+			}
+		case "#default":
+			defaults = row[1:]
+		}
+	}
+	for i, d := range defaults {
+		if d == "" {
+			continue
+		}
+		x, err := convertToType(d, cols[i].Type)
+		if err != nil {
+			return nil, fmt.Errorf("cannot convert default value %q to type %q: %v", d, cols[i].Type, err)
+		}
+		cols[i].Default = x
+	}
+	return cols, nil
+}
+
+func convertToType(s string, typ string) (interface{}, error) {
+	switch typ {
+	case "boolean":
+		return strconv.ParseBool(s)
+	case "long":
+		return strconv.ParseInt(s, 10, 64)
+	case "unsignedLong":
+		return strconv.ParseUint(s, 10, 64)
+	case "double":
+		x, err := strconv.ParseFloat(s, 64)
+		if err != nil {
+			return nil, err
+		}
+		if math.IsInf(x, 0) || math.IsNaN(x) {
+			return s, nil
+		}
+		return x, nil
+	case "string", "tag", "":
+		return s, nil
+	case "duration":
+		return time.ParseDuration(s)
+	case "base64Binary":
+		return base64.StdEncoding.DecodeString(s)
+	case "dateTime", "dateTime:RFC3339", "dateTime:RFC3339Nano":
+		return time.Parse(time.RFC3339, s)
+	}
+	return s, nil
+}
+
+// read consumes the next line from the CSV,
+// discarding any peeked data.
+func (r *Reader) read() ([]string, error) {
+	if r.hasPeeked {
+		row, err := r.peekRow, r.peekErr
+		r.peekRow, r.peekErr, r.hasPeeked = nil, nil, false
+		return row, err
+	}
+	return r.r.Read()
+}
+
+// peek returns the next line without consuming it.
+// Successive calls to peek will return the same line.
+func (r *Reader) peek() ([]string, error) {
+	if r.hasPeeked {
+		return r.peekRow, r.peekErr
+	}
+	row, err := r.r.Read()
+	r.peekRow, r.peekErr, r.hasPeeked = row, err, true
+	return row, err
+}

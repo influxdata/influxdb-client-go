@@ -399,37 +399,6 @@ type Filter struct {
 	AfterTime time.Time
 }
 
-type QueryResult struct {
-	// unexported fields.
-}
-
-// NextTable advances to the next table in the result.
-// Any remaining data in the current table is discarded.
-//
-// When there are no more tables, it returns false.
-func (r *QueryResult) NextTable() bool
-
-// NextRow advances to the next row in the current table.
-// When there are no more rows in the current table, it
-// returns false.
-func (r *QueryResult) NextRow() bool
-
-// Columns returns information on the columns in the current
-// table. It returns nil if there is no current table (for example
-// before NextTable has been called, or after NextTable returns false).
-func (r *QueryResult) Columns() []TableColumn
-
-// Err returns any error encountered. This should be called after NextTable
-// returns false to check that all the results were correctly received.
-func (r *QueryResult) Err() error
-
-// Values returns the values in the current row.
-// It returns nil if there is no current row.
-// All rows in a table have the same number of values.
-// The caller should not use the slice after NextRow
-// has been called again, because it's re-used.
-func (r *QueryResult) Values() []interface{}
-
 // Decode decodes the current row into x, which should be
 // a pointer to a struct. Columns in the row are decoded into
 // appropriate fields in the struct, using the tag conventions

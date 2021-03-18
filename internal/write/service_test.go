@@ -259,3 +259,21 @@ func TestRetryOnConnectionError(t *testing.T) {
 	assert.Equal(t, "4", hs.Lines()[3])
 
 }
+
+func TestNoRetryIfMaxRetriesIsZero(t *testing.T) {
+	log.Log.SetLogLevel(log.DebugLevel)
+	hs := test.NewTestService(t, "http://localhost:8086")
+	//
+	opts := write.DefaultOptions().SetMaxRetries(0)
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+
+	hs.SetReplyError(&http.Error{
+		Err: errors.New("connection refused"),
+	})
+
+	b1 := NewBatch("1\n", opts.RetryInterval())
+	err := srv.HandleWrite(ctx, b1)
+	assert.NotNil(t, err)
+	assert.Equal(t, 0, srv.retryQueue.list.Len())
+}

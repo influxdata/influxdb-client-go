@@ -115,7 +115,7 @@ func TestWrite(t *testing.T) {
 
 	err := client.WriteAPIBlocking("my-org", "my-bucket").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("test").
 		AddTag("a", "3").AddField("i", 20).AddField("f", 4.4))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	client.Close()
 	wg.Wait()
@@ -203,7 +203,7 @@ func TestWriteV1Compatibility(t *testing.T) {
 
 	err := client.WriteAPIBlocking("", "mydb/autogen").WritePoint(context.Background(), influxdb2.NewPointWithMeasurement("testv1").
 		AddTag("a", "3").AddField("i", 20).AddField("f", 4.4))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	client.Close()
 	wg.Wait()
@@ -273,7 +273,7 @@ func TestHTTPService(t *testing.T) {
 	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
 	if err != nil {
 		//return err
-		t.Error(err)
+		t.Fatal(err)
 	}
 	taskDescription := "Example task"
 	taskFlux := `option task = {

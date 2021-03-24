@@ -7,6 +7,8 @@ package write
 import (
 	"context"
 	"errors"
+	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -19,12 +21,13 @@ import (
 )
 
 func TestAddDefaultTags(t *testing.T) {
+	hs := test.NewTestService(t, "http://localhost:8888")
 	opts := write.DefaultOptions()
 	assert.Len(t, opts.DefaultTags(), 0)
 
 	opts.AddDefaultTag("dt1", "val1")
 	opts.AddDefaultTag("zdt", "val2")
-	srv := NewService("org", "buc", nil, opts)
+	srv := NewService("org", "buc", hs, opts)
 
 	p := write.NewPointWithMeasurement("test")
 	p.AddTag("id", "101")
@@ -135,7 +138,7 @@ func TestCustomRetryDelayWithFLush(t *testing.T) {
 func TestBufferOverwrite(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:8086")
-	//
+	// Buffer limit 15000, bach ii 5000 => buffer for 3 batches
 	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
 	ctx := context.Background()
 	srv := NewService("my-org", "my-bucket", hs, opts)
@@ -162,25 +165,33 @@ func TestBufferOverwrite(t *testing.T) {
 	assert.Equal(t, uint(25), b1.retryDelay)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
-	// now it should drop b1
-	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
+	// Write early
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay) / 2)
 	b4 := NewBatch("4\n", opts.RetryInterval())
 	err = srv.HandleWrite(ctx, b4)
-	assert.NotNil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, uint(1), b2.retryDelay)
+	assert.Equal(t, 3, srv.retryQueue.list.Len())
+
+	// Overwrite
+	<-time.After(time.Millisecond * time.Duration(b1.retryDelay) / 2)
+	b5 := NewBatch("5\n", opts.RetryInterval())
+	err = srv.HandleWrite(ctx, b5)
+	assert.Error(t, err)
+	assert.Equal(t, uint(5), b2.retryDelay)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// let write pass and it will clear queue
 	<-time.After(time.Millisecond * time.Duration(b1.retryDelay))
 	hs.SetReplyError(nil)
-	err = srv.HandleWrite(ctx, NewBatch("5\n", opts.RetryInterval()))
+	err = srv.HandleWrite(ctx, NewBatch("6\n", opts.RetryInterval()))
 	assert.Nil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 	require.Len(t, hs.Lines(), 4)
-	assert.Equal(t, "2", hs.Lines()[0])
-	assert.Equal(t, "3", hs.Lines()[1])
-	assert.Equal(t, "4", hs.Lines()[2])
-	assert.Equal(t, "5", hs.Lines()[3])
+	assert.Equal(t, "3", hs.Lines()[0])
+	assert.Equal(t, "4", hs.Lines()[1])
+	assert.Equal(t, "5", hs.Lines()[2])
+	assert.Equal(t, "6", hs.Lines()[3])
 }
 
 func TestMaxRetryInterval(t *testing.T) {
@@ -276,4 +287,24 @@ func TestNoRetryIfMaxRetriesIsZero(t *testing.T) {
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
+}
+
+func TestWriteContextCancel(t *testing.T) {
+	hs := test.NewTestService(t, "http://localhost:8888")
+	opts := write.DefaultOptions()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+	lines := test.GenRecords(10)
+	ctx, cancel := context.WithCancel(context.Background())
+	var err error
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		<-time.After(time.Second)
+		err = srv.HandleWrite(ctx, NewBatch(strings.Join(lines, "\n"), opts.RetryInterval()))
+		wg.Done()
+	}()
+	cancel()
+	wg.Wait()
+	require.Equal(t, context.Canceled, err)
+	assert.Len(t, hs.Lines(), 0)
 }

@@ -55,7 +55,15 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 	if retryBufferLimit == 0 {
 		retryBufferLimit = 1
 	}
-	return &Service{org: org, bucket: bucket, httpService: httpService, writeOptions: options, retryQueue: newQueue(int(retryBufferLimit)), retryExponentialBase: 5}
+	u, _ := url.Parse(httpService.ServerAPIURL())
+	u, _ = u.Parse("write")
+	params := u.Query()
+	params.Set("org", org)
+	params.Set("bucket", bucket)
+	params.Set("precision", precisionToString(options.Precision()))
+	u.RawQuery = params.Encode()
+	writeURL := u.String()
+	return &Service{org: org, bucket: bucket, httpService: httpService, url: writeURL, writeOptions: options, retryQueue: newQueue(int(retryBufferLimit)), retryExponentialBase: 5}
 }
 
 func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
@@ -138,12 +146,8 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 }
 
 func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
-	wURL, err := w.WriteURL()
-	if err != nil {
-		log.Errorf("%s\n", err.Error())
-		return http2.NewError(err)
-	}
 	var body io.Reader
+	var err error
 	body = strings.NewReader(batch.batch)
 	log.Debugf("Writing batch: %s", batch.batch)
 	if w.writeOptions.UseGZip() {
@@ -152,8 +156,10 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 			return http2.NewError(err)
 		}
 	}
+	w.lock.Lock()
 	w.lastWriteAttempt = time.Now()
-	perror := w.httpService.DoPostRequest(ctx, wURL, body, func(req *http.Request) {
+	w.lock.Unlock()
+	perror := w.httpService.DoPostRequest(ctx, w.url, body, func(req *http.Request) {
 		if w.writeOptions.UseGZip() {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
@@ -238,26 +244,8 @@ func (w *Service) pointToEncode(point *write.Point) lp.Metric {
 	return m
 }
 
-func (w *Service) WriteURL() (string, error) {
-	if w.url == "" {
-		u, err := url.Parse(w.httpService.ServerAPIURL())
-		if err != nil {
-			return "", err
-		}
-		u, err = u.Parse("write")
-		if err != nil {
-			return "", err
-		}
-		params := u.Query()
-		params.Set("org", w.org)
-		params.Set("bucket", w.bucket)
-		params.Set("precision", precisionToString(w.writeOptions.Precision()))
-		u.RawQuery = params.Encode()
-		w.lock.Lock()
-		w.url = u.String()
-		w.lock.Unlock()
-	}
-	return w.url, nil
+func (w *Service) WriteURL() string {
+	return w.url
 }
 
 func precisionToString(precision time.Duration) string {

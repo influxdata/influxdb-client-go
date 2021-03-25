@@ -170,7 +170,7 @@ func TestSignInOut(t *testing.T) {
 
 	// try authorized calls
 	err = client.WriteAPIBlocking("my-org", "my-bucket").WriteRecord(ctx, "test,a=rock,b=local f=1.2,i=-5i")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	res, err := client.QueryAPI("my-org").QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -24h) |> filter(fn: (r) => r._measurement == "test")`, influxdb2.DefaultDialect())
 	assert.Nil(t, err)

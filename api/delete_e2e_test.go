@@ -34,7 +34,7 @@ func TestDeleteAPI(t *testing.T) {
 				map[string]interface{}{"f": f, "i": i},
 				tm)
 			err := writeAPI.WritePoint(ctx, p)
-			require.Nil(t, err, err)
+			require.NoError(t, err)
 			f += 1.2
 			tm = tm.Add(time.Minute)
 		}

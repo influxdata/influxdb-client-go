@@ -69,7 +69,8 @@ func (o *Options) MaxRetries() uint {
 	return o.maxRetries
 }
 
-// SetMaxRetries sets maximum count of retry attempts of failed writes
+// SetMaxRetries sets maximum count of retry attempts of failed writes.
+// Setting zero value disables retry strategy.
 func (o *Options) SetMaxRetries(maxRetries uint) *Options {
 	o.maxRetries = maxRetries
 	return o

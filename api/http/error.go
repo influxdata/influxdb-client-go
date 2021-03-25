@@ -5,6 +5,7 @@
 package http
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -28,6 +29,10 @@ func (e *Error) Error() string {
 	default:
 		return "Unexpected status code " + strconv.Itoa(e.StatusCode)
 	}
+}
+
+func (e *Error) Unwrap() error {
+	return errors.New(e.Error())
 }
 
 // NewError returns newly created Error initialised with nested error and default values

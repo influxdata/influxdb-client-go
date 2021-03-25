@@ -1,3 +1,8 @@
+## 2.2.3 [in progress]
+### Bug fixes
+1. [#236](https://github.com/influxdata/influxdb-client-go/pull/236) Setting MaxRetries to zero value disables retry strategy.
+1. [#239](https://github.com/influxdata/influxdb-client-go/pull/239) Blocking write client doesn't use retry handling.  
+
 ## 2.2.2 [2021-01-29]
 ### Bug fixes
 1. [#229](https://github.com/influxdata/influxdb-client-go/pull/229) Connection errors are also subject for retrying.

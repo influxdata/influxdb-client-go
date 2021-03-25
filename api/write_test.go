@@ -6,7 +6,6 @@ package api
 
 import (
 	"fmt"
-	"math/rand"
 	"strings"
 	"sync"
 	"testing"
@@ -19,49 +18,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-func genPoints(num int) []*write.Point {
-	points := make([]*write.Point, num)
-	rand.Seed(321)
-
-	t := time.Now()
-	for i := 0; i < len(points); i++ {
-		points[i] = write.NewPoint(
-			"test",
-			map[string]string{
-				"id":       fmt.Sprintf("rack_%v", i%10),
-				"vendor":   "AWS",
-				"hostname": fmt.Sprintf("host_%v", i%100),
-			},
-			map[string]interface{}{
-				"temperature": rand.Float64() * 80.0,
-				"disk_free":   rand.Float64() * 1000.0,
-				"disk_total":  (i/10 + 1) * 1000000,
-				"mem_total":   (i/100 + 1) * 10000000,
-				"mem_free":    rand.Uint64(),
-			},
-			t)
-		if i%10 == 0 {
-			t = t.Add(time.Second)
-		}
-	}
-	return points
-}
-
-func genRecords(num int) []string {
-	lines := make([]string, num)
-	rand.Seed(321)
-
-	t := time.Now()
-	for i := 0; i < len(lines); i++ {
-		lines[i] = fmt.Sprintf("test,id=rack_%v,vendor=AWS,hostname=host_%v temperature=%v,disk_free=%v,disk_total=%vi,mem_total=%vi,mem_free=%vu %v",
-			i%10, i%100, rand.Float64()*80.0, rand.Float64()*1000.0, (i/10+1)*1000000, (i/100+1)*10000000, rand.Uint64(), t.UnixNano())
-		if i%10 == 0 {
-			t = t.Add(time.Second)
-		}
-	}
-	return lines
-}
 
 func TestWriteAPIWriteDefaultTag(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
@@ -85,7 +41,7 @@ func TestWriteAPIWriteDefaultTag(t *testing.T) {
 func TestWriteAPIImpl_Write(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
-	points := genPoints(10)
+	points := test.GenPoints(10)
 	for _, p := range points {
 		writeAPI.WritePoint(p)
 	}
@@ -103,7 +59,7 @@ func TestGzipWithFlushing(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	log.Log.SetLogLevel(log.DebugLevel)
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetUseGZip(true))
-	points := genPoints(5)
+	points := test.GenPoints(5)
 	for _, p := range points {
 		writeAPI.WritePoint(p)
 	}
@@ -128,7 +84,7 @@ func TestGzipWithFlushing(t *testing.T) {
 func TestFlushInterval(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(10).SetFlushInterval(500))
-	points := genPoints(5)
+	points := test.GenPoints(5)
 	for _, p := range points {
 		writeAPI.WritePoint(p)
 	}
@@ -153,7 +109,7 @@ func TestRetry(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	log.Log.SetLogLevel(log.DebugLevel)
 	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetRetryInterval(10000))
-	points := genPoints(15)
+	points := test.GenPoints(15)
 	for i := 0; i < 5; i++ {
 		writeAPI.WritePoint(points[i])
 	}
@@ -203,7 +159,7 @@ func TestWriteError(t *testing.T) {
 		recErr = <-errCh
 		wg.Done()
 	}()
-	points := genPoints(15)
+	points := test.GenPoints(15)
 	for i := 0; i < 5; i++ {
 		writeAPI.WritePoint(points[i])
 	}

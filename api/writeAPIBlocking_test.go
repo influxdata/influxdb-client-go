@@ -6,6 +6,8 @@ package api
 
 import (
 	"context"
+	"net"
+	"net/http"
 	"sync"
 	"testing"
 	"time"
@@ -20,7 +22,7 @@ import (
 func TestWritePoint(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
-	points := genPoints(10)
+	points := test.GenPoints(10)
 	err := writeAPI.WritePoint(context.Background(), points...)
 	require.Nil(t, err)
 	require.Len(t, service.Lines(), 10)
@@ -35,7 +37,7 @@ func TestWritePoint(t *testing.T) {
 func TestWriteRecord(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
-	lines := genRecords(10)
+	lines := test.GenRecords(10)
 	err := writeAPI.WriteRecord(context.Background(), lines...)
 	require.Nil(t, err)
 	require.Len(t, service.Lines(), 10)
@@ -54,29 +56,10 @@ func TestWriteRecord(t *testing.T) {
 	require.Equal(t, "invalid: data", err.Error())
 }
 
-func TestWriteContextCancel(t *testing.T) {
-	service := test.NewTestService(t, "http://localhost:8888")
-	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
-	lines := genRecords(10)
-	ctx, cancel := context.WithCancel(context.Background())
-	var err error
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		<-time.After(time.Second)
-		err = writeAPI.WriteRecord(ctx, lines...)
-		wg.Done()
-	}()
-	cancel()
-	wg.Wait()
-	require.Equal(t, context.Canceled, err)
-	assert.Len(t, service.Lines(), 0)
-}
-
 func TestWriteParallel(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
-	lines := genRecords(1000)
+	lines := test.GenRecords(1000)
 
 	chanLine := make(chan string)
 	var wg sync.WaitGroup
@@ -98,4 +81,26 @@ func TestWriteParallel(t *testing.T) {
 	assert.Len(t, service.Lines(), len(lines))
 
 	service.Close()
+}
+
+func TestWriteErrors(t *testing.T) {
+	service := http2.NewService("http://locl:866", "", http2.DefaultOptions().SetHTTPClient(&http.Client{
+		Timeout: 100 * time.Millisecond,
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout: 100 * time.Millisecond,
+			}).DialContext,
+		},
+	}))
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	points := test.GenPoints(10)
+	errors := 0
+	for _, p := range points {
+		err := writeAPI.WritePoint(context.Background(), p)
+		if assert.Error(t, err) {
+			errors++
+		}
+	}
+	require.Equal(t, 10, errors)
+
 }

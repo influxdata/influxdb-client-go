@@ -12,7 +12,6 @@ import (
 	"testing"
 	"time"
 
-	http3 "github.com/influxdata/influxdb-client-go/v2/api/http"
 	http2 "github.com/influxdata/influxdb-client-go/v2/internal/http"
 	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
 	"github.com/stretchr/testify/assert"
@@ -39,8 +38,7 @@ func TestUrls(t *testing.T) {
 			assert.Equal(t, url.serverURL, ci.serverURL)
 			assert.Equal(t, url.serverAPIURL, ci.httpService.ServerAPIURL())
 			ws := iwrite.NewService("org", "bucket", ci.httpService, c.Options().WriteOptions())
-			wu, err := ws.WriteURL()
-			require.Nil(t, err)
+			wu := ws.WriteURL()
 			assert.Equal(t, url.writeURLPrefix+"?bucket=bucket&org=org&precision=ns", wu)
 		})
 	}
@@ -94,7 +92,7 @@ func TestUserAgent(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestServerError429(t *testing.T) {
@@ -109,12 +107,8 @@ func TestServerError429(t *testing.T) {
 	defer server.Close()
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
-	require.NotNil(t, err)
-	perror, ok := err.(*http3.Error)
-	require.True(t, ok)
-	require.NotNil(t, perror)
-	assert.Equal(t, "too many requests", perror.Code)
-	assert.Equal(t, "exceeded rate limit", perror.Message)
+	require.Error(t, err)
+	assert.Equal(t, "too many requests: exceeded rate limit", err.Error())
 }
 
 func TestServerOnPath(t *testing.T) {
@@ -130,7 +124,7 @@ func TestServerOnPath(t *testing.T) {
 	defer server.Close()
 	c := NewClient(server.URL+"/proxy/0:0/influx/", "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestServerErrorNonJSON(t *testing.T) {
@@ -143,12 +137,8 @@ func TestServerErrorNonJSON(t *testing.T) {
 	defer server.Close()
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
-	require.NotNil(t, err)
-	perror, ok := err.(*http3.Error)
-	require.True(t, ok)
-	require.NotNil(t, perror)
-	assert.Equal(t, "500 Internal Server Error", perror.Code)
-	assert.Equal(t, "internal server error", perror.Message)
+	require.Error(t, err)
+	assert.Equal(t, "500 Internal Server Error: internal server error", err.Error())
 }
 
 func TestServerErrorInflux1_8(t *testing.T) {
@@ -162,12 +152,8 @@ func TestServerErrorInflux1_8(t *testing.T) {
 	defer server.Close()
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
-	require.NotNil(t, err)
-	perror, ok := err.(*http3.Error)
-	require.True(t, ok)
-	require.NotNil(t, perror)
-	assert.Equal(t, "404 Not Found", perror.Code)
-	assert.Equal(t, "bruh moment", perror.Message)
+	require.Error(t, err)
+	assert.Equal(t, "404 Not Found: bruh moment", err.Error())
 }
 
 func TestServerErrorEmptyBody(t *testing.T) {
@@ -178,6 +164,6 @@ func TestServerErrorEmptyBody(t *testing.T) {
 	defer server.Close()
 	c := NewClient(server.URL, "x")
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
-	require.NotNil(t, err)
+	require.Error(t, err)
 	assert.Equal(t, "Unexpected status code 404", err.Error())
 }

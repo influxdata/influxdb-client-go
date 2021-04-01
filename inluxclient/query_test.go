@@ -51,15 +51,15 @@ func TestMultiSections(t *testing.T) {
 		{ // Table 1
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "double", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "double", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -90,15 +90,15 @@ func TestMultiSections(t *testing.T) {
 		{ //Table 2
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "long", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "long", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -129,15 +129,15 @@ func TestMultiSections(t *testing.T) {
 		{ // Table 3
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "boolean", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "boolean", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -168,15 +168,15 @@ func TestMultiSections(t *testing.T) {
 		{ //Table 4
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_time", Group: false},
-				{Type: "unsignedLong", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339Nano", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339Nano", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339Nano", Default: "", Name: "_time", Group: false},
+				{Type: "unsignedLong", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -215,8 +215,10 @@ func TestMultiSections(t *testing.T) {
 
 	//test skip first table header
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
-	require.Equal(t, tables[0].rows[0], res.Row())
+	require.NoError(t, res.Err())
+	var row []interface{}
+	require.NoError(t, res.Decode(&row))
+	require.Equal(t, tables[0].rows[0], row)
 	require.Nil(t, res.Close())
 
 	reader = strings.NewReader(csvTableMultiStructure)
@@ -224,16 +226,17 @@ func TestMultiSections(t *testing.T) {
 
 	//test skip tables
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
-	require.Equal(t, tables[2].rows[0], res.Row())
+	require.NoError(t, res.Err())
+	require.NoError(t, res.Decode(&row))
+	require.Equal(t, tables[2].rows[0], row)
 
 	require.Nil(t, res.Close())
 
@@ -257,17 +260,19 @@ func TestMultiSections(t *testing.T) {
 	//test skip first table header
 	require.True(t, res.NextRow())
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
-	require.Equal(t, tables[0].rows[1], res.Row())
+	require.NoError(t, res.Err())
+	row = row[:0]
+	require.NoError(t, res.Decode(&row))
+	require.Equal(t, tables[0].rows[1], row)
 	require.Nil(t, res.Close())
 
 	// skip sections
 	reader = strings.NewReader(csvTableMultiTables)
 	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.False(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.Nil(t, res.Close())
 }
 
@@ -279,7 +284,7 @@ func TestErrorInRow(t *testing.T) {
 ,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897
 
 `
-	verifyParsingError(t, csvTableError, "flux query error (code 897): failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time", true)
+	verifyParsingError(t, csvTableError, "Flux query error (code 897): failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time", true)
 
 	csvTableErrorNoReference := `#datatype,string,long
 #group,true,true
@@ -288,7 +293,7 @@ func TestErrorInRow(t *testing.T) {
 ,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,
 
 `
-	verifyParsingError(t, csvTableErrorNoReference, "no row found in error section", true)
+	verifyParsingError(t, csvTableErrorNoReference, `cannot decode row in error section: cannot convert value "" in column of type "long" to Go type int64 at line 5: strconv.ParseInt: parsing "": invalid syntax`, true)
 
 	csvTableErrorNoMessage := `#datatype,string,long
 #group,true,true
@@ -314,7 +319,7 @@ func TestErrorInRow(t *testing.T) {
 ,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897
 
 `
-	verifyParsingError(t, csvTableErrorInvalidReferenceType, "unexpected column types (string, string) in error section", true)
+	verifyParsingError(t, csvTableErrorInvalidReferenceType, "cannot decode row in error section: cannot convert from column type string to int64", true)
 
 	csvTableErrorNoColumnReference := `#datatype,string
 #group,true
@@ -326,7 +331,7 @@ func TestErrorInRow(t *testing.T) {
 	tables := []expectedTable{
 		{ // Table 1
 			[]annotatedcsv.Column{
-				{Type: "string", Default: nil, Name: "error", Group: true},
+				{Type: "string", Default: "", Name: "error", Group: true},
 			},
 			[][]interface{}{
 				{
@@ -349,14 +354,14 @@ func TestCSVError(t *testing.T) {
 	res := influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
 
 	require.False(t, res.NextSection())
-	require.NotNil(t, res.Err())
+	require.Error(t, res.Err())
 	require.Nil(t, res.Close())
 
 	reader = strings.NewReader(csvErrInHeader)
 	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
 	//straight to error
 	require.False(t, res.NextRow())
-	require.NotNil(t, res.Err())
+	require.Error(t, res.Err())
 	require.Nil(t, res.Close())
 
 	csvErrInRow := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
@@ -370,10 +375,9 @@ func TestCSVError(t *testing.T) {
 
 	require.True(t, res.NextSection())
 	require.False(t, res.NextRow())
-	require.NotNil(t, res.Err())
+	require.Error(t, res.Err())
 	require.Nil(t, res.Close())
 }
-
 func verifyParsingError(t *testing.T, csvTable, error string, inHeader bool) {
 	reader := strings.NewReader(csvTable)
 	res := influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
@@ -382,13 +386,23 @@ func verifyParsingError(t *testing.T, csvTable, error string, inHeader bool) {
 		require.False(t, res.NextSection())
 		//repeatedly
 		require.False(t, res.NextSection())
+		require.False(t, res.NextRow())
+		require.Error(t, res.Err())
+		assert.Equal(t, error, res.Err().Error())
 	} else {
 		require.True(t, res.NextSection())
+		if res.NextRow() {
+			require.NoError(t, res.Err())
+			var row []interface{}
+			err := res.Decode(&row)
+			require.Error(t, err)
+			assert.Equal(t, error, err.Error())
+		} else {
+			require.Error(t, res.Err())
+			assert.Equal(t, error, res.Err().Error())
+		}
 	}
-	require.False(t, res.NextRow())
-	require.NotNil(t, res.Err())
-	assert.Equal(t, error, res.Err().Error())
-	require.Nil(t, res.Close())
+	require.NoError(t, res.Close())
 }
 
 func verifyTables(t *testing.T, csvTable string, expectedTables []expectedTable) {
@@ -397,38 +411,32 @@ func verifyTables(t *testing.T, csvTable string, expectedTables []expectedTable)
 
 	for _, table := range expectedTables {
 		require.True(t, res.NextSection(), res.Err())
-		require.Nil(t, res.Err())
+		require.NoError(t, res.Err())
 		require.Equal(t, table.columns, res.Columns())
 		for _, row := range table.rows {
 			require.True(t, res.NextRow(), res.Err())
-			require.Nil(t, res.Err())
-			for i, v := range res.Row() {
+			require.NoError(t, res.Err())
+			var r []interface{}
+			err := res.Decode(&r)
+			require.NoError(t, err)
+			for i, v := range r {
 				if table.columns[i].Type == "base64Binary" {
 					require.Equal(t, row[i], v)
 				} else {
 					require.True(t, row[i] == v, fmt.Sprintf("%v vs %v", row[i], v))
 				}
 			}
-			for i, c := range table.columns {
-				v := res.ValueByName(c.Name)
-				if c.Type == "base64Binary" {
-					require.Equal(t, row[i], v)
-				} else {
-					require.True(t, row[i] == v)
-				}
-			}
 		}
 		require.False(t, res.NextRow(), res.Err())
-		require.Nil(t, res.Err())
+		require.NoError(t, res.Err())
 	}
 
 	require.False(t, res.NextSection(), res.Err())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 
 	require.Nil(t, res.Columns())
 	require.Nil(t, res.Row())
-	require.Nil(t, res.ValueByName("table"))
-	require.Nil(t, res.Close())
+	require.NoError(t, res.Close())
 }
 
 // ExpectedTable represents table for comparison with parsed tables

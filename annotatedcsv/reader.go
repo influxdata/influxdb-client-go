@@ -30,15 +30,11 @@
 package annotatedcsv
 
 import (
-	"encoding/base64"
 	"fmt"
-	"io"
-	"math"
-	"strconv"
-	"strings"
-	"time"
-
 	"github.com/influxdata/influxdb-client-go/internal/csv"
+	"io"
+	"reflect"
+	"strings"
 )
 
 // Column represents a column in one section of CSV.
@@ -48,8 +44,7 @@ type Column struct {
 	// Group specifies whether this column is a group key.
 	Group bool
 	// Default holds the default value for items in this column.
-	// It will be nil if no default is specified.
-	Default interface{}
+	Default string
 	// Type holds the type of the column.
 	Type string
 }
@@ -70,11 +65,11 @@ func NewReader(r io.Reader) *Reader {
 // Within a section, successive calls to NextRow will advance to each row.
 // If NextRow is called without first calling NextSection, the rows from the first section will be returned.
 //
-// The Row method returns all the data for a given row; ValueByName can be used
-// to get a value for a column with a particular name.
+// The Row method returns all the data for a given row in raw (string) format.
+// Use Decode to convert values to fields of a struct or slice.
 type Reader struct {
 	cols []Column
-	row  []interface{}
+	row  []string
 	err  error
 
 	hasPeeked bool
@@ -83,6 +78,16 @@ type Reader struct {
 	r         *csv.Reader
 	// columnIndexes maps column names to their indexes.
 	columnIndexes map[string]int
+	// decodeType holds the type that was last decoded into.
+	// This is reset at the start of each section.
+	decodeType reflect.Type
+	// colSetters holds an element for each column in the current
+	// section. Given an instance of decodeType, it decodes
+	// the column string value into the appropriate field.
+	colSetters []fieldSetter
+	// decodeRow is the function for decoding a CSV row
+	// into an instance of decodeType using colSetters
+	decodeRow rowDecoder
 }
 
 // NextSection advances to the next section in the csv stream and reports whether
@@ -107,6 +112,9 @@ func (r *Reader) NextSection() bool {
 		return false
 	}
 	r.cols = cols
+	// Zero the cached decode type because it probably won't be
+	// valid for the next section.
+	r.decodeType = nil
 	return true
 }
 
@@ -142,25 +150,14 @@ func (r *Reader) NextRow() bool {
 	return true
 }
 
-// Row returns the values in the current row of the current section.
+// Row returns the raw values in the current row of the current section.
 // It returns nil if there is no current row.
 // All rows in a section have the same number of values.
-func (r *Reader) Row() []interface{} {
+func (r *Reader) Row() []string {
 	return r.row
 }
 
-// ValueByName returns the value for the column with the given name.
-// It returns nil if section has no value for such column.
-func (r *Reader) ValueByName(name string) interface{} {
-	if r.columnIndexes != nil {
-		if i, ok := r.columnIndexes[name]; ok {
-			return r.row[i]
-		}
-	}
-	return nil
-}
-
-func (r *Reader) readRow() ([]interface{}, error) {
+func (r *Reader) readRow() ([]string, error) {
 	row, err := r.peek()
 	if err != nil {
 		return nil, err
@@ -174,28 +171,17 @@ func (r *Reader) readRow() ([]interface{}, error) {
 	if colsCount != len(r.cols) {
 		return nil, fmt.Errorf("inconsistent number of columns at line %d (got %d items want %d)", r.r.Line(), colsCount, len(r.cols))
 	}
-	rowVals := make([]interface{}, colsCount)
-	for i, val := range row[1:] {
-		col := r.cols[i]
-		if col.Default != nil && val == "" {
-			rowVals[i] = col.Default
-			continue
+	for i, v := range row[1:] {
+		if v == "" {
+			row[i+1] = r.cols[i].Default
 		}
-		if val == "" && col.Name == "" {
-			continue
-		}
-		x, err := convertToType(val, col.Type)
-		if err != nil {
-			return nil, fmt.Errorf("cannot convert value %q to type %q at line %d: %v", val, col.Type, r.r.Line(), err)
-		}
-		rowVals[i] = x
 	}
-	return rowVals, nil
+	return row[1:], nil
 }
 
 func (r *Reader) readHeader() ([]Column, error) {
 	var cols []Column
-	var defaults []string
+	r.columnIndexes = map[string]int{}
 	for {
 		row, err := r.read()
 		if err != nil {
@@ -207,7 +193,6 @@ func (r *Reader) readHeader() ([]Column, error) {
 		} else if colsCount != len(cols) {
 			return nil, fmt.Errorf("inconsistent table header (got %d items want %d)", colsCount, len(cols))
 		}
-		r.columnIndexes = map[string]int{}
 		if !strings.HasPrefix(row[0], "#") {
 			for i, col := range row[1:] {
 				cols[i].Name = col
@@ -225,49 +210,12 @@ func (r *Reader) readHeader() ([]Column, error) {
 				cols[i].Group = c == "true"
 			}
 		case "#default":
-			defaults = row[1:]
+			for i, c := range row[1:] {
+				cols[i].Default = c
+			}
 		}
-	}
-	for i, d := range defaults {
-		if d == "" {
-			continue
-		}
-		x, err := convertToType(d, cols[i].Type)
-		if err != nil {
-			return nil, fmt.Errorf("cannot convert default value %q to type %q: %v", d, cols[i].Type, err)
-		}
-		cols[i].Default = x
 	}
 	return cols, nil
-}
-
-func convertToType(s string, typ string) (interface{}, error) {
-	switch typ {
-	case "boolean":
-		return strconv.ParseBool(s)
-	case "long":
-		return strconv.ParseInt(s, 10, 64)
-	case "unsignedLong":
-		return strconv.ParseUint(s, 10, 64)
-	case "double":
-		x, err := strconv.ParseFloat(s, 64)
-		if err != nil {
-			return nil, err
-		}
-		if math.IsInf(x, 0) || math.IsNaN(x) {
-			return s, nil
-		}
-		return x, nil
-	case "string", "tag", "":
-		return s, nil
-	case "duration":
-		return time.ParseDuration(s)
-	case "base64Binary":
-		return base64.StdEncoding.DecodeString(s)
-	case "dateTime", "dateTime:RFC3339", "dateTime:RFC3339Nano":
-		return time.Parse(time.RFC3339, s)
-	}
-	return s, nil
 }
 
 // read consumes the next line from the CSV,

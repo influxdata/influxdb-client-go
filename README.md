@@ -14,7 +14,7 @@ State: under development.
 |:----------|:----------|:----------|
 | `WritePoints()` | `/api/v2/write` |  | 
 | `PointWriter` | `/api/v2/write` |  |
-| `Query()` | `/api/v2/query` |  |
+| `Query()` | `/api/v2/query` | In progress |
 | `DeletePoints()` | `/api/v2/delete` |  |
 | `Ready()` | `/ready` |  |
 | `Health()` | `/health` |  |

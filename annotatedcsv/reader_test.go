@@ -27,15 +27,15 @@ func TestSingleTable(t *testing.T) {
 	tables := []expectedTable{
 		{columns: []annotatedcsv.Column{
 			{Type: "string", Default: "_result", Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-			{Type: "double", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: true},
-			{Type: "string", Default: nil, Name: "_measurement", Group: true},
-			{Type: "string", Default: nil, Name: "a", Group: true},
-			{Type: "string", Default: nil, Name: "b", Group: true},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+			{Type: "double", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: true},
+			{Type: "string", Default: "", Name: "_measurement", Group: true},
+			{Type: "string", Default: "", Name: "a", Group: true},
+			{Type: "string", Default: "", Name: "b", Group: true},
 		},
 			rows: [][]interface{}{
 				{
@@ -103,15 +103,15 @@ func TestMultiTables(t *testing.T) {
 		{ // Table 1
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "double", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "double", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -142,15 +142,15 @@ func TestMultiTables(t *testing.T) {
 		{ //Table 2
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "long", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "long", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -181,15 +181,15 @@ func TestMultiTables(t *testing.T) {
 		{ // Table 3
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "boolean", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "boolean", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -220,15 +220,15 @@ func TestMultiTables(t *testing.T) {
 		{ //Table 4
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_time", Group: false},
-				{Type: "unsignedLong", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339Nano", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339Nano", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339Nano", Default: "", Name: "_time", Group: false},
+				{Type: "unsignedLong", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -264,28 +264,31 @@ func TestMultiTables(t *testing.T) {
 	res := annotatedcsv.NewReader(reader)
 
 	require.False(t, res.NextRow())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
-	require.Equal(t, tablesMultiStructure[0].rows[0], res.Row())
+	require.NoError(t, res.Err())
+	var row []interface{}
+	require.NoError(t, res.Decode(&row))
+	require.Equal(t, tablesMultiStructure[0].rows[0], row)
 
 	reader = strings.NewReader(csvTableMultiStructure)
 	res = annotatedcsv.NewReader(reader)
 
 	//test skip tables
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.True(t, res.NextRow())
-	require.Nil(t, res.Err())
-	require.Equal(t, tablesMultiStructure[2].rows[0], res.Row())
+	require.NoError(t, res.Err())
+	require.NoError(t, res.Decode(&row))
+	require.Equal(t, tablesMultiStructure[2].rows[0], row)
 
 	csvTableMultiTables := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
@@ -305,15 +308,15 @@ func TestMultiTables(t *testing.T) {
 		{
 			columns: []annotatedcsv.Column{
 				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "double", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
+				{Type: "long", Default: "", Name: "table", Group: false},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+				{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+				{Type: "double", Default: "", Name: "_value", Group: false},
+				{Type: "string", Default: "", Name: "_field", Group: true},
+				{Type: "string", Default: "", Name: "_measurement", Group: true},
+				{Type: "string", Default: "", Name: "a", Group: true},
+				{Type: "string", Default: "", Name: "b", Group: true},
 			},
 			rows: [][]interface{}{
 				{"_result",
@@ -417,126 +420,9 @@ func TestMultiTables(t *testing.T) {
 	reader = strings.NewReader(csvTableMultiTables)
 	res = annotatedcsv.NewReader(reader)
 	require.True(t, res.NextSection())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 	require.False(t, res.NextSection())
-	require.Nil(t, res.Err())
-}
-
-func TestValueByName(t *testing.T) {
-	csvTable := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,duration,base64Binary,dateTime:RFC3339
-#group,false,false,true,true,false,true,true,false,false,false
-#default,_result,,,,,,,,,
-,result,table,_start,_stop,_time,deviceId,sensor,elapsed,note,start
-,,0,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:38:11.480545389Z,1467463,BME280,1m1s,ZGF0YWluYmFzZTY0,2020-04-27T00:00:00Z
-,,1,2020-04-28T12:36:50.990018157Z,2020-04-28T12:51:50.990018157Z,2020-04-28T12:39:36.330153686Z,1467463,BME280,1h20m30.13245s,eHh4eHhjY2NjY2NkZGRkZA==,2020-04-28T00:00:00Z
-
-#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
-#group,false,false,true,true,false,false,true,true,true,true
-#default,_result,,,,,,,,,
-,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
-,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
-,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
-
-`
-	tables := []expectedTable{
-		{ // Table 1
-			columns: []annotatedcsv.Column{
-				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "long", Default: nil, Name: "deviceId", Group: true},
-				{Type: "string", Default: nil, Name: "sensor", Group: true},
-				{Type: "duration", Default: nil, Name: "elapsed", Group: false},
-				{Type: "base64Binary", Default: nil, Name: "note", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "start", Group: false},
-			},
-			rows: [][]interface{}{
-				{
-					"_result",
-					int64(0),
-					mustParseTime("2020-04-28T12:36:50.990018157Z"),
-					mustParseTime("2020-04-28T12:51:50.990018157Z"),
-					mustParseTime("2020-04-28T12:38:11.480545389Z"),
-					int64(1467463),
-					"BME280",
-					time.Minute + time.Second,
-					[]byte("datainbase64"),
-					time.Date(2020, 4, 27, 0, 0, 0, 0, time.UTC),
-				},
-				{
-					"_result",
-					int64(1),
-					mustParseTime("2020-04-28T12:36:50.990018157Z"),
-					mustParseTime("2020-04-28T12:51:50.990018157Z"),
-					mustParseTime("2020-04-28T12:39:36.330153686Z"),
-					int64(1467463),
-					"BME280",
-					time.Hour + 20*time.Minute + 30*time.Second + 132450000*time.Nanosecond,
-					[]byte("xxxxxccccccddddd"),
-					time.Date(2020, 4, 28, 0, 0, 0, 0, time.UTC),
-				},
-			},
-		},
-		{
-			columns: []annotatedcsv.Column{
-				{Type: "string", Default: "_result", Name: "result", Group: false},
-				{Type: "long", Default: nil, Name: "table", Group: false},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-				{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-				{Type: "double", Default: nil, Name: "_value", Group: false},
-				{Type: "string", Default: nil, Name: "_field", Group: true},
-				{Type: "string", Default: nil, Name: "_measurement", Group: true},
-				{Type: "string", Default: nil, Name: "a", Group: true},
-				{Type: "string", Default: nil, Name: "b", Group: true},
-			},
-			rows: [][]interface{}{
-				{
-					"_result",
-					int64(0),
-					mustParseTime("2020-02-17T22:19:49.747562847Z"),
-					mustParseTime("2020-02-18T22:19:49.747562847Z"),
-					mustParseTime("2020-02-18T10:34:08.135814545Z"),
-					1.4,
-					"f",
-					"test",
-					"1",
-					"adsfasdf",
-				},
-				{
-					"_result",
-					int64(0),
-					mustParseTime("2020-02-17T22:19:49.747562847Z"),
-					mustParseTime("2020-02-18T22:19:49.747562847Z"),
-					mustParseTime("2020-02-18T22:08:44.850214724Z"),
-					6.6,
-					"f",
-					"test",
-					"1",
-					"adsfasdf",
-				},
-			},
-		},
-	}
-
-	verifyTables(t, csvTable, tables)
-
-	reader := strings.NewReader(csvTable)
-	res := annotatedcsv.NewReader(reader)
-
-	require.True(t, res.NextSection() && res.NextRow(), res.Err())
-	require.Nil(t, res.Err())
-	assert.Equal(t, []byte("datainbase64"), res.ValueByName("note"))
-	assert.Nil(t, res.ValueByName(""))
-	assert.Nil(t, res.ValueByName("invalid"))
-	assert.Nil(t, res.ValueByName("a"))
-
-	require.True(t, res.NextSection() && res.NextRow(), res.Err())
-	assert.Equal(t, "1", res.ValueByName("a"))
-	assert.Nil(t, res.ValueByName("note"))
-
+	require.NoError(t, res.Err())
 }
 
 func TestErrorInRow(t *testing.T) {
@@ -551,8 +437,8 @@ func TestErrorInRow(t *testing.T) {
 	tables := []expectedTable{
 		{ // Table 1
 			[]annotatedcsv.Column{
-				{Type: "string", Default: nil, Name: "error", Group: true},
-				{Type: "string", Default: nil, Name: "reference", Group: true},
+				{Type: "string", Default: "", Name: "error", Group: true},
+				{Type: "string", Default: "", Name: "reference", Group: true},
 			},
 			[][]interface{}{
 				{
@@ -574,8 +460,8 @@ func TestErrorInRow(t *testing.T) {
 	tables = []expectedTable{
 		{ // Table 1
 			[]annotatedcsv.Column{
-				{Type: "string", Default: nil, Name: "error", Group: true},
-				{Type: "string", Default: nil, Name: "reference", Group: true},
+				{Type: "string", Default: "", Name: "error", Group: true},
+				{Type: "string", Default: "", Name: "reference", Group: true},
 			},
 			[][]interface{}{
 				{
@@ -597,8 +483,8 @@ func TestErrorInRow(t *testing.T) {
 	tables = []expectedTable{
 		{ // Table 1
 			[]annotatedcsv.Column{
-				{Type: "string", Default: nil, Name: "error", Group: true},
-				{Type: "string", Default: nil, Name: "reference", Group: true},
+				{Type: "string", Default: "", Name: "error", Group: true},
+				{Type: "string", Default: "", Name: "reference", Group: true},
 			},
 			[][]interface{}{
 				{
@@ -623,15 +509,15 @@ func TestInvalidDataType(t *testing.T) {
 	tables := []expectedTable{
 		{[]annotatedcsv.Column{
 			{Type: "string", Default: "_result", Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-			{Type: "int", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: true},
-			{Type: "string", Default: nil, Name: "_measurement", Group: true},
-			{Type: "string", Default: nil, Name: "a", Group: true},
-			{Type: "string", Default: nil, Name: "b", Group: true},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+			{Type: "int", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: true},
+			{Type: "string", Default: "", Name: "_measurement", Group: true},
+			{Type: "string", Default: "", Name: "a", Group: true},
+			{Type: "string", Default: "", Name: "b", Group: true},
 		},
 			[][]interface{}{
 				{
@@ -677,15 +563,15 @@ func TestReorderedAnnotations(t *testing.T) {
 	tables := []expectedTable{
 		{[]annotatedcsv.Column{
 			{Type: "string", Default: "_result", Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-			{Type: "double", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: true},
-			{Type: "string", Default: nil, Name: "_measurement", Group: true},
-			{Type: "string", Default: nil, Name: "a", Group: true},
-			{Type: "string", Default: nil, Name: "b", Group: true},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+			{Type: "double", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: true},
+			{Type: "string", Default: "", Name: "_measurement", Group: true},
+			{Type: "string", Default: "", Name: "a", Group: true},
+			{Type: "string", Default: "", Name: "b", Group: true},
 		},
 			[][]interface{}{
 				{
@@ -738,16 +624,16 @@ func TestDatatypeOnlyAnnotation(t *testing.T) {
 `
 	tables := []expectedTable{
 		{[]annotatedcsv.Column{
-			{Type: "string", Default: nil, Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-			{Type: "double", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: false},
-			{Type: "string", Default: nil, Name: "_measurement", Group: false},
-			{Type: "string", Default: nil, Name: "a", Group: false},
-			{Type: "string", Default: nil, Name: "b", Group: false},
+			{Type: "string", Default: "", Name: "result", Group: false},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+			{Type: "double", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: false},
+			{Type: "string", Default: "", Name: "_measurement", Group: false},
+			{Type: "string", Default: "", Name: "a", Group: false},
+			{Type: "string", Default: "", Name: "b", Group: false},
 		},
 			[][]interface{}{
 				{
@@ -793,15 +679,15 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 		{ // Table 1
 			columns: []annotatedcsv.Column{
 				{Type: "", Default: "_result", Name: "result", Group: false},
-				{Type: "", Default: nil, Name: "table", Group: false},
-				{Type: "", Default: nil, Name: "_start", Group: true},
-				{Type: "", Default: nil, Name: "_stop", Group: true},
-				{Type: "", Default: nil, Name: "_time", Group: false},
-				{Type: "", Default: nil, Name: "deviceId", Group: true},
-				{Type: "", Default: nil, Name: "sensor", Group: true},
-				{Type: "", Default: nil, Name: "elapsed", Group: false},
-				{Type: "", Default: nil, Name: "note", Group: false},
-				{Type: "", Default: nil, Name: "start", Group: false},
+				{Type: "", Default: "", Name: "table", Group: false},
+				{Type: "", Default: "", Name: "_start", Group: true},
+				{Type: "", Default: "", Name: "_stop", Group: true},
+				{Type: "", Default: "", Name: "_time", Group: false},
+				{Type: "", Default: "", Name: "deviceId", Group: true},
+				{Type: "", Default: "", Name: "sensor", Group: true},
+				{Type: "", Default: "", Name: "elapsed", Group: false},
+				{Type: "", Default: "", Name: "note", Group: false},
+				{Type: "", Default: "", Name: "start", Group: false},
 			},
 			rows: [][]interface{}{
 				{
@@ -853,16 +739,16 @@ func TestMissingAnnotations(t *testing.T) {
 	tables := []expectedTable{
 		{ // Table 1
 			columns: []annotatedcsv.Column{
-				{Type: "", Default: nil, Name: "result", Group: false},
-				{Type: "", Default: nil, Name: "table", Group: false},
-				{Type: "", Default: nil, Name: "_start", Group: false},
-				{Type: "", Default: nil, Name: "_stop", Group: false},
-				{Type: "", Default: nil, Name: "_time", Group: false},
-				{Type: "", Default: nil, Name: "deviceId", Group: false},
-				{Type: "", Default: nil, Name: "sensor", Group: false},
-				{Type: "", Default: nil, Name: "elapsed", Group: false},
-				{Type: "", Default: nil, Name: "note", Group: false},
-				{Type: "", Default: nil, Name: "start", Group: false},
+				{Type: "", Default: "", Name: "result", Group: false},
+				{Type: "", Default: "", Name: "table", Group: false},
+				{Type: "", Default: "", Name: "_start", Group: false},
+				{Type: "", Default: "", Name: "_stop", Group: false},
+				{Type: "", Default: "", Name: "_time", Group: false},
+				{Type: "", Default: "", Name: "deviceId", Group: false},
+				{Type: "", Default: "", Name: "sensor", Group: false},
+				{Type: "", Default: "", Name: "elapsed", Group: false},
+				{Type: "", Default: "", Name: "note", Group: false},
+				{Type: "", Default: "", Name: "start", Group: false},
 			},
 			rows: [][]interface{}{
 				{
@@ -908,15 +794,15 @@ func TestUnexpectedAnnotation(t *testing.T) {
 	tables := []expectedTable{
 		{[]annotatedcsv.Column{
 			{Type: "string", Default: "_result", Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_stop", Group: true},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_time", Group: false},
-			{Type: "double", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: true},
-			{Type: "string", Default: nil, Name: "_measurement", Group: true},
-			{Type: "string", Default: nil, Name: "a", Group: true},
-			{Type: "string", Default: nil, Name: "b", Group: true},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_stop", Group: true},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_time", Group: false},
+			{Type: "double", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: true},
+			{Type: "string", Default: "", Name: "_measurement", Group: true},
+			{Type: "string", Default: "", Name: "a", Group: true},
+			{Type: "string", Default: "", Name: "b", Group: true},
 		},
 			[][]interface{}{
 				{
@@ -962,15 +848,15 @@ func TestDatetimeConversion(t *testing.T) {
 	tables := []expectedTable{
 		{[]annotatedcsv.Column{
 			{Type: "string", Default: "_result", Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:RFC3339", Default: nil, Name: "_start", Group: true},
-			{Type: "dateTime", Default: nil, Name: "_stop", Group: true},
-			{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_time", Group: false},
-			{Type: "double", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: true},
-			{Type: "string", Default: nil, Name: "_measurement", Group: true},
-			{Type: "string", Default: nil, Name: "a", Group: true},
-			{Type: "string", Default: nil, Name: "b", Group: true},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:RFC3339", Default: "", Name: "_start", Group: true},
+			{Type: "dateTime", Default: "", Name: "_stop", Group: true},
+			{Type: "dateTime:RFC3339Nano", Default: "", Name: "_time", Group: false},
+			{Type: "double", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: true},
+			{Type: "string", Default: "", Name: "_measurement", Group: true},
+			{Type: "string", Default: "", Name: "a", Group: true},
+			{Type: "string", Default: "", Name: "b", Group: true},
 		},
 			[][]interface{}{
 				{
@@ -1015,15 +901,15 @@ func TestDatetimeConversion(t *testing.T) {
 	tables = []expectedTable{
 		{[]annotatedcsv.Column{
 			{Type: "string", Default: "_result", Name: "result", Group: false},
-			{Type: "long", Default: nil, Name: "table", Group: false},
-			{Type: "dateTime:wrongLayout", Default: nil, Name: "_start", Group: true},
-			{Type: "dateTime", Default: nil, Name: "_stop", Group: true},
-			{Type: "dateTime:RFC3339Nano", Default: nil, Name: "_time", Group: false},
-			{Type: "double", Default: nil, Name: "_value", Group: false},
-			{Type: "string", Default: nil, Name: "_field", Group: true},
-			{Type: "string", Default: nil, Name: "_measurement", Group: true},
-			{Type: "string", Default: nil, Name: "a", Group: true},
-			{Type: "string", Default: nil, Name: "b", Group: true},
+			{Type: "long", Default: "", Name: "table", Group: false},
+			{Type: "dateTime:wrongLayout", Default: "", Name: "_start", Group: true},
+			{Type: "dateTime", Default: "", Name: "_stop", Group: true},
+			{Type: "dateTime:RFC3339Nano", Default: "", Name: "_time", Group: false},
+			{Type: "double", Default: "", Name: "_value", Group: false},
+			{Type: "string", Default: "", Name: "_field", Group: true},
+			{Type: "string", Default: "", Name: "_measurement", Group: true},
+			{Type: "string", Default: "", Name: "a", Group: true},
+			{Type: "string", Default: "", Name: "b", Group: true},
 		},
 			[][]interface{}{
 				{
@@ -1063,11 +949,11 @@ func TestFailedConversion(t *testing.T) {
 #group,false,false,true,true,false,false,true,true,true,true
 #default,_result,zero,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
-,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,seven,f,test,1,adsfasdf
+,,,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,seven,f,test,1,adsfasdf
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,six,f,test,1,adsfasdf
 
 `
-	verifyParsingError(t, csvTable, `cannot convert default value "zero" to type "long": strconv.ParseInt: parsing "zero": invalid syntax`, true)
+	verifyParsingError(t, csvTable, `cannot convert value "zero" in column of type "long" to Go type interface {} at line 5: strconv.ParseInt: parsing "zero": invalid syntax`, false)
 
 	csvTable = `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
@@ -1077,7 +963,7 @@ func TestFailedConversion(t *testing.T) {
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,six,f,test,1,adsfasdf
 
 `
-	verifyParsingError(t, csvTable, `cannot convert value "seven" to type "double" at line 5: strconv.ParseFloat: parsing "seven": invalid syntax`, false)
+	verifyParsingError(t, csvTable, `cannot convert value "seven" in column of type "double" to Go type interface {} at line 5: strconv.ParseFloat: parsing "seven": invalid syntax`, false)
 }
 
 func TestDifferentNumberOfColumns(t *testing.T) {
@@ -1150,12 +1036,22 @@ func verifyParsingError(t *testing.T, csvTable, error string, inHeader bool) {
 
 	if inHeader {
 		require.False(t, res.NextSection())
+		require.False(t, res.NextRow())
+		require.Error(t, res.Err())
+		assert.Equal(t, error, res.Err().Error())
 	} else {
 		require.True(t, res.NextSection())
+		if res.NextRow() {
+			require.NoError(t, res.Err())
+			var row []interface{}
+			err := res.Decode(&row)
+			require.Error(t, err)
+			assert.Equal(t, error, err.Error())
+		} else {
+			require.Error(t, res.Err())
+			assert.Equal(t, error, res.Err().Error())
+		}
 	}
-	require.False(t, res.NextRow())
-	require.NotNil(t, res.Err())
-	assert.Equal(t, error, res.Err().Error())
 }
 
 func verifyTables(t *testing.T, csvTable string, expectedTables []expectedTable) {
@@ -1164,37 +1060,31 @@ func verifyTables(t *testing.T, csvTable string, expectedTables []expectedTable)
 
 	for _, table := range expectedTables {
 		require.True(t, res.NextSection(), res.Err())
-		require.Nil(t, res.Err())
+		require.NoError(t, res.Err())
 		require.Equal(t, table.columns, res.Columns())
 		for _, row := range table.rows {
 			require.True(t, res.NextRow(), res.Err())
-			require.Nil(t, res.Err())
-			for i, v := range res.Row() {
+			require.NoError(t, res.Err())
+			var r []interface{}
+			err := res.Decode(&r)
+			require.NoError(t, err)
+			for i, v := range r {
 				if table.columns[i].Type == "base64Binary" {
 					require.Equal(t, row[i], v)
 				} else {
 					require.True(t, row[i] == v, fmt.Sprintf("%v vs %v", row[i], v))
 				}
 			}
-			for i, c := range table.columns {
-				v := res.ValueByName(c.Name)
-				if c.Type == "base64Binary" {
-					require.Equal(t, row[i], v)
-				} else {
-					require.True(t, row[i] == v)
-				}
-			}
 		}
 		require.False(t, res.NextRow(), res.Err())
-		require.Nil(t, res.Err())
+		require.NoError(t, res.Err())
 	}
 
 	require.False(t, res.NextSection(), res.Err())
-	require.Nil(t, res.Err())
+	require.NoError(t, res.Err())
 
 	require.Nil(t, res.Columns())
 	require.Nil(t, res.Row())
-	require.Nil(t, res.ValueByName("table"))
 }
 
 // ExpectedTable represents table for comparison with parsed tables

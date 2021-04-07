@@ -146,17 +146,18 @@ func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
 
 func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
 	if username == "" || password == "" {
-		return nil, errors.New("a username and password is required for a setup")
+		return nil, errors.New("a username and a password is required for a setup")
 	}
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	params := &domain.PostSetupParams{}
+	retentionPeriodSeconds := retentionPeriodHours * 3600
 	body := &domain.PostSetupJSONRequestBody{
-		Bucket:             bucket,
-		Org:                org,
-		Password:           &password,
-		RetentionPeriodHrs: &retentionPeriodHours,
-		Username:           username,
+		Bucket:                 bucket,
+		Org:                    org,
+		Password:               &password,
+		RetentionPeriodSeconds: &retentionPeriodSeconds,
+		Username:               username,
 	}
 	response, err := c.apiClient.PostSetupWithResponse(ctx, params, *body)
 	if err != nil {

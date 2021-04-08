@@ -11,6 +11,7 @@ import (
 	"errors"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/influxdata/influxdb-client-go/v2/api"
 	"github.com/influxdata/influxdb-client-go/v2/api/http"
@@ -152,11 +153,13 @@ func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket 
 	defer c.lock.Unlock()
 	params := &domain.PostSetupParams{}
 	retentionPeriodSeconds := retentionPeriodHours * 3600
+	retentionPeriodHrs := int(time.Duration(retentionPeriodSeconds) * time.Second)
 	body := &domain.PostSetupJSONRequestBody{
 		Bucket:                 bucket,
 		Org:                    org,
 		Password:               &password,
 		RetentionPeriodSeconds: &retentionPeriodSeconds,
+		RetentionPeriodHrs:     &retentionPeriodHrs,
 		Username:               username,
 	}
 	response, err := c.apiClient.PostSetupWithResponse(ctx, params, *body)

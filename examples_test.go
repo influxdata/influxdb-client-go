@@ -31,50 +31,57 @@ func ExampleClient_newClientWithOptions() {
 }
 
 func ExampleClient_customServerAPICall() {
-	// Create a new client using an InfluxDB server base URL and empty token
-	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// This example shows how to perform custom server API invocation for any endpoint
+	// Here we will create a DBRP mapping which allows using buckets in legacy write and query (InfluxQL) endpoints
+
+	// Create client. You need an admin token for creating DBRP mapping
+	client := influxdb2.NewClient("https://ec2-13-57-118-201.us-west-1.compute.amazonaws.com:9999/", "tqX_zPwl9Nxe5pQJQZShZfGnO9dpRx4oeNFMzVMAGKx_oc30i0QKKzmj-pvFo-sHNMN-OtfSj09L3poXm2TfKQ==")
+
 	// Always close client at the end
 	defer client.Close()
+
 	// Get generated client for server API calls
 	apiClient := domain.NewClientWithResponses(client.HTTPService())
-	// Get an organization that will own task
-	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
+	ctx := context.Background()
+
+	// Get a bucket we would like to query using InfluxQL
+	b, err := client.BucketsAPI().FindBucketByName(ctx, "my-bucket")
 	if err != nil {
-		//return err
 		panic(err)
 	}
-
-	// Basic task properties
-	taskDescription := "Example task"
-	taskFlux := `option task = {
-  name: "My task",
-  every: 1h
-}
-
-from(bucket:"my-bucket") |> range(start: -1m) |> last()`
-	taskStatus := domain.TaskStatusTypeActive
-
-	// Create TaskCreateRequest object
-	taskRequest := domain.TaskCreateRequest{
-		Org:         &org.Name,
-		OrgID:       org.Id,
-		Description: &taskDescription,
-		Flux:        taskFlux,
-		Status:      &taskStatus,
-	}
-
-	// Issue an API call
-	resp, err := apiClient.PostTasksWithResponse(context.Background(), &domain.PostTasksParams{}, domain.PostTasksJSONRequestBody(taskRequest))
+	// Get an organization that will own the mapping
+	o, err := client.OrganizationsAPI().FindOrganizationByName(ctx, "my-org")
 	if err != nil {
 		panic(err)
 	}
 
-	// Always check generated response errors
+	yes := true
+
+	// Fill required fields of the DBRP struct
+	dbrp := domain.DBRP{
+		BucketID:        *b.Id,
+		Database:        "my-bucket",
+		Default:         &yes,
+		OrgID:           *o.Id,
+		RetentionPolicy: "autogen",
+	}
+
+	params := &domain.PostDBRPParams{}
+	// Call server API
+	resp, err := apiClient.PostDBRPWithResponse(ctx, params, domain.PostDBRPJSONRequestBody(dbrp))
+	if err != nil {
+		panic(err)
+	}
+	// Check generated response errors
 	if resp.JSONDefault != nil {
 		panic(resp.JSONDefault.Message)
 	}
+	// Check generated response errors
+	if resp.JSON400 != nil {
+		panic(resp.JSON400.Message)
+	}
 
 	// Use API call result
-	task := resp.JSON201
-	fmt.Println("Created task: ", task.Name)
+	newDbrp := resp.JSON201
+	fmt.Printf("Created DBRP: %#v\n", newDbrp)
 }

@@ -35,7 +35,7 @@ func ExampleClient_customServerAPICall() {
 	// Here we will create a DBRP mapping which allows using buckets in legacy write and query (InfluxQL) endpoints
 
 	// Create client. You need an admin token for creating DBRP mapping
-	client := influxdb2.NewClient("https://ec2-13-57-118-201.us-west-1.compute.amazonaws.com:9999/", "tqX_zPwl9Nxe5pQJQZShZfGnO9dpRx4oeNFMzVMAGKx_oc30i0QKKzmj-pvFo-sHNMN-OtfSj09L3poXm2TfKQ==")
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
 
 	// Always close client at the end
 	defer client.Close()
@@ -56,14 +56,15 @@ func ExampleClient_customServerAPICall() {
 	}
 
 	yes := true
-
+	db := "my-bucket"
+	rp := "autogen"
 	// Fill required fields of the DBRP struct
 	dbrp := domain.DBRP{
-		BucketID:        *b.Id,
-		Database:        "my-bucket",
+		BucketID:        b.Id,
+		Database:        &db,
 		Default:         &yes,
-		OrgID:           *o.Id,
-		RetentionPolicy: "autogen",
+		OrgID:           o.Id,
+		RetentionPolicy: &rp,
 	}
 
 	params := &domain.PostDBRPParams{}

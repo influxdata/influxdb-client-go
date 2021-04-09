@@ -43,11 +43,14 @@ type Client interface {
 	ServerURL() string
 	// HTTPService returns underlying HTTP service object used by client
 	HTTPService() http.Service
-	// WriteAPI returns the asynchronous, non-blocking, Write client
+	// WriteAPI returns the asynchronous, non-blocking, Write client.
+	// Ensures using a single WriteAPI instance for each org/bucket pair.
 	WriteAPI(org, bucket string) api.WriteAPI
-	// WriteAPIBlocking returns the synchronous, blocking, Write client
+	// WriteAPIBlocking returns the synchronous, blocking, Write client.
+	// Ensures using a single WriteAPIBlocking instance for each org/bucket pair.
 	WriteAPIBlocking(org, bucket string) api.WriteAPIBlocking
-	// QueryAPI returns Query client
+	// QueryAPI returns Query client.
+	// Ensures using a single QueryAPI instance each org.
 	QueryAPI(org string) api.QueryAPI
 	// AuthorizationsAPI returns Authorizations API client.
 	AuthorizationsAPI() api.AuthorizationsAPI

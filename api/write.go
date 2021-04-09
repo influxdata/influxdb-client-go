@@ -16,6 +16,8 @@ import (
 )
 
 // WriteAPI is Write client interface with non-blocking methods for writing time series data asynchronously in batches into an InfluxDB server.
+// WriteAPI is allowed to be used concurrently.
+// When using multiple goroutines for writing, use a single WriteAPI instance in all goroutines.
 type WriteAPI interface {
 	// WriteRecord writes asynchronously line protocol record into bucket.
 	// WriteRecord adds record into the buffer which is sent on the background when it reaches the batch size.

@@ -204,6 +204,27 @@ const (
 	GaugeViewPropertiesTypeGauge GaugeViewPropertiesType = "gauge"
 )
 
+// Defines values for GeoViewLayerPropertiesType.
+const (
+	GeoViewLayerPropertiesTypeCircleMap GeoViewLayerPropertiesType = "circleMap"
+
+	GeoViewLayerPropertiesTypeHeatmap GeoViewLayerPropertiesType = "heatmap"
+
+	GeoViewLayerPropertiesTypePointMap GeoViewLayerPropertiesType = "pointMap"
+
+	GeoViewLayerPropertiesTypeTrackMap GeoViewLayerPropertiesType = "trackMap"
+)
+
+// Defines values for GeoViewPropertiesShape.
+const (
+	GeoViewPropertiesShapeChronografV2 GeoViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for GeoViewPropertiesType.
+const (
+	GeoViewPropertiesTypeGeo GeoViewPropertiesType = "geo"
+)
+
 // Defines values for GreaterThresholdType.
 const (
 	GreaterThresholdTypeGreater GreaterThresholdType = "greater"
@@ -353,6 +374,17 @@ const (
 // Defines values for MarkdownViewPropertiesType.
 const (
 	MarkdownViewPropertiesTypeMarkdown MarkdownViewPropertiesType = "markdown"
+)
+
+// Defines values for MosaicViewPropertiesHoverDimension.
+const (
+	MosaicViewPropertiesHoverDimensionAuto MosaicViewPropertiesHoverDimension = "auto"
+
+	MosaicViewPropertiesHoverDimensionTrue MosaicViewPropertiesHoverDimension = "true"
+
+	MosaicViewPropertiesHoverDimensionX MosaicViewPropertiesHoverDimension = "x"
+
+	MosaicViewPropertiesHoverDimensionXy MosaicViewPropertiesHoverDimension = "xy"
 )
 
 // Defines values for MosaicViewPropertiesShape.
@@ -883,12 +915,15 @@ type BandViewProperties struct {
 	Axes Axes `json:"axes"`
 
 	// Colors define color encoding of data into a visualization
-	Colors         []DashboardColor                  `json:"colors"`
-	Geom           XYGeom                            `json:"geom"`
-	HoverDimension *BandViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	Colors             []DashboardColor                  `json:"colors"`
+	GenerateXAxisTicks *[]string                         `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks *[]string                         `json:"generateYAxisTicks,omitempty"`
+	Geom               XYGeom                            `json:"geom"`
+	HoverDimension     *BandViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
 	Legend                     Legend                  `json:"legend"`
+	LegendColorizeRows         *bool                   `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                    `json:"legendOrientationThreshold,omitempty"`
 	LowerColumn                *string                 `json:"lowerColumn,omitempty"`
@@ -903,7 +938,13 @@ type BandViewProperties struct {
 	Type              BandViewPropertiesType `json:"type"`
 	UpperColumn       *string                `json:"upperColumn,omitempty"`
 	XColumn           *string                `json:"xColumn,omitempty"`
+	XTickStart        *float32               `json:"xTickStart,omitempty"`
+	XTickStep         *float32               `json:"xTickStep,omitempty"`
+	XTotalTicks       *int                   `json:"xTotalTicks,omitempty"`
 	YColumn           *string                `json:"yColumn,omitempty"`
+	YTickStart        *float32               `json:"yTickStart,omitempty"`
+	YTickStep         *float32               `json:"yTickStep,omitempty"`
+	YTotalTicks       *int                   `json:"yTotalTicks,omitempty"`
 }
 
 // BandViewPropertiesHoverDimension defines model for BandViewProperties.HoverDimension.
@@ -1148,6 +1189,7 @@ type CheckViewProperties struct {
 
 	// Colors define color encoding of data into a visualization
 	Colors                     []DashboardColor         `json:"colors"`
+	LegendColorizeRows         *bool                    `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                 `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                     `json:"legendOrientationThreshold,omitempty"`
 	Queries                    []DashboardQuery         `json:"queries"`
@@ -1223,30 +1265,7 @@ type CustomCheck struct {
 type CustomCheckType string
 
 // DBRP defines model for DBRP.
-type DBRP struct {
-
-	// the bucket ID used as target for the translation.
-	BucketID string `json:"bucketID"`
-
-	// InfluxDB v1 database
-	Database string `json:"database"`
-
-	// Specify if this mapping represents the default retention policy for the database specificed.
-	Default *bool `json:"default,omitempty"`
-
-	// the mapping identifier
-	Id    *string `json:"id,omitempty"`
-	Links *Links  `json:"links,omitempty"`
-
-	// the organization that owns this mapping.
-	Org string `json:"org"`
-
-	// the organization ID that owns this mapping.
-	OrgID string `json:"orgID"`
-
-	// InfluxDB v1 retention policy
-	RetentionPolicy string `json:"retention_policy"`
-}
+type DBRP interface{}
 
 // DBRPUpdate defines model for DBRPUpdate.
 type DBRPUpdate struct {
@@ -1262,8 +1281,7 @@ type DBRPUpdate struct {
 
 // DBRPs defines model for DBRPs.
 type DBRPs struct {
-	Links                 *Links  `json:"links,omitempty"`
-	NotificationEndpoints *[]DBRP `json:"notificationEndpoints,omitempty"`
+	Content *[]DBRP `json:"content,omitempty"`
 }
 
 // Dashboard defines model for Dashboard.
@@ -1465,6 +1483,25 @@ type DialectAnnotations string
 
 // DialectDateTimeFormat defines model for Dialect.DateTimeFormat.
 type DialectDateTimeFormat string
+
+// DictExpression defines model for DictExpression.
+type DictExpression struct {
+
+	// Elements of the dictionary
+	Elements *[]DictItem `json:"elements,omitempty"`
+
+	// Type of AST node
+	Type *NodeType `json:"type,omitempty"`
+}
+
+// DictItem defines model for DictItem.
+type DictItem struct {
+	Key *Expression `json:"key,omitempty"`
+
+	// Type of AST node
+	Type *NodeType   `json:"type,omitempty"`
+	Val  *Expression `json:"val,omitempty"`
+}
 
 // Document defines model for Document.
 type Document struct {
@@ -1684,6 +1721,138 @@ type GaugeViewPropertiesShape string
 // GaugeViewPropertiesType defines model for GaugeViewProperties.Type.
 type GaugeViewPropertiesType string
 
+// GeoCircleViewLayer defines model for GeoCircleViewLayer.
+type GeoCircleViewLayer struct {
+	// Embedded struct due to allOf(#/components/schemas/GeoViewLayerProperties)
+	GeoViewLayerProperties
+	// Embedded fields due to inline allOf schema
+
+	// The description of a particular axis for a visualization.
+	ColorDimension Axis `json:"colorDimension"`
+
+	// Circle color field
+	ColorField string `json:"colorField"`
+
+	// Colors define color encoding of data into a visualization
+	Colors []DashboardColor `json:"colors"`
+
+	// Interpolate circle color based on displayed value
+	InterpolateColors *bool `json:"interpolateColors,omitempty"`
+
+	// Maximum radius size in pixels
+	Radius *int `json:"radius,omitempty"`
+
+	// The description of a particular axis for a visualization.
+	RadiusDimension Axis `json:"radiusDimension"`
+
+	// Radius field
+	RadiusField string `json:"radiusField"`
+}
+
+// GeoHeatMapViewLayer defines model for GeoHeatMapViewLayer.
+type GeoHeatMapViewLayer struct {
+	// Embedded struct due to allOf(#/components/schemas/GeoViewLayerProperties)
+	GeoViewLayerProperties
+	// Embedded fields due to inline allOf schema
+
+	// Blur for heatmap points
+	Blur int `json:"blur"`
+
+	// Colors define color encoding of data into a visualization
+	Colors []DashboardColor `json:"colors"`
+
+	// The description of a particular axis for a visualization.
+	IntensityDimension Axis `json:"intensityDimension"`
+
+	// Intensity field
+	IntensityField string `json:"intensityField"`
+
+	// Radius size in pixels
+	Radius int `json:"radius"`
+}
+
+// GeoPointMapViewLayer defines model for GeoPointMapViewLayer.
+type GeoPointMapViewLayer struct {
+	// Embedded struct due to allOf(#/components/schemas/GeoViewLayerProperties)
+	GeoViewLayerProperties
+	// Embedded fields due to inline allOf schema
+
+	// The description of a particular axis for a visualization.
+	ColorDimension Axis `json:"colorDimension"`
+
+	// Marker color field
+	ColorField string `json:"colorField"`
+
+	// Colors define color encoding of data into a visualization
+	Colors []DashboardColor `json:"colors"`
+
+	// Cluster close markers together
+	IsClustered *bool `json:"isClustered,omitempty"`
+}
+
+// GeoTrackMapViewLayer defines model for GeoTrackMapViewLayer.
+type GeoTrackMapViewLayer struct {
+	// Embedded struct due to allOf(#/components/schemas/GeoViewLayerProperties)
+	GeoViewLayerProperties
+	// Embedded fields due to inline allOf schema
+}
+
+// GeoViewLayer defines model for GeoViewLayer.
+type GeoViewLayer interface{}
+
+// GeoViewLayerProperties defines model for GeoViewLayerProperties.
+type GeoViewLayerProperties struct {
+	Type GeoViewLayerPropertiesType `json:"type"`
+}
+
+// GeoViewLayerPropertiesType defines model for GeoViewLayerProperties.Type.
+type GeoViewLayerPropertiesType string
+
+// GeoViewProperties defines model for GeoViewProperties.
+type GeoViewProperties struct {
+
+	// If true, map zoom and pan controls are enabled on the dashboard view
+	AllowPanAndZoom bool `json:"allowPanAndZoom"`
+
+	// Coordinates of the center of the map
+	Center struct {
+
+		// Latitude of the center of the map
+		Lat float64 `json:"lat"`
+
+		// Longitude of the center of the map
+		Lon float64 `json:"lon"`
+	} `json:"center"`
+
+	// Colors define color encoding of data into a visualization
+	Colors *[]DashboardColor `json:"colors,omitempty"`
+
+	// If true, search results get automatically regroupped so that lon,lat and value are treated as columns
+	DetectCoordinateFields bool `json:"detectCoordinateFields"`
+
+	// List of individual layers shown in the map
+	Layers []GeoViewLayer `json:"layers"`
+
+	// Define map type - regular, satellite etc.
+	MapStyle *string                `json:"mapStyle,omitempty"`
+	Note     string                 `json:"note"`
+	Queries  []DashboardQuery       `json:"queries"`
+	Shape    GeoViewPropertiesShape `json:"shape"`
+
+	// If true, will display note when empty
+	ShowNoteWhenEmpty bool                  `json:"showNoteWhenEmpty"`
+	Type              GeoViewPropertiesType `json:"type"`
+
+	// Zoom level used for initial display of the map
+	Zoom float64 `json:"zoom"`
+}
+
+// GeoViewPropertiesShape defines model for GeoViewProperties.Shape.
+type GeoViewPropertiesShape string
+
+// GeoViewPropertiesType defines model for GeoViewProperties.Type.
+type GeoViewPropertiesType string
+
 // GreaterThreshold defines model for GreaterThreshold.
 type GreaterThreshold struct {
 	// Embedded struct due to allOf(#/components/schemas/ThresholdBase)
@@ -1760,6 +1929,9 @@ type HeatmapViewProperties struct {
 
 	// Colors define color encoding of data into a visualization
 	Colors                     []string                   `json:"colors"`
+	GenerateXAxisTicks         *[]string                  `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks         *[]string                  `json:"generateYAxisTicks,omitempty"`
+	LegendColorizeRows         *bool                      `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                   `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                       `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                     `json:"note"`
@@ -1775,11 +1947,17 @@ type HeatmapViewProperties struct {
 	XDomain           []float32                 `json:"xDomain"`
 	XPrefix           string                    `json:"xPrefix"`
 	XSuffix           string                    `json:"xSuffix"`
+	XTickStart        *float32                  `json:"xTickStart,omitempty"`
+	XTickStep         *float32                  `json:"xTickStep,omitempty"`
+	XTotalTicks       *int                      `json:"xTotalTicks,omitempty"`
 	YAxisLabel        string                    `json:"yAxisLabel"`
 	YColumn           string                    `json:"yColumn"`
 	YDomain           []float32                 `json:"yDomain"`
 	YPrefix           string                    `json:"yPrefix"`
 	YSuffix           string                    `json:"ySuffix"`
+	YTickStart        *float32                  `json:"yTickStart,omitempty"`
+	YTickStep         *float32                  `json:"yTickStep,omitempty"`
+	YTotalTicks       *int                      `json:"yTotalTicks,omitempty"`
 }
 
 // HeatmapViewPropertiesShape defines model for HeatmapViewProperties.Shape.
@@ -1795,6 +1973,7 @@ type HistogramViewProperties struct {
 	// Colors define color encoding of data into a visualization
 	Colors                     []DashboardColor                `json:"colors"`
 	FillColumns                []string                        `json:"fillColumns"`
+	LegendColorizeRows         *bool                           `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                        `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                            `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                          `json:"note"`
@@ -1987,11 +2166,14 @@ type LinePlusSingleStatProperties struct {
 	Colors []DashboardColor `json:"colors"`
 
 	// Indicates whether decimal places should be enforced, and how many digits it should show.
-	DecimalPlaces  DecimalPlaces                               `json:"decimalPlaces"`
-	HoverDimension *LinePlusSingleStatPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	DecimalPlaces      DecimalPlaces                               `json:"decimalPlaces"`
+	GenerateXAxisTicks *[]string                                   `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks *[]string                                   `json:"generateYAxisTicks,omitempty"`
+	HoverDimension     *LinePlusSingleStatPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
 	Legend                     Legend                               `json:"legend"`
+	LegendColorizeRows         *bool                                `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                             `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                                 `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                               `json:"note"`
@@ -2007,7 +2189,13 @@ type LinePlusSingleStatProperties struct {
 	TimeFormat        *string                          `json:"timeFormat,omitempty"`
 	Type              LinePlusSingleStatPropertiesType `json:"type"`
 	XColumn           *string                          `json:"xColumn,omitempty"`
+	XTickStart        *float32                         `json:"xTickStart,omitempty"`
+	XTickStep         *float32                         `json:"xTickStep,omitempty"`
+	XTotalTicks       *int                             `json:"xTotalTicks,omitempty"`
 	YColumn           *string                          `json:"yColumn,omitempty"`
+	YTickStart        *float32                         `json:"yTickStart,omitempty"`
+	YTickStep         *float32                         `json:"yTickStep,omitempty"`
+	YTotalTicks       *int                             `json:"yTotalTicks,omitempty"`
 }
 
 // LinePlusSingleStatPropertiesHoverDimension defines model for LinePlusSingleStatProperties.HoverDimension.
@@ -2152,29 +2340,40 @@ type MemberExpression struct {
 type MosaicViewProperties struct {
 
 	// Colors define color encoding of data into a visualization
-	Colors                     []string                  `json:"colors"`
-	FillColumns                []string                  `json:"fillColumns"`
-	LegendOpacity              *float32                  `json:"legendOpacity,omitempty"`
-	LegendOrientationThreshold *int                      `json:"legendOrientationThreshold,omitempty"`
-	Note                       string                    `json:"note"`
-	Queries                    []DashboardQuery          `json:"queries"`
-	Shape                      MosaicViewPropertiesShape `json:"shape"`
+	Colors                     []string                            `json:"colors"`
+	FillColumns                []string                            `json:"fillColumns"`
+	GenerateXAxisTicks         *[]string                           `json:"generateXAxisTicks,omitempty"`
+	HoverDimension             *MosaicViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	LegendColorizeRows         *bool                               `json:"legendColorizeRows,omitempty"`
+	LegendOpacity              *float32                            `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                                `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                              `json:"note"`
+	Queries                    []DashboardQuery                    `json:"queries"`
+	Shape                      MosaicViewPropertiesShape           `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool                     `json:"showNoteWhenEmpty"`
-	TimeFormat        *string                  `json:"timeFormat,omitempty"`
-	Type              MosaicViewPropertiesType `json:"type"`
-	XAxisLabel        string                   `json:"xAxisLabel"`
-	XColumn           string                   `json:"xColumn"`
-	XDomain           []float32                `json:"xDomain"`
-	XPrefix           string                   `json:"xPrefix"`
-	XSuffix           string                   `json:"xSuffix"`
-	YAxisLabel        string                   `json:"yAxisLabel"`
-	YDomain           []float32                `json:"yDomain"`
-	YPrefix           string                   `json:"yPrefix"`
-	YSeriesColumns    []string                 `json:"ySeriesColumns"`
-	YSuffix           string                   `json:"ySuffix"`
+	ShowNoteWhenEmpty     bool                     `json:"showNoteWhenEmpty"`
+	TimeFormat            *string                  `json:"timeFormat,omitempty"`
+	Type                  MosaicViewPropertiesType `json:"type"`
+	XAxisLabel            string                   `json:"xAxisLabel"`
+	XColumn               string                   `json:"xColumn"`
+	XDomain               []float32                `json:"xDomain"`
+	XPrefix               string                   `json:"xPrefix"`
+	XSuffix               string                   `json:"xSuffix"`
+	XTickStart            *float32                 `json:"xTickStart,omitempty"`
+	XTickStep             *float32                 `json:"xTickStep,omitempty"`
+	XTotalTicks           *int                     `json:"xTotalTicks,omitempty"`
+	YAxisLabel            string                   `json:"yAxisLabel"`
+	YDomain               []float32                `json:"yDomain"`
+	YLabelColumnSeparator *string                  `json:"yLabelColumnSeparator,omitempty"`
+	YLabelColumns         *[]string                `json:"yLabelColumns,omitempty"`
+	YPrefix               string                   `json:"yPrefix"`
+	YSeriesColumns        []string                 `json:"ySeriesColumns"`
+	YSuffix               string                   `json:"ySuffix"`
 }
+
+// MosaicViewPropertiesHoverDimension defines model for MosaicViewProperties.HoverDimension.
+type MosaicViewPropertiesHoverDimension string
 
 // MosaicViewPropertiesShape defines model for MosaicViewProperties.Shape.
 type MosaicViewPropertiesShape string
@@ -2355,11 +2554,14 @@ type ObjectExpression struct {
 
 // OnboardingRequest defines model for OnboardingRequest.
 type OnboardingRequest struct {
-	Bucket             string  `json:"bucket"`
-	Org                string  `json:"org"`
-	Password           *string `json:"password,omitempty"`
-	RetentionPeriodHrs *int    `json:"retentionPeriodHrs,omitempty"`
-	Username           string  `json:"username"`
+	Bucket   string  `json:"bucket"`
+	Org      string  `json:"org"`
+	Password *string `json:"password,omitempty"`
+
+	// Retention period *in nanoseconds* for the new bucket. This key's name has been misleading since OSS 2.0 GA, please transition to use `retentionPeriodSeconds`
+	RetentionPeriodHrs     *int   `json:"retentionPeriodHrs,omitempty"`
+	RetentionPeriodSeconds *int   `json:"retentionPeriodSeconds,omitempty"`
+	Username               string `json:"username"`
 }
 
 // OnboardingResponse defines model for OnboardingResponse.
@@ -2701,9 +2903,12 @@ type ResourceOwners struct {
 // RetentionRule defines model for RetentionRule.
 type RetentionRule struct {
 
-	// Duration in seconds for how long data will be kept in the database.
-	EverySeconds int               `json:"everySeconds"`
-	Type         RetentionRuleType `json:"type"`
+	// Duration in seconds for how long data will be kept in the database. 0 means infinite.
+	EverySeconds int `json:"everySeconds"`
+
+	// Shard duration measured in seconds.
+	ShardGroupDurationSeconds *int64            `json:"shardGroupDurationSeconds,omitempty"`
+	Type                      RetentionRuleType `json:"type"`
 }
 
 // RetentionRuleType defines model for RetentionRule.Type.
@@ -2828,6 +3033,9 @@ type ScatterViewProperties struct {
 	// Colors define color encoding of data into a visualization
 	Colors                     []string                   `json:"colors"`
 	FillColumns                []string                   `json:"fillColumns"`
+	GenerateXAxisTicks         *[]string                  `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks         *[]string                  `json:"generateYAxisTicks,omitempty"`
+	LegendColorizeRows         *bool                      `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                   `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                       `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                     `json:"note"`
@@ -2844,11 +3052,17 @@ type ScatterViewProperties struct {
 	XDomain           []float32                 `json:"xDomain"`
 	XPrefix           string                    `json:"xPrefix"`
 	XSuffix           string                    `json:"xSuffix"`
+	XTickStart        *float32                  `json:"xTickStart,omitempty"`
+	XTickStep         *float32                  `json:"xTickStep,omitempty"`
+	XTotalTicks       *int                      `json:"xTotalTicks,omitempty"`
 	YAxisLabel        string                    `json:"yAxisLabel"`
 	YColumn           string                    `json:"yColumn"`
 	YDomain           []float32                 `json:"yDomain"`
 	YPrefix           string                    `json:"yPrefix"`
 	YSuffix           string                    `json:"ySuffix"`
+	YTickStart        *float32                  `json:"yTickStart,omitempty"`
+	YTickStep         *float32                  `json:"yTickStep,omitempty"`
+	YTotalTicks       *int                      `json:"yTotalTicks,omitempty"`
 }
 
 // ScatterViewPropertiesShape defines model for ScatterViewProperties.Shape.
@@ -2859,6 +3073,9 @@ type ScatterViewPropertiesType string
 
 // ScraperTargetRequest defines model for ScraperTargetRequest.
 type ScraperTargetRequest struct {
+
+	// Skip TLS verification on endpoint.
+	AllowInsecure *bool `json:"allowInsecure,omitempty"`
 
 	// The ID of the bucket to write to.
 	BucketID *string `json:"bucketID,omitempty"`
@@ -2946,13 +3163,11 @@ type SingleStatViewProperties struct {
 	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
 
 	// Legend define encoding of data into a view's legend
-	Legend                     Legend                        `json:"legend"`
-	LegendOpacity              *float32                      `json:"legendOpacity,omitempty"`
-	LegendOrientationThreshold *int                          `json:"legendOrientationThreshold,omitempty"`
-	Note                       string                        `json:"note"`
-	Prefix                     string                        `json:"prefix"`
-	Queries                    []DashboardQuery              `json:"queries"`
-	Shape                      SingleStatViewPropertiesShape `json:"shape"`
+	Legend  Legend                        `json:"legend"`
+	Note    string                        `json:"note"`
+	Prefix  string                        `json:"prefix"`
+	Queries []DashboardQuery              `json:"queries"`
+	Shape   SingleStatViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                         `json:"showNoteWhenEmpty"`
@@ -3427,8 +3642,8 @@ type TemplateEnvReferences []struct {
 	Value *interface{} `json:"value"`
 }
 
-// TemplateExport defines model for TemplateExport.
-type TemplateExport struct {
+// TemplateExportByID defines model for TemplateExportByID.
+type TemplateExportByID struct {
 	OrgIDs *[]struct {
 		OrgID           *string `json:"orgID,omitempty"`
 		ResourceFilters *struct {
@@ -3439,7 +3654,25 @@ type TemplateExport struct {
 	Resources *struct {
 		Id   string       `json:"id"`
 		Kind TemplateKind `json:"kind"`
-		Name *string      `json:"name,omitempty"`
+
+		// if defined with id, name is used for resource exported by id. if defined independently, resources strictly matching name are exported
+		Name *string `json:"name,omitempty"`
+	} `json:"resources,omitempty"`
+	StackID *string `json:"stackID,omitempty"`
+}
+
+// TemplateExportByName defines model for TemplateExportByName.
+type TemplateExportByName struct {
+	OrgIDs *[]struct {
+		OrgID           *string `json:"orgID,omitempty"`
+		ResourceFilters *struct {
+			ByLabel        *[]string       `json:"byLabel,omitempty"`
+			ByResourceKind *[]TemplateKind `json:"byResourceKind,omitempty"`
+		} `json:"resourceFilters,omitempty"`
+	} `json:"orgIDs,omitempty"`
+	Resources *struct {
+		Kind TemplateKind `json:"kind"`
+		Name string       `json:"name"`
 	} `json:"resources,omitempty"`
 	StackID *string `json:"stackID,omitempty"`
 }
@@ -3913,12 +4146,15 @@ type XYViewProperties struct {
 	Axes Axes `json:"axes"`
 
 	// Colors define color encoding of data into a visualization
-	Colors         []DashboardColor                `json:"colors"`
-	Geom           XYGeom                          `json:"geom"`
-	HoverDimension *XYViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	Colors             []DashboardColor                `json:"colors"`
+	GenerateXAxisTicks *[]string                       `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks *[]string                       `json:"generateYAxisTicks,omitempty"`
+	Geom               XYGeom                          `json:"geom"`
+	HoverDimension     *XYViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 
 	// Legend define encoding of data into a view's legend
 	Legend                     Legend                   `json:"legend"`
+	LegendColorizeRows         *bool                    `json:"legendColorizeRows,omitempty"`
 	LegendOpacity              *float32                 `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                     `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                   `json:"note"`
@@ -3932,7 +4168,13 @@ type XYViewProperties struct {
 	TimeFormat        *string              `json:"timeFormat,omitempty"`
 	Type              XYViewPropertiesType `json:"type"`
 	XColumn           *string              `json:"xColumn,omitempty"`
+	XTickStart        *float32             `json:"xTickStart,omitempty"`
+	XTickStep         *float32             `json:"xTickStep,omitempty"`
+	XTotalTicks       *int                 `json:"xTotalTicks,omitempty"`
 	YColumn           *string              `json:"yColumn,omitempty"`
+	YTickStart        *float32             `json:"yTickStart,omitempty"`
+	YTickStep         *float32             `json:"yTickStep,omitempty"`
+	YTotalTicks       *int                 `json:"yTotalTicks,omitempty"`
 }
 
 // XYViewPropertiesHoverDimension defines model for XYViewProperties.HoverDimension.
@@ -5624,7 +5866,7 @@ type DeleteTelegrafsIDOwnersIDParams struct {
 type ApplyTemplateJSONBody TemplateApply
 
 // ExportTemplateJSONBody defines parameters for ExportTemplate.
-type ExportTemplateJSONBody TemplateExport
+type ExportTemplateJSONBody interface{}
 
 // GetUsersParams defines parameters for GetUsers.
 type GetUsersParams struct {

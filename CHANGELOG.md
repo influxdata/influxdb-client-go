@@ -1,3 +1,9 @@
+## 2.3.0 [in progress]
+### Features
+[#241](https://github.com/influxdata/influxdb-client-go/pull/241) Synced with InfluxDB 2.0.5 swagger:
+  - Setup (onboarding) now sends correctly retentionDuration if specified  
+  - `RetentionRule` used in `Bucket` now contains `ShardGroupDurationSeconds` to specify the shard group duration.
+
 ## 2.2.3 [2021-04-01]
 ### Bug fixes
 1. [#236](https://github.com/influxdata/influxdb-client-go/pull/236) Setting MaxRetries to zero value disables retry strategy.

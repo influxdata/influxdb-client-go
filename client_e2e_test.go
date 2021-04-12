@@ -44,13 +44,17 @@ func init() {
 
 func TestSetup(t *testing.T) {
 	client := influxdb2.NewClientWithOptions(onboardingURL, "", influxdb2.DefaultOptions().SetLogLevel(2))
-	response, err := client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
+	response, err := client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 24)
 	if err != nil {
 		t.Error(err)
 	}
 	require.NotNil(t, response)
 	require.NotNil(t, response.Auth)
 	require.NotNil(t, response.Auth.Token)
+	require.NotNil(t, response.Bucket)
+	require.NotNil(t, response.Bucket.RetentionRules)
+	require.Len(t, response.Bucket.RetentionRules, 1)
+	assert.Equal(t, 24*3600, response.Bucket.RetentionRules[0].EverySeconds)
 
 	_, err = client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
 	require.NotNil(t, err)

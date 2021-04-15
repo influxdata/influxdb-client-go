@@ -379,7 +379,7 @@ func main() {
 }    
 ```
 ### Concurrency
-InfluxDB Go Client can be used in a concurrent environment. All its functions are thread safe.
+InfluxDB Go Client can be used in a concurrent environment. All its functions are thread-safe.
 
 The best practise is to use a single `Client` instance per server URL. This ensures optimized resources usage, 
 most importantly reusing HTTP connections. 
@@ -427,44 +427,43 @@ import (
 
 func main() {
     // Create client
-	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
     // Ensure closing the client
     defer client.Close()
 
-	// Get write client
+    // Get write client
     writeApi := client.WriteAPI("my-org", "my-bucket")
 
     // Create channel for points feeding
-	pointsCh := make(chan *write.Point, 200)
+    pointsCh := make(chan *write.Point, 200)
 
-	threads := 5
+    threads := 5
 
-	var wg sync.WaitGroup
-	go func(points int) {
-		for i := 0; i < points; i++ {
-			p := influxdb2.NewPoint("meas",
-				map[string]string{"tag": "tagvalue"},
-				map[string]interface{}{"val1": rand.Int63n(1000), "val2": rand.Float64()*100.0 - 50.0},
-				time.Now())
-			pointsCh <- p
-		}
-		close(pointsCh)
-	}(1000000)
+    var wg sync.WaitGroup
+    go func(points int) {
+        for i := 0; i < points; i++ {
+            p := influxdb2.NewPoint("meas",
+                map[string]string{"tag": "tagvalue"},
+                map[string]interface{}{"val1": rand.Int63n(1000), "val2": rand.Float64()*100.0 - 50.0},
+                time.Now())
+            pointsCh <- p
+        }
+        close(pointsCh)
+    }(1000000)
 
     // Launch write routines
-	for t := 0; t < threads; t++ {
-		wg.Add(1)
-		go func() {
-			for p := range pointsCh {
-				writeApi.WritePoint(p)
-			}
-			wg.Done()
-		}()
-	}
+    for t := 0; t < threads; t++ {
+        wg.Add(1)
+        go func() {
+            for p := range pointsCh {
+                writeApi.WritePoint(p)
+            }
+            wg.Done()
+        }()
+    }
     // Wait for writes complete
-	wg.Wait()
+    wg.Wait()
 }
-```  
 
 ## InfluxDB 1.8 API compatibility
   

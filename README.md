@@ -16,6 +16,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - [Basic Example](#basic-example)
     - [Writes in Detail](#writes)
     - [Queries in Detail](#queries)
+    - [Concurrency](#concurrency)
 - [InfluxDB 1.8 API compatibility](#influxdb-18-api-compatibility)
 - [Contributing](#contributing)
 - [License](#license)
@@ -377,7 +378,92 @@ func main() {
     client.Close()
 }    
 ```
+### Concurrency
+InfluxDB Go Client can be used in a concurrent environment. All its functions are thread-safe.
 
+The best practise is to use a single `Client` instance per server URL. This ensures optimized resources usage, 
+most importantly reusing HTTP connections. 
+
+For efficient reuse of HTTP resources among multiple clients, create an HTTP client and use `Options.SetHTTPClient()` for setting it to all clients:
+```go
+    // Create HTTP client
+	httpClient := &http.Client{
+		Timeout: time.Second * time.Duration(60),
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout: 5 * time.Second,
+			}).DialContext,
+			TLSHandshakeTimeout: 5 * time.Second,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+			MaxIdleConns:        100,
+			MaxIdleConnsPerHost: 100,
+			IdleConnTimeout:     90 * time.Second,
+		},
+	}
+    // Client for server 1
+    client1 := influxdb2.NewClientWithOptions("https://server:8086", "my-token", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+    // Client for server 2
+    client2 := influxdb2.NewClientWithOptions("https://server:9999", "my-token2", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+   
+```
+
+Client ensures that there is a single instance of each server API sub-client for the specific area. E.g. a single `WriteAPI` instance for each org/bucket pair, 
+a single `QueryAPI` for each org.
+
+Such a single API sub-client instance can be used concurrently:
+```go
+package main
+
+import (
+	"math/rand"
+	"sync"
+	"time"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go"
+	"github.com/influxdata/influxdb-client-go/v2/api/write"
+)
+
+func main() {
+    // Create client
+    client := influxdb2.NewClient("http://localhost:8086", "my-token")
+    // Ensure closing the client
+    defer client.Close()
+
+    // Get write client
+    writeApi := client.WriteAPI("my-org", "my-bucket")
+
+    // Create channel for points feeding
+    pointsCh := make(chan *write.Point, 200)
+
+    threads := 5
+
+    var wg sync.WaitGroup
+    go func(points int) {
+        for i := 0; i < points; i++ {
+            p := influxdb2.NewPoint("meas",
+                map[string]string{"tag": "tagvalue"},
+                map[string]interface{}{"val1": rand.Int63n(1000), "val2": rand.Float64()*100.0 - 50.0},
+                time.Now())
+            pointsCh <- p
+        }
+        close(pointsCh)
+    }(1000000)
+
+    // Launch write routines
+    for t := 0; t < threads; t++ {
+        wg.Add(1)
+        go func() {
+            for p := range pointsCh {
+                writeApi.WritePoint(p)
+            }
+            wg.Done()
+        }()
+    }
+    // Wait for writes complete
+    wg.Wait()
+}
 
 ## InfluxDB 1.8 API compatibility
   

@@ -15,6 +15,10 @@ import (
 
 // WriteAPIBlocking offers blocking methods for writing time series data synchronously into an InfluxDB server.
 // It doesn't implicitly create batches of points. It is intended to use for writing less frequent data, such as a weather sensing, or if there is a need to have explicit control of failed batches.
+//
+// WriteAPIBlocking can be used concurrently.
+// When using multiple goroutines for writing, use a single WriteAPIBlocking instance in all goroutines.
+//
 // To add implicit batching, use a wrapper, such as:
 //	type writer struct {
 //		batch []*write.Point

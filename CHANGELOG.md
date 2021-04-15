@@ -1,6 +1,6 @@
 ## 2.3.0 [in progress]
 ### Features
-[#241](https://github.com/influxdata/influxdb-client-go/pull/241) Synced with InfluxDB 2.0.5 swagger:
+[#241](https://github.com/influxdata/influxdb-client-go/pull/241),[#248](https://github.com/influxdata/influxdb-client-go/pull/248) Synced with InfluxDB 2.0.5 swagger:
   - Setup (onboarding) now sends correctly retentionDuration if specified  
   - `RetentionRule` used in `Bucket` now contains `ShardGroupDurationSeconds` to specify the shard group duration.
 

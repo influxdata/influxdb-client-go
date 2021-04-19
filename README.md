@@ -464,6 +464,7 @@ func main() {
     // Wait for writes complete
     wg.Wait()
 }
+```
 
 ## InfluxDB 1.8 API compatibility
   
@@ -472,7 +473,7 @@ func main() {
   Client API usage differences summary:
  1. Use the form `username:password` for an **authentication token**. Example: `my-user:my-password`. Use an empty string (`""`) if the server doesn't require authentication.
  1. The organization parameter is not used. Use an empty string (`""`) where necessary.
- 1. Use the form `database/retention-policy` where a **bucket** is required. Skip retention policy if the default retention policy should be used. Examples: `telegraf/autogen`, `telegraf`.  
+ 1. Use the form `database/retention-policy` where a **bucket** is required. Skip retention policy if the default retention policy should be used. Examples: `telegraf/autogen`, `telegraf`.  
   
   The following forward compatible APIs are available:
   
@@ -537,6 +538,7 @@ func main() {
     client.Close()
 }
 ```
+
 ## Contributing
 
 If you would like to contribute code you can do through GitHub by forking the repository and sending a pull request into the `master` branch.

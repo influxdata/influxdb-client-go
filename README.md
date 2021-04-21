@@ -464,6 +464,7 @@ func main() {
     // Wait for writes complete
     wg.Wait()
 }
+```
 
 ## InfluxDB 1.8 API compatibility
   

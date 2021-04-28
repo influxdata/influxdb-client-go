@@ -464,6 +464,7 @@ func main() {
     // Wait for writes complete
     wg.Wait()
 }
+```
 
 ## InfluxDB 1.8 API compatibility
   
@@ -537,6 +538,7 @@ func main() {
     client.Close()
 }
 ```
+
 ## Contributing
 
 If you would like to contribute code you can do through GitHub by forking the repository and sending a pull request into the `master` branch.

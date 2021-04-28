@@ -5,9 +5,13 @@
   - `RetentionRule` used in `Bucket` now contains `ShardGroupDurationSeconds` to specify the shard group duration.
 
 ### Documentation
-[#242](https://github.com/influxdata/influxdb-client-go/pull/242) Documentation improvements:
+1. [#242](https://github.com/influxdata/influxdb-client-go/pull/242) Documentation improvements:
  - [Custom server API example](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#example-Client-CustomServerAPICall) now shows how to create DBRP mapping
- - Improved documentation about concurrency  
+ - Improved documentation about concurrency
+1. [#251](https://github.com/influxdata/influxdb-client-go/pull/251) Fixed Readme.md formatting
+ 
+### Bugfixes
+  
 
 ## 2.2.3 [2021-04-01]
 ### Bug fixes

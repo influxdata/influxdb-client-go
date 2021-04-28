@@ -49,7 +49,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, org)
 
 	name := "bucket-x"
-	b, err := bucketsAPI.CreateBucketWithName(ctx, org, name, domain.RetentionRule{EverySeconds: 3600 * 12}, domain.RetentionRule{EverySeconds: 3600 * 24})
+	b, err := bucketsAPI.CreateBucketWithName(ctx, org, name, domain.RetentionRule{EverySeconds: 3600 * 12})
 	require.Nil(t, err, err)
 	require.NotNil(t, b)
 	assert.Equal(t, name, b.Name)

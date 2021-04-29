@@ -46,7 +46,7 @@ jobs:
           command: ./scripts/influxdb-restart.sh
       - run:
           command: |
-            go get gotest.tools/gotestsum && gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/...' -tags e2e ./...
+            go get gotest.tools/gotestsum && gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/.../,./log/...' -tags e2e ./...
             bash <(curl -s https://codecov.io/bash)
             go tool cover -html=coverage.txt -o /tmp/artifacts/coverage.html
       - store_artifacts:

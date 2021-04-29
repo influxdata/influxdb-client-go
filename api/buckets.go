@@ -8,7 +8,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
-	"github.com/influxdata/influxdb-client-go/v2/internal/log"
 )
 
 // BucketsAPI provides methods for managing Buckets in a InfluxDB server.
@@ -94,7 +93,6 @@ func (b *bucketsAPI) getBuckets(ctx context.Context, params *domain.GetBucketsPa
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("getbuckets: ", string(response.Body))
 	if response.JSONDefault != nil {
 		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
 	}

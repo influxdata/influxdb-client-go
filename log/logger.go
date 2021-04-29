@@ -24,10 +24,6 @@ const (
 
 // Logger defines interface for logging
 type Logger interface {
-	// SetLogLevel sets allowed logging level.
-	SetLogLevel(logLevel uint)
-	// SetPrefix sets logging prefix.
-	SetPrefix(prefix string)
 	// Writes formatted debug message if debug logLevel is enabled.
 	Debugf(format string, v ...interface{})
 	// Writes debug message if debug is enabled.
@@ -44,6 +40,12 @@ type Logger interface {
 	Errorf(format string, v ...interface{})
 	// Writes error message
 	Error(msg string)
+	// SetLogLevel sets allowed logging level.
+	SetLogLevel(logLevel uint)
+	// LogLevel retrieves current logging level
+	LogLevel() uint
+	// SetPrefix sets logging prefix.
+	SetPrefix(prefix string)
 }
 
 // logger provides default implementation for Logger. It logs using Go log API
@@ -54,6 +56,10 @@ type logger struct {
 
 func (l *logger) SetLogLevel(logLevel uint) {
 	l.logLevel = logLevel
+}
+
+func (l *logger) LogLevel() uint {
+	return l.logLevel
 }
 
 func (l *logger) SetPrefix(prefix string) {

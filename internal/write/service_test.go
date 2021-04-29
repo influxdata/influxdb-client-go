@@ -61,37 +61,7 @@ func TestAddDefaultTags(t *testing.T) {
 	assert.Len(t, p.TagList(), 2)
 }
 
-func TestDefaultRetryDelay(t *testing.T) {
-	log.Log.SetLogLevel(log.DebugLevel)
-	hs := test.NewTestService(t, "http://localhost:8086")
-	opts := write.DefaultOptions()
-	ctx := context.Background()
-	srv := NewService("my-org", "my-bucket", hs, opts)
-	hs.SetReplyError(&http.Error{
-		StatusCode: 502,
-	})
-	b1 := NewBatch("", opts.RetryInterval())
-	err := srv.HandleWrite(ctx, b1)
-	assert.NotNil(t, err)
-	assert.Equal(t, uint(5000), b1.retryDelay)
-	assert.Equal(t, 1, srv.retryQueue.list.Len())
-	//wait retry delay + little more
-	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
-	b2 := NewBatch("", opts.RetryInterval())
-	err = srv.HandleWrite(ctx, b2)
-	assert.NotNil(t, err)
-	assert.Equal(t, uint(25000), b1.retryDelay)
-	assert.Equal(t, 2, srv.retryQueue.list.Len())
-
-	<-time.After(time.Millisecond*time.Duration(b1.retryDelay) + time.Microsecond*5)
-	b3 := NewBatch("", opts.RetryInterval())
-	err = srv.HandleWrite(ctx, b3)
-	assert.NotNil(t, err)
-	assert.Equal(t, uint(125000), b1.retryDelay)
-	assert.Equal(t, 3, srv.retryQueue.list.Len())
-}
-
-func TestCustomRetryDelayWithFLush(t *testing.T) {
+func TestRetryStrategy(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:8086")
 	opts := write.DefaultOptions().SetRetryInterval(1)
@@ -299,7 +269,7 @@ func TestWriteContextCancel(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
-		<-time.After(time.Second)
+		<-time.After(10 * time.Millisecond)
 		err = srv.HandleWrite(ctx, NewBatch(strings.Join(lines, "\n"), opts.RetryInterval()))
 		wg.Done()
 	}()

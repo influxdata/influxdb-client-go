@@ -20,6 +20,7 @@ import (
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
 	"github.com/influxdata/influxdb-client-go/v2/internal/gzip"
 	"github.com/influxdata/influxdb-client-go/v2/internal/log"
+	ilog "github.com/influxdata/influxdb-client-go/v2/log"
 	lp "github.com/influxdata/line-protocol"
 )
 
@@ -149,7 +150,10 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 	var body io.Reader
 	var err error
 	body = strings.NewReader(batch.batch)
-	log.Debugf("Writing batch: %s", batch.batch)
+
+	if log.LogLevel() >= ilog.DebugLevel {
+		log.Debugf("Writing batch: %s", batch.batch)
+	}
 	if w.writeOptions.UseGZip() {
 		body, err = gzip.CompressWithGzip(body)
 		if err != nil {
@@ -164,9 +168,6 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
 	}, func(r *http.Response) error {
-		// discard body so connection can be reused
-		// _, _ = io.Copy(ioutil.Discard, r.Body)
-		// _ = r.Body.Close()
 		return nil
 	})
 	return perror

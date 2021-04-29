@@ -151,19 +151,22 @@ func (r *FluxRecord) Table() int {
 	return r.table
 }
 
-// Start returns the inclusive lower time bound of all records in the current table
+// Start returns the inclusive lower time bound of all records in the current table.
+// Returns empty time.Time if there is no column "_start".
 func (r *FluxRecord) Start() time.Time {
-	return r.ValueByKey("_start").(time.Time)
+	return timeValue(r.values, "_start")
 }
 
-// Stop returns the exclusive upper time bound of all records in the current table
+// Stop returns the exclusive upper time bound of all records in the current table.
+// Returns empty time.Time if there is no column "_stop".
 func (r *FluxRecord) Stop() time.Time {
-	return r.ValueByKey("_stop").(time.Time)
+	return timeValue(r.values, "_stop")
 }
 
-// Time returns the time of the record
+// Time returns the time of the record.
+// Returns empty time.Time if there is no column "_time".
 func (r *FluxRecord) Time() time.Time {
-	return r.ValueByKey("_time").(time.Time)
+	return timeValue(r.values, "_time")
 }
 
 // Value returns the default _value column value or nil if not present
@@ -171,14 +174,16 @@ func (r *FluxRecord) Value() interface{} {
 	return r.ValueByKey("_value")
 }
 
-// Field returns the field name
+// Field returns the field name.
+// Returns empty string if there is no column "_field".
 func (r *FluxRecord) Field() string {
-	return r.ValueByKey("_field").(string)
+	return stringValue(r.values, "_field")
 }
 
 // Measurement returns the measurement name of the record
+// Returns empty string if there is no column "_measurement".
 func (r *FluxRecord) Measurement() string {
-	return r.ValueByKey("_measurement").(string)
+	return stringValue(r.values, "_measurement")
 }
 
 // Values returns map of the values where key is the column name
@@ -203,4 +208,26 @@ func (r *FluxRecord) String() string {
 		i++
 	}
 	return buffer.String()
+}
+
+// timeValue returns time.Time value from values map according to the key
+// Empty time.Time value is returned if key is not found
+func timeValue(values map[string]interface{}, key string) time.Time {
+	if val, ok := values[key]; ok {
+		if t, ok := val.(time.Time); ok {
+			return t
+		}
+	}
+	return time.Time{}
+}
+
+// timeValue returns string value from values map according to the key
+// Empty string is returned if key is not found
+func stringValue(values map[string]interface{}, key string) string {
+	if val, ok := values[key]; ok {
+		if s, ok := val.(string); ok {
+			return s
+		}
+	}
+	return ""
 }

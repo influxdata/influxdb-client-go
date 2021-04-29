@@ -10,8 +10,8 @@
  - Improved documentation about concurrency
 1. [#251](https://github.com/influxdata/influxdb-client-go/pull/251) Fixed Readme.md formatting
  
-### Bugfixes
-  
+### Bug fixes
+1. [#252](https://github.com/influxdata/influxdb-client-go/pull/252) Fixed panic when getting not present standard Flux columns  
 
 ## 2.2.3 [2021-04-01]
 ### Bug fixes

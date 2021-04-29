@@ -27,6 +27,7 @@ import (
 	"github.com/influxdata/influxdb-client-go/v2/api/query"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/influxdata/influxdb-client-go/v2/internal/log"
+	ilog "github.com/influxdata/influxdb-client-go/v2/log"
 )
 
 const (
@@ -75,7 +76,9 @@ func (q *queryAPI) QueryRaw(ctx context.Context, query string, dialect *domain.D
 	if err != nil {
 		return "", err
 	}
-	log.Debugf("Query: %s", string(qrJSON))
+	if log.LogLevel() >= ilog.DebugLevel {
+		log.Debugf("Query: %s", qrJSON)
+	}
 	var body string
 	perror := q.httpService.DoPostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
 		req.Header.Set("Content-Type", "application/json")
@@ -125,7 +128,9 @@ func (q *queryAPI) Query(ctx context.Context, query string) (*QueryTableResult, 
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("Query: %s", string(qrJSON))
+	if log.LogLevel() >= ilog.DebugLevel {
+		log.Debugf("Query: %s", qrJSON)
+	}
 	perror := q.httpService.DoPostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept-Encoding", "gzip")

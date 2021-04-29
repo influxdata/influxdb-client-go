@@ -1,4 +1,7 @@
 ## 2.3.0 [in progress]
+### Breaking change
+[#253](https://github.com/influxdata/influxdb-client-go/pull/253) Interface 'Logger' extended with 'LogLevel() uint' getter.
+
 ### Features
 [#241](https://github.com/influxdata/influxdb-client-go/pull/241),[#248](https://github.com/influxdata/influxdb-client-go/pull/248) Synced with InfluxDB 2.0.5 swagger:
   - Setup (onboarding) now sends correctly retentionDuration if specified  
@@ -12,6 +15,7 @@
  
 ### Bug fixes
 1. [#252](https://github.com/influxdata/influxdb-client-go/pull/252) Fixed panic when getting not present standard Flux columns  
+1. [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Conditional debug logging of buffers 
 
 ## 2.2.3 [2021-04-01]
 ### Bug fixes

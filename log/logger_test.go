@@ -96,6 +96,10 @@ func TestCustomLogger(t *testing.T) {
 type testLogger struct {
 }
 
+func (l *testLogger) LogLevel() uint {
+	return 0
+}
+
 func (l *testLogger) SetLogLevel(_ uint) {
 }
 

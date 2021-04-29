@@ -53,3 +53,10 @@ func Error(msg string) {
 		ilog.Log.Error(msg)
 	}
 }
+
+func LogLevel() uint {
+	if ilog.Log != nil {
+		return ilog.Log.LogLevel()
+	}
+	return ilog.ErrorLevel
+}

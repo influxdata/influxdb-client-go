@@ -16,82 +16,96 @@ import (
 type Options struct {
 }
 
+// SetBatchSize to emulate fake options
 func (o *Options) SetBatchSize(_ uint) *Options {
 	return o
 }
 
-type fakeClient struct {
+// FakeClient emulates Client for allowing using client in api examples
+type FakeClient struct {
 }
 
-func NewClient(_ string, _ string) *fakeClient {
-	client := &fakeClient{}
+// NewClient returns new FakeClient
+func NewClient(_ string, _ string) *FakeClient {
+	client := &FakeClient{}
 	return client
 }
 
-func NewClientWithOptions(_ string, _ string, _ *Options) *fakeClient {
-	client := &fakeClient{}
-	return client
-}
-
-func (c *fakeClient) Options() *Options {
+// Options returns nil
+func (c *FakeClient) Options() *Options {
 	return nil
 }
 
-func (c *fakeClient) ServerURL() string {
+// ServerURL returns empty server URL
+func (c *FakeClient) ServerURL() string {
 	return ""
 }
 
-func (c *fakeClient) Ready(_ context.Context) (bool, error) {
+// Ready does nothing
+func (c *FakeClient) Ready(_ context.Context) (bool, error) {
 	return true, nil
 }
 
-func (c *fakeClient) Setup(_ context.Context, _, _, _, _ string, _ int) (*domain.OnboardingResponse, error) {
+// Setup does nothing
+func (c *FakeClient) Setup(_ context.Context, _, _, _, _ string, _ int) (*domain.OnboardingResponse, error) {
 	return nil, nil
 }
 
-func (c *fakeClient) Health(_ context.Context) (*domain.HealthCheck, error) {
+// Health does nothing
+func (c *FakeClient) Health(_ context.Context) (*domain.HealthCheck, error) {
 	return nil, nil
 }
 
-func (c *fakeClient) WriteAPI(_, _ string) api.WriteAPI {
+// WriteAPI does nothing
+func (c *FakeClient) WriteAPI(_, _ string) api.WriteAPI {
 	return nil
 }
 
-func (c *fakeClient) WriteAPIBlocking(_, _ string) api.WriteAPIBlocking {
+// WriteAPIBlocking does nothing
+func (c *FakeClient) WriteAPIBlocking(_, _ string) api.WriteAPIBlocking {
 	return nil
 }
 
-func (c *fakeClient) Close() {
+// Close does nothing
+func (c *FakeClient) Close() {
 }
 
-func (c *fakeClient) QueryAPI(_ string) api.QueryAPI {
+// QueryAPI returns nil
+func (c *FakeClient) QueryAPI(_ string) api.QueryAPI {
 	return nil
 }
 
-func (c *fakeClient) AuthorizationsAPI() api.AuthorizationsAPI {
+// AuthorizationsAPI returns nil
+func (c *FakeClient) AuthorizationsAPI() api.AuthorizationsAPI {
 	return nil
 }
 
-func (c *fakeClient) OrganizationsAPI() api.OrganizationsAPI {
+// OrganizationsAPI returns nil
+func (c *FakeClient) OrganizationsAPI() api.OrganizationsAPI {
 	return nil
 }
 
-func (c *fakeClient) UsersAPI() api.UsersAPI {
+// UsersAPI returns nil
+func (c *FakeClient) UsersAPI() api.UsersAPI {
 	return nil
 }
 
-func (c *fakeClient) DeleteAPI() api.DeleteAPI {
+// DeleteAPI returns nil
+func (c *FakeClient) DeleteAPI() api.DeleteAPI {
 	return nil
 }
 
-func (c *fakeClient) BucketsAPI() api.BucketsAPI {
+// BucketsAPI returns nil
+func (c *FakeClient) BucketsAPI() api.BucketsAPI {
 	return nil
 }
 
-func (c *fakeClient) LabelsAPI() api.LabelsAPI {
+// LabelsAPI returns nil
+func (c *FakeClient) LabelsAPI() api.LabelsAPI {
 	return nil
 }
 
-func (c *fakeClient) TasksAPI() api.TasksAPI {
+// TasksAPI returns nil
+func (c *FakeClient) TasksAPI() api.TasksAPI {
 	return nil
 }

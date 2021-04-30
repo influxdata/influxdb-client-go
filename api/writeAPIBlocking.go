@@ -66,8 +66,8 @@ type writeAPIBlocking struct {
 	writeOptions *write.Options
 }
 
-// NewWriteAPIBlocking creates new WriteAPIBlocking instance for org and bucket with underlying client
-func NewWriteAPIBlocking(org string, bucket string, service http2.Service, writeOptions *write.Options) *writeAPIBlocking {
+// NewWriteAPIBlocking creates new instance of blocking write client for writing data to bucket belonging to org
+func NewWriteAPIBlocking(org string, bucket string, service http2.Service, writeOptions *write.Options) WriteAPIBlocking {
 	return &writeAPIBlocking{service: iwrite.NewService(org, bucket, service, writeOptions), writeOptions: writeOptions}
 }
 

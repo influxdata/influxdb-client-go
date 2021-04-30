@@ -24,10 +24,12 @@ type DeleteAPI interface {
 	DeleteWithName(ctx context.Context, orgName, bucketName string, start, stop time.Time, predicate string) error
 }
 
+// deleteAPI implements DeleteAPI
 type deleteAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
+// NewDeleteAPI creates new instance of DeleteAPI
 func NewDeleteAPI(apiClient *domain.ClientWithResponses) DeleteAPI {
 	return &deleteAPI{
 		apiClient: apiClient,
@@ -40,16 +42,16 @@ func (d *deleteAPI) delete(ctx context.Context, params *domain.PostDeleteParams,
 		return err
 	}
 	if resp.JSON404 != nil {
-		return domain.DomainErrorToError(resp.JSON404, resp.StatusCode())
+		return domain.ErrorToHTTPError(resp.JSON404, resp.StatusCode())
 	}
 	if resp.JSON403 != nil {
-		return domain.DomainErrorToError(resp.JSON403, resp.StatusCode())
+		return domain.ErrorToHTTPError(resp.JSON403, resp.StatusCode())
 	}
 	if resp.JSON400 != nil {
-		return domain.DomainErrorToError(resp.JSON400, resp.StatusCode())
+		return domain.ErrorToHTTPError(resp.JSON400, resp.StatusCode())
 	}
 	if resp.JSONDefault != nil {
-		return domain.DomainErrorToError(resp.JSONDefault, resp.StatusCode())
+		return domain.ErrorToHTTPError(resp.JSONDefault, resp.StatusCode())
 	}
 	return nil
 }

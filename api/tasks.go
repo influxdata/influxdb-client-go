@@ -137,10 +137,12 @@ type TasksAPI interface {
 	RemoveLabelWithID(ctx context.Context, taskID, labelID string) error
 }
 
+// tasksAPI implements TasksAPI
 type tasksAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
+// NewTasksAPI creates new instance of TasksAPI
 func NewTasksAPI(apiClient *domain.ClientWithResponses) TasksAPI {
 	return &tasksAPI{
 		apiClient: apiClient,
@@ -179,7 +181,7 @@ func (t *tasksAPI) FindTasks(ctx context.Context, filter *TaskFilter) ([]domain.
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Tasks == nil {
 		return nil, errors.New("tasks not found")
@@ -198,7 +200,7 @@ func (t *tasksAPI) GetTaskByID(ctx context.Context, taskID string) (*domain.Task
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -210,7 +212,7 @@ func (t *tasksAPI) createTask(ctx context.Context, taskReq *domain.TaskCreateReq
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -260,7 +262,7 @@ func (t *tasksAPI) DeleteTaskWithID(ctx context.Context, taskID string) error {
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }
@@ -284,7 +286,7 @@ func (t *tasksAPI) UpdateTask(ctx context.Context, task *domain.Task) (*domain.T
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -300,7 +302,7 @@ func (t *tasksAPI) FindMembersWithID(ctx context.Context, taskID string) ([]doma
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Users == nil {
 		return nil, fmt.Errorf("members for task '%s' not found", taskID)
@@ -320,7 +322,7 @@ func (t *tasksAPI) AddMemberWithID(ctx context.Context, taskID, memberID string)
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -336,7 +338,7 @@ func (t *tasksAPI) RemoveMemberWithID(ctx context.Context, taskID, memberID stri
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }
@@ -352,7 +354,7 @@ func (t *tasksAPI) FindOwnersWithID(ctx context.Context, taskID string) ([]domai
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Users == nil {
 		return nil, fmt.Errorf("owners for task '%s' not found", taskID)
@@ -372,7 +374,7 @@ func (t *tasksAPI) AddOwnerWithID(ctx context.Context, taskID, memberID string) 
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -388,7 +390,7 @@ func (t *tasksAPI) RemoveOwnerWithID(ctx context.Context, taskID, memberID strin
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }
@@ -418,7 +420,7 @@ func (t *tasksAPI) FindRunsWithID(ctx context.Context, taskID string, filter *Ru
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return *response.JSON200.Runs, nil
 }
@@ -434,7 +436,7 @@ func (t *tasksAPI) GetRunByID(ctx context.Context, taskID, runID string) (*domai
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -450,7 +452,7 @@ func (t *tasksAPI) FindRunLogsWithID(ctx context.Context, taskID, runID string) 
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Events == nil {
 		return nil, fmt.Errorf("logs for task '%s' run '%s 'not found", taskID, runID)
@@ -469,7 +471,7 @@ func (t *tasksAPI) RunManuallyWithID(ctx context.Context, taskID string) (*domai
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -485,7 +487,7 @@ func (t *tasksAPI) RetryRunWithID(ctx context.Context, taskID, runID string) (*d
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -501,7 +503,7 @@ func (t *tasksAPI) CancelRunWithID(ctx context.Context, taskID, runID string) er
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }
@@ -518,7 +520,7 @@ func (t *tasksAPI) FindLogsWithID(ctx context.Context, taskID string) ([]domain.
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Events == nil {
 		return nil, fmt.Errorf("logs for task '%s' not found", taskID)
@@ -537,7 +539,7 @@ func (t *tasksAPI) FindLabelsWithID(ctx context.Context, taskID string) ([]domai
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Labels == nil {
 		return nil, fmt.Errorf("lables for task '%s' not found", taskID)
@@ -557,7 +559,7 @@ func (t *tasksAPI) AddLabelWithID(ctx context.Context, taskID, labelID string) (
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201.Label, nil
 }
@@ -573,7 +575,7 @@ func (t *tasksAPI) RemoveLabelWithID(ctx context.Context, taskID, memberID strin
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }

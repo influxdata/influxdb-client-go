@@ -24,6 +24,7 @@ import (
 	lp "github.com/influxdata/line-protocol"
 )
 
+// Batch holds information for sending points batch
 type Batch struct {
 	batch         string
 	retryDelay    uint
@@ -31,6 +32,7 @@ type Batch struct {
 	evicted       bool
 }
 
+// NewBatch creates new batch
 func NewBatch(data string, retryDelay uint) *Batch {
 	return &Batch{
 		batch:      data,
@@ -38,6 +40,7 @@ func NewBatch(data string, retryDelay uint) *Batch {
 	}
 }
 
+// Service is responsible for reliable writing of batches
 type Service struct {
 	org                  string
 	bucket               string
@@ -50,6 +53,7 @@ type Service struct {
 	retryExponentialBase uint
 }
 
+// NewService creates new write service
 func NewService(org string, bucket string, httpService http2.Service, options *write.Options) *Service {
 
 	retryBufferLimit := options.RetryBufferLimit() / options.BatchSize()
@@ -67,6 +71,7 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 	return &Service{org: org, bucket: bucket, httpService: httpService, url: writeURL, writeOptions: options, retryQueue: newQueue(int(retryBufferLimit)), retryExponentialBase: 5}
 }
 
+// HandleWrite handles writes batches and handles retrying
 func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 	log.Debug("Write proc: received write request")
 	batchToWrite := batch
@@ -133,12 +138,11 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 					log.Errorf("Write error: %s\n", perror.Error())
 				}
 				return perror
-			} else {
-				if retrying && !batchToWrite.evicted {
-					w.retryQueue.pop()
-				}
-				batchToWrite = nil
 			}
+			if retrying && !batchToWrite.evicted {
+				w.retryQueue.pop()
+			}
+			batchToWrite = nil
 		} else {
 			break
 		}
@@ -146,12 +150,13 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 	return nil
 }
 
+// WriteBatch performs actual writing via HTTP service
 func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 	var body io.Reader
 	var err error
 	body = strings.NewReader(batch.batch)
 
-	if log.LogLevel() >= ilog.DebugLevel {
+	if log.Level() >= ilog.DebugLevel {
 		log.Debugf("Writing batch: %s", batch.batch)
 	}
 	if w.writeOptions.UseGZip() {
@@ -173,6 +178,7 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 	return perror
 }
 
+// pointWithDefaultTags encapsulates Point with default tags
 type pointWithDefaultTags struct {
 	point       *write.Point
 	defaultTags map[string]string
@@ -193,6 +199,8 @@ func (p *pointWithDefaultTags) FieldList() []*lp.Field {
 	return p.point.FieldList()
 }
 
+// TagList returns tags from point along with default tags
+// If point of tag can override default tag
 func (p *pointWithDefaultTags) TagList() []*lp.Tag {
 	tags := make([]*lp.Tag, 0, len(p.point.TagList())+len(p.defaultTags))
 	tags = append(tags, p.point.TagList()...)
@@ -217,6 +225,7 @@ func existTag(tags []*lp.Tag, key string) bool {
 	return false
 }
 
+// EncodePoints creates line protocol string from points
 func (w *Service) EncodePoints(points ...*write.Point) (string, error) {
 	var buffer bytes.Buffer
 	e := lp.NewEncoder(&buffer)
@@ -232,6 +241,8 @@ func (w *Service) EncodePoints(points ...*write.Point) (string, error) {
 	return buffer.String(), nil
 }
 
+// pointToEncode determines whether default tags should be applied
+// and returns point with default tags instead of point
 func (w *Service) pointToEncode(point *write.Point) lp.Metric {
 	var m lp.Metric
 	if len(w.writeOptions.DefaultTags()) > 0 {
@@ -245,6 +256,7 @@ func (w *Service) pointToEncode(point *write.Point) lp.Metric {
 	return m
 }
 
+// WriteURL returns current write URL
 func (w *Service) WriteURL() string {
 	return w.url
 }

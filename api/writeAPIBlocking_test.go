@@ -21,13 +21,14 @@ import (
 
 func TestWritePoint(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
-	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	opts := write.DefaultOptions().SetBatchSize(5)
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, opts)
 	points := test.GenPoints(10)
 	err := writeAPI.WritePoint(context.Background(), points...)
 	require.Nil(t, err)
 	require.Len(t, service.Lines(), 10)
 	for i, p := range points {
-		line := write.PointToLineProtocol(p, writeAPI.writeOptions.Precision())
+		line := write.PointToLineProtocol(p, opts.Precision())
 		//cut off last \n char
 		line = line[:len(line)-1]
 		assert.Equal(t, service.Lines()[i], line)

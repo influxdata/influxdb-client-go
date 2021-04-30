@@ -40,10 +40,12 @@ type LabelsAPI interface {
 	DeleteLabel(ctx context.Context, label *domain.Label) error
 }
 
+// labelsAPI implements LabelsAPI
 type labelsAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
+// NewLabelsAPI creates new instance of LabelsAPI
 func NewLabelsAPI(apiClient *domain.ClientWithResponses) LabelsAPI {
 	return &labelsAPI{
 		apiClient: apiClient,
@@ -61,7 +63,7 @@ func (u *labelsAPI) getLabels(ctx context.Context, params *domain.GetLabelsParam
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return (*[]domain.Label)(response.JSON200.Labels), nil
 }
@@ -82,7 +84,7 @@ func (u *labelsAPI) FindLabelByID(ctx context.Context, labelID string) (*domain.
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200.Label, nil
 }
@@ -121,7 +123,7 @@ func (u *labelsAPI) CreateLabel(ctx context.Context, label *domain.LabelCreateRe
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201.Label, nil
 }
@@ -141,10 +143,10 @@ func (u *labelsAPI) UpdateLabel(ctx context.Context, label *domain.Label) (*doma
 		return nil, err
 	}
 	if response.JSON404 != nil {
-		return nil, domain.DomainErrorToError(response.JSON404, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSON404, response.StatusCode())
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200.Label, nil
 }
@@ -160,10 +162,10 @@ func (u *labelsAPI) DeleteLabelWithID(ctx context.Context, labelID string) error
 		return err
 	}
 	if response.JSON404 != nil {
-		return domain.DomainErrorToError(response.JSON404, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSON404, response.StatusCode())
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }

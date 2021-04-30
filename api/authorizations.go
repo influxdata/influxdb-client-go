@@ -36,10 +36,12 @@ type AuthorizationsAPI interface {
 	DeleteAuthorizationWithID(ctx context.Context, authID string) error
 }
 
+// authorizationsAPI implements AuthorizationsAPI
 type authorizationsAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
+// NewAuthorizationsAPI creates new instance of AuthorizationsAPI
 func NewAuthorizationsAPI(apiClient *domain.ClientWithResponses) AuthorizationsAPI {
 	return &authorizationsAPI{
 		apiClient: apiClient,
@@ -77,7 +79,7 @@ func (a *authorizationsAPI) listAuthorizations(ctx context.Context, query *domai
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200.Authorizations, nil
 }
@@ -89,10 +91,10 @@ func (a *authorizationsAPI) CreateAuthorization(ctx context.Context, authorizati
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON400 != nil {
-		return nil, domain.DomainErrorToError(response.JSON400, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSON400, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -115,7 +117,7 @@ func (a *authorizationsAPI) UpdateAuthorizationStatusWithID(ctx context.Context,
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -135,7 +137,7 @@ func (a *authorizationsAPI) DeleteAuthorizationWithID(ctx context.Context, authI
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }

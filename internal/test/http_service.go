@@ -20,6 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// HTTPService is http.Service implementation for tests
 type HTTPService struct {
 	serverURL      string
 	authorization  string
@@ -31,30 +32,37 @@ type HTTPService struct {
 	lock           sync.Mutex
 }
 
+// WasGzip returns true of request was in GZip format
 func (t *HTTPService) WasGzip() bool {
 	return t.wasGzip
 }
 
+// SetWasGzip sets wasGzip flag
 func (t *HTTPService) SetWasGzip(wasGzip bool) {
 	t.wasGzip = wasGzip
 }
 
+// ServerURL returns testing URL
 func (t *HTTPService) ServerURL() string {
 	return t.serverURL
 }
 
+// ServerAPIURL returns testing URL
 func (t *HTTPService) ServerAPIURL() string {
 	return t.serverURL
 }
 
+// Authorization returns current authorization header value
 func (t *HTTPService) Authorization() string {
 	return t.authorization
 }
 
+// HTTPClient returns nil for this service
 func (t *HTTPService) HTTPClient() *http.Client {
 	return nil
 }
 
+// Close clears instance
 func (t *HTTPService) Close() {
 	t.lock.Lock()
 	if len(t.lines) > 0 {
@@ -66,32 +74,41 @@ func (t *HTTPService) Close() {
 	t.lock.Unlock()
 }
 
+// SetReplyError sets Error that will be returned as a response
 func (t *HTTPService) SetReplyError(replyError *http2.Error) {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	t.replyError = replyError
 }
 
+// ReplyError returns current reply error
 func (t *HTTPService) ReplyError() *http2.Error {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	return t.replyError
 }
 
+// SetAuthorization sets authorization string
 func (t *HTTPService) SetAuthorization(_ string) {
 
 }
+
+// GetRequest does nothing for this service
 func (t *HTTPService) GetRequest(_ context.Context, _ string, _ http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	return nil
 }
+
+// DoHTTPRequest does nothing for this service
 func (t *HTTPService) DoHTTPRequest(_ *http.Request, _ http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	return nil
 }
 
+// DoHTTPRequestWithResponse does nothing for this service
 func (t *HTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ http2.RequestCallback) (*http.Response, error) {
 	return nil, nil
 }
 
+// DoPostRequest reads http request, validates URL and stores data in the request
 func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reader, requestCallback http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
@@ -117,9 +134,8 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 
 	if err != nil {
 		return http2.NewError(err)
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func (t *HTTPService) decodeLines(body io.Reader) error {
@@ -135,12 +151,14 @@ func (t *HTTPService) decodeLines(body io.Reader) error {
 	return nil
 }
 
+// Lines returns decoded lines from request
 func (t *HTTPService) Lines() []string {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	return t.lines
 }
 
+// NewTestService creates new test HTTP service
 func NewTestService(t *testing.T, serverURL string) *HTTPService {
 	return &HTTPService{
 		t:         t,

@@ -1,4 +1,4 @@
-## 2.3.0 [in progress]
+## 2.3.0 [2021-04-30]
 ### Breaking change
 [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Interface 'Logger' extended with 'LogLevel() uint' getter.
 

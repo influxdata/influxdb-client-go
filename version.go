@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	// Version defines current version
 	Version = "2.2.3"
 )
 

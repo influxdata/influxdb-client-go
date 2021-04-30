@@ -62,10 +62,12 @@ type BucketsAPI interface {
 	RemoveOwnerWithID(ctx context.Context, bucketID, memberID string) error
 }
 
+// bucketsAPI implements BucketsAPI
 type bucketsAPI struct {
 	apiClient *domain.ClientWithResponses
 }
 
+// NewBucketsAPI creates new instance of BucketsAPI
 func NewBucketsAPI(apiClient *domain.ClientWithResponses) BucketsAPI {
 	return &bucketsAPI{
 		apiClient: apiClient,
@@ -94,7 +96,7 @@ func (b *bucketsAPI) getBuckets(ctx context.Context, params *domain.GetBucketsPa
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200.Buckets, nil
 }
@@ -106,13 +108,12 @@ func (b *bucketsAPI) FindBucketByName(ctx context.Context, bucketName string) (*
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON200.Buckets != nil && len(*response.JSON200.Buckets) > 0 {
 		return &(*response.JSON200.Buckets)[0], nil
-	} else {
-		return nil, fmt.Errorf("bucket '%s' not found", bucketName)
 	}
+	return nil, fmt.Errorf("bucket '%s' not found", bucketName)
 }
 
 func (b *bucketsAPI) FindBucketByID(ctx context.Context, bucketID string) (*domain.Bucket, error) {
@@ -122,7 +123,7 @@ func (b *bucketsAPI) FindBucketByID(ctx context.Context, bucketID string) (*doma
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -144,10 +145,10 @@ func (b *bucketsAPI) createBucket(ctx context.Context, bucketReq *domain.PostBuc
 		return nil, err
 	}
 	if response.JSON422 != nil {
-		return nil, domain.DomainErrorToError(response.JSON422, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSON422, response.StatusCode())
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -182,10 +183,10 @@ func (b *bucketsAPI) DeleteBucketWithID(ctx context.Context, bucketID string) er
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON404 != nil {
-		return domain.DomainErrorToError(response.JSON404, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSON404, response.StatusCode())
 	}
 	return nil
 }
@@ -197,7 +198,7 @@ func (b *bucketsAPI) UpdateBucket(ctx context.Context, bucket *domain.Bucket) (*
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200, nil
 }
@@ -213,7 +214,7 @@ func (b *bucketsAPI) GetMembersWithID(ctx context.Context, bucketID string) (*[]
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200.Users, nil
 }
@@ -230,7 +231,7 @@ func (b *bucketsAPI) AddMemberWithID(ctx context.Context, bucketID, memberID str
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -246,7 +247,7 @@ func (b *bucketsAPI) RemoveMemberWithID(ctx context.Context, bucketID, memberID 
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }
@@ -262,7 +263,7 @@ func (b *bucketsAPI) GetOwnersWithID(ctx context.Context, bucketID string) (*[]d
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON200.Users, nil
 }
@@ -279,7 +280,7 @@ func (b *bucketsAPI) AddOwnerWithID(ctx context.Context, bucketID, memberID stri
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return response.JSON201, nil
 }
@@ -295,7 +296,7 @@ func (b *bucketsAPI) RemoveOwnerWithID(ctx context.Context, bucketID, memberID s
 		return err
 	}
 	if response.JSONDefault != nil {
-		return domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
 }

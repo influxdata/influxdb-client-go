@@ -143,7 +143,7 @@ func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
 		return false, err
 	}
 	if response.JSONDefault != nil {
-		return false, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return false, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return true, nil
 }
@@ -170,7 +170,7 @@ func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket 
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	c.httpService.SetAuthorization("Token " + *response.JSON201.Auth.Token)
 	return response.JSON201, nil
@@ -183,7 +183,7 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return nil, domain.DomainErrorToError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	if response.JSON503 != nil {
 		//unhealthy server

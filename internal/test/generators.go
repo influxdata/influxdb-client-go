@@ -8,6 +8,7 @@ import (
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
 )
 
+// GenPoints generates num points
 func GenPoints(num int) []*write.Point {
 	points := make([]*write.Point, num)
 	rand.Seed(321)
@@ -36,6 +37,7 @@ func GenPoints(num int) []*write.Point {
 	return points
 }
 
+// GenRecords generates num points
 func GenRecords(num int) []string {
 	lines := make([]string, num)
 	rand.Seed(321)

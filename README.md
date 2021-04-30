@@ -387,26 +387,25 @@ most importantly reusing HTTP connections.
 For efficient reuse of HTTP resources among multiple clients, create an HTTP client and use `Options.SetHTTPClient()` for setting it to all clients:
 ```go
     // Create HTTP client
-	httpClient := &http.Client{
-		Timeout: time.Second * time.Duration(60),
-		Transport: &http.Transport{
-			DialContext: (&net.Dialer{
-				Timeout: 5 * time.Second,
-			}).DialContext,
-			TLSHandshakeTimeout: 5 * time.Second,
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-			MaxIdleConns:        100,
-			MaxIdleConnsPerHost: 100,
-			IdleConnTimeout:     90 * time.Second,
-		},
-	}
+    httpClient := &http.Client{
+        Timeout: time.Second * time.Duration(60),
+        Transport: &http.Transport{
+            DialContext: (&net.Dialer{
+                Timeout: 5 * time.Second,
+            }).DialContext,
+            TLSHandshakeTimeout: 5 * time.Second,
+            TLSClientConfig: &tls.Config{
+                InsecureSkipVerify: true,
+            },
+            MaxIdleConns:        100,
+            MaxIdleConnsPerHost: 100,
+            IdleConnTimeout:     90 * time.Second,
+        },
+    }
     // Client for server 1
     client1 := influxdb2.NewClientWithOptions("https://server:8086", "my-token", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
     // Client for server 2
     client2 := influxdb2.NewClientWithOptions("https://server:9999", "my-token2", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
-   
 ```
 
 Client ensures that there is a single instance of each server API sub-client for the specific area. E.g. a single `WriteAPI` instance for each org/bucket pair, 

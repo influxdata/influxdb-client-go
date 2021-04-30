@@ -19,7 +19,7 @@ func TestLogging(t *testing.T) {
 	log.SetOutput(&sb)
 	dlog.Log.SetLogLevel(dlog.DebugLevel)
 	assert.Equal(t, dlog.DebugLevel, dlog.Log.LogLevel())
-	assert.Equal(t, dlog.DebugLevel, ilog.LogLevel())
+	assert.Equal(t, dlog.DebugLevel, ilog.Level())
 	//test default settings
 	ilog.Debug("Debug")
 	ilog.Debugf("Debugf %s %d", "message", 1)

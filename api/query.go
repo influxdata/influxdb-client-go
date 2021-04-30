@@ -50,6 +50,7 @@ type QueryAPI interface {
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
 }
 
+// NewQueryAPI returns new query client for querying buckets belonging to org
 func NewQueryAPI(org string, service http2.Service) QueryAPI {
 	return &queryAPI{
 		org:         org,
@@ -76,7 +77,7 @@ func (q *queryAPI) QueryRaw(ctx context.Context, query string, dialect *domain.D
 	if err != nil {
 		return "", err
 	}
-	if log.LogLevel() >= ilog.DebugLevel {
+	if log.Level() >= ilog.DebugLevel {
 		log.Debugf("Query: %s", qrJSON)
 	}
 	var body string
@@ -128,7 +129,7 @@ func (q *queryAPI) Query(ctx context.Context, query string) (*QueryTableResult, 
 	if err != nil {
 		return nil, err
 	}
-	if log.LogLevel() >= ilog.DebugLevel {
+	if log.Level() >= ilog.DebugLevel {
 		log.Debugf("Query: %s", qrJSON)
 	}
 	perror := q.httpService.DoPostRequest(ctx, queryURL, bytes.NewReader(qrJSON), func(req *http.Request) {

@@ -11,11 +11,13 @@ import (
 	"sync"
 )
 
+// ReadWaitCloser is ReadCloser that waits for finishing underlying reader
 type ReadWaitCloser struct {
 	pipeReader *io.PipeReader
 	wg         sync.WaitGroup
 }
 
+// Close closes underlying reader and waits for finishing operations
 func (r *ReadWaitCloser) Close() error {
 	err := r.pipeReader.Close()
 	r.wg.Wait() // wait for the gzip goroutine finish

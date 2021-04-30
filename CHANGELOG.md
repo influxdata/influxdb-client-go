@@ -16,6 +16,7 @@
 ### Bug fixes
 1. [#252](https://github.com/influxdata/influxdb-client-go/pull/252) Fixed panic when getting not present standard Flux columns  
 1. [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Conditional debug logging of buffers 
+1. [#254](https://github.com/influxdata/influxdb-client-go/pull/254) Fixed golint issues
 
 ## 2.2.3 [2021-04-01]
 ### Bug fixes

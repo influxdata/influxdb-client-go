@@ -15,13 +15,13 @@ import (
 // QueryError defines the information of Flux query error
 type QueryError struct {
 	// Message is a Flux query error message
-	Message string
+	Message string `csv:"error"`
 	// Code is an Flux query error code
-	Code int64
+	Code int64 `csv:"reference"`
 }
 
 func (e *QueryError) Error() string {
-	return fmt.Sprintf("flux query error (code %d): %s", e.Code, e.Message)
+	return fmt.Sprintf("Flux query error (code %d): %s", e.Code, e.Message)
 }
 
 // NewQueryResultReader returns new QueryResultReader for parsing Flux query result stream.
@@ -98,12 +98,14 @@ func (r *QueryResultReader) errorSection() error {
 			}
 		}
 		row := r.Row()
-		message, ok1 := row[0].(string)
-		reference, ok2 := row[1].(int64)
-		if !ok1 || !ok2 {
-			return fmt.Errorf("unexpected column types (%T, %T) in error section", row[0], row[1])
+		if row[0] == "" {
+			return errors.New("no row found in error section")
 		}
-		return &QueryError{Message: message, Code: reference}
+		var e QueryError
+		if err := r.Decode(&e); err != nil {
+			return fmt.Errorf("cannot decode row in error section: %v", err)
+		}
+		return &e
 	}
 	return nil
 }

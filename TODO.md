@@ -399,13 +399,6 @@ type Filter struct {
 	AfterTime time.Time
 }
 
-// Decode decodes the current row into x, which should be
-// a pointer to a struct. Columns in the row are decoded into
-// appropriate fields in the struct, using the tag conventions
-// described by encoding/json to determine how to map
-// column names to struct fields.
-func (r *QueryResult) Decode(x interface{}) error
-
 // PointWriter implements a batching point writer.
 type PointWriter struct {
 	// unexported fields

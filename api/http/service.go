@@ -50,16 +50,25 @@ type Service interface {
 	ServerURL() string
 }
 
+type Doer interface {
+	Do(*http.Request) (*http.Response, error)
+}
+
 // service implements Service interface
 type service struct {
 	serverAPIURL  string
 	serverURL     string
 	authorization string
-	client        *http.Client
+	client        Doer
 }
 
 // NewService creates instance of http Service with given parameters
 func NewService(serverURL, authorization string, httpOptions *Options) Service {
+	return NewServiceI(serverURL, authorization, httpOptions.HTTPClient())
+}
+
+// NewServiceI creates instance of http Service with given parameters
+func NewServiceI(serverURL, authorization string, doer Doer) Service {
 	apiURL, err := url.Parse(serverURL)
 	serverAPIURL := serverURL
 	if err == nil {
@@ -72,7 +81,7 @@ func NewService(serverURL, authorization string, httpOptions *Options) Service {
 		serverAPIURL:  serverAPIURL,
 		serverURL:     serverURL,
 		authorization: authorization,
-		client:        httpOptions.HTTPClient(),
+		client:        doer,
 	}
 }
 
@@ -127,7 +136,9 @@ func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback R
 	if len(s.authorization) > 0 {
 		req.Header.Set("Authorization", s.authorization)
 	}
-	req.Header.Set("User-Agent", http2.UserAgent)
+	if req.Header.Get("User-Agent") == "" {
+		req.Header.Set("User-Agent", http2.UserAgent)
+	}
 	if requestCallback != nil {
 		requestCallback(req)
 	}

@@ -1,7 +1,6 @@
 ## Unreleased
-
 ### Features
-[#256](https://github.com/influxdata/influxdb-client-go/pull/256) struct http.Service can be created with a 'Doer' interface
+[#256](https://github.com/influxdata/influxdb-client-go/pull/256) Allowing 'Doer' interface for HTTP requests
 
 ## 2.3.0 [2021-04-30]
 ### Breaking change

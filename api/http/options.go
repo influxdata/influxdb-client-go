@@ -82,14 +82,14 @@ type Doer interface {
 // Setting the HTTPDoer will cause the other HTTP options
 // to be ignored.
 func (o *Options) SetHTTPDoer(d Doer) *Options {
-	if d == nil {
-		return o
+	if d != nil {
+		o.doer = d
+		o.ownClient = false
 	}
-	o.doer = d
-	o.ownClient = false
 	return o
 }
 
+// HTTPDoer returns actual Doer if set, or http.Client
 func (o *Options) HTTPDoer() Doer {
 	if o.doer != nil {
 		return o.doer

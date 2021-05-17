@@ -50,10 +50,6 @@ type Service interface {
 	ServerURL() string
 }
 
-type Doer interface {
-	Do(*http.Request) (*http.Response, error)
-}
-
 // service implements Service interface
 type service struct {
 	serverAPIURL  string
@@ -64,11 +60,6 @@ type service struct {
 
 // NewService creates instance of http Service with given parameters
 func NewService(serverURL, authorization string, httpOptions *Options) Service {
-	return NewServiceI(serverURL, authorization, httpOptions.HTTPClient())
-}
-
-// NewServiceI creates instance of http Service with given parameters
-func NewServiceI(serverURL, authorization string, doer Doer) Service {
 	apiURL, err := url.Parse(serverURL)
 	serverAPIURL := serverURL
 	if err == nil {
@@ -81,7 +72,7 @@ func NewServiceI(serverURL, authorization string, doer Doer) Service {
 		serverAPIURL:  serverAPIURL,
 		serverURL:     serverURL,
 		authorization: authorization,
-		client:        doer,
+		client:        httpOptions.HTTPDoer(),
 	}
 }
 

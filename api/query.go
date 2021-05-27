@@ -355,6 +355,15 @@ func (q *QueryTableResult) Err() error {
 	return q.err
 }
 
+// Close reads remaining data and closes underlying Closer
+func (q *QueryTableResult) Close() error {
+	var err error
+	for err == nil {
+		_, err = q.csvReader.Read()
+	}
+	return q.Closer.Close()
+}
+
 // stringTernary returns a if not empty, otherwise b
 func stringTernary(a, b string) string {
 	if a == "" {

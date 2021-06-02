@@ -1,15 +1,19 @@
 ## Unreleased
 ### Features
-[#256](https://github.com/influxdata/influxdb-client-go/pull/256) Allowing 'Doer' interface for HTTP requests
+ - [#256](https://github.com/influxdata/influxdb-client-go/pull/256) Allowing 'Doer' interface for HTTP requests
+
+### Bug fixes
+ - [#259](https://github.com/influxdata/influxdb-client-go/pull/259) Fixed leaking connection in case of not reading whole query result on TLS connection  
+
 
 ## 2.3.0 [2021-04-30]
 ### Breaking change
-[#253](https://github.com/influxdata/influxdb-client-go/pull/253) Interface 'Logger' extended with 'LogLevel() uint' getter.
+ - [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Interface 'Logger' extended with 'LogLevel() uint' getter.
 
 ### Features
-[#241](https://github.com/influxdata/influxdb-client-go/pull/241),[#248](https://github.com/influxdata/influxdb-client-go/pull/248) Synced with InfluxDB 2.0.5 swagger:
-  - Setup (onboarding) now sends correctly retentionDuration if specified  
-  - `RetentionRule` used in `Bucket` now contains `ShardGroupDurationSeconds` to specify the shard group duration.
+ - [#241](https://github.com/influxdata/influxdb-client-go/pull/241),[#248](https://github.com/influxdata/influxdb-client-go/pull/248) Synced with InfluxDB 2.0.5 swagger:
+    - Setup (onboarding) now sends correctly retentionDuration if specified  
+    - `RetentionRule` used in `Bucket` now contains `ShardGroupDurationSeconds` to specify the shard group duration.
 
 ### Documentation
 1. [#242](https://github.com/influxdata/influxdb-client-go/pull/242) Documentation improvements:

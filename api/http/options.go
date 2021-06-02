@@ -71,7 +71,7 @@ func (o *Options) OwnHTTPClient() bool {
 	return o.ownClient
 }
 
-
+// Doer allows proving custom Do for HTTP operations
 type Doer interface {
 	Do(*http.Request) (*http.Response, error)
 }

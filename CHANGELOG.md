@@ -1,4 +1,4 @@
-## Unreleased
+## 2.4.0 [2021-06-04]
 ### Features
  - [#256](https://github.com/influxdata/influxdb-client-go/pull/256) Allowing 'Doer' interface for HTTP requests
 

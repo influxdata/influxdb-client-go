@@ -42,11 +42,11 @@ type BucketsAPI interface {
 	GetMembersWithID(ctx context.Context, bucketID string) (*[]domain.ResourceMember, error)
 	// AddMember adds a member to a bucket.
 	AddMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceMember, error)
-	// AddMember adds a member with id memberID to a bucket with bucketID.
+	// AddMemberWithID adds a member with id memberID to a bucket with bucketID.
 	AddMemberWithID(ctx context.Context, bucketID, memberID string) (*domain.ResourceMember, error)
 	// RemoveMember removes a member from a bucket.
 	RemoveMember(ctx context.Context, bucket *domain.Bucket, user *domain.User) error
-	// RemoveMember removes a member with id memberID from a bucket with bucketID.
+	// RemoveMemberWithID removes a member with id memberID from a bucket with bucketID.
 	RemoveMemberWithID(ctx context.Context, bucketID, memberID string) error
 	// GetOwners returns owners of a bucket.
 	GetOwners(ctx context.Context, bucket *domain.Bucket) (*[]domain.ResourceOwner, error)
@@ -54,11 +54,11 @@ type BucketsAPI interface {
 	GetOwnersWithID(ctx context.Context, bucketID string) (*[]domain.ResourceOwner, error)
 	// AddOwner adds an owner to a bucket.
 	AddOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) (*domain.ResourceOwner, error)
-	// AddOwner adds an owner with id memberID to a bucket with bucketID.
+	// AddOwnerWithID adds an owner with id memberID to a bucket with bucketID.
 	AddOwnerWithID(ctx context.Context, bucketID, memberID string) (*domain.ResourceOwner, error)
 	// RemoveOwner removes an owner from a bucket.
 	RemoveOwner(ctx context.Context, bucket *domain.Bucket, user *domain.User) error
-	// RemoveOwner removes a member with id memberID from a bucket with bucketID.
+	// RemoveOwnerWithID removes a member with id memberID from a bucket with bucketID.
 	RemoveOwnerWithID(ctx context.Context, bucketID, memberID string) error
 }
 
@@ -193,7 +193,12 @@ func (b *bucketsAPI) DeleteBucketWithID(ctx context.Context, bucketID string) er
 
 func (b *bucketsAPI) UpdateBucket(ctx context.Context, bucket *domain.Bucket) (*domain.Bucket, error) {
 	params := &domain.PatchBucketsIDParams{}
-	response, err := b.apiClient.PatchBucketsIDWithResponse(ctx, *bucket.Id, params, domain.PatchBucketsIDJSONRequestBody(*bucket))
+	req := domain.PatchBucketsIDJSONRequestBody{
+		Description:    bucket.Description,
+		Name:           &bucket.Name,
+		RetentionRules: retentionRulesToPatchRetentionRules(&bucket.RetentionRules),
+	}
+	response, err := b.apiClient.PatchBucketsIDWithResponse(ctx, *bucket.Id, params, req)
 	if err != nil {
 		return nil, err
 	}
@@ -299,4 +304,20 @@ func (b *bucketsAPI) RemoveOwnerWithID(ctx context.Context, bucketID, memberID s
 		return domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
 	return nil
+}
+
+func retentionRulesToPatchRetentionRules(rrs *domain.RetentionRules) *domain.PatchRetentionRules {
+	if rrs == nil {
+		return nil
+	}
+	prrs := make([]domain.PatchRetentionRule, len(*rrs))
+	for i, rr := range *rrs {
+		prrs[i] = domain.PatchRetentionRule{
+			EverySeconds:              &rr.EverySeconds,
+			ShardGroupDurationSeconds: rr.ShardGroupDurationSeconds,
+			Type:                      domain.PatchRetentionRuleType(rr.Type),
+		}
+	}
+	dprrs := domain.PatchRetentionRules(prrs)
+	return &dprrs
 }

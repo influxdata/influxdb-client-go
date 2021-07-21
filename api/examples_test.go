@@ -280,7 +280,6 @@ func ExampleAuthorizationsAPI() {
 	auth := &domain.Authorization{
 		OrgID:       org.Id,
 		Permissions: &permissions,
-		User:        &user.Name,
 		UserID:      user.Id,
 	}
 

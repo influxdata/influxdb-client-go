@@ -90,7 +90,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, owners)
 	assert.Len(t, *owners, 1)
 
-	err = bucketsAPI.RemoveOwner(ctx, b, &(*owners)[0].User)
+	err = bucketsAPI.RemoveOwnerWithID(ctx, *b.Id, *(*owners)[0].Id)
 	require.Nil(t, err, err)
 
 	owners, err = bucketsAPI.GetOwners(ctx, b)
@@ -118,7 +118,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.NotNil(t, members)
 	assert.Len(t, *members, 1)
 
-	err = bucketsAPI.RemoveMember(ctx, b, &(*members)[0].User)
+	err = bucketsAPI.RemoveMemberWithID(ctx, *b.Id, *(*members)[0].Id)
 	require.Nil(t, err, err)
 
 	members, err = bucketsAPI.GetMembers(ctx, b)
@@ -335,7 +335,7 @@ func TestBucketsAPI_requestFailing(t *testing.T) {
 	_, err = bucketsAPI.AddMember(ctx, bucket, user)
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.RemoveMember(ctx, bucket, user)
+	err = bucketsAPI.RemoveMemberWithID(ctx, *bucket.Id, *user.Id)
 	assert.NotNil(t, err)
 
 	_, err = bucketsAPI.GetOwners(ctx, bucket)
@@ -344,6 +344,6 @@ func TestBucketsAPI_requestFailing(t *testing.T) {
 	_, err = bucketsAPI.AddOwner(ctx, bucket, user)
 	assert.NotNil(t, err)
 
-	err = bucketsAPI.RemoveOwner(ctx, bucket, user)
+	err = bucketsAPI.RemoveOwnerWithID(ctx, *bucket.Id, *user.Id)
 	assert.NotNil(t, err)
 }

@@ -56,15 +56,13 @@ func ExampleClient_customServerAPICall() {
 	}
 
 	yes := true
-	db := "my-bucket"
-	rp := "autogen"
 	// Fill required fields of the DBRP struct
-	dbrp := domain.DBRP{
-		BucketID:        b.Id,
-		Database:        &db,
+	dbrp := domain.DBRPCreate{
+		BucketID:        *b.Id,
+		Database:        "my-bucket",
 		Default:         &yes,
 		OrgID:           o.Id,
-		RetentionPolicy: &rp,
+		RetentionPolicy: "autogen",
 	}
 
 	params := &domain.PostDBRPParams{}

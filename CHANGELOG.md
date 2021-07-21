@@ -1,4 +1,7 @@
-## Unreleased
+## 2.3.0 [in progress]
+### Features
+ - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 
+
 ### Documentation
  - [#261](https://github.com/influxdata/influxdb-client-go/pull/261) Update Line Protocol document link to v2.0
 

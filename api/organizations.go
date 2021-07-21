@@ -126,7 +126,11 @@ func (o *organizationsAPI) FindOrganizationsByUserID(ctx context.Context, userID
 
 func (o *organizationsAPI) CreateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error) {
 	params := &domain.PostOrgsParams{}
-	response, err := o.apiClient.PostOrgsWithResponse(ctx, params, domain.PostOrgsJSONRequestBody(*org))
+	req := domain.PostOrgsJSONRequestBody{
+		Name:        org.Name,
+		Description: org.Description,
+	}
+	response, err := o.apiClient.PostOrgsWithResponse(ctx, params, req)
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +167,11 @@ func (o *organizationsAPI) DeleteOrganizationWithID(ctx context.Context, orgID s
 
 func (o *organizationsAPI) UpdateOrganization(ctx context.Context, org *domain.Organization) (*domain.Organization, error) {
 	params := &domain.PatchOrgsIDParams{}
-	response, err := o.apiClient.PatchOrgsIDWithResponse(ctx, *org.Id, params, domain.PatchOrgsIDJSONRequestBody(*org))
+	req := domain.PatchOrgsIDJSONRequestBody{
+		Name:        &org.Name,
+		Description: org.Description,
+	}
+	response, err := o.apiClient.PatchOrgsIDWithResponse(ctx, *org.Id, params, req)
 	if err != nil {
 		return nil, err
 	}

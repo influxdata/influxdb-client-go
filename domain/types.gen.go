@@ -24,11 +24,11 @@ const (
 
 // Defines values for AxisBase.
 const (
-	AxisBase1 AxisBase = "2"
+	AxisBase10 AxisBase = "10"
+
+	AxisBase2 AxisBase = "2"
 
 	AxisBaseEmpty AxisBase = ""
-
-	AxisBaseN0 AxisBase = "10"
 )
 
 // Defines values for AxisScale.
@@ -42,11 +42,11 @@ const (
 const (
 	BandViewPropertiesHoverDimensionAuto BandViewPropertiesHoverDimension = "auto"
 
-	BandViewPropertiesHoverDimensionTrue BandViewPropertiesHoverDimension = "true"
-
 	BandViewPropertiesHoverDimensionX BandViewPropertiesHoverDimension = "x"
 
 	BandViewPropertiesHoverDimensionXy BandViewPropertiesHoverDimension = "xy"
+
+	BandViewPropertiesHoverDimensionY BandViewPropertiesHoverDimension = "y"
 )
 
 // Defines values for BandViewPropertiesShape.
@@ -174,6 +174,8 @@ const (
 
 	ErrorCodeNotFound ErrorCode = "not found"
 
+	ErrorCodeRequestTooLarge ErrorCode = "request too large"
+
 	ErrorCodeTooManyRequests ErrorCode = "too many requests"
 
 	ErrorCodeUnauthorized ErrorCode = "unauthorized"
@@ -181,6 +183,8 @@ const (
 	ErrorCodeUnavailable ErrorCode = "unavailable"
 
 	ErrorCodeUnprocessableEntity ErrorCode = "unprocessable entity"
+
+	ErrorCodeUnsupportedMediaType ErrorCode = "unsupported media type"
 )
 
 // Defines values for FieldType.
@@ -296,22 +300,6 @@ const (
 	InfluxQLQueryTypeInfluxql InfluxQLQueryType = "influxql"
 )
 
-// Defines values for LegendOrientation.
-const (
-	LegendOrientationBottom LegendOrientation = "bottom"
-
-	LegendOrientationLeft LegendOrientation = "left"
-
-	LegendOrientationRight LegendOrientation = "right"
-
-	LegendOrientationTop LegendOrientation = "top"
-)
-
-// Defines values for LegendType.
-const (
-	LegendTypeStatic LegendType = "static"
-)
-
 // Defines values for LesserThresholdType.
 const (
 	LesserThresholdTypeLesser LesserThresholdType = "lesser"
@@ -321,11 +309,11 @@ const (
 const (
 	LinePlusSingleStatPropertiesHoverDimensionAuto LinePlusSingleStatPropertiesHoverDimension = "auto"
 
-	LinePlusSingleStatPropertiesHoverDimensionTrue LinePlusSingleStatPropertiesHoverDimension = "true"
-
 	LinePlusSingleStatPropertiesHoverDimensionX LinePlusSingleStatPropertiesHoverDimension = "x"
 
 	LinePlusSingleStatPropertiesHoverDimensionXy LinePlusSingleStatPropertiesHoverDimension = "xy"
+
+	LinePlusSingleStatPropertiesHoverDimensionY LinePlusSingleStatPropertiesHoverDimension = "y"
 )
 
 // Defines values for LinePlusSingleStatPropertiesPosition.
@@ -384,11 +372,11 @@ const (
 const (
 	MosaicViewPropertiesHoverDimensionAuto MosaicViewPropertiesHoverDimension = "auto"
 
-	MosaicViewPropertiesHoverDimensionTrue MosaicViewPropertiesHoverDimension = "true"
-
 	MosaicViewPropertiesHoverDimensionX MosaicViewPropertiesHoverDimension = "x"
 
 	MosaicViewPropertiesHoverDimensionXy MosaicViewPropertiesHoverDimension = "xy"
+
+	MosaicViewPropertiesHoverDimensionY MosaicViewPropertiesHoverDimension = "y"
 )
 
 // Defines values for MosaicViewPropertiesShape.
@@ -454,6 +442,11 @@ const (
 	PagerDutyNotificationRuleBaseTypePagerduty PagerDutyNotificationRuleBaseType = "pagerduty"
 )
 
+// Defines values for PatchRetentionRuleType.
+const (
+	PatchRetentionRuleTypeExpire PatchRetentionRuleType = "expire"
+)
+
 // Defines values for PermissionAction.
 const (
 	PermissionActionRead PermissionAction = "read"
@@ -503,6 +496,8 @@ const (
 	ResourceTypeDocuments ResourceType = "documents"
 
 	ResourceTypeLabels ResourceType = "labels"
+
+	ResourceTypeNotebooks ResourceType = "notebooks"
 
 	ResourceTypeNotificationEndpoints ResourceType = "notificationEndpoints"
 
@@ -583,6 +578,13 @@ const (
 // Defines values for ScatterViewPropertiesType.
 const (
 	ScatterViewPropertiesTypeScatter ScatterViewPropertiesType = "scatter"
+)
+
+// Defines values for SchemaType.
+const (
+	SchemaTypeExplicit SchemaType = "explicit"
+
+	SchemaTypeImplicit SchemaType = "implicit"
 )
 
 // Defines values for ScraperTargetRequestType.
@@ -724,6 +726,13 @@ const (
 	UserStatusInactive UserStatus = "inactive"
 )
 
+// Defines values for UserResponseStatus.
+const (
+	UserResponseStatusActive UserResponseStatus = "active"
+
+	UserResponseStatusInactive UserResponseStatus = "inactive"
+)
+
 // Defines values for WritePrecision.
 const (
 	WritePrecisionMs WritePrecision = "ms"
@@ -752,11 +761,11 @@ const (
 const (
 	XYViewPropertiesHoverDimensionAuto XYViewPropertiesHoverDimension = "auto"
 
-	XYViewPropertiesHoverDimensionTrue XYViewPropertiesHoverDimension = "true"
-
 	XYViewPropertiesHoverDimensionX XYViewPropertiesHoverDimension = "x"
 
 	XYViewPropertiesHoverDimensionXy XYViewPropertiesHoverDimension = "xy"
+
+	XYViewPropertiesHoverDimensionY XYViewPropertiesHoverDimension = "y"
 )
 
 // Defines values for XYViewPropertiesPosition.
@@ -845,6 +854,22 @@ type Authorization struct {
 	UserID *string `json:"userID,omitempty"`
 }
 
+// AuthorizationPostRequest defines model for AuthorizationPostRequest.
+type AuthorizationPostRequest struct {
+	// Embedded struct due to allOf(#/components/schemas/AuthorizationUpdateRequest)
+	AuthorizationUpdateRequest `yaml:",inline"`
+	// Embedded fields due to inline allOf schema
+
+	// ID of org that authorization is scoped to.
+	OrgID *string `json:"orgID,omitempty"`
+
+	// List of permissions for an auth.  An auth must have at least one Permission.
+	Permissions *[]Permission `json:"permissions,omitempty"`
+
+	// ID of user that authorization is scoped to.
+	UserID *string `json:"userID,omitempty"`
+}
+
 // AuthorizationUpdateRequest defines model for AuthorizationUpdateRequest.
 type AuthorizationUpdateRequest struct {
 
@@ -919,36 +944,37 @@ type BandViewProperties struct {
 	Axes Axes `json:"axes"`
 
 	// Colors define color encoding of data into a visualization
-	Colors             []DashboardColor                  `json:"colors"`
-	GenerateXAxisTicks *[]string                         `json:"generateXAxisTicks,omitempty"`
-	GenerateYAxisTicks *[]string                         `json:"generateYAxisTicks,omitempty"`
-	Geom               XYGeom                            `json:"geom"`
-	HoverDimension     *BandViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
-
-	// Legend define encoding of data into a view's legend
-	Legend                     Legend                  `json:"legend"`
-	LegendColorizeRows         *bool                   `json:"legendColorizeRows,omitempty"`
-	LegendOpacity              *float32                `json:"legendOpacity,omitempty"`
-	LegendOrientationThreshold *int                    `json:"legendOrientationThreshold,omitempty"`
-	LowerColumn                *string                 `json:"lowerColumn,omitempty"`
-	MainColumn                 *string                 `json:"mainColumn,omitempty"`
-	Note                       string                  `json:"note"`
-	Queries                    []DashboardQuery        `json:"queries"`
-	Shape                      BandViewPropertiesShape `json:"shape"`
+	Colors                     []DashboardColor                  `json:"colors"`
+	GenerateXAxisTicks         *[]string                         `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks         *[]string                         `json:"generateYAxisTicks,omitempty"`
+	Geom                       XYGeom                            `json:"geom"`
+	HoverDimension             *BandViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	LegendColorizeRows         *bool                             `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                             `json:"legendHide,omitempty"`
+	LegendOpacity              *float32                          `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                              `json:"legendOrientationThreshold,omitempty"`
+	LowerColumn                *string                           `json:"lowerColumn,omitempty"`
+	MainColumn                 *string                           `json:"mainColumn,omitempty"`
+	Note                       string                            `json:"note"`
+	Queries                    []DashboardQuery                  `json:"queries"`
+	Shape                      BandViewPropertiesShape           `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool                   `json:"showNoteWhenEmpty"`
-	TimeFormat        *string                `json:"timeFormat,omitempty"`
-	Type              BandViewPropertiesType `json:"type"`
-	UpperColumn       *string                `json:"upperColumn,omitempty"`
-	XColumn           *string                `json:"xColumn,omitempty"`
-	XTickStart        *float32               `json:"xTickStart,omitempty"`
-	XTickStep         *float32               `json:"xTickStep,omitempty"`
-	XTotalTicks       *int                   `json:"xTotalTicks,omitempty"`
-	YColumn           *string                `json:"yColumn,omitempty"`
-	YTickStart        *float32               `json:"yTickStart,omitempty"`
-	YTickStep         *float32               `json:"yTickStep,omitempty"`
-	YTotalTicks       *int                   `json:"yTotalTicks,omitempty"`
+	ShowNoteWhenEmpty bool `json:"showNoteWhenEmpty"`
+
+	// StaticLegend represents the options specific to the static legend
+	StaticLegend *StaticLegend          `json:"staticLegend,omitempty"`
+	TimeFormat   *string                `json:"timeFormat,omitempty"`
+	Type         BandViewPropertiesType `json:"type"`
+	UpperColumn  *string                `json:"upperColumn,omitempty"`
+	XColumn      *string                `json:"xColumn,omitempty"`
+	XTickStart   *float32               `json:"xTickStart,omitempty"`
+	XTickStep    *float32               `json:"xTickStep,omitempty"`
+	XTotalTicks  *int                   `json:"xTotalTicks,omitempty"`
+	YColumn      *string                `json:"yColumn,omitempty"`
+	YTickStart   *float32               `json:"yTickStart,omitempty"`
+	YTickStep    *float32               `json:"yTickStep,omitempty"`
+	YTotalTicks  *int                   `json:"yTotalTicks,omitempty"`
 }
 
 // BandViewPropertiesHoverDimension defines model for BandViewProperties.HoverDimension.
@@ -1020,12 +1046,36 @@ type Bucket struct {
 	// Rules to expire or retain data.  No rules means data never expires.
 	RetentionRules RetentionRules `json:"retentionRules"`
 	Rp             *string        `json:"rp,omitempty"`
+	SchemaType     *SchemaType    `json:"schemaType,omitempty"`
 	Type           *BucketType    `json:"type,omitempty"`
 	UpdatedAt      *time.Time     `json:"updatedAt,omitempty"`
 }
 
 // BucketType defines model for Bucket.Type.
 type BucketType string
+
+// BucketMetadataManifest defines model for BucketMetadataManifest.
+type BucketMetadataManifest struct {
+	BucketID               string                   `json:"bucketID"`
+	BucketName             string                   `json:"bucketName"`
+	DefaultRetentionPolicy string                   `json:"defaultRetentionPolicy"`
+	Description            *string                  `json:"description,omitempty"`
+	OrganizationID         string                   `json:"organizationID"`
+	OrganizationName       string                   `json:"organizationName"`
+	RetentionPolicies      RetentionPolicyManifests `json:"retentionPolicies"`
+}
+
+// BucketMetadataManifests defines model for BucketMetadataManifests.
+type BucketMetadataManifests []BucketMetadataManifest
+
+// BucketShardMapping defines model for BucketShardMapping.
+type BucketShardMapping struct {
+	NewId int64 `json:"newId"`
+	OldId int64 `json:"oldId"`
+}
+
+// BucketShardMappings defines model for BucketShardMappings.
+type BucketShardMappings []BucketShardMapping
 
 // Buckets defines model for Buckets.
 type Buckets struct {
@@ -1161,10 +1211,13 @@ type CheckBase struct {
 	OrgID string `json:"orgID"`
 
 	// The ID of creator used to create this check.
-	OwnerID   *string         `json:"ownerID,omitempty"`
-	Query     DashboardQuery  `json:"query"`
-	Status    *TaskStatusType `json:"status,omitempty"`
-	UpdatedAt *time.Time      `json:"updatedAt,omitempty"`
+	OwnerID *string         `json:"ownerID,omitempty"`
+	Query   DashboardQuery  `json:"query"`
+	Status  *TaskStatusType `json:"status,omitempty"`
+
+	// The ID of the task associated with this check.
+	TaskID    *string    `json:"taskID,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
 
 // CheckBaseLastRunStatus defines model for CheckBase.LastRunStatus.
@@ -1194,6 +1247,7 @@ type CheckViewProperties struct {
 	// Colors define color encoding of data into a visualization
 	Colors                     []DashboardColor         `json:"colors"`
 	LegendColorizeRows         *bool                    `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                    `json:"legendHide,omitempty"`
 	LegendOpacity              *float32                 `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                     `json:"legendOrientationThreshold,omitempty"`
 	Queries                    []DashboardQuery         `json:"queries"`
@@ -1272,17 +1326,36 @@ type CustomCheckType string
 type DBRP struct {
 
 	// the bucket ID used as target for the translation.
-	BucketID *string `json:"bucketID,omitempty"`
+	BucketID string `json:"bucketID"`
 
 	// InfluxDB v1 database
-	Database *string `json:"database,omitempty"`
+	Database string `json:"database"`
+
+	// Specify if this mapping represents the default retention policy for the database specificed.
+	Default bool `json:"default"`
+
+	// the mapping identifier
+	Id    string `json:"id"`
+	Links *Links `json:"links,omitempty"`
+
+	// the organization ID that owns this mapping.
+	OrgID string `json:"orgID"`
+
+	// InfluxDB v1 retention policy
+	RetentionPolicy string `json:"retention_policy"`
+}
+
+// DBRPCreate defines model for DBRPCreate.
+type DBRPCreate struct {
+
+	// the bucket ID used as target for the translation.
+	BucketID string `json:"bucketID"`
+
+	// InfluxDB v1 database
+	Database string `json:"database"`
 
 	// Specify if this mapping represents the default retention policy for the database specificed.
 	Default *bool `json:"default,omitempty"`
-
-	// the mapping identifier
-	Id    *string `json:"id,omitempty"`
-	Links *Links  `json:"links,omitempty"`
 
 	// the organization that owns this mapping.
 	Org *string `json:"org,omitempty"`
@@ -1291,16 +1364,17 @@ type DBRP struct {
 	OrgID *string `json:"orgID,omitempty"`
 
 	// InfluxDB v1 retention policy
-	RetentionPolicy *string `json:"retention_policy,omitempty"`
+	RetentionPolicy string `json:"retention_policy"`
+}
+
+// DBRPGet defines model for DBRPGet.
+type DBRPGet struct {
+	Content *DBRP `json:"content,omitempty"`
 }
 
 // DBRPUpdate defines model for DBRPUpdate.
 type DBRPUpdate struct {
-
-	// InfluxDB v1 database
-	Database *string `json:"database,omitempty"`
-	Default  *bool   `json:"default,omitempty"`
-	Links    *Links  `json:"links,omitempty"`
+	Default *bool `json:"default,omitempty"`
 
 	// InfluxDB v1 retention policy
 	RetentionPolicy *string `json:"retention_policy,omitempty"`
@@ -1421,8 +1495,8 @@ type Dashboards struct {
 type DateTimeLiteral struct {
 
 	// Type of AST node
-	Type  *NodeType `json:"type,omitempty"`
-	Value *string   `json:"value,omitempty"`
+	Type  *NodeType  `json:"type,omitempty"`
+	Value *time.Time `json:"value,omitempty"`
 }
 
 // DeadmanCheck defines model for DeadmanCheck.
@@ -1614,14 +1688,20 @@ type DurationLiteral struct {
 // Error defines model for Error.
 type Error struct {
 
-	// Code is the machine-readable error code.
+	// code is the machine-readable error code.
 	Code ErrorCode `json:"code"`
 
-	// Message is a human-readable message.
+	// err is a stack of errors that occurred during processing of the request. Useful for debugging.
+	Err *string `json:"err,omitempty"`
+
+	// message is a human-readable message.
 	Message string `json:"message"`
+
+	// op describes the logical code operation during error. Useful for debugging.
+	Op *string `json:"op,omitempty"`
 }
 
-// Code is the machine-readable error code.
+// code is the machine-readable error code.
 type ErrorCode string
 
 // Expression defines model for Expression.
@@ -1725,14 +1805,11 @@ type GaugeViewProperties struct {
 	Colors []DashboardColor `json:"colors"`
 
 	// Indicates whether decimal places should be enforced, and how many digits it should show.
-	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
-
-	// Legend define encoding of data into a view's legend
-	Legend  Legend                   `json:"legend"`
-	Note    string                   `json:"note"`
-	Prefix  string                   `json:"prefix"`
-	Queries []DashboardQuery         `json:"queries"`
-	Shape   GaugeViewPropertiesShape `json:"shape"`
+	DecimalPlaces DecimalPlaces            `json:"decimalPlaces"`
+	Note          string                   `json:"note"`
+	Prefix        string                   `json:"prefix"`
+	Queries       []DashboardQuery         `json:"queries"`
+	Shape         GaugeViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                    `json:"showNoteWhenEmpty"`
@@ -1815,6 +1892,9 @@ type GeoPointMapViewLayer struct {
 
 	// Cluster close markers together
 	IsClustered *bool `json:"isClustered,omitempty"`
+
+	// An array for which columns to display in tooltip
+	TooltipColumns *[]string `json:"tooltipColumns,omitempty"`
 }
 
 // GeoTrackMapViewLayer defines model for GeoTrackMapViewLayer.
@@ -1857,18 +1937,27 @@ type GeoViewProperties struct {
 	// If true, search results get automatically regroupped so that lon,lat and value are treated as columns
 	DetectCoordinateFields bool `json:"detectCoordinateFields"`
 
+	// Object type to define lat/lon columns
+	LatLonColumns *LatLonColumns `json:"latLonColumns,omitempty"`
+
 	// List of individual layers shown in the map
 	Layers []GeoViewLayer `json:"layers"`
 
 	// Define map type - regular, satellite etc.
-	MapStyle *string                `json:"mapStyle,omitempty"`
-	Note     string                 `json:"note"`
-	Queries  []DashboardQuery       `json:"queries"`
+	MapStyle *string          `json:"mapStyle,omitempty"`
+	Note     string           `json:"note"`
+	Queries  []DashboardQuery `json:"queries"`
+
+	// String to define the column
+	S2Column *string                `json:"s2Column,omitempty"`
 	Shape    GeoViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
 	ShowNoteWhenEmpty bool                  `json:"showNoteWhenEmpty"`
 	Type              GeoViewPropertiesType `json:"type"`
+
+	// If true, S2 column is used to calculate lat/lon
+	UseS2CellID *bool `json:"useS2CellID,omitempty"`
 
 	// Zoom level used for initial display of the map
 	Zoom float64 `json:"zoom"`
@@ -1959,6 +2048,7 @@ type HeatmapViewProperties struct {
 	GenerateXAxisTicks         *[]string                  `json:"generateXAxisTicks,omitempty"`
 	GenerateYAxisTicks         *[]string                  `json:"generateYAxisTicks,omitempty"`
 	LegendColorizeRows         *bool                      `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                      `json:"legendHide,omitempty"`
 	LegendOpacity              *float32                   `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                       `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                     `json:"note"`
@@ -2001,6 +2091,7 @@ type HistogramViewProperties struct {
 	Colors                     []DashboardColor                `json:"colors"`
 	FillColumns                []string                        `json:"fillColumns"`
 	LegendColorizeRows         *bool                           `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                           `json:"legendHide,omitempty"`
 	LegendOpacity              *float32                        `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                            `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                          `json:"note"`
@@ -2155,21 +2246,44 @@ type LanguageRequest struct {
 	Query string `json:"query"`
 }
 
-// Legend define encoding of data into a view's legend
-type Legend struct {
+// Object type for key and column definitions
+type LatLonColumn struct {
 
-	// orientation is the location of the legend with respect to the view graph
-	Orientation *LegendOrientation `json:"orientation,omitempty"`
+	// Column to look up Lat/Lon
+	Column string `json:"column"`
 
-	// The style of the legend.
-	Type *LegendType `json:"type,omitempty"`
+	// Key to determine whether the column is tag/field
+	Key string `json:"key"`
 }
 
-// orientation is the location of the legend with respect to the view graph
-type LegendOrientation string
+// Object type to define lat/lon columns
+type LatLonColumns struct {
 
-// The style of the legend.
-type LegendType string
+	// Object type for key and column definitions
+	Lat LatLonColumn `json:"lat"`
+
+	// Object type for key and column definitions
+	Lon LatLonColumn `json:"lon"`
+}
+
+// LegacyAuthorizationPostRequest defines model for LegacyAuthorizationPostRequest.
+type LegacyAuthorizationPostRequest struct {
+	// Embedded struct due to allOf(#/components/schemas/AuthorizationUpdateRequest)
+	AuthorizationUpdateRequest `yaml:",inline"`
+	// Embedded fields due to inline allOf schema
+
+	// ID of org that authorization is scoped to.
+	OrgID *string `json:"orgID,omitempty"`
+
+	// List of permissions for an auth.  An auth must have at least one Permission.
+	Permissions *[]Permission `json:"permissions,omitempty"`
+
+	// Token (name) of the authorization
+	Token *string `json:"token,omitempty"`
+
+	// ID of user that authorization is scoped to.
+	UserID *string `json:"userID,omitempty"`
+}
 
 // LesserThreshold defines model for LesserThreshold.
 type LesserThreshold struct {
@@ -2193,36 +2307,37 @@ type LinePlusSingleStatProperties struct {
 	Colors []DashboardColor `json:"colors"`
 
 	// Indicates whether decimal places should be enforced, and how many digits it should show.
-	DecimalPlaces      DecimalPlaces                               `json:"decimalPlaces"`
-	GenerateXAxisTicks *[]string                                   `json:"generateXAxisTicks,omitempty"`
-	GenerateYAxisTicks *[]string                                   `json:"generateYAxisTicks,omitempty"`
-	HoverDimension     *LinePlusSingleStatPropertiesHoverDimension `json:"hoverDimension,omitempty"`
-
-	// Legend define encoding of data into a view's legend
-	Legend                     Legend                               `json:"legend"`
-	LegendColorizeRows         *bool                                `json:"legendColorizeRows,omitempty"`
-	LegendOpacity              *float32                             `json:"legendOpacity,omitempty"`
-	LegendOrientationThreshold *int                                 `json:"legendOrientationThreshold,omitempty"`
-	Note                       string                               `json:"note"`
-	Position                   LinePlusSingleStatPropertiesPosition `json:"position"`
-	Prefix                     string                               `json:"prefix"`
-	Queries                    []DashboardQuery                     `json:"queries"`
-	ShadeBelow                 *bool                                `json:"shadeBelow,omitempty"`
-	Shape                      LinePlusSingleStatPropertiesShape    `json:"shape"`
+	DecimalPlaces              DecimalPlaces                               `json:"decimalPlaces"`
+	GenerateXAxisTicks         *[]string                                   `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks         *[]string                                   `json:"generateYAxisTicks,omitempty"`
+	HoverDimension             *LinePlusSingleStatPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	LegendColorizeRows         *bool                                       `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                                       `json:"legendHide,omitempty"`
+	LegendOpacity              *float32                                    `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                                        `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                                      `json:"note"`
+	Position                   LinePlusSingleStatPropertiesPosition        `json:"position"`
+	Prefix                     string                                      `json:"prefix"`
+	Queries                    []DashboardQuery                            `json:"queries"`
+	ShadeBelow                 *bool                                       `json:"shadeBelow,omitempty"`
+	Shape                      LinePlusSingleStatPropertiesShape           `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool                             `json:"showNoteWhenEmpty"`
-	Suffix            string                           `json:"suffix"`
-	TimeFormat        *string                          `json:"timeFormat,omitempty"`
-	Type              LinePlusSingleStatPropertiesType `json:"type"`
-	XColumn           *string                          `json:"xColumn,omitempty"`
-	XTickStart        *float32                         `json:"xTickStart,omitempty"`
-	XTickStep         *float32                         `json:"xTickStep,omitempty"`
-	XTotalTicks       *int                             `json:"xTotalTicks,omitempty"`
-	YColumn           *string                          `json:"yColumn,omitempty"`
-	YTickStart        *float32                         `json:"yTickStart,omitempty"`
-	YTickStep         *float32                         `json:"yTickStep,omitempty"`
-	YTotalTicks       *int                             `json:"yTotalTicks,omitempty"`
+	ShowNoteWhenEmpty bool `json:"showNoteWhenEmpty"`
+
+	// StaticLegend represents the options specific to the static legend
+	StaticLegend *StaticLegend                    `json:"staticLegend,omitempty"`
+	Suffix       string                           `json:"suffix"`
+	TimeFormat   *string                          `json:"timeFormat,omitempty"`
+	Type         LinePlusSingleStatPropertiesType `json:"type"`
+	XColumn      *string                          `json:"xColumn,omitempty"`
+	XTickStart   *float32                         `json:"xTickStart,omitempty"`
+	XTickStep    *float32                         `json:"xTickStep,omitempty"`
+	XTotalTicks  *int                             `json:"xTotalTicks,omitempty"`
+	YColumn      *string                          `json:"yColumn,omitempty"`
+	YTickStart   *float32                         `json:"yTickStart,omitempty"`
+	YTickStep    *float32                         `json:"yTickStep,omitempty"`
+	YTotalTicks  *int                             `json:"yTotalTicks,omitempty"`
 }
 
 // LinePlusSingleStatPropertiesHoverDimension defines model for LinePlusSingleStatProperties.HoverDimension.
@@ -2297,6 +2412,9 @@ type LogEvent struct {
 	// A description of the event that occurred.
 	Message *string `json:"message,omitempty"`
 
+	// the ID of the task that logged
+	RunID *string `json:"runID,omitempty"`
+
 	// Time event occurred, RFC3339Nano.
 	Time *time.Time `json:"time,omitempty"`
 }
@@ -2363,6 +2481,13 @@ type MemberExpression struct {
 	Type *NodeType `json:"type,omitempty"`
 }
 
+// MetadataBackup defines model for MetadataBackup.
+type MetadataBackup struct {
+	Buckets BucketMetadataManifests `json:"buckets"`
+	Kv      string                  `json:"kv"`
+	Sql     string                  `json:"sql"`
+}
+
 // MosaicViewProperties defines model for MosaicViewProperties.
 type MosaicViewProperties struct {
 
@@ -2372,6 +2497,7 @@ type MosaicViewProperties struct {
 	GenerateXAxisTicks         *[]string                           `json:"generateXAxisTicks,omitempty"`
 	HoverDimension             *MosaicViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
 	LegendColorizeRows         *bool                               `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                               `json:"legendHide,omitempty"`
 	LegendOpacity              *float32                            `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                                `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                              `json:"note"`
@@ -2416,8 +2542,8 @@ type NodeType string
 
 // NotificationEndpoint defines model for NotificationEndpoint.
 type NotificationEndpoint struct {
-	// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscrimator)
-	NotificationEndpointDiscrimator `yaml:",inline"`
+	// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscriminator)
+	NotificationEndpointDiscriminator `yaml:",inline"`
 }
 
 // NotificationEndpointBase defines model for NotificationEndpointBase.
@@ -2455,8 +2581,8 @@ type NotificationEndpointBase struct {
 // The status of the endpoint.
 type NotificationEndpointBaseStatus string
 
-// NotificationEndpointDiscrimator defines model for NotificationEndpointDiscrimator.
-type NotificationEndpointDiscrimator interface{}
+// NotificationEndpointDiscriminator defines model for NotificationEndpointDiscriminator.
+type NotificationEndpointDiscriminator interface{}
 
 // NotificationEndpointType defines model for NotificationEndpointType.
 type NotificationEndpointType string
@@ -2493,7 +2619,7 @@ type NotificationRuleBase struct {
 
 	// The notification repetition interval.
 	Every         *string                            `json:"every,omitempty"`
-	Id            string                             `json:"id"`
+	Id            *string                            `json:"id,omitempty"`
 	Labels        *Labels                            `json:"labels,omitempty"`
 	LastRunError  *string                            `json:"lastRunError,omitempty"`
 	LastRunStatus *NotificationRuleBaseLastRunStatus `json:"lastRunStatus,omitempty"`
@@ -2543,7 +2669,10 @@ type NotificationRuleBase struct {
 	StatusRules []StatusRule `json:"statusRules"`
 
 	// List of tag rules the notification rule attempts to match.
-	TagRules  []TagRule  `json:"tagRules"`
+	TagRules *[]TagRule `json:"tagRules,omitempty"`
+
+	// The ID of the task associated with this notification rule.
+	TaskID    *string    `json:"taskID,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
 
@@ -2587,8 +2716,11 @@ type OnboardingRequest struct {
 
 	// Retention period *in nanoseconds* for the new bucket. This key's name has been misleading since OSS 2.0 GA, please transition to use `retentionPeriodSeconds`
 	RetentionPeriodHrs     *int   `json:"retentionPeriodHrs,omitempty"`
-	RetentionPeriodSeconds *int   `json:"retentionPeriodSeconds,omitempty"`
-	Username               string `json:"username"`
+	RetentionPeriodSeconds *int64 `json:"retentionPeriodSeconds,omitempty"`
+
+	// Authentication token to set on the initial user. If not specified, the server will generate a token.
+	Token    *string `json:"token,omitempty"`
+	Username string  `json:"username"`
 }
 
 // OnboardingResponse defines model for OnboardingResponse.
@@ -2596,7 +2728,7 @@ type OnboardingResponse struct {
 	Auth   *Authorization `json:"auth,omitempty"`
 	Bucket *Bucket        `json:"bucket,omitempty"`
 	Org    *Organization  `json:"org,omitempty"`
-	User   *User          `json:"user,omitempty"`
+	User   *UserResponse  `json:"user,omitempty"`
 }
 
 // A single variable declaration
@@ -2719,6 +2851,42 @@ type PasswordResetBody struct {
 	Password string `json:"password"`
 }
 
+// Updates to an existing bucket resource.
+type PatchBucketRequest struct {
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
+
+	// Updates to rules to expire or retain data. No rules means no updates.
+	RetentionRules *PatchRetentionRules `json:"retentionRules,omitempty"`
+}
+
+// PatchOrganizationRequest defines model for PatchOrganizationRequest.
+type PatchOrganizationRequest struct {
+
+	// New description to set on the organization
+	Description *string `json:"description,omitempty"`
+
+	// New name to set on the organization
+	Name *string `json:"name,omitempty"`
+}
+
+// Updates to a rule to expire or retain data.
+type PatchRetentionRule struct {
+
+	// Duration in seconds for how long data will be kept in the database. 0 means infinite.
+	EverySeconds *int64 `json:"everySeconds,omitempty"`
+
+	// Shard duration measured in seconds.
+	ShardGroupDurationSeconds *int64                 `json:"shardGroupDurationSeconds,omitempty"`
+	Type                      PatchRetentionRuleType `json:"type"`
+}
+
+// PatchRetentionRuleType defines model for PatchRetentionRule.Type.
+type PatchRetentionRuleType string
+
+// Updates to rules to expire or retain data. No rules means no updates.
+type PatchRetentionRules []PatchRetentionRule
+
 // Permission defines model for Permission.
 type Permission struct {
 	Action   PermissionAction `json:"action"`
@@ -2755,6 +2923,7 @@ type PostBucketRequest struct {
 	// Rules to expire or retain data.  No rules means data never expires.
 	RetentionRules RetentionRules `json:"retentionRules"`
 	Rp             *string        `json:"rp,omitempty"`
+	SchemaType     *SchemaType    `json:"schemaType,omitempty"`
 }
 
 // PostCheck defines model for PostCheck.
@@ -2765,14 +2934,20 @@ type PostCheck struct {
 
 // PostNotificationEndpoint defines model for PostNotificationEndpoint.
 type PostNotificationEndpoint struct {
-	// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscrimator)
-	NotificationEndpointDiscrimator `yaml:",inline"`
+	// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscriminator)
+	NotificationEndpointDiscriminator `yaml:",inline"`
 }
 
 // PostNotificationRule defines model for PostNotificationRule.
 type PostNotificationRule struct {
 	// Embedded struct due to allOf(#/components/schemas/NotificationRuleDiscriminator)
 	NotificationRuleDiscriminator `yaml:",inline"`
+}
+
+// PostOrganizationRequest defines model for PostOrganizationRequest.
+type PostOrganizationRequest struct {
+	Description *string `json:"description,omitempty"`
+	Name        string  `json:"name"`
 }
 
 // The value associated with a key
@@ -2799,11 +2974,19 @@ type Query struct {
 	// Specifies the time that should be reported as "now" in the query. Default is the server's now time.
 	Now *time.Time `json:"now,omitempty"`
 
+	// Enumeration of key/value pairs that respresent parameters to be injected into query (can only specify either this field or extern and not both)
+	Params *Query_Params `json:"params,omitempty"`
+
 	// Query script to execute.
 	Query string `json:"query"`
 
 	// The type of query. Must be "flux".
 	Type *QueryType `json:"type,omitempty"`
+}
+
+// Enumeration of key/value pairs that respresent parameters to be injected into query (can only specify either this field or extern and not both)
+type Query_Params struct {
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // The type of query. Must be "flux".
@@ -2873,16 +3056,16 @@ type RenamableField struct {
 type Resource struct {
 
 	// If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
-	Id *string `json:"id"`
+	Id *string `json:"id,omitempty"`
 
 	// Optional name of the resource if the resource has a name field.
-	Name *string `json:"name"`
+	Name *string `json:"name,omitempty"`
 
 	// Optional name of the organization of the organization with orgID.
-	Org *string `json:"org"`
+	Org *string `json:"org,omitempty"`
 
 	// If orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.
-	OrgID *string      `json:"orgID"`
+	OrgID *string      `json:"orgID,omitempty"`
 	Type  ResourceType `json:"type"`
 }
 
@@ -2891,8 +3074,8 @@ type ResourceType string
 
 // ResourceMember defines model for ResourceMember.
 type ResourceMember struct {
-	// Embedded struct due to allOf(#/components/schemas/User)
-	User `yaml:",inline"`
+	// Embedded struct due to allOf(#/components/schemas/UserResponse)
+	UserResponse `yaml:",inline"`
 	// Embedded fields due to inline allOf schema
 	Role *ResourceMemberRole `json:"role,omitempty"`
 }
@@ -2910,8 +3093,8 @@ type ResourceMembers struct {
 
 // ResourceOwner defines model for ResourceOwner.
 type ResourceOwner struct {
-	// Embedded struct due to allOf(#/components/schemas/User)
-	User `yaml:",inline"`
+	// Embedded struct due to allOf(#/components/schemas/UserResponse)
+	UserResponse `yaml:",inline"`
 	// Embedded fields due to inline allOf schema
 	Role *ResourceOwnerRole `json:"role,omitempty"`
 }
@@ -2927,11 +3110,33 @@ type ResourceOwners struct {
 	Users *[]ResourceOwner `json:"users,omitempty"`
 }
 
+// RestoredBucketMappings defines model for RestoredBucketMappings.
+type RestoredBucketMappings struct {
+
+	// New ID of the restored bucket
+	Id            string              `json:"id"`
+	Name          string              `json:"name"`
+	ShardMappings BucketShardMappings `json:"shardMappings"`
+}
+
+// RetentionPolicyManifest defines model for RetentionPolicyManifest.
+type RetentionPolicyManifest struct {
+	Duration           int64                 `json:"duration"`
+	Name               string                `json:"name"`
+	ReplicaN           int                   `json:"replicaN"`
+	ShardGroupDuration int64                 `json:"shardGroupDuration"`
+	ShardGroups        ShardGroupManifests   `json:"shardGroups"`
+	Subscriptions      SubscriptionManifests `json:"subscriptions"`
+}
+
+// RetentionPolicyManifests defines model for RetentionPolicyManifests.
+type RetentionPolicyManifests []RetentionPolicyManifest
+
 // RetentionRule defines model for RetentionRule.
 type RetentionRule struct {
 
 	// Duration in seconds for how long data will be kept in the database. 0 means infinite.
-	EverySeconds int `json:"everySeconds"`
+	EverySeconds int64 `json:"everySeconds"`
 
 	// Shard duration measured in seconds.
 	ShardGroupDurationSeconds *int64            `json:"shardGroupDurationSeconds,omitempty"`
@@ -3001,11 +3206,7 @@ type Run struct {
 	} `json:"links,omitempty"`
 
 	// An array of logs associated with the run.
-	Log *[]struct {
-		Message *string `json:"message,omitempty"`
-		RunID   *string `json:"runID,omitempty"`
-		Time    *string `json:"time,omitempty"`
-	} `json:"log,omitempty"`
+	Log *[]LogEvent `json:"log,omitempty"`
 
 	// Time run was manually requested, RFC3339Nano.
 	RequestedAt *time.Time `json:"requestedAt,omitempty"`
@@ -3063,6 +3264,7 @@ type ScatterViewProperties struct {
 	GenerateXAxisTicks         *[]string                  `json:"generateXAxisTicks,omitempty"`
 	GenerateYAxisTicks         *[]string                  `json:"generateYAxisTicks,omitempty"`
 	LegendColorizeRows         *bool                      `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                      `json:"legendHide,omitempty"`
 	LegendOpacity              *float32                   `json:"legendOpacity,omitempty"`
 	LegendOrientationThreshold *int                       `json:"legendOrientationThreshold,omitempty"`
 	Note                       string                     `json:"note"`
@@ -3097,6 +3299,9 @@ type ScatterViewPropertiesShape string
 
 // ScatterViewPropertiesType defines model for ScatterViewProperties.Type.
 type ScatterViewPropertiesType string
+
+// SchemaType defines model for SchemaType.
+type SchemaType string
 
 // ScraperTargetRequest defines model for ScraperTargetRequest.
 type ScraperTargetRequest struct {
@@ -3150,7 +3355,7 @@ type ScraperTargetResponse struct {
 		Self *Link `json:"self,omitempty"`
 	} `json:"links,omitempty"`
 
-	// The organization name.
+	// The name of the organization.
 	Org *string `json:"org,omitempty"`
 }
 
@@ -3180,6 +3385,38 @@ type Secrets struct {
 	AdditionalProperties map[string]string `json:"-"`
 }
 
+// ShardGroupManifest defines model for ShardGroupManifest.
+type ShardGroupManifest struct {
+	DeletedAt   *time.Time     `json:"deletedAt,omitempty"`
+	EndTime     time.Time      `json:"endTime"`
+	Id          int64          `json:"id"`
+	Shards      ShardManifests `json:"shards"`
+	StartTime   time.Time      `json:"startTime"`
+	TruncatedAt *time.Time     `json:"truncatedAt,omitempty"`
+}
+
+// ShardGroupManifests defines model for ShardGroupManifests.
+type ShardGroupManifests []ShardGroupManifest
+
+// ShardManifest defines model for ShardManifest.
+type ShardManifest struct {
+	Id          int64       `json:"id"`
+	ShardOwners ShardOwners `json:"shardOwners"`
+}
+
+// ShardManifests defines model for ShardManifests.
+type ShardManifests []ShardManifest
+
+// ShardOwner defines model for ShardOwner.
+type ShardOwner struct {
+
+	// ID of the node that owns a shard.
+	NodeID int64 `json:"nodeID"`
+}
+
+// ShardOwners defines model for ShardOwners.
+type ShardOwners []ShardOwner
+
 // SingleStatViewProperties defines model for SingleStatViewProperties.
 type SingleStatViewProperties struct {
 
@@ -3187,21 +3424,21 @@ type SingleStatViewProperties struct {
 	Colors []DashboardColor `json:"colors"`
 
 	// Indicates whether decimal places should be enforced, and how many digits it should show.
-	DecimalPlaces DecimalPlaces `json:"decimalPlaces"`
-
-	// Legend define encoding of data into a view's legend
-	Legend  Legend                        `json:"legend"`
-	Note    string                        `json:"note"`
-	Prefix  string                        `json:"prefix"`
-	Queries []DashboardQuery              `json:"queries"`
-	Shape   SingleStatViewPropertiesShape `json:"shape"`
+	DecimalPlaces DecimalPlaces                 `json:"decimalPlaces"`
+	Note          string                        `json:"note"`
+	Prefix        string                        `json:"prefix"`
+	Queries       []DashboardQuery              `json:"queries"`
+	Shape         SingleStatViewPropertiesShape `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool                         `json:"showNoteWhenEmpty"`
-	Suffix            string                       `json:"suffix"`
-	TickPrefix        string                       `json:"tickPrefix"`
-	TickSuffix        string                       `json:"tickSuffix"`
-	Type              SingleStatViewPropertiesType `json:"type"`
+	ShowNoteWhenEmpty bool `json:"showNoteWhenEmpty"`
+
+	// StaticLegend represents the options specific to the static legend
+	StaticLegend *StaticLegend                `json:"staticLegend,omitempty"`
+	Suffix       string                       `json:"suffix"`
+	TickPrefix   string                       `json:"tickPrefix"`
+	TickSuffix   string                       `json:"tickSuffix"`
+	Type         SingleStatViewPropertiesType `json:"type"`
 }
 
 // SingleStatViewPropertiesShape defines model for SingleStatViewProperties.Shape.
@@ -3311,6 +3548,17 @@ type Stack struct {
 // Statement defines model for Statement.
 type Statement interface{}
 
+// StaticLegend represents the options specific to the static legend
+type StaticLegend struct {
+	ColorizeRows         *bool    `json:"colorizeRows,omitempty"`
+	HeightRatio          *float32 `json:"heightRatio,omitempty"`
+	Opacity              *float32 `json:"opacity,omitempty"`
+	OrientationThreshold *int     `json:"orientationThreshold,omitempty"`
+	Show                 *bool    `json:"show,omitempty"`
+	ValueAxis            *string  `json:"valueAxis,omitempty"`
+	WidthRatio           *float32 `json:"widthRatio,omitempty"`
+}
+
 // StatusRule defines model for StatusRule.
 type StatusRule struct {
 	Count *int `json:"count,omitempty"`
@@ -3330,6 +3578,16 @@ type StringLiteral struct {
 	Type  *NodeType `json:"type,omitempty"`
 	Value *string   `json:"value,omitempty"`
 }
+
+// SubscriptionManifest defines model for SubscriptionManifest.
+type SubscriptionManifest struct {
+	Destinations []string `json:"destinations"`
+	Mode         string   `json:"mode"`
+	Name         string   `json:"name"`
+}
+
+// SubscriptionManifests defines model for SubscriptionManifests.
+type SubscriptionManifests []SubscriptionManifest
 
 // TableViewProperties defines model for TableViewProperties.
 type TableViewProperties struct {
@@ -3443,8 +3701,11 @@ type Task struct {
 	Org *string `json:"org,omitempty"`
 
 	// The ID of the organization that owns this Task.
-	OrgID  string          `json:"orgID"`
-	Status *TaskStatusType `json:"status,omitempty"`
+	OrgID string `json:"orgID"`
+
+	// The ID of the user who owns this Task.
+	OwnerID *string         `json:"ownerID,omitempty"`
+	Status  *TaskStatusType `json:"status,omitempty"`
 
 	// The type of task, this can be used for filtering tasks on list actions.
 	Type      *string    `json:"type,omitempty"`
@@ -3678,7 +3939,7 @@ type TemplateExportByID struct {
 			ByResourceKind *[]TemplateKind `json:"byResourceKind,omitempty"`
 		} `json:"resourceFilters,omitempty"`
 	} `json:"orgIDs,omitempty"`
-	Resources *struct {
+	Resources *[]struct {
 		Id   string       `json:"id"`
 		Kind TemplateKind `json:"kind"`
 
@@ -3697,7 +3958,7 @@ type TemplateExportByName struct {
 			ByResourceKind *[]TemplateKind `json:"byResourceKind,omitempty"`
 		} `json:"resourceFilters,omitempty"`
 	} `json:"orgIDs,omitempty"`
-	Resources *struct {
+	Resources *[]struct {
 		Kind TemplateKind `json:"kind"`
 		Name string       `json:"name"`
 	} `json:"resources,omitempty"`
@@ -3781,12 +4042,12 @@ type TemplateSummary struct {
 			TemplateMetaName *string `json:"templateMetaName,omitempty"`
 		} `json:"labels,omitempty"`
 		NotificationEndpoints *[]struct {
-			Id               *string                          `json:"id,omitempty"`
-			Kind             *TemplateKind                    `json:"kind,omitempty"`
-			New              *NotificationEndpointDiscrimator `json:"new,omitempty"`
-			Old              *NotificationEndpointDiscrimator `json:"old,omitempty"`
-			StateStatus      *string                          `json:"stateStatus,omitempty"`
-			TemplateMetaName *string                          `json:"templateMetaName,omitempty"`
+			Id               *string                            `json:"id,omitempty"`
+			Kind             *TemplateKind                      `json:"kind,omitempty"`
+			New              *NotificationEndpointDiscriminator `json:"new,omitempty"`
+			Old              *NotificationEndpointDiscriminator `json:"old,omitempty"`
+			StateStatus      *string                            `json:"stateStatus,omitempty"`
+			TemplateMetaName *string                            `json:"templateMetaName,omitempty"`
 		} `json:"notificationEndpoints,omitempty"`
 		NotificationRules *[]struct {
 			Id   *string       `json:"id,omitempty"`
@@ -3937,8 +4198,8 @@ type TemplateSummary struct {
 		MissingEnvRefs        *[]string               `json:"missingEnvRefs,omitempty"`
 		MissingSecrets        *[]string               `json:"missingSecrets,omitempty"`
 		NotificationEndpoints *[]struct {
-			// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscrimator)
-			NotificationEndpointDiscrimator `yaml:",inline"`
+			// Embedded struct due to allOf(#/components/schemas/NotificationEndpointDiscriminator)
+			NotificationEndpointDiscriminator `yaml:",inline"`
 			// Embedded fields due to inline allOf schema
 			EnvReferences     *TemplateEnvReferences  `json:"envReferences,omitempty"`
 			Kind              *TemplateKind           `json:"kind,omitempty"`
@@ -4088,10 +4349,7 @@ type UnsignedIntegerLiteral struct {
 
 // User defines model for User.
 type User struct {
-	Id    *string `json:"id,omitempty"`
-	Links *struct {
-		Self *string `json:"self,omitempty"`
-	} `json:"links,omitempty"`
+	Id      *string `json:"id,omitempty"`
 	Name    string  `json:"name"`
 	OauthID *string `json:"oauthID,omitempty"`
 
@@ -4102,12 +4360,28 @@ type User struct {
 // If inactive the user is inactive.
 type UserStatus string
 
+// UserResponse defines model for UserResponse.
+type UserResponse struct {
+	Id    *string `json:"id,omitempty"`
+	Links *struct {
+		Self *string `json:"self,omitempty"`
+	} `json:"links,omitempty"`
+	Name    string  `json:"name"`
+	OauthID *string `json:"oauthID,omitempty"`
+
+	// If inactive the user is inactive.
+	Status *UserResponseStatus `json:"status,omitempty"`
+}
+
+// If inactive the user is inactive.
+type UserResponseStatus string
+
 // Users defines model for Users.
 type Users struct {
 	Links *struct {
 		Self *string `json:"self,omitempty"`
 	} `json:"links,omitempty"`
-	Users *[]User `json:"users,omitempty"`
+	Users *[]UserResponse `json:"users,omitempty"`
 }
 
 // Variable defines model for Variable.
@@ -4173,35 +4447,36 @@ type XYViewProperties struct {
 	Axes Axes `json:"axes"`
 
 	// Colors define color encoding of data into a visualization
-	Colors             []DashboardColor                `json:"colors"`
-	GenerateXAxisTicks *[]string                       `json:"generateXAxisTicks,omitempty"`
-	GenerateYAxisTicks *[]string                       `json:"generateYAxisTicks,omitempty"`
-	Geom               XYGeom                          `json:"geom"`
-	HoverDimension     *XYViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
-
-	// Legend define encoding of data into a view's legend
-	Legend                     Legend                   `json:"legend"`
-	LegendColorizeRows         *bool                    `json:"legendColorizeRows,omitempty"`
-	LegendOpacity              *float32                 `json:"legendOpacity,omitempty"`
-	LegendOrientationThreshold *int                     `json:"legendOrientationThreshold,omitempty"`
-	Note                       string                   `json:"note"`
-	Position                   XYViewPropertiesPosition `json:"position"`
-	Queries                    []DashboardQuery         `json:"queries"`
-	ShadeBelow                 *bool                    `json:"shadeBelow,omitempty"`
-	Shape                      XYViewPropertiesShape    `json:"shape"`
+	Colors                     []DashboardColor                `json:"colors"`
+	GenerateXAxisTicks         *[]string                       `json:"generateXAxisTicks,omitempty"`
+	GenerateYAxisTicks         *[]string                       `json:"generateYAxisTicks,omitempty"`
+	Geom                       XYGeom                          `json:"geom"`
+	HoverDimension             *XYViewPropertiesHoverDimension `json:"hoverDimension,omitempty"`
+	LegendColorizeRows         *bool                           `json:"legendColorizeRows,omitempty"`
+	LegendHide                 *bool                           `json:"legendHide,omitempty"`
+	LegendOpacity              *float32                        `json:"legendOpacity,omitempty"`
+	LegendOrientationThreshold *int                            `json:"legendOrientationThreshold,omitempty"`
+	Note                       string                          `json:"note"`
+	Position                   XYViewPropertiesPosition        `json:"position"`
+	Queries                    []DashboardQuery                `json:"queries"`
+	ShadeBelow                 *bool                           `json:"shadeBelow,omitempty"`
+	Shape                      XYViewPropertiesShape           `json:"shape"`
 
 	// If true, will display note when empty
-	ShowNoteWhenEmpty bool                 `json:"showNoteWhenEmpty"`
-	TimeFormat        *string              `json:"timeFormat,omitempty"`
-	Type              XYViewPropertiesType `json:"type"`
-	XColumn           *string              `json:"xColumn,omitempty"`
-	XTickStart        *float32             `json:"xTickStart,omitempty"`
-	XTickStep         *float32             `json:"xTickStep,omitempty"`
-	XTotalTicks       *int                 `json:"xTotalTicks,omitempty"`
-	YColumn           *string              `json:"yColumn,omitempty"`
-	YTickStart        *float32             `json:"yTickStart,omitempty"`
-	YTickStep         *float32             `json:"yTickStep,omitempty"`
-	YTotalTicks       *int                 `json:"yTotalTicks,omitempty"`
+	ShowNoteWhenEmpty bool `json:"showNoteWhenEmpty"`
+
+	// StaticLegend represents the options specific to the static legend
+	StaticLegend *StaticLegend        `json:"staticLegend,omitempty"`
+	TimeFormat   *string              `json:"timeFormat,omitempty"`
+	Type         XYViewPropertiesType `json:"type"`
+	XColumn      *string              `json:"xColumn,omitempty"`
+	XTickStart   *float32             `json:"xTickStart,omitempty"`
+	XTickStep    *float32             `json:"xTickStep,omitempty"`
+	XTotalTicks  *int                 `json:"xTotalTicks,omitempty"`
+	YColumn      *string              `json:"yColumn,omitempty"`
+	YTickStart   *float32             `json:"yTickStart,omitempty"`
+	YTickStep    *float32             `json:"yTickStep,omitempty"`
+	YTotalTicks  *int                 `json:"yTotalTicks,omitempty"`
 }
 
 // XYViewPropertiesHoverDimension defines model for XYViewProperties.HoverDimension.
@@ -4231,6 +4506,9 @@ type Offset int
 // TraceSpan defines model for TraceSpan.
 type TraceSpan string
 
+// ServerError defines model for ServerError.
+type ServerError Error
+
 // GetRoutesParams defines parameters for GetRoutes.
 type GetRoutesParams struct {
 
@@ -4258,7 +4536,7 @@ type GetAuthorizationsParams struct {
 }
 
 // PostAuthorizationsJSONBody defines parameters for PostAuthorizations.
-type PostAuthorizationsJSONBody Authorization
+type PostAuthorizationsJSONBody AuthorizationPostRequest
 
 // PostAuthorizationsParams defines parameters for PostAuthorizations.
 type PostAuthorizationsParams struct {
@@ -4291,6 +4569,42 @@ type PatchAuthorizationsIDParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// GetBackupKVParams defines parameters for GetBackupKV.
+type GetBackupKVParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetBackupMetadataParams defines parameters for GetBackupMetadata.
+type GetBackupMetadataParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+
+	// The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
+	AcceptEncoding *GetBackupMetadataParamsAcceptEncoding `json:"Accept-Encoding,omitempty"`
+}
+
+// GetBackupMetadataParamsAcceptEncoding defines parameters for GetBackupMetadata.
+type GetBackupMetadataParamsAcceptEncoding string
+
+// GetBackupShardIdParams defines parameters for GetBackupShardId.
+type GetBackupShardIdParams struct {
+
+	// Earliest time to include in the snapshot. RFC3339 format.
+	Since *time.Time `json:"since,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+
+	// The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
+	AcceptEncoding *GetBackupShardIdParamsAcceptEncoding `json:"Accept-Encoding,omitempty"`
+}
+
+// GetBackupShardIdParamsAcceptEncoding defines parameters for GetBackupShardId.
+type GetBackupShardIdParamsAcceptEncoding string
+
 // GetBucketsParams defines parameters for GetBuckets.
 type GetBucketsParams struct {
 	Offset *Offset `json:"offset,omitempty"`
@@ -4299,7 +4613,7 @@ type GetBucketsParams struct {
 	// The last resource ID from which to seek from (but not including). This is to be used instead of `offset`.
 	After *After `json:"after,omitempty"`
 
-	// The organization name.
+	// The name of the organization.
 	Org *string `json:"org,omitempty"`
 
 	// The organization ID.
@@ -4307,6 +4621,9 @@ type GetBucketsParams struct {
 
 	// Only returns buckets with a specific name.
 	Name *string `json:"name,omitempty"`
+
+	// Only returns buckets with a specific ID.
+	Id *string `json:"id,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -4337,7 +4654,7 @@ type GetBucketsIDParams struct {
 }
 
 // PatchBucketsIDJSONBody defines parameters for PatchBucketsID.
-type PatchBucketsIDJSONBody Bucket
+type PatchBucketsIDJSONBody PatchBucketRequest
 
 // PatchBucketsIDParams defines parameters for PatchBucketsID.
 type PatchBucketsIDParams struct {
@@ -4504,19 +4821,19 @@ type GetDashboardsParams struct {
 	Limit      *Limit      `json:"limit,omitempty"`
 	Descending *Descending `json:"descending,omitempty"`
 
-	// The owner ID.
+	// A user identifier. Returns only dashboards where this user has the `owner` role.
 	Owner *string `json:"owner,omitempty"`
 
 	// The column to sort by.
 	SortBy *GetDashboardsParamsSortBy `json:"sortBy,omitempty"`
 
-	// List of dashboard IDs to return. If both `id` and `owner` are specified, only `id` is used.
+	// A list of dashboard identifiers. Returns only the listed dashboards. If both `id` and `owner` are specified, only `id` is used.
 	Id *[]string `json:"id,omitempty"`
 
-	// The organization ID.
+	// The identifier of the organization.
 	OrgID *string `json:"orgID,omitempty"`
 
-	// The organization name.
+	// The name of the organization.
 	Org *string `json:"org,omitempty"`
 
 	// OpenTracing span context
@@ -4704,7 +5021,10 @@ type DeleteDashboardsIDOwnersIDParams struct {
 type GetDBRPsParams struct {
 
 	// Specifies the organization ID to filter on
-	OrgID string `json:"orgID"`
+	OrgID *string `json:"orgID,omitempty"`
+
+	// Specifies the organization name to filter on
+	Org *string `json:"org,omitempty"`
 
 	// Specifies the mapping ID to filter on
 	Id *string `json:"id,omitempty"`
@@ -4726,7 +5046,7 @@ type GetDBRPsParams struct {
 }
 
 // PostDBRPJSONBody defines parameters for PostDBRP.
-type PostDBRPJSONBody DBRP
+type PostDBRPJSONBody DBRPCreate
 
 // PostDBRPParams defines parameters for PostDBRP.
 type PostDBRPParams struct {
@@ -4739,7 +5059,10 @@ type PostDBRPParams struct {
 type DeleteDBRPIDParams struct {
 
 	// Specifies the organization ID of the mapping
-	OrgID string `json:"orgID"`
+	OrgID *string `json:"orgID,omitempty"`
+
+	// Specifies the organization name of the mapping
+	Org *string `json:"org,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -4749,7 +5072,10 @@ type DeleteDBRPIDParams struct {
 type GetDBRPsIDParams struct {
 
 	// Specifies the organization ID of the mapping
-	OrgID string `json:"orgID"`
+	OrgID *string `json:"orgID,omitempty"`
+
+	// Specifies the organization name of the mapping
+	Org *string `json:"org,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -4762,7 +5088,10 @@ type PatchDBRPIDJSONBody DBRPUpdate
 type PatchDBRPIDParams struct {
 
 	// Specifies the organization ID of the mapping
-	OrgID string `json:"orgID"`
+	OrgID *string `json:"orgID,omitempty"`
+
+	// Specifies the organization name of the mapping
+	Org *string `json:"org,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -4907,6 +5236,75 @@ type PatchLabelsIDJSONBody LabelUpdate
 
 // PatchLabelsIDParams defines parameters for PatchLabelsID.
 type PatchLabelsIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetLegacyAuthorizationsParams defines parameters for GetLegacyAuthorizations.
+type GetLegacyAuthorizationsParams struct {
+
+	// Only show legacy authorizations that belong to a user ID.
+	UserID *string `json:"userID,omitempty"`
+
+	// Only show legacy authorizations that belong to a user name.
+	User *string `json:"user,omitempty"`
+
+	// Only show legacy authorizations that belong to an organization ID.
+	OrgID *string `json:"orgID,omitempty"`
+
+	// Only show legacy authorizations that belong to a organization name.
+	Org *string `json:"org,omitempty"`
+
+	// Only show legacy authorizations with a specified token (auth name).
+	Token *string `json:"token,omitempty"`
+
+	// Only show legacy authorizations with a specified auth ID.
+	AuthID *string `json:"authID,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostLegacyAuthorizationsJSONBody defines parameters for PostLegacyAuthorizations.
+type PostLegacyAuthorizationsJSONBody LegacyAuthorizationPostRequest
+
+// PostLegacyAuthorizationsParams defines parameters for PostLegacyAuthorizations.
+type PostLegacyAuthorizationsParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// DeleteLegacyAuthorizationsIDParams defines parameters for DeleteLegacyAuthorizationsID.
+type DeleteLegacyAuthorizationsIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetLegacyAuthorizationsIDParams defines parameters for GetLegacyAuthorizationsID.
+type GetLegacyAuthorizationsIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PatchLegacyAuthorizationsIDJSONBody defines parameters for PatchLegacyAuthorizationsID.
+type PatchLegacyAuthorizationsIDJSONBody AuthorizationUpdateRequest
+
+// PatchLegacyAuthorizationsIDParams defines parameters for PatchLegacyAuthorizationsID.
+type PatchLegacyAuthorizationsIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostLegacyAuthorizationsIDPasswordJSONBody defines parameters for PostLegacyAuthorizationsIDPassword.
+type PostLegacyAuthorizationsIDPasswordJSONBody PasswordResetBody
+
+// PostLegacyAuthorizationsIDPasswordParams defines parameters for PostLegacyAuthorizationsIDPassword.
+type PostLegacyAuthorizationsIDPasswordParams struct {
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5108,7 +5506,7 @@ type GetOrgsParams struct {
 }
 
 // PostOrgsJSONBody defines parameters for PostOrgs.
-type PostOrgsJSONBody Organization
+type PostOrgsJSONBody PostOrganizationRequest
 
 // PostOrgsParams defines parameters for PostOrgs.
 type PostOrgsParams struct {
@@ -5132,7 +5530,7 @@ type GetOrgsIDParams struct {
 }
 
 // PatchOrgsIDJSONBody defines parameters for PatchOrgsID.
-type PatchOrgsIDJSONBody Organization
+type PatchOrgsIDJSONBody PatchOrganizationRequest
 
 // PatchOrgsIDParams defines parameters for PatchOrgsID.
 type PatchOrgsIDParams struct {
@@ -5291,6 +5689,78 @@ type GetReadyParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// PostRestoreBucketMetadataJSONBody defines parameters for PostRestoreBucketMetadata.
+type PostRestoreBucketMetadataJSONBody BucketMetadataManifest
+
+// PostRestoreBucketMetadataParams defines parameters for PostRestoreBucketMetadata.
+type PostRestoreBucketMetadataParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostRestoreBucketIDParams defines parameters for PostRestoreBucketID.
+type PostRestoreBucketIDParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan                            `json:"Zap-Trace-Span,omitempty"`
+	ContentType  *PostRestoreBucketIDParamsContentType `json:"Content-Type,omitempty"`
+}
+
+// PostRestoreBucketIDParamsContentType defines parameters for PostRestoreBucketID.
+type PostRestoreBucketIDParamsContentType string
+
+// PostRestoreKVParams defines parameters for PostRestoreKV.
+type PostRestoreKVParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+
+	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	ContentEncoding *PostRestoreKVParamsContentEncoding `json:"Content-Encoding,omitempty"`
+	ContentType     *PostRestoreKVParamsContentType     `json:"Content-Type,omitempty"`
+}
+
+// PostRestoreKVParamsContentEncoding defines parameters for PostRestoreKV.
+type PostRestoreKVParamsContentEncoding string
+
+// PostRestoreKVParamsContentType defines parameters for PostRestoreKV.
+type PostRestoreKVParamsContentType string
+
+// PostRestoreShardIdParams defines parameters for PostRestoreShardId.
+type PostRestoreShardIdParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+
+	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	ContentEncoding *PostRestoreShardIdParamsContentEncoding `json:"Content-Encoding,omitempty"`
+	ContentType     *PostRestoreShardIdParamsContentType     `json:"Content-Type,omitempty"`
+}
+
+// PostRestoreShardIdParamsContentEncoding defines parameters for PostRestoreShardId.
+type PostRestoreShardIdParamsContentEncoding string
+
+// PostRestoreShardIdParamsContentType defines parameters for PostRestoreShardId.
+type PostRestoreShardIdParamsContentType string
+
+// PostRestoreSQLParams defines parameters for PostRestoreSQL.
+type PostRestoreSQLParams struct {
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+
+	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	ContentEncoding *PostRestoreSQLParamsContentEncoding `json:"Content-Encoding,omitempty"`
+	ContentType     *PostRestoreSQLParamsContentType     `json:"Content-Type,omitempty"`
+}
+
+// PostRestoreSQLParamsContentEncoding defines parameters for PostRestoreSQL.
+type PostRestoreSQLParamsContentEncoding string
+
+// PostRestoreSQLParamsContentType defines parameters for PostRestoreSQL.
+type PostRestoreSQLParamsContentType string
+
 // GetScrapersParams defines parameters for GetScrapers.
 type GetScrapersParams struct {
 
@@ -5433,16 +5903,6 @@ type PostSetupParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// PostSetupUserJSONBody defines parameters for PostSetupUser.
-type PostSetupUserJSONBody OnboardingRequest
-
-// PostSetupUserParams defines parameters for PostSetupUser.
-type PostSetupUserParams struct {
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
 // PostSigninParams defines parameters for PostSignin.
 type PostSigninParams struct {
 
@@ -5460,7 +5920,7 @@ type PostSignoutParams struct {
 // GetSourcesParams defines parameters for GetSources.
 type GetSourcesParams struct {
 
-	// The organization name.
+	// The name of the organization.
 	Org *string `json:"org,omitempty"`
 
 	// OpenTracing span context
@@ -5504,7 +5964,7 @@ type PatchSourcesIDParams struct {
 // GetSourcesIDBucketsParams defines parameters for GetSourcesIDBuckets.
 type GetSourcesIDBucketsParams struct {
 
-	// The organization name.
+	// The name of the organization.
 	Org *string `json:"org,omitempty"`
 
 	// OpenTracing span context
@@ -5542,7 +6002,7 @@ type CreateStackJSONBody struct {
 // DeleteStackParams defines parameters for DeleteStack.
 type DeleteStackParams struct {
 
-	// The organization id of the user
+	// The identifier of the organization.
 	OrgID string `json:"orgID"`
 }
 
@@ -5897,6 +6357,13 @@ type ExportTemplateJSONBody interface{}
 
 // GetUsersParams defines parameters for GetUsers.
 type GetUsersParams struct {
+	Offset *Offset `json:"offset,omitempty"`
+	Limit  *Limit  `json:"limit,omitempty"`
+
+	// The last resource ID from which to seek from (but not including). This is to be used instead of `offset`.
+	After *After  `json:"after,omitempty"`
+	Name  *string `json:"name,omitempty"`
+	Id    *string `json:"id,omitempty"`
 
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
@@ -5949,7 +6416,7 @@ type PostUsersIDPasswordParams struct {
 // GetVariablesParams defines parameters for GetVariables.
 type GetVariablesParams struct {
 
-	// The organization name.
+	// The name of the organization.
 	Org *string `json:"org,omitempty"`
 
 	// The organization ID.
@@ -6151,6 +6618,15 @@ type PostLabelsJSONRequestBody PostLabelsJSONBody
 // PatchLabelsIDJSONRequestBody defines body for PatchLabelsID for application/json ContentType.
 type PatchLabelsIDJSONRequestBody PatchLabelsIDJSONBody
 
+// PostLegacyAuthorizationsJSONRequestBody defines body for PostLegacyAuthorizations for application/json ContentType.
+type PostLegacyAuthorizationsJSONRequestBody PostLegacyAuthorizationsJSONBody
+
+// PatchLegacyAuthorizationsIDJSONRequestBody defines body for PatchLegacyAuthorizationsID for application/json ContentType.
+type PatchLegacyAuthorizationsIDJSONRequestBody PatchLegacyAuthorizationsIDJSONBody
+
+// PostLegacyAuthorizationsIDPasswordJSONRequestBody defines body for PostLegacyAuthorizationsIDPassword for application/json ContentType.
+type PostLegacyAuthorizationsIDPasswordJSONRequestBody PostLegacyAuthorizationsIDPasswordJSONBody
+
 // PutMePasswordJSONRequestBody defines body for PutMePassword for application/json ContentType.
 type PutMePasswordJSONRequestBody PutMePasswordJSONBody
 
@@ -6205,6 +6681,9 @@ type PostQueryAnalyzeJSONRequestBody PostQueryAnalyzeJSONBody
 // PostQueryAstJSONRequestBody defines body for PostQueryAst for application/json ContentType.
 type PostQueryAstJSONRequestBody PostQueryAstJSONBody
 
+// PostRestoreBucketMetadataJSONRequestBody defines body for PostRestoreBucketMetadata for application/json ContentType.
+type PostRestoreBucketMetadataJSONRequestBody PostRestoreBucketMetadataJSONBody
+
 // PostScrapersJSONRequestBody defines body for PostScrapers for application/json ContentType.
 type PostScrapersJSONRequestBody PostScrapersJSONBody
 
@@ -6222,9 +6701,6 @@ type PostScrapersIDOwnersJSONRequestBody PostScrapersIDOwnersJSONBody
 
 // PostSetupJSONRequestBody defines body for PostSetup for application/json ContentType.
 type PostSetupJSONRequestBody PostSetupJSONBody
-
-// PostSetupUserJSONRequestBody defines body for PostSetupUser for application/json ContentType.
-type PostSetupUserJSONRequestBody PostSetupUserJSONBody
 
 // PostSourcesJSONRequestBody defines body for PostSources for application/json ContentType.
 type PostSourcesJSONRequestBody PostSourcesJSONBody
@@ -6657,6 +7133,59 @@ func (a *MapVariableProperties_Values) UnmarshalJSON(b []byte) error {
 
 // Override default JSON handling for MapVariableProperties_Values to handle AdditionalProperties
 func (a MapVariableProperties_Values) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for Query_Params. Returns the specified
+// element and whether it was found
+func (a Query_Params) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for Query_Params
+func (a *Query_Params) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for Query_Params to handle AdditionalProperties
+func (a *Query_Params) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for Query_Params to handle AdditionalProperties
+func (a Query_Params) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
 

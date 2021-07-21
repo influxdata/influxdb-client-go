@@ -76,7 +76,7 @@ func (u *usersAPI) GetUsers(ctx context.Context) (*[]domain.User, error) {
 	if response.JSONDefault != nil {
 		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
-	return response.JSON200.Users, nil
+	return userResponsesToUsers(response.JSON200.Users), nil
 }
 
 func (u *usersAPI) FindUserByID(ctx context.Context, userID string) (*domain.User, error) {
@@ -88,7 +88,7 @@ func (u *usersAPI) FindUserByID(ctx context.Context, userID string) (*domain.Use
 	if response.JSONDefault != nil {
 		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
-	return response.JSON200, nil
+	return userResponseToUser(response.JSON200), nil
 }
 
 func (u *usersAPI) FindUserByName(ctx context.Context, userName string) (*domain.User, error) {
@@ -123,7 +123,7 @@ func (u *usersAPI) CreateUser(ctx context.Context, user *domain.User) (*domain.U
 	if response.JSONDefault != nil {
 		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
-	return response.JSON201, nil
+	return userResponseToUser(response.JSON201), nil
 }
 
 func (u *usersAPI) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
@@ -135,7 +135,7 @@ func (u *usersAPI) UpdateUser(ctx context.Context, user *domain.User) (*domain.U
 	if response.JSONDefault != nil {
 		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
-	return response.JSON200, nil
+	return userResponseToUser(response.JSON200), nil
 }
 
 func (u *usersAPI) UpdateUserPassword(ctx context.Context, user *domain.User, password string) error {
@@ -180,7 +180,7 @@ func (u *usersAPI) Me(ctx context.Context) (*domain.User, error) {
 	if response.JSONDefault != nil {
 		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
-	return response.JSON200, nil
+	return userResponseToUser(response.JSON200), nil
 }
 
 func (u *usersAPI) MeUpdatePassword(ctx context.Context, oldPassword, newPassword string) error {
@@ -253,4 +253,36 @@ func (u *usersAPI) SignOut(ctx context.Context) error {
 		u.httpClient.Jar = nil
 	}
 	return nil
+}
+
+func userResponseToUser(ur *domain.UserResponse) *domain.User {
+	if ur == nil {
+		return nil
+	}
+	user := &domain.User{
+		Id:      ur.Id,
+		Name:    ur.Name,
+		OauthID: ur.OauthID,
+		Status:  userResponseStatusToUserStatus(ur.Status),
+	}
+	return user
+}
+
+func userResponseStatusToUserStatus(urs *domain.UserResponseStatus) *domain.UserStatus {
+	if urs == nil {
+		return nil
+	}
+	us := domain.UserStatus(*urs)
+	return &us
+}
+
+func userResponsesToUsers(urs *[]domain.UserResponse) *[]domain.User {
+	if urs == nil {
+		return nil
+	}
+	us := make([]domain.User, len(*urs))
+	for i, ur := range *urs {
+		us[i] = *userResponseToUser(&ur)
+	}
+	return &us
 }

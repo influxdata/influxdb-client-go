@@ -275,7 +275,7 @@ func TestTasksAPI_MembersOwners(t *testing.T) {
 	require.NotNil(t, owners)
 	assert.Len(t, owners, 1)
 
-	err = tasksAPI.RemoveOwner(ctx, task, &owners[0].User)
+	err = tasksAPI.RemoveOwnerWithID(ctx, task.Id, *owners[0].Id)
 	require.Nil(t, err, err)
 
 	owners, err = tasksAPI.FindOwners(ctx, task)
@@ -303,7 +303,7 @@ func TestTasksAPI_MembersOwners(t *testing.T) {
 	require.NotNil(t, members)
 	assert.Len(t, members, 1)
 
-	err = tasksAPI.RemoveMember(ctx, task, &members[0].User)
+	err = tasksAPI.RemoveMemberWithID(ctx, task.Id, *members[0].Id)
 	require.Nil(t, err, err)
 
 	members, err = tasksAPI.FindMembers(ctx, task)

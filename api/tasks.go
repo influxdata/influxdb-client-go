@@ -77,11 +77,11 @@ type TasksAPI interface {
 	FindMembersWithID(ctx context.Context, taskID string) ([]domain.ResourceMember, error)
 	// AddMember adds a member to a task.
 	AddMember(ctx context.Context, task *domain.Task, user *domain.User) (*domain.ResourceMember, error)
-	// AddMember adds a member with id memberID to a task with taskID.
+	// AddMemberWithID adds a member with id memberID to a task with taskID.
 	AddMemberWithID(ctx context.Context, taskID, memberID string) (*domain.ResourceMember, error)
 	// RemoveMember removes a member from a task.
 	RemoveMember(ctx context.Context, task *domain.Task, user *domain.User) error
-	// RemoveMember removes a member with id memberID from a task with taskID.
+	// RemoveMemberWithID removes a member with id memberID from a task with taskID.
 	RemoveMemberWithID(ctx context.Context, taskID, memberID string) error
 	// FindOwners retrieves owners of a task.
 	FindOwners(ctx context.Context, task *domain.Task) ([]domain.ResourceOwner, error)
@@ -89,11 +89,11 @@ type TasksAPI interface {
 	FindOwnersWithID(ctx context.Context, taskID string) ([]domain.ResourceOwner, error)
 	// AddOwner adds an owner to a task.
 	AddOwner(ctx context.Context, task *domain.Task, user *domain.User) (*domain.ResourceOwner, error)
-	// AddOwner adds an owner with id memberID to a task with taskID.
+	// AddOwnerWithID adds an owner with id memberID to a task with taskID.
 	AddOwnerWithID(ctx context.Context, taskID, memberID string) (*domain.ResourceOwner, error)
 	// RemoveOwner removes an owner from a task.
 	RemoveOwner(ctx context.Context, task *domain.Task, user *domain.User) error
-	// RemoveOwner removes a member with id memberID from a task with taskID.
+	// RemoveOwnerWithID removes a member with id memberID from a task with taskID.
 	RemoveOwnerWithID(ctx context.Context, taskID, memberID string) error
 	// FindRuns retrieves a task runs according the filter. More fields can be applied. Filter can be nil.
 	FindRuns(ctx context.Context, task *domain.Task, filter *RunFilter) ([]domain.Run, error)
@@ -109,7 +109,7 @@ type TasksAPI interface {
 	FindRunLogsWithID(ctx context.Context, taskID, runID string) ([]domain.LogEvent, error)
 	// RunManually manually start a run of the task now, overriding the current schedule.
 	RunManually(ctx context.Context, task *domain.Task) (*domain.Run, error)
-	// RunManually manually start a run of a task with taskID now, overriding the current schedule.
+	// RunManuallyWithID manually start a run of a task with taskID now, overriding the current schedule.
 	RunManuallyWithID(ctx context.Context, taskID string) (*domain.Run, error)
 	// RetryRun retry a task run.
 	RetryRun(ctx context.Context, run *domain.Run) (*domain.Run, error)
@@ -117,7 +117,7 @@ type TasksAPI interface {
 	RetryRunWithID(ctx context.Context, taskID, runID string) (*domain.Run, error)
 	// CancelRun cancels a running task.
 	CancelRun(ctx context.Context, run *domain.Run) error
-	// CancelRun cancels a running task.
+	// CancelRunWithID cancels a running task.
 	CancelRunWithID(ctx context.Context, taskID, runID string) error
 	// FindLogs retrieves all logs for a task.
 	FindLogs(ctx context.Context, task *domain.Task) ([]domain.LogEvent, error)
@@ -482,7 +482,7 @@ func (t *tasksAPI) RetryRun(ctx context.Context, run *domain.Run) (*domain.Run, 
 
 func (t *tasksAPI) RetryRunWithID(ctx context.Context, taskID, runID string) (*domain.Run, error) {
 	params := &domain.PostTasksIDRunsIDRetryParams{}
-	response, err := t.apiClient.PostTasksIDRunsIDRetryWithResponse(ctx, taskID, runID, params)
+	response, err := t.apiClient.PostTasksIDRunsIDRetryWithBodyWithResponse(ctx, taskID, runID, params, "application/json; charset=utf-8", nil)
 	if err != nil {
 		return nil, err
 	}

@@ -41,7 +41,12 @@ This repository contains the reference Go client for InfluxDB 2.
      
 ## Documentation
 
-Go API docs is available at: [https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2)
+This section contains links to the client library documentation.
+
+- [Product documentation](https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/), [Getting Started](#how-to-use)
+- [Examples](#examples)
+- [API Reference](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2)
+- [Changelog](CHANGELOG.md)
 
 ### Examples
 

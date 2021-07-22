@@ -155,7 +155,7 @@ func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket 
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	params := &domain.PostSetupParams{}
-	retentionPeriodSeconds := retentionPeriodHours * 3600
+	retentionPeriodSeconds := int64(retentionPeriodHours * 3600)
 	retentionPeriodHrs := int(time.Duration(retentionPeriodSeconds) * time.Second)
 	body := &domain.PostSetupJSONRequestBody{
 		Bucket:                 bucket,

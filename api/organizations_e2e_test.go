@@ -157,7 +157,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, u)
 
-	err = orgsAPI.RemoveOwner(ctx, org2, u)
+	err = orgsAPI.RemoveOwnerWithID(ctx, *org2.Id, *u.Id)
 	require.Nil(t, err)
 
 	owners, err = orgsAPI.GetOwners(ctx, org2)
@@ -170,7 +170,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	require.NotNil(t, orgs)
 	require.Len(t, *orgs, 2)
 
-	err = orgsAPI.RemoveMember(ctx, org, user)
+	err = orgsAPI.RemoveMemberWithID(ctx, *org.Id, *user.Id)
 	require.Nil(t, err)
 
 	members, err = orgsAPI.GetMembers(ctx, org)

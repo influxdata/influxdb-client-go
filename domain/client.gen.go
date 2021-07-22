@@ -58,6 +58,15 @@ type ClientInterface interface {
 
 	PatchAuthorizationsID(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*http.Response, error)
 
+	// GetBackupKV request
+	GetBackupKV(ctx context.Context, params *GetBackupKVParams) (*http.Response, error)
+
+	// GetBackupMetadata request
+	GetBackupMetadata(ctx context.Context, params *GetBackupMetadataParams) (*http.Response, error)
+
+	// GetBackupShardId request
+	GetBackupShardId(ctx context.Context, shardID int64, params *GetBackupShardIdParams) (*http.Response, error)
+
 	// GetBuckets request
 	GetBuckets(ctx context.Context, params *GetBucketsParams) (*http.Response, error)
 
@@ -305,6 +314,30 @@ type ClientInterface interface {
 
 	PatchLabelsID(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*http.Response, error)
 
+	// GetLegacyAuthorizations request
+	GetLegacyAuthorizations(ctx context.Context, params *GetLegacyAuthorizationsParams) (*http.Response, error)
+
+	// PostLegacyAuthorizations request  with any body
+	PostLegacyAuthorizationsWithBody(ctx context.Context, params *PostLegacyAuthorizationsParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostLegacyAuthorizations(ctx context.Context, params *PostLegacyAuthorizationsParams, body PostLegacyAuthorizationsJSONRequestBody) (*http.Response, error)
+
+	// DeleteLegacyAuthorizationsID request
+	DeleteLegacyAuthorizationsID(ctx context.Context, authID string, params *DeleteLegacyAuthorizationsIDParams) (*http.Response, error)
+
+	// GetLegacyAuthorizationsID request
+	GetLegacyAuthorizationsID(ctx context.Context, authID string, params *GetLegacyAuthorizationsIDParams) (*http.Response, error)
+
+	// PatchLegacyAuthorizationsID request  with any body
+	PatchLegacyAuthorizationsIDWithBody(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PatchLegacyAuthorizationsID(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, body PatchLegacyAuthorizationsIDJSONRequestBody) (*http.Response, error)
+
+	// PostLegacyAuthorizationsIDPassword request  with any body
+	PostLegacyAuthorizationsIDPasswordWithBody(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostLegacyAuthorizationsIDPassword(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, body PostLegacyAuthorizationsIDPasswordJSONRequestBody) (*http.Response, error)
+
 	// GetMe request
 	GetMe(ctx context.Context, params *GetMeParams) (*http.Response, error)
 
@@ -440,6 +473,12 @@ type ClientInterface interface {
 
 	PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error)
 
+	// GetPing request
+	GetPing(ctx context.Context) (*http.Response, error)
+
+	// HeadPing request
+	HeadPing(ctx context.Context) (*http.Response, error)
+
 	// PostQuery request  with any body
 	PostQueryWithBody(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*http.Response, error)
 
@@ -463,6 +502,23 @@ type ClientInterface interface {
 
 	// GetReady request
 	GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error)
+
+	// PostRestoreBucketMetadata request  with any body
+	PostRestoreBucketMetadataWithBody(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostRestoreBucketMetadata(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Response, error)
+
+	// PostRestoreBucketID request  with any body
+	PostRestoreBucketIDWithBody(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Response, error)
+
+	// PostRestoreKV request  with any body
+	PostRestoreKVWithBody(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader) (*http.Response, error)
+
+	// PostRestoreShardId request  with any body
+	PostRestoreShardIdWithBody(ctx context.Context, shardID string, params *PostRestoreShardIdParams, contentType string, body io.Reader) (*http.Response, error)
+
+	// PostRestoreSQL request  with any body
+	PostRestoreSQLWithBody(ctx context.Context, params *PostRestoreSQLParams, contentType string, body io.Reader) (*http.Response, error)
 
 	// GetScrapers request
 	GetScrapers(ctx context.Context, params *GetScrapersParams) (*http.Response, error)
@@ -523,11 +579,6 @@ type ClientInterface interface {
 	PostSetupWithBody(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*http.Response, error)
 
 	PostSetup(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*http.Response, error)
-
-	// PostSetupUser request  with any body
-	PostSetupUserWithBody(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Response, error)
-
-	PostSetupUser(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Response, error)
 
 	// PostSignin request
 	PostSignin(ctx context.Context, params *PostSigninParams) (*http.Response, error)
@@ -654,8 +705,8 @@ type ClientInterface interface {
 	// GetTasksIDRunsIDLogs request
 	GetTasksIDRunsIDLogs(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*http.Response, error)
 
-	// PostTasksIDRunsIDRetry request
-	PostTasksIDRunsIDRetry(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*http.Response, error)
+	// PostTasksIDRunsIDRetry request  with any body
+	PostTasksIDRunsIDRetryWithBody(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams, contentType string, body io.Reader) (*http.Response, error)
 
 	// GetTelegrafPlugins request
 	GetTelegrafPlugins(ctx context.Context, params *GetTelegrafPluginsParams) (*http.Response, error)
@@ -850,6 +901,33 @@ func (c *Client) PatchAuthorizationsIDWithBody(ctx context.Context, authID strin
 
 func (c *Client) PatchAuthorizationsID(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*http.Response, error) {
 	req, err := NewPatchAuthorizationsIDRequest(c.service.ServerAPIURL(), authID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetBackupKV(ctx context.Context, params *GetBackupKVParams) (*http.Response, error) {
+	req, err := NewGetBackupKVRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetBackupMetadata(ctx context.Context, params *GetBackupMetadataParams) (*http.Response, error) {
+	req, err := NewGetBackupMetadataRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetBackupShardId(ctx context.Context, shardID int64, params *GetBackupShardIdParams) (*http.Response, error) {
+	req, err := NewGetBackupShardIdRequest(c.service.ServerAPIURL(), shardID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1676,6 +1754,87 @@ func (c *Client) PatchLabelsID(ctx context.Context, labelID string, params *Patc
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetLegacyAuthorizations(ctx context.Context, params *GetLegacyAuthorizationsParams) (*http.Response, error) {
+	req, err := NewGetLegacyAuthorizationsRequest(c.service.ServerURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostLegacyAuthorizationsWithBody(ctx context.Context, params *PostLegacyAuthorizationsParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostLegacyAuthorizationsRequestWithBody(c.service.ServerURL(), params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostLegacyAuthorizations(ctx context.Context, params *PostLegacyAuthorizationsParams, body PostLegacyAuthorizationsJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostLegacyAuthorizationsRequest(c.service.ServerURL(), params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteLegacyAuthorizationsID(ctx context.Context, authID string, params *DeleteLegacyAuthorizationsIDParams) (*http.Response, error) {
+	req, err := NewDeleteLegacyAuthorizationsIDRequest(c.service.ServerURL(), authID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetLegacyAuthorizationsID(ctx context.Context, authID string, params *GetLegacyAuthorizationsIDParams) (*http.Response, error) {
+	req, err := NewGetLegacyAuthorizationsIDRequest(c.service.ServerURL(), authID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchLegacyAuthorizationsIDWithBody(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPatchLegacyAuthorizationsIDRequestWithBody(c.service.ServerURL(), authID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchLegacyAuthorizationsID(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, body PatchLegacyAuthorizationsIDJSONRequestBody) (*http.Response, error) {
+	req, err := NewPatchLegacyAuthorizationsIDRequest(c.service.ServerURL(), authID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostLegacyAuthorizationsIDPasswordWithBody(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostLegacyAuthorizationsIDPasswordRequestWithBody(c.service.ServerURL(), authID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostLegacyAuthorizationsIDPassword(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, body PostLegacyAuthorizationsIDPasswordJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostLegacyAuthorizationsIDPasswordRequest(c.service.ServerURL(), authID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
 func (c *Client) GetMe(ctx context.Context, params *GetMeParams) (*http.Response, error) {
 	req, err := NewGetMeRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
@@ -2126,6 +2285,24 @@ func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *Po
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetPing(ctx context.Context) (*http.Response, error) {
+	req, err := NewGetPingRequest(c.service.ServerURL())
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) HeadPing(ctx context.Context) (*http.Response, error) {
+	req, err := NewHeadPingRequest(c.service.ServerURL())
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
 func (c *Client) PostQueryWithBody(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*http.Response, error) {
 	req, err := NewPostQueryRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
@@ -2200,6 +2377,60 @@ func (c *Client) GetQuerySuggestionsName(ctx context.Context, name string, param
 
 func (c *Client) GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error) {
 	req, err := NewGetReadyRequest(c.service.ServerURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreBucketMetadataWithBody(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRestoreBucketMetadataRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreBucketMetadata(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostRestoreBucketMetadataRequest(c.service.ServerAPIURL(), params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreBucketIDWithBody(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRestoreBucketIDRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreKVWithBody(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRestoreKVRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreShardIdWithBody(ctx context.Context, shardID string, params *PostRestoreShardIdParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRestoreShardIdRequestWithBody(c.service.ServerAPIURL(), shardID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreSQLWithBody(ctx context.Context, params *PostRestoreSQLParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRestoreSQLRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2398,24 +2629,6 @@ func (c *Client) PostSetupWithBody(ctx context.Context, params *PostSetupParams,
 
 func (c *Client) PostSetup(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*http.Response, error) {
 	req, err := NewPostSetupRequest(c.service.ServerAPIURL(), params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostSetupUserWithBody(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostSetupUserRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostSetupUser(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostSetupUserRequest(c.service.ServerAPIURL(), params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2828,8 +3041,8 @@ func (c *Client) GetTasksIDRunsIDLogs(ctx context.Context, taskID string, runID 
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
-func (c *Client) PostTasksIDRunsIDRetry(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*http.Response, error) {
-	req, err := NewPostTasksIDRunsIDRetryRequest(c.service.ServerAPIURL(), taskID, runID, params)
+func (c *Client) PostTasksIDRunsIDRetryWithBody(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostTasksIDRunsIDRetryRequestWithBody(c.service.ServerAPIURL(), taskID, runID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3605,6 +3818,169 @@ func NewPatchAuthorizationsIDRequestWithBody(server string, authID string, param
 	return req, nil
 }
 
+// NewGetBackupKVRequest generates requests for GetBackupKV
+func NewGetBackupKVRequest(server string, params *GetBackupKVParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/backup/kv")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetBackupMetadataRequest generates requests for GetBackupMetadata
+func NewGetBackupMetadataRequest(server string, params *GetBackupMetadataParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/backup/metadata")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	if params.AcceptEncoding != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Accept-Encoding", runtime.ParamLocationHeader, *params.AcceptEncoding)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Accept-Encoding", headerParam1)
+	}
+
+	return req, nil
+}
+
+// NewGetBackupShardIdRequest generates requests for GetBackupShardId
+func NewGetBackupShardIdRequest(server string, shardID int64, params *GetBackupShardIdParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "shardID", runtime.ParamLocationPath, shardID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/backup/shards/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	queryValues := queryURL.Query()
+
+	if params.Since != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "since", runtime.ParamLocationQuery, *params.Since); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	if params.AcceptEncoding != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Accept-Encoding", runtime.ParamLocationHeader, *params.AcceptEncoding)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Accept-Encoding", headerParam1)
+	}
+
+	return req, nil
+}
+
 // NewGetBucketsRequest generates requests for GetBuckets
 func NewGetBucketsRequest(server string, params *GetBucketsParams) (*http.Request, error) {
 	var err error
@@ -3709,6 +4085,22 @@ func NewGetBucketsRequest(server string, params *GetBucketsParams) (*http.Reques
 	if params.Name != nil {
 
 		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Id != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, *params.Id); err != nil {
 			return nil, err
 		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 			return nil, err
@@ -6182,16 +6574,36 @@ func NewGetDBRPsRequest(server string, params *GetDBRPsParams) (*http.Request, e
 
 	queryValues := queryURL.Query()
 
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
+	if params.OrgID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, *params.OrgID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
 			}
 		}
+
+	}
+
+	if params.Org != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "org", runtime.ParamLocationQuery, *params.Org); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
 	}
 
 	if params.Id != nil {
@@ -6375,16 +6787,36 @@ func NewDeleteDBRPIDRequest(server string, dbrpID string, params *DeleteDBRPIDPa
 
 	queryValues := queryURL.Query()
 
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
+	if params.OrgID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, *params.OrgID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
 			}
 		}
+
+	}
+
+	if params.Org != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "org", runtime.ParamLocationQuery, *params.Org); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
 	}
 
 	queryURL.RawQuery = queryValues.Encode()
@@ -6436,16 +6868,36 @@ func NewGetDBRPsIDRequest(server string, dbrpID string, params *GetDBRPsIDParams
 
 	queryValues := queryURL.Query()
 
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
+	if params.OrgID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, *params.OrgID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
 			}
 		}
+
+	}
+
+	if params.Org != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "org", runtime.ParamLocationQuery, *params.Org); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
 	}
 
 	queryURL.RawQuery = queryValues.Encode()
@@ -6508,16 +6960,36 @@ func NewPatchDBRPIDRequestWithBody(server string, dbrpID string, params *PatchDB
 
 	queryValues := queryURL.Query()
 
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, params.OrgID); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
+	if params.OrgID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, *params.OrgID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
 			}
 		}
+
+	}
+
+	if params.Org != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "org", runtime.ParamLocationQuery, *params.Org); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
 	}
 
 	queryURL.RawQuery = queryValues.Encode()
@@ -7398,6 +7870,404 @@ func NewPatchLabelsIDRequestWithBody(server string, labelID string, params *Patc
 	queryURL := serverURL.ResolveReference(&operationURL)
 
 	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewGetLegacyAuthorizationsRequest generates requests for GetLegacyAuthorizations
+func NewGetLegacyAuthorizationsRequest(server string, params *GetLegacyAuthorizationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/legacy/authorizations")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	queryValues := queryURL.Query()
+
+	if params.UserID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "userID", runtime.ParamLocationQuery, *params.UserID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.User != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "user", runtime.ParamLocationQuery, *params.User); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.OrgID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, *params.OrgID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Org != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "org", runtime.ParamLocationQuery, *params.Org); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Token != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "token", runtime.ParamLocationQuery, *params.Token); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.AuthID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "authID", runtime.ParamLocationQuery, *params.AuthID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPostLegacyAuthorizationsRequest calls the generic PostLegacyAuthorizations builder with application/json body
+func NewPostLegacyAuthorizationsRequest(server string, params *PostLegacyAuthorizationsParams, body PostLegacyAuthorizationsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostLegacyAuthorizationsRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostLegacyAuthorizationsRequestWithBody generates requests for PostLegacyAuthorizations with any type of body
+func NewPostLegacyAuthorizationsRequestWithBody(server string, params *PostLegacyAuthorizationsParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/legacy/authorizations")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewDeleteLegacyAuthorizationsIDRequest generates requests for DeleteLegacyAuthorizationsID
+func NewDeleteLegacyAuthorizationsIDRequest(server string, authID string, params *DeleteLegacyAuthorizationsIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authID", runtime.ParamLocationPath, authID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/legacy/authorizations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetLegacyAuthorizationsIDRequest generates requests for GetLegacyAuthorizationsID
+func NewGetLegacyAuthorizationsIDRequest(server string, authID string, params *GetLegacyAuthorizationsIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authID", runtime.ParamLocationPath, authID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/legacy/authorizations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPatchLegacyAuthorizationsIDRequest calls the generic PatchLegacyAuthorizationsID builder with application/json body
+func NewPatchLegacyAuthorizationsIDRequest(server string, authID string, params *PatchLegacyAuthorizationsIDParams, body PatchLegacyAuthorizationsIDJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchLegacyAuthorizationsIDRequestWithBody(server, authID, params, "application/json", bodyReader)
+}
+
+// NewPatchLegacyAuthorizationsIDRequestWithBody generates requests for PatchLegacyAuthorizationsID with any type of body
+func NewPatchLegacyAuthorizationsIDRequestWithBody(server string, authID string, params *PatchLegacyAuthorizationsIDParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authID", runtime.ParamLocationPath, authID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/legacy/authorizations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewPostLegacyAuthorizationsIDPasswordRequest calls the generic PostLegacyAuthorizationsIDPassword builder with application/json body
+func NewPostLegacyAuthorizationsIDPasswordRequest(server string, authID string, params *PostLegacyAuthorizationsIDPasswordParams, body PostLegacyAuthorizationsIDPasswordJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostLegacyAuthorizationsIDPasswordRequestWithBody(server, authID, params, "application/json", bodyReader)
+}
+
+// NewPostLegacyAuthorizationsIDPasswordRequestWithBody generates requests for PostLegacyAuthorizationsIDPassword with any type of body
+func NewPostLegacyAuthorizationsIDPasswordRequestWithBody(server string, authID string, params *PostLegacyAuthorizationsIDPasswordParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authID", runtime.ParamLocationPath, authID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/legacy/authorizations/%s/password", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9382,6 +10252,60 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 	return req, nil
 }
 
+// NewGetPingRequest generates requests for GetPing
+func NewGetPingRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/ping")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewHeadPingRequest generates requests for HeadPing
+func NewHeadPingRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/ping")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("HEAD", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewPostQueryRequest calls the generic PostQuery builder with application/json body
 func NewPostQueryRequest(server string, params *PostQueryParams, body PostQueryJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -9736,6 +10660,313 @@ func NewGetReadyRequest(server string, params *GetReadyParams) (*http.Request, e
 		req.Header.Set("Zap-Trace-Span", headerParam0)
 	}
 
+	return req, nil
+}
+
+// NewPostRestoreBucketMetadataRequest calls the generic PostRestoreBucketMetadata builder with application/json body
+func NewPostRestoreBucketMetadataRequest(server string, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostRestoreBucketMetadataRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostRestoreBucketMetadataRequestWithBody generates requests for PostRestoreBucketMetadata with any type of body
+func NewPostRestoreBucketMetadataRequestWithBody(server string, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/restore/bucket-metadata")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewPostRestoreBucketIDRequestWithBody generates requests for PostRestoreBucketID with any type of body
+func NewPostRestoreBucketIDRequestWithBody(server string, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "bucketID", runtime.ParamLocationPath, bucketID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/restore/bucket/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	if params.ContentType != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Content-Type", runtime.ParamLocationHeader, *params.ContentType)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Type", headerParam1)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewPostRestoreKVRequestWithBody generates requests for PostRestoreKV with any type of body
+func NewPostRestoreKVRequestWithBody(server string, params *PostRestoreKVParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/restore/kv")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	if params.ContentEncoding != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Content-Encoding", runtime.ParamLocationHeader, *params.ContentEncoding)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Encoding", headerParam1)
+	}
+
+	if params.ContentType != nil {
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Content-Type", runtime.ParamLocationHeader, *params.ContentType)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Type", headerParam2)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewPostRestoreShardIdRequestWithBody generates requests for PostRestoreShardId with any type of body
+func NewPostRestoreShardIdRequestWithBody(server string, shardID string, params *PostRestoreShardIdParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "shardID", runtime.ParamLocationPath, shardID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/restore/shards/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	if params.ContentEncoding != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Content-Encoding", runtime.ParamLocationHeader, *params.ContentEncoding)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Encoding", headerParam1)
+	}
+
+	if params.ContentType != nil {
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Content-Type", runtime.ParamLocationHeader, *params.ContentType)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Type", headerParam2)
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	return req, nil
+}
+
+// NewPostRestoreSQLRequestWithBody generates requests for PostRestoreSQL with any type of body
+func NewPostRestoreSQLRequestWithBody(server string, params *PostRestoreSQLParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/restore/sql")
+	if operationPath[0] == '/' {
+		operationPath = operationPath[1:]
+	}
+	operationURL := url.URL{
+		Path: operationPath,
+	}
+
+	queryURL := serverURL.ResolveReference(&operationURL)
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	if params.ContentEncoding != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Content-Encoding", runtime.ParamLocationHeader, *params.ContentEncoding)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Encoding", headerParam1)
+	}
+
+	if params.ContentType != nil {
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Content-Type", runtime.ParamLocationHeader, *params.ContentType)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Content-Type", headerParam2)
+	}
+
+	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -10573,58 +11804,6 @@ func NewPostSetupRequestWithBody(server string, params *PostSetupParams, content
 	}
 
 	operationPath := fmt.Sprintf("/setup")
-	if operationPath[0] == '/' {
-		operationPath = operationPath[1:]
-	}
-	operationURL := url.URL{
-		Path: operationPath,
-	}
-
-	queryURL := serverURL.ResolveReference(&operationURL)
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
-}
-
-// NewPostSetupUserRequest calls the generic PostSetupUser builder with application/json body
-func NewPostSetupUserRequest(server string, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostSetupUserRequestWithBody(server, params, "application/json", bodyReader)
-}
-
-// NewPostSetupUserRequestWithBody generates requests for PostSetupUser with any type of body
-func NewPostSetupUserRequestWithBody(server string, params *PostSetupUserParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/setup/user")
 	if operationPath[0] == '/' {
 		operationPath = operationPath[1:]
 	}
@@ -12579,8 +13758,8 @@ func NewGetTasksIDRunsIDLogsRequest(server string, taskID string, runID string, 
 	return req, nil
 }
 
-// NewPostTasksIDRunsIDRetryRequest generates requests for PostTasksIDRunsIDRetry
-func NewPostTasksIDRunsIDRetryRequest(server string, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*http.Request, error) {
+// NewPostTasksIDRunsIDRetryRequestWithBody generates requests for PostTasksIDRunsIDRetry with any type of body
+func NewPostTasksIDRunsIDRetryRequestWithBody(server string, taskID string, runID string, params *PostTasksIDRunsIDRetryParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -12612,10 +13791,12 @@ func NewPostTasksIDRunsIDRetryRequest(server string, taskID string, runID string
 
 	queryURL := serverURL.ResolveReference(&operationURL)
 
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -12628,6 +13809,7 @@ func NewPostTasksIDRunsIDRetryRequest(server string, taskID string, runID string
 		req.Header.Set("Zap-Trace-Span", headerParam0)
 	}
 
+	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -13527,6 +14709,90 @@ func NewGetUsersRequest(server string, params *GetUsersParams) (*http.Request, e
 	}
 
 	queryURL := serverURL.ResolveReference(&operationURL)
+
+	queryValues := queryURL.Query()
+
+	if params.Offset != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Limit != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.After != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "after", runtime.ParamLocationQuery, *params.After); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Name != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Id != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, *params.Id); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
@@ -14478,6 +15744,15 @@ type ClientWithResponsesInterface interface {
 
 	PatchAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody) (*PatchAuthorizationsIDResponse, error)
 
+	// GetBackupKV request
+	GetBackupKVWithResponse(ctx context.Context, params *GetBackupKVParams) (*GetBackupKVResponse, error)
+
+	// GetBackupMetadata request
+	GetBackupMetadataWithResponse(ctx context.Context, params *GetBackupMetadataParams) (*GetBackupMetadataResponse, error)
+
+	// GetBackupShardId request
+	GetBackupShardIdWithResponse(ctx context.Context, shardID int64, params *GetBackupShardIdParams) (*GetBackupShardIdResponse, error)
+
 	// GetBuckets request
 	GetBucketsWithResponse(ctx context.Context, params *GetBucketsParams) (*GetBucketsResponse, error)
 
@@ -14725,6 +16000,30 @@ type ClientWithResponsesInterface interface {
 
 	PatchLabelsIDWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody) (*PatchLabelsIDResponse, error)
 
+	// GetLegacyAuthorizations request
+	GetLegacyAuthorizationsWithResponse(ctx context.Context, params *GetLegacyAuthorizationsParams) (*GetLegacyAuthorizationsResponse, error)
+
+	// PostLegacyAuthorizations request  with any body
+	PostLegacyAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostLegacyAuthorizationsParams, contentType string, body io.Reader) (*PostLegacyAuthorizationsResponse, error)
+
+	PostLegacyAuthorizationsWithResponse(ctx context.Context, params *PostLegacyAuthorizationsParams, body PostLegacyAuthorizationsJSONRequestBody) (*PostLegacyAuthorizationsResponse, error)
+
+	// DeleteLegacyAuthorizationsID request
+	DeleteLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteLegacyAuthorizationsIDParams) (*DeleteLegacyAuthorizationsIDResponse, error)
+
+	// GetLegacyAuthorizationsID request
+	GetLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetLegacyAuthorizationsIDParams) (*GetLegacyAuthorizationsIDResponse, error)
+
+	// PatchLegacyAuthorizationsID request  with any body
+	PatchLegacyAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, contentType string, body io.Reader) (*PatchLegacyAuthorizationsIDResponse, error)
+
+	PatchLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, body PatchLegacyAuthorizationsIDJSONRequestBody) (*PatchLegacyAuthorizationsIDResponse, error)
+
+	// PostLegacyAuthorizationsIDPassword request  with any body
+	PostLegacyAuthorizationsIDPasswordWithBodyWithResponse(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, contentType string, body io.Reader) (*PostLegacyAuthorizationsIDPasswordResponse, error)
+
+	PostLegacyAuthorizationsIDPasswordWithResponse(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, body PostLegacyAuthorizationsIDPasswordJSONRequestBody) (*PostLegacyAuthorizationsIDPasswordResponse, error)
+
 	// GetMe request
 	GetMeWithResponse(ctx context.Context, params *GetMeParams) (*GetMeResponse, error)
 
@@ -14860,6 +16159,12 @@ type ClientWithResponsesInterface interface {
 
 	PostOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*PostOrgsIDSecretsResponse, error)
 
+	// GetPing request
+	GetPingWithResponse(ctx context.Context) (*GetPingResponse, error)
+
+	// HeadPing request
+	HeadPingWithResponse(ctx context.Context) (*HeadPingResponse, error)
+
 	// PostQuery request  with any body
 	PostQueryWithBodyWithResponse(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*PostQueryResponse, error)
 
@@ -14883,6 +16188,23 @@ type ClientWithResponsesInterface interface {
 
 	// GetReady request
 	GetReadyWithResponse(ctx context.Context, params *GetReadyParams) (*GetReadyResponse, error)
+
+	// PostRestoreBucketMetadata request  with any body
+	PostRestoreBucketMetadataWithBodyWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*PostRestoreBucketMetadataResponse, error)
+
+	PostRestoreBucketMetadataWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*PostRestoreBucketMetadataResponse, error)
+
+	// PostRestoreBucketID request  with any body
+	PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*PostRestoreBucketIDResponse, error)
+
+	// PostRestoreKV request  with any body
+	PostRestoreKVWithBodyWithResponse(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader) (*PostRestoreKVResponse, error)
+
+	// PostRestoreShardId request  with any body
+	PostRestoreShardIdWithBodyWithResponse(ctx context.Context, shardID string, params *PostRestoreShardIdParams, contentType string, body io.Reader) (*PostRestoreShardIdResponse, error)
+
+	// PostRestoreSQL request  with any body
+	PostRestoreSQLWithBodyWithResponse(ctx context.Context, params *PostRestoreSQLParams, contentType string, body io.Reader) (*PostRestoreSQLResponse, error)
 
 	// GetScrapers request
 	GetScrapersWithResponse(ctx context.Context, params *GetScrapersParams) (*GetScrapersResponse, error)
@@ -14943,11 +16265,6 @@ type ClientWithResponsesInterface interface {
 	PostSetupWithBodyWithResponse(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader) (*PostSetupResponse, error)
 
 	PostSetupWithResponse(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody) (*PostSetupResponse, error)
-
-	// PostSetupUser request  with any body
-	PostSetupUserWithBodyWithResponse(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*PostSetupUserResponse, error)
-
-	PostSetupUserWithResponse(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*PostSetupUserResponse, error)
 
 	// PostSignin request
 	PostSigninWithResponse(ctx context.Context, params *PostSigninParams) (*PostSigninResponse, error)
@@ -15074,8 +16391,8 @@ type ClientWithResponsesInterface interface {
 	// GetTasksIDRunsIDLogs request
 	GetTasksIDRunsIDLogsWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams) (*GetTasksIDRunsIDLogsResponse, error)
 
-	// PostTasksIDRunsIDRetry request
-	PostTasksIDRunsIDRetryWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*PostTasksIDRunsIDRetryResponse, error)
+	// PostTasksIDRunsIDRetry request  with any body
+	PostTasksIDRunsIDRetryWithBodyWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams, contentType string, body io.Reader) (*PostTasksIDRunsIDRetryResponse, error)
 
 	// GetTelegrafPlugins request
 	GetTelegrafPluginsWithResponse(ctx context.Context, params *GetTelegrafPluginsParams) (*GetTelegrafPluginsResponse, error)
@@ -15336,6 +16653,73 @@ func (r PatchAuthorizationsIDResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PatchAuthorizationsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBackupKVResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBackupKVResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBackupKVResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBackupMetadataResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBackupMetadataResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBackupMetadataResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBackupShardIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBackupShardIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBackupShardIdResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -16436,7 +17820,7 @@ func (r DeleteDBRPIDResponse) StatusCode() int {
 type GetDBRPsIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *DBRP
+	JSON200      *DBRPGet
 	JSON400      *Error
 	JSONDefault  *Error
 }
@@ -16460,7 +17844,7 @@ func (r GetDBRPsIDResponse) StatusCode() int {
 type PatchDBRPIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *DBRP
+	JSON200      *DBRPGet
 	JSON400      *Error
 	JSON404      *Error
 	JSONDefault  *Error
@@ -16853,10 +18237,147 @@ func (r PatchLabelsIDResponse) StatusCode() int {
 	return 0
 }
 
+type GetLegacyAuthorizationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Authorizations
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetLegacyAuthorizationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetLegacyAuthorizationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostLegacyAuthorizationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Authorization
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostLegacyAuthorizationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostLegacyAuthorizationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteLegacyAuthorizationsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteLegacyAuthorizationsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteLegacyAuthorizationsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetLegacyAuthorizationsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Authorization
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetLegacyAuthorizationsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetLegacyAuthorizationsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchLegacyAuthorizationsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Authorization
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchLegacyAuthorizationsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchLegacyAuthorizationsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostLegacyAuthorizationsIDPasswordResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostLegacyAuthorizationsIDPasswordResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostLegacyAuthorizationsIDPasswordResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetMeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *User
+	JSON200      *UserResponse
 	JSONDefault  *Error
 }
 
@@ -17661,6 +19182,48 @@ func (r PostOrgsIDSecretsResponse) StatusCode() int {
 	return 0
 }
 
+type GetPingResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPingResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPingResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type HeadPingResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r HeadPingResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r HeadPingResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type PostQueryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17792,6 +19355,118 @@ func (r GetReadyResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetReadyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostRestoreBucketMetadataResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *RestoredBucketMappings
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRestoreBucketMetadataResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRestoreBucketMetadataResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostRestoreBucketIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]byte
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRestoreBucketIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRestoreBucketIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostRestoreKVResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRestoreKVResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRestoreKVResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostRestoreShardIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRestoreShardIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRestoreShardIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostRestoreSQLResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRestoreSQLResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRestoreSQLResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18155,29 +19830,6 @@ func (r PostSetupResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostSetupResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PostSetupUserResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *OnboardingResponse
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r PostSetupUserResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostSetupUserResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19430,7 +21082,7 @@ func (r GetUsersResponse) StatusCode() int {
 type PostUsersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *User
+	JSON201      *UserResponse
 	JSONDefault  *Error
 }
 
@@ -19475,7 +21127,7 @@ func (r DeleteUsersIDResponse) StatusCode() int {
 type GetUsersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *User
+	JSON200      *UserResponse
 	JSONDefault  *Error
 }
 
@@ -19498,7 +21150,7 @@ func (r GetUsersIDResponse) StatusCode() int {
 type PatchUsersIDResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *User
+	JSON200      *UserResponse
 	JSONDefault  *Error
 }
 
@@ -19842,6 +21494,33 @@ func (c *ClientWithResponses) PatchAuthorizationsIDWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParsePatchAuthorizationsIDResponse(rsp)
+}
+
+// GetBackupKVWithResponse request returning *GetBackupKVResponse
+func (c *ClientWithResponses) GetBackupKVWithResponse(ctx context.Context, params *GetBackupKVParams) (*GetBackupKVResponse, error) {
+	rsp, err := c.GetBackupKV(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBackupKVResponse(rsp)
+}
+
+// GetBackupMetadataWithResponse request returning *GetBackupMetadataResponse
+func (c *ClientWithResponses) GetBackupMetadataWithResponse(ctx context.Context, params *GetBackupMetadataParams) (*GetBackupMetadataResponse, error) {
+	rsp, err := c.GetBackupMetadata(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBackupMetadataResponse(rsp)
+}
+
+// GetBackupShardIdWithResponse request returning *GetBackupShardIdResponse
+func (c *ClientWithResponses) GetBackupShardIdWithResponse(ctx context.Context, shardID int64, params *GetBackupShardIdParams) (*GetBackupShardIdResponse, error) {
+	rsp, err := c.GetBackupShardId(ctx, shardID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBackupShardIdResponse(rsp)
 }
 
 // GetBucketsWithResponse request returning *GetBucketsResponse
@@ -20637,6 +22316,84 @@ func (c *ClientWithResponses) PatchLabelsIDWithResponse(ctx context.Context, lab
 	return ParsePatchLabelsIDResponse(rsp)
 }
 
+// GetLegacyAuthorizationsWithResponse request returning *GetLegacyAuthorizationsResponse
+func (c *ClientWithResponses) GetLegacyAuthorizationsWithResponse(ctx context.Context, params *GetLegacyAuthorizationsParams) (*GetLegacyAuthorizationsResponse, error) {
+	rsp, err := c.GetLegacyAuthorizations(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetLegacyAuthorizationsResponse(rsp)
+}
+
+// PostLegacyAuthorizationsWithBodyWithResponse request with arbitrary body returning *PostLegacyAuthorizationsResponse
+func (c *ClientWithResponses) PostLegacyAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostLegacyAuthorizationsParams, contentType string, body io.Reader) (*PostLegacyAuthorizationsResponse, error) {
+	rsp, err := c.PostLegacyAuthorizationsWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostLegacyAuthorizationsResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostLegacyAuthorizationsWithResponse(ctx context.Context, params *PostLegacyAuthorizationsParams, body PostLegacyAuthorizationsJSONRequestBody) (*PostLegacyAuthorizationsResponse, error) {
+	rsp, err := c.PostLegacyAuthorizations(ctx, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostLegacyAuthorizationsResponse(rsp)
+}
+
+// DeleteLegacyAuthorizationsIDWithResponse request returning *DeleteLegacyAuthorizationsIDResponse
+func (c *ClientWithResponses) DeleteLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteLegacyAuthorizationsIDParams) (*DeleteLegacyAuthorizationsIDResponse, error) {
+	rsp, err := c.DeleteLegacyAuthorizationsID(ctx, authID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteLegacyAuthorizationsIDResponse(rsp)
+}
+
+// GetLegacyAuthorizationsIDWithResponse request returning *GetLegacyAuthorizationsIDResponse
+func (c *ClientWithResponses) GetLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetLegacyAuthorizationsIDParams) (*GetLegacyAuthorizationsIDResponse, error) {
+	rsp, err := c.GetLegacyAuthorizationsID(ctx, authID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetLegacyAuthorizationsIDResponse(rsp)
+}
+
+// PatchLegacyAuthorizationsIDWithBodyWithResponse request with arbitrary body returning *PatchLegacyAuthorizationsIDResponse
+func (c *ClientWithResponses) PatchLegacyAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, contentType string, body io.Reader) (*PatchLegacyAuthorizationsIDResponse, error) {
+	rsp, err := c.PatchLegacyAuthorizationsIDWithBody(ctx, authID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchLegacyAuthorizationsIDResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, body PatchLegacyAuthorizationsIDJSONRequestBody) (*PatchLegacyAuthorizationsIDResponse, error) {
+	rsp, err := c.PatchLegacyAuthorizationsID(ctx, authID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchLegacyAuthorizationsIDResponse(rsp)
+}
+
+// PostLegacyAuthorizationsIDPasswordWithBodyWithResponse request with arbitrary body returning *PostLegacyAuthorizationsIDPasswordResponse
+func (c *ClientWithResponses) PostLegacyAuthorizationsIDPasswordWithBodyWithResponse(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, contentType string, body io.Reader) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
+	rsp, err := c.PostLegacyAuthorizationsIDPasswordWithBody(ctx, authID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostLegacyAuthorizationsIDPasswordResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostLegacyAuthorizationsIDPasswordWithResponse(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, body PostLegacyAuthorizationsIDPasswordJSONRequestBody) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
+	rsp, err := c.PostLegacyAuthorizationsIDPassword(ctx, authID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostLegacyAuthorizationsIDPasswordResponse(rsp)
+}
+
 // GetMeWithResponse request returning *GetMeResponse
 func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, params *GetMeParams) (*GetMeResponse, error) {
 	rsp, err := c.GetMe(ctx, params)
@@ -21072,6 +22829,24 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context,
 	return ParsePostOrgsIDSecretsResponse(rsp)
 }
 
+// GetPingWithResponse request returning *GetPingResponse
+func (c *ClientWithResponses) GetPingWithResponse(ctx context.Context) (*GetPingResponse, error) {
+	rsp, err := c.GetPing(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetPingResponse(rsp)
+}
+
+// HeadPingWithResponse request returning *HeadPingResponse
+func (c *ClientWithResponses) HeadPingWithResponse(ctx context.Context) (*HeadPingResponse, error) {
+	rsp, err := c.HeadPing(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHeadPingResponse(rsp)
+}
+
 // PostQueryWithBodyWithResponse request with arbitrary body returning *PostQueryResponse
 func (c *ClientWithResponses) PostQueryWithBodyWithResponse(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader) (*PostQueryResponse, error) {
 	rsp, err := c.PostQueryWithBody(ctx, params, contentType, body)
@@ -21148,6 +22923,59 @@ func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *
 		return nil, err
 	}
 	return ParseGetReadyResponse(rsp)
+}
+
+// PostRestoreBucketMetadataWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketMetadataResponse
+func (c *ClientWithResponses) PostRestoreBucketMetadataWithBodyWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*PostRestoreBucketMetadataResponse, error) {
+	rsp, err := c.PostRestoreBucketMetadataWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreBucketMetadataResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostRestoreBucketMetadataWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*PostRestoreBucketMetadataResponse, error) {
+	rsp, err := c.PostRestoreBucketMetadata(ctx, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreBucketMetadataResponse(rsp)
+}
+
+// PostRestoreBucketIDWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketIDResponse
+func (c *ClientWithResponses) PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*PostRestoreBucketIDResponse, error) {
+	rsp, err := c.PostRestoreBucketIDWithBody(ctx, bucketID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreBucketIDResponse(rsp)
+}
+
+// PostRestoreKVWithBodyWithResponse request with arbitrary body returning *PostRestoreKVResponse
+func (c *ClientWithResponses) PostRestoreKVWithBodyWithResponse(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader) (*PostRestoreKVResponse, error) {
+	rsp, err := c.PostRestoreKVWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreKVResponse(rsp)
+}
+
+// PostRestoreShardIdWithBodyWithResponse request with arbitrary body returning *PostRestoreShardIdResponse
+func (c *ClientWithResponses) PostRestoreShardIdWithBodyWithResponse(ctx context.Context, shardID string, params *PostRestoreShardIdParams, contentType string, body io.Reader) (*PostRestoreShardIdResponse, error) {
+	rsp, err := c.PostRestoreShardIdWithBody(ctx, shardID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreShardIdResponse(rsp)
+}
+
+// PostRestoreSQLWithBodyWithResponse request with arbitrary body returning *PostRestoreSQLResponse
+func (c *ClientWithResponses) PostRestoreSQLWithBodyWithResponse(ctx context.Context, params *PostRestoreSQLParams, contentType string, body io.Reader) (*PostRestoreSQLResponse, error) {
+	rsp, err := c.PostRestoreSQLWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreSQLResponse(rsp)
 }
 
 // GetScrapersWithResponse request returning *GetScrapersResponse
@@ -21340,23 +23168,6 @@ func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params 
 		return nil, err
 	}
 	return ParsePostSetupResponse(rsp)
-}
-
-// PostSetupUserWithBodyWithResponse request with arbitrary body returning *PostSetupUserResponse
-func (c *ClientWithResponses) PostSetupUserWithBodyWithResponse(ctx context.Context, params *PostSetupUserParams, contentType string, body io.Reader) (*PostSetupUserResponse, error) {
-	rsp, err := c.PostSetupUserWithBody(ctx, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostSetupUserResponse(rsp)
-}
-
-func (c *ClientWithResponses) PostSetupUserWithResponse(ctx context.Context, params *PostSetupUserParams, body PostSetupUserJSONRequestBody) (*PostSetupUserResponse, error) {
-	rsp, err := c.PostSetupUser(ctx, params, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostSetupUserResponse(rsp)
 }
 
 // PostSigninWithResponse request returning *PostSigninResponse
@@ -21754,9 +23565,9 @@ func (c *ClientWithResponses) GetTasksIDRunsIDLogsWithResponse(ctx context.Conte
 	return ParseGetTasksIDRunsIDLogsResponse(rsp)
 }
 
-// PostTasksIDRunsIDRetryWithResponse request returning *PostTasksIDRunsIDRetryResponse
-func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams) (*PostTasksIDRunsIDRetryResponse, error) {
-	rsp, err := c.PostTasksIDRunsIDRetry(ctx, taskID, runID, params)
+// PostTasksIDRunsIDRetryWithBodyWithResponse request with arbitrary body returning *PostTasksIDRunsIDRetryResponse
+func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithBodyWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams, contentType string, body io.Reader) (*PostTasksIDRunsIDRetryResponse, error) {
+	rsp, err := c.PostTasksIDRunsIDRetryWithBody(ctx, taskID, runID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -22375,6 +24186,106 @@ func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*PatchAuthorization
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetBackupKVResponse parses an HTTP response from a GetBackupKVWithResponse call
+func ParseGetBackupKVResponse(rsp *http.Response) (*GetBackupKVResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBackupKVResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetBackupMetadataResponse parses an HTTP response from a GetBackupMetadataWithResponse call
+func ParseGetBackupMetadataResponse(rsp *http.Response) (*GetBackupMetadataResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBackupMetadataResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetBackupShardIdResponse parses an HTTP response from a GetBackupShardIdWithResponse call
+func ParseGetBackupShardIdResponse(rsp *http.Response) (*GetBackupShardIdResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBackupShardIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -24264,7 +26175,7 @@ func ParseGetDBRPsIDResponse(rsp *http.Response) (*GetDBRPsIDResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DBRP
+		var dest DBRPGet
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -24309,7 +26220,7 @@ func ParsePatchDBRPIDResponse(rsp *http.Response) (*PatchDBRPIDResponse, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DBRP
+		var dest DBRPGet
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -24975,6 +26886,227 @@ func ParsePatchLabelsIDResponse(rsp *http.Response) (*PatchLabelsIDResponse, err
 	return response, nil
 }
 
+// ParseGetLegacyAuthorizationsResponse parses an HTTP response from a GetLegacyAuthorizationsWithResponse call
+func ParseGetLegacyAuthorizationsResponse(rsp *http.Response) (*GetLegacyAuthorizationsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetLegacyAuthorizationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Authorizations
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostLegacyAuthorizationsResponse parses an HTTP response from a PostLegacyAuthorizationsWithResponse call
+func ParsePostLegacyAuthorizationsResponse(rsp *http.Response) (*PostLegacyAuthorizationsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostLegacyAuthorizationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Authorization
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseDeleteLegacyAuthorizationsIDResponse parses an HTTP response from a DeleteLegacyAuthorizationsIDWithResponse call
+func ParseDeleteLegacyAuthorizationsIDResponse(rsp *http.Response) (*DeleteLegacyAuthorizationsIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteLegacyAuthorizationsIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetLegacyAuthorizationsIDResponse parses an HTTP response from a GetLegacyAuthorizationsIDWithResponse call
+func ParseGetLegacyAuthorizationsIDResponse(rsp *http.Response) (*GetLegacyAuthorizationsIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetLegacyAuthorizationsIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Authorization
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePatchLegacyAuthorizationsIDResponse parses an HTTP response from a PatchLegacyAuthorizationsIDWithResponse call
+func ParsePatchLegacyAuthorizationsIDResponse(rsp *http.Response) (*PatchLegacyAuthorizationsIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchLegacyAuthorizationsIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Authorization
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostLegacyAuthorizationsIDPasswordResponse parses an HTTP response from a PostLegacyAuthorizationsIDPasswordWithResponse call
+func ParsePostLegacyAuthorizationsIDPasswordResponse(rsp *http.Response) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostLegacyAuthorizationsIDPasswordResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
 // ParseGetMeResponse parses an HTTP response from a GetMeWithResponse call
 func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -24990,7 +27122,7 @@ func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest User
+		var dest UserResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -26326,6 +28458,56 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*PostOrgsIDSecretsRespo
 	return response, nil
 }
 
+// ParseGetPingResponse parses an HTTP response from a GetPingWithResponse call
+func ParseGetPingResponse(rsp *http.Response) (*GetPingResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPingResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseHeadPingResponse parses an HTTP response from a HeadPingWithResponse call
+func ParseHeadPingResponse(rsp *http.Response) (*HeadPingResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &HeadPingResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
 // ParsePostQueryResponse parses an HTTP response from a PostQueryWithResponse call
 func ParsePostQueryResponse(rsp *http.Response) (*PostQueryResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -26530,6 +28712,175 @@ func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostRestoreBucketMetadataResponse parses an HTTP response from a PostRestoreBucketMetadataWithResponse call
+func ParsePostRestoreBucketMetadataResponse(rsp *http.Response) (*PostRestoreBucketMetadataResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRestoreBucketMetadataResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest RestoredBucketMappings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostRestoreBucketIDResponse parses an HTTP response from a PostRestoreBucketIDWithResponse call
+func ParsePostRestoreBucketIDResponse(rsp *http.Response) (*PostRestoreBucketIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRestoreBucketIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []byte
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostRestoreKVResponse parses an HTTP response from a PostRestoreKVWithResponse call
+func ParsePostRestoreKVResponse(rsp *http.Response) (*PostRestoreKVResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRestoreKVResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostRestoreShardIdResponse parses an HTTP response from a PostRestoreShardIdWithResponse call
+func ParsePostRestoreShardIdResponse(rsp *http.Response) (*PostRestoreShardIdResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRestoreShardIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostRestoreSQLResponse parses an HTTP response from a PostRestoreSQLWithResponse call
+func ParsePostRestoreSQLResponse(rsp *http.Response) (*PostRestoreSQLResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRestoreSQLResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -27091,44 +29442,6 @@ func ParsePostSetupResponse(rsp *http.Response) (*PostSetupResponse, error) {
 	}
 
 	response := &PostSetupResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest OnboardingResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParsePostSetupUserResponse parses an HTTP response from a PostSetupUserWithResponse call
-func ParsePostSetupUserResponse(rsp *http.Response) (*PostSetupUserResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostSetupUserResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -29223,7 +31536,7 @@ func ParsePostUsersResponse(rsp *http.Response) (*PostUsersResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest User
+		var dest UserResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -29292,7 +31605,7 @@ func ParseGetUsersIDResponse(rsp *http.Response) (*GetUsersIDResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest User
+		var dest UserResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -29330,7 +31643,7 @@ func ParsePatchUsersIDResponse(rsp *http.Response) (*PatchUsersIDResponse, error
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest User
+		var dest UserResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

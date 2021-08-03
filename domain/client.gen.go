@@ -23996,6 +23996,10 @@ func ParseGetRoutesResponse(rsp *http.Response) (*GetRoutesResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Routes
@@ -24004,11 +24008,6 @@ func ParseGetRoutesResponse(rsp *http.Response) (*GetRoutesResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24027,6 +24026,10 @@ func ParseGetAuthorizationsResponse(rsp *http.Response) (*GetAuthorizationsRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Authorizations
@@ -24042,11 +24045,6 @@ func ParseGetAuthorizationsResponse(rsp *http.Response) (*GetAuthorizationsRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24063,6 +24061,10 @@ func ParsePostAuthorizationsResponse(rsp *http.Response) (*PostAuthorizationsRes
 	response := &PostAuthorizationsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -24087,11 +24089,6 @@ func ParsePostAuthorizationsResponse(rsp *http.Response) (*PostAuthorizationsRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24110,6 +24107,10 @@ func ParseDeleteAuthorizationsIDResponse(rsp *http.Response) (*DeleteAuthorizati
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -24118,11 +24119,6 @@ func ParseDeleteAuthorizationsIDResponse(rsp *http.Response) (*DeleteAuthorizati
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24141,6 +24137,10 @@ func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*GetAuthorizationsIDR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Authorization
@@ -24156,11 +24156,6 @@ func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*GetAuthorizationsIDR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24179,6 +24174,10 @@ func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*PatchAuthorization
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Authorization
@@ -24194,11 +24193,6 @@ func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*PatchAuthorization
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24217,6 +24211,10 @@ func ParseGetBackupKVResponse(rsp *http.Response) (*GetBackupKVResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -24225,11 +24223,6 @@ func ParseGetBackupKVResponse(rsp *http.Response) (*GetBackupKVResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24248,6 +24241,10 @@ func ParseGetBackupMetadataResponse(rsp *http.Response) (*GetBackupMetadataRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -24256,11 +24253,6 @@ func ParseGetBackupMetadataResponse(rsp *http.Response) (*GetBackupMetadataRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24279,6 +24271,10 @@ func ParseGetBackupShardIdResponse(rsp *http.Response) (*GetBackupShardIdRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -24294,11 +24290,6 @@ func ParseGetBackupShardIdResponse(rsp *http.Response) (*GetBackupShardIdRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24317,6 +24308,10 @@ func ParseGetBucketsResponse(rsp *http.Response) (*GetBucketsResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Buckets
@@ -24332,11 +24327,6 @@ func ParseGetBucketsResponse(rsp *http.Response) (*GetBucketsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24353,6 +24343,10 @@ func ParsePostBucketsResponse(rsp *http.Response) (*PostBucketsResponse, error) 
 	response := &PostBucketsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -24377,11 +24371,6 @@ func ParsePostBucketsResponse(rsp *http.Response) (*PostBucketsResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24400,6 +24389,10 @@ func ParseDeleteBucketsIDResponse(rsp *http.Response) (*DeleteBucketsIDResponse,
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -24415,11 +24408,6 @@ func ParseDeleteBucketsIDResponse(rsp *http.Response) (*DeleteBucketsIDResponse,
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24438,6 +24426,10 @@ func ParseGetBucketsIDResponse(rsp *http.Response) (*GetBucketsIDResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Bucket
@@ -24453,11 +24445,6 @@ func ParseGetBucketsIDResponse(rsp *http.Response) (*GetBucketsIDResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24476,6 +24463,10 @@ func ParsePatchBucketsIDResponse(rsp *http.Response) (*PatchBucketsIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Bucket
@@ -24491,11 +24482,6 @@ func ParsePatchBucketsIDResponse(rsp *http.Response) (*PatchBucketsIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24514,6 +24500,10 @@ func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*GetBucketsIDLabelsRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -24529,11 +24519,6 @@ func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*GetBucketsIDLabelsRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24552,6 +24537,10 @@ func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*PostBucketsIDLabelsR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -24567,11 +24556,6 @@ func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*PostBucketsIDLabelsR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24590,6 +24574,10 @@ func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*DeleteBucketsIDL
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -24605,11 +24593,6 @@ func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*DeleteBucketsIDL
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24628,6 +24611,10 @@ func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*GetBucketsIDMembersR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMembers
@@ -24643,11 +24630,6 @@ func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*GetBucketsIDMembersR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24666,6 +24648,10 @@ func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*PostBucketsIDMember
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceMember
@@ -24681,11 +24667,6 @@ func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*PostBucketsIDMember
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24704,6 +24685,10 @@ func ParseDeleteBucketsIDMembersIDResponse(rsp *http.Response) (*DeleteBucketsID
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -24712,11 +24697,6 @@ func ParseDeleteBucketsIDMembersIDResponse(rsp *http.Response) (*DeleteBucketsID
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24735,6 +24715,10 @@ func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*GetBucketsIDOwnersRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceOwners
@@ -24750,11 +24734,6 @@ func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*GetBucketsIDOwnersRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24773,6 +24752,10 @@ func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*PostBucketsIDOwnersR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceOwner
@@ -24788,11 +24771,6 @@ func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*PostBucketsIDOwnersR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24811,6 +24789,10 @@ func ParseDeleteBucketsIDOwnersIDResponse(rsp *http.Response) (*DeleteBucketsIDO
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -24819,11 +24801,6 @@ func ParseDeleteBucketsIDOwnersIDResponse(rsp *http.Response) (*DeleteBucketsIDO
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24842,6 +24819,10 @@ func ParseGetChecksResponse(rsp *http.Response) (*GetChecksResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Checks
@@ -24857,11 +24838,6 @@ func ParseGetChecksResponse(rsp *http.Response) (*GetChecksResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24880,6 +24856,10 @@ func ParseCreateCheckResponse(rsp *http.Response) (*CreateCheckResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Check
@@ -24895,11 +24875,6 @@ func ParseCreateCheckResponse(rsp *http.Response) (*CreateCheckResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24918,6 +24893,10 @@ func ParseDeleteChecksIDResponse(rsp *http.Response) (*DeleteChecksIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -24933,11 +24912,6 @@ func ParseDeleteChecksIDResponse(rsp *http.Response) (*DeleteChecksIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24956,6 +24930,10 @@ func ParseGetChecksIDResponse(rsp *http.Response) (*GetChecksIDResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Check
@@ -24971,11 +24949,6 @@ func ParseGetChecksIDResponse(rsp *http.Response) (*GetChecksIDResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -24994,6 +24967,10 @@ func ParsePatchChecksIDResponse(rsp *http.Response) (*PatchChecksIDResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Check
@@ -25016,11 +24993,6 @@ func ParsePatchChecksIDResponse(rsp *http.Response) (*PatchChecksIDResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25039,6 +25011,10 @@ func ParsePutChecksIDResponse(rsp *http.Response) (*PutChecksIDResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Check
@@ -25061,11 +25037,6 @@ func ParsePutChecksIDResponse(rsp *http.Response) (*PutChecksIDResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25084,6 +25055,10 @@ func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*GetChecksIDLabelsRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -25099,11 +25074,6 @@ func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*GetChecksIDLabelsRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25122,6 +25092,10 @@ func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*PostChecksIDLabelsRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -25137,11 +25111,6 @@ func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*PostChecksIDLabelsRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25160,6 +25129,10 @@ func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*DeleteChecksIDLab
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -25175,11 +25148,6 @@ func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*DeleteChecksIDLab
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25196,6 +25164,10 @@ func ParseGetChecksIDQueryResponse(rsp *http.Response) (*GetChecksIDQueryRespons
 	response := &GetChecksIDQueryResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -25227,11 +25199,6 @@ func ParseGetChecksIDQueryResponse(rsp *http.Response) (*GetChecksIDQueryRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25250,6 +25217,10 @@ func ParseGetDashboardsResponse(rsp *http.Response) (*GetDashboardsResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Dashboards
@@ -25265,11 +25236,6 @@ func ParseGetDashboardsResponse(rsp *http.Response) (*GetDashboardsResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25288,6 +25254,10 @@ func ParsePostDashboardsResponse(rsp *http.Response) (*PostDashboardsResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest interface{}
@@ -25303,11 +25273,6 @@ func ParsePostDashboardsResponse(rsp *http.Response) (*PostDashboardsResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25326,6 +25291,10 @@ func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*DeleteDashboardsIDRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -25341,11 +25310,6 @@ func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*DeleteDashboardsIDRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25362,6 +25326,10 @@ func ParseGetDashboardsIDResponse(rsp *http.Response) (*GetDashboardsIDResponse,
 	response := &GetDashboardsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -25386,11 +25354,6 @@ func ParseGetDashboardsIDResponse(rsp *http.Response) (*GetDashboardsIDResponse,
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25409,6 +25372,10 @@ func ParsePatchDashboardsIDResponse(rsp *http.Response) (*PatchDashboardsIDRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Dashboard
@@ -25431,11 +25398,6 @@ func ParsePatchDashboardsIDResponse(rsp *http.Response) (*PatchDashboardsIDRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25454,6 +25416,10 @@ func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*PostDashboardsIDCe
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Cell
@@ -25476,11 +25442,6 @@ func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*PostDashboardsIDCe
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25497,6 +25458,10 @@ func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*PutDashboardsIDCell
 	response := &PutDashboardsIDCellsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -25521,11 +25486,6 @@ func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*PutDashboardsIDCell
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25544,6 +25504,10 @@ func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*DeleteDashboar
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -25559,11 +25523,6 @@ func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*DeleteDashboar
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25580,6 +25539,10 @@ func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*PatchDashboards
 	response := &PatchDashboardsIDCellsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -25604,11 +25567,6 @@ func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*PatchDashboards
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25627,6 +25585,10 @@ func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*GetDashboards
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest View
@@ -25649,11 +25611,6 @@ func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*GetDashboards
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25672,6 +25629,10 @@ func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*PatchDashbo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest View
@@ -25694,11 +25655,6 @@ func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*PatchDashbo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25717,6 +25673,10 @@ func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*GetDashboardsIDLab
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -25732,11 +25692,6 @@ func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*GetDashboardsIDLab
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25755,6 +25710,10 @@ func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*PostDashboardsIDL
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -25770,11 +25729,6 @@ func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*PostDashboardsIDL
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25793,6 +25747,10 @@ func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*DeleteDashboa
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -25808,11 +25766,6 @@ func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*DeleteDashboa
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25831,6 +25784,10 @@ func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*GetDashboardsIDMe
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMembers
@@ -25846,11 +25803,6 @@ func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*GetDashboardsIDMe
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25869,6 +25821,10 @@ func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*PostDashboardsID
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceMember
@@ -25884,11 +25840,6 @@ func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*PostDashboardsID
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25907,6 +25858,10 @@ func ParseDeleteDashboardsIDMembersIDResponse(rsp *http.Response) (*DeleteDashbo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -25915,11 +25870,6 @@ func ParseDeleteDashboardsIDMembersIDResponse(rsp *http.Response) (*DeleteDashbo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25938,6 +25888,10 @@ func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*GetDashboardsIDOwn
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceOwners
@@ -25953,11 +25907,6 @@ func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*GetDashboardsIDOwn
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -25976,6 +25925,10 @@ func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*PostDashboardsIDO
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceOwner
@@ -25991,11 +25944,6 @@ func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*PostDashboardsIDO
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26014,6 +25962,10 @@ func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*DeleteDashboa
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -26022,11 +25974,6 @@ func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*DeleteDashboa
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26043,6 +25990,10 @@ func ParseGetDBRPsResponse(rsp *http.Response) (*GetDBRPsResponse, error) {
 	response := &GetDBRPsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26067,11 +26018,6 @@ func ParseGetDBRPsResponse(rsp *http.Response) (*GetDBRPsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26088,6 +26034,10 @@ func ParsePostDBRPResponse(rsp *http.Response) (*PostDBRPResponse, error) {
 	response := &PostDBRPResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26112,11 +26062,6 @@ func ParsePostDBRPResponse(rsp *http.Response) (*PostDBRPResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26135,6 +26080,10 @@ func ParseDeleteDBRPIDResponse(rsp *http.Response) (*DeleteDBRPIDResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest Error
@@ -26150,11 +26099,6 @@ func ParseDeleteDBRPIDResponse(rsp *http.Response) (*DeleteDBRPIDResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26171,6 +26115,10 @@ func ParseGetDBRPsIDResponse(rsp *http.Response) (*GetDBRPsIDResponse, error) {
 	response := &GetDBRPsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26195,11 +26143,6 @@ func ParseGetDBRPsIDResponse(rsp *http.Response) (*GetDBRPsIDResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26216,6 +26159,10 @@ func ParsePatchDBRPIDResponse(rsp *http.Response) (*PatchDBRPIDResponse, error) 
 	response := &PatchDBRPIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26247,11 +26194,6 @@ func ParsePatchDBRPIDResponse(rsp *http.Response) (*PatchDBRPIDResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26268,6 +26210,10 @@ func ParsePostDeleteResponse(rsp *http.Response) (*PostDeleteResponse, error) {
 	response := &PostDeleteResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26299,11 +26245,6 @@ func ParsePostDeleteResponse(rsp *http.Response) (*PostDeleteResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26322,6 +26263,10 @@ func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*GetDocumentsTempla
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Documents
@@ -26337,11 +26282,6 @@ func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*GetDocumentsTempla
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26360,6 +26300,10 @@ func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*PostDocumentsTemp
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Document
@@ -26375,11 +26319,6 @@ func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*PostDocumentsTemp
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26398,6 +26337,10 @@ func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*DeleteDocumen
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -26406,11 +26349,6 @@ func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*DeleteDocumen
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26429,6 +26367,10 @@ func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*GetDocumentsTemp
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Document
@@ -26444,11 +26386,6 @@ func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*GetDocumentsTemp
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26467,6 +26404,10 @@ func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*PutDocumentsTemp
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Document
@@ -26482,11 +26423,6 @@ func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*PutDocumentsTemp
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26505,6 +26441,10 @@ func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*GetDocumen
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -26520,11 +26460,6 @@ func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*GetDocumen
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26543,6 +26478,10 @@ func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*PostDocum
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -26558,11 +26497,6 @@ func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*PostDocum
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26581,6 +26515,10 @@ func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*Delet
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -26596,11 +26534,6 @@ func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*Delet
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26619,6 +26552,10 @@ func ParseGetFlagsResponse(rsp *http.Response) (*GetFlagsResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Flags
@@ -26634,11 +26571,6 @@ func ParseGetFlagsResponse(rsp *http.Response) (*GetFlagsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26655,6 +26587,10 @@ func ParseGetHealthResponse(rsp *http.Response) (*GetHealthResponse, error) {
 	response := &GetHealthResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26679,11 +26615,6 @@ func ParseGetHealthResponse(rsp *http.Response) (*GetHealthResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26702,6 +26633,10 @@ func ParseGetLabelsResponse(rsp *http.Response) (*GetLabelsResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -26717,11 +26652,6 @@ func ParseGetLabelsResponse(rsp *http.Response) (*GetLabelsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26740,6 +26670,10 @@ func ParsePostLabelsResponse(rsp *http.Response) (*PostLabelsResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -26755,11 +26689,6 @@ func ParsePostLabelsResponse(rsp *http.Response) (*PostLabelsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26778,6 +26707,10 @@ func ParseDeleteLabelsIDResponse(rsp *http.Response) (*DeleteLabelsIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -26793,11 +26726,6 @@ func ParseDeleteLabelsIDResponse(rsp *http.Response) (*DeleteLabelsIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26816,6 +26744,10 @@ func ParseGetLabelsIDResponse(rsp *http.Response) (*GetLabelsIDResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelResponse
@@ -26831,11 +26763,6 @@ func ParseGetLabelsIDResponse(rsp *http.Response) (*GetLabelsIDResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26852,6 +26779,10 @@ func ParsePatchLabelsIDResponse(rsp *http.Response) (*PatchLabelsIDResponse, err
 	response := &PatchLabelsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26876,11 +26807,6 @@ func ParsePatchLabelsIDResponse(rsp *http.Response) (*PatchLabelsIDResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26899,6 +26825,10 @@ func ParseGetLegacyAuthorizationsResponse(rsp *http.Response) (*GetLegacyAuthori
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Authorizations
@@ -26914,11 +26844,6 @@ func ParseGetLegacyAuthorizationsResponse(rsp *http.Response) (*GetLegacyAuthori
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26935,6 +26860,10 @@ func ParsePostLegacyAuthorizationsResponse(rsp *http.Response) (*PostLegacyAutho
 	response := &PostLegacyAuthorizationsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -26959,11 +26888,6 @@ func ParsePostLegacyAuthorizationsResponse(rsp *http.Response) (*PostLegacyAutho
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -26982,6 +26906,10 @@ func ParseDeleteLegacyAuthorizationsIDResponse(rsp *http.Response) (*DeleteLegac
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -26990,11 +26918,6 @@ func ParseDeleteLegacyAuthorizationsIDResponse(rsp *http.Response) (*DeleteLegac
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27013,6 +26936,10 @@ func ParseGetLegacyAuthorizationsIDResponse(rsp *http.Response) (*GetLegacyAutho
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Authorization
@@ -27028,11 +26955,6 @@ func ParseGetLegacyAuthorizationsIDResponse(rsp *http.Response) (*GetLegacyAutho
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27051,6 +26973,10 @@ func ParsePatchLegacyAuthorizationsIDResponse(rsp *http.Response) (*PatchLegacyA
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Authorization
@@ -27066,11 +26992,6 @@ func ParsePatchLegacyAuthorizationsIDResponse(rsp *http.Response) (*PatchLegacyA
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27089,6 +27010,10 @@ func ParsePostLegacyAuthorizationsIDPasswordResponse(rsp *http.Response) (*PostL
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -27097,11 +27022,6 @@ func ParsePostLegacyAuthorizationsIDPasswordResponse(rsp *http.Response) (*PostL
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27120,6 +27040,10 @@ func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest UserResponse
@@ -27135,11 +27059,6 @@ func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27158,6 +27077,10 @@ func ParsePutMePasswordResponse(rsp *http.Response) (*PutMePasswordResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -27166,11 +27089,6 @@ func ParsePutMePasswordResponse(rsp *http.Response) (*PutMePasswordResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27189,6 +27107,10 @@ func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*GetNotification
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationEndpoints
@@ -27204,11 +27126,6 @@ func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*GetNotification
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27227,6 +27144,10 @@ func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*CreateNotific
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest NotificationEndpoint
@@ -27242,11 +27163,6 @@ func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*CreateNotific
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27265,6 +27181,10 @@ func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*DeleteNoti
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -27280,11 +27200,6 @@ func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*DeleteNoti
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27303,6 +27218,10 @@ func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*GetNotificati
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationEndpoint
@@ -27318,11 +27237,6 @@ func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*GetNotificati
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27341,6 +27255,10 @@ func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*PatchNotifi
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationEndpoint
@@ -27363,11 +27281,6 @@ func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*PatchNotifi
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27386,6 +27299,10 @@ func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*PutNotificati
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationEndpoint
@@ -27408,11 +27325,6 @@ func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*PutNotificati
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27431,6 +27343,10 @@ func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*GetNoti
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -27446,11 +27362,6 @@ func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*GetNoti
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27469,6 +27380,10 @@ func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*PostNot
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -27484,11 +27399,6 @@ func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*PostNot
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27507,6 +27417,10 @@ func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*De
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -27522,11 +27436,6 @@ func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*De
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27545,6 +27454,10 @@ func ParseGetNotificationRulesResponse(rsp *http.Response) (*GetNotificationRule
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationRules
@@ -27560,11 +27473,6 @@ func ParseGetNotificationRulesResponse(rsp *http.Response) (*GetNotificationRule
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27583,6 +27491,10 @@ func ParseCreateNotificationRuleResponse(rsp *http.Response) (*CreateNotificatio
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest NotificationRule
@@ -27598,11 +27510,6 @@ func ParseCreateNotificationRuleResponse(rsp *http.Response) (*CreateNotificatio
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27621,6 +27528,10 @@ func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*DeleteNotifica
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -27636,11 +27547,6 @@ func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*DeleteNotifica
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27659,6 +27565,10 @@ func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*GetNotificationRu
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationRule
@@ -27674,11 +27584,6 @@ func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*GetNotificationRu
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27697,6 +27602,10 @@ func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*PatchNotificati
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationRule
@@ -27719,11 +27628,6 @@ func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*PatchNotificati
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27742,6 +27646,10 @@ func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*PutNotificationRu
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest NotificationRule
@@ -27764,11 +27672,6 @@ func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*PutNotificationRu
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27787,6 +27690,10 @@ func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*GetNotifica
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -27802,11 +27709,6 @@ func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*GetNotifica
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27825,6 +27727,10 @@ func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*PostNotific
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -27840,11 +27746,6 @@ func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*PostNotific
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27863,6 +27764,10 @@ func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*Delete
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -27878,11 +27783,6 @@ func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*Delete
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27899,6 +27799,10 @@ func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*GetNotificat
 	response := &GetNotificationRulesIDQueryResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -27930,11 +27834,6 @@ func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*GetNotificat
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27953,6 +27852,10 @@ func ParseGetOrgsResponse(rsp *http.Response) (*GetOrgsResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Organizations
@@ -27968,11 +27871,6 @@ func ParseGetOrgsResponse(rsp *http.Response) (*GetOrgsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -27991,6 +27889,10 @@ func ParsePostOrgsResponse(rsp *http.Response) (*PostOrgsResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Organization
@@ -28006,11 +27908,6 @@ func ParsePostOrgsResponse(rsp *http.Response) (*PostOrgsResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28029,6 +27926,10 @@ func ParseDeleteOrgsIDResponse(rsp *http.Response) (*DeleteOrgsIDResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -28044,11 +27945,6 @@ func ParseDeleteOrgsIDResponse(rsp *http.Response) (*DeleteOrgsIDResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28067,6 +27963,10 @@ func ParseGetOrgsIDResponse(rsp *http.Response) (*GetOrgsIDResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Organization
@@ -28082,11 +27982,6 @@ func ParseGetOrgsIDResponse(rsp *http.Response) (*GetOrgsIDResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28105,6 +28000,10 @@ func ParsePatchOrgsIDResponse(rsp *http.Response) (*PatchOrgsIDResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Organization
@@ -28120,11 +28019,6 @@ func ParsePatchOrgsIDResponse(rsp *http.Response) (*PatchOrgsIDResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28143,6 +28037,10 @@ func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*GetOrgsIDMembersRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMembers
@@ -28165,11 +28063,6 @@ func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*GetOrgsIDMembersRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28188,6 +28081,10 @@ func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*PostOrgsIDMembersRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceMember
@@ -28203,11 +28100,6 @@ func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*PostOrgsIDMembersRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28226,6 +28118,10 @@ func ParseDeleteOrgsIDMembersIDResponse(rsp *http.Response) (*DeleteOrgsIDMember
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28234,11 +28130,6 @@ func ParseDeleteOrgsIDMembersIDResponse(rsp *http.Response) (*DeleteOrgsIDMember
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28257,6 +28148,10 @@ func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*GetOrgsIDOwnersResponse,
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceOwners
@@ -28279,11 +28174,6 @@ func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*GetOrgsIDOwnersResponse,
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28302,6 +28192,10 @@ func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*PostOrgsIDOwnersRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceOwner
@@ -28317,11 +28211,6 @@ func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*PostOrgsIDOwnersRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28340,6 +28229,10 @@ func ParseDeleteOrgsIDOwnersIDResponse(rsp *http.Response) (*DeleteOrgsIDOwnersI
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28348,11 +28241,6 @@ func ParseDeleteOrgsIDOwnersIDResponse(rsp *http.Response) (*DeleteOrgsIDOwnersI
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28371,6 +28259,10 @@ func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*GetOrgsIDSecretsRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest SecretKeysResponse
@@ -28386,11 +28278,6 @@ func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*GetOrgsIDSecretsRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28409,6 +28296,10 @@ func ParsePatchOrgsIDSecretsResponse(rsp *http.Response) (*PatchOrgsIDSecretsRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28417,11 +28308,6 @@ func ParsePatchOrgsIDSecretsResponse(rsp *http.Response) (*PatchOrgsIDSecretsRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28440,6 +28326,10 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*PostOrgsIDSecretsRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28448,11 +28338,6 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*PostOrgsIDSecretsRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28471,13 +28356,8 @@ func ParseGetPingResponse(rsp *http.Response) (*GetPingResponse, error) {
 		HTTPResponse: rsp,
 	}
 
-	switch {
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	return response, nil
@@ -28496,13 +28376,8 @@ func ParseHeadPingResponse(rsp *http.Response) (*HeadPingResponse, error) {
 		HTTPResponse: rsp,
 	}
 
-	switch {
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	return response, nil
@@ -28521,6 +28396,10 @@ func ParsePostQueryResponse(rsp *http.Response) (*PostQueryResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28529,11 +28408,6 @@ func ParsePostQueryResponse(rsp *http.Response) (*PostQueryResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28552,6 +28426,10 @@ func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*PostQueryAnalyzeRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest AnalyzeQueryResponse
@@ -28567,11 +28445,6 @@ func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*PostQueryAnalyzeRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28590,6 +28463,10 @@ func ParsePostQueryAstResponse(rsp *http.Response) (*PostQueryAstResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ASTResponse
@@ -28605,11 +28482,6 @@ func ParsePostQueryAstResponse(rsp *http.Response) (*PostQueryAstResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28628,6 +28500,10 @@ func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*GetQuerySuggestionsR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest FluxSuggestions
@@ -28643,11 +28519,6 @@ func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*GetQuerySuggestionsR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28666,6 +28537,10 @@ func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*GetQuerySuggesti
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest FluxSuggestion
@@ -28681,11 +28556,6 @@ func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*GetQuerySuggesti
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28704,6 +28574,10 @@ func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Ready
@@ -28719,11 +28593,6 @@ func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28742,6 +28611,10 @@ func ParsePostRestoreBucketMetadataResponse(rsp *http.Response) (*PostRestoreBuc
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest RestoredBucketMappings
@@ -28757,11 +28630,6 @@ func ParsePostRestoreBucketMetadataResponse(rsp *http.Response) (*PostRestoreBuc
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28780,6 +28648,10 @@ func ParsePostRestoreBucketIDResponse(rsp *http.Response) (*PostRestoreBucketIDR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []byte
@@ -28795,11 +28667,6 @@ func ParsePostRestoreBucketIDResponse(rsp *http.Response) (*PostRestoreBucketIDR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28818,6 +28685,10 @@ func ParsePostRestoreKVResponse(rsp *http.Response) (*PostRestoreKVResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28826,11 +28697,6 @@ func ParsePostRestoreKVResponse(rsp *http.Response) (*PostRestoreKVResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28849,6 +28715,10 @@ func ParsePostRestoreShardIdResponse(rsp *http.Response) (*PostRestoreShardIdRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28857,11 +28727,6 @@ func ParsePostRestoreShardIdResponse(rsp *http.Response) (*PostRestoreShardIdRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28880,6 +28745,10 @@ func ParsePostRestoreSQLResponse(rsp *http.Response) (*PostRestoreSQLResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28888,11 +28757,6 @@ func ParsePostRestoreSQLResponse(rsp *http.Response) (*PostRestoreSQLResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28911,6 +28775,10 @@ func ParseGetScrapersResponse(rsp *http.Response) (*GetScrapersResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ScraperTargetResponses
@@ -28919,11 +28787,6 @@ func ParseGetScrapersResponse(rsp *http.Response) (*GetScrapersResponse, error) 
 		}
 		response.JSON200 = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28942,6 +28805,10 @@ func ParsePostScrapersResponse(rsp *http.Response) (*PostScrapersResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ScraperTargetResponse
@@ -28957,11 +28824,6 @@ func ParsePostScrapersResponse(rsp *http.Response) (*PostScrapersResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -28980,6 +28842,10 @@ func ParseDeleteScrapersIDResponse(rsp *http.Response) (*DeleteScrapersIDRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28988,11 +28854,6 @@ func ParseDeleteScrapersIDResponse(rsp *http.Response) (*DeleteScrapersIDRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29011,6 +28872,10 @@ func ParseGetScrapersIDResponse(rsp *http.Response) (*GetScrapersIDResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ScraperTargetResponse
@@ -29026,11 +28891,6 @@ func ParseGetScrapersIDResponse(rsp *http.Response) (*GetScrapersIDResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29049,6 +28909,10 @@ func ParsePatchScrapersIDResponse(rsp *http.Response) (*PatchScrapersIDResponse,
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ScraperTargetResponse
@@ -29064,11 +28928,6 @@ func ParsePatchScrapersIDResponse(rsp *http.Response) (*PatchScrapersIDResponse,
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29087,6 +28946,10 @@ func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*GetScrapersIDLabelsR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -29102,11 +28965,6 @@ func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*GetScrapersIDLabelsR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29125,6 +28983,10 @@ func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*PostScrapersIDLabel
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -29140,11 +29002,6 @@ func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*PostScrapersIDLabel
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29163,6 +29020,10 @@ func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*DeleteScrapersI
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -29178,11 +29039,6 @@ func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*DeleteScrapersI
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29201,6 +29057,10 @@ func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*GetScrapersIDMember
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMembers
@@ -29216,11 +29076,6 @@ func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*GetScrapersIDMember
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29239,6 +29094,10 @@ func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*PostScrapersIDMemb
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceMember
@@ -29254,11 +29113,6 @@ func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*PostScrapersIDMemb
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29277,6 +29131,10 @@ func ParseDeleteScrapersIDMembersIDResponse(rsp *http.Response) (*DeleteScrapers
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -29285,11 +29143,6 @@ func ParseDeleteScrapersIDMembersIDResponse(rsp *http.Response) (*DeleteScrapers
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29308,6 +29161,10 @@ func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*GetScrapersIDOwnersR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceOwners
@@ -29323,11 +29180,6 @@ func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*GetScrapersIDOwnersR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29346,6 +29198,10 @@ func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*PostScrapersIDOwner
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceOwner
@@ -29361,11 +29217,6 @@ func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*PostScrapersIDOwner
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29384,6 +29235,10 @@ func ParseDeleteScrapersIDOwnersIDResponse(rsp *http.Response) (*DeleteScrapersI
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -29392,11 +29247,6 @@ func ParseDeleteScrapersIDOwnersIDResponse(rsp *http.Response) (*DeleteScrapersI
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29415,6 +29265,10 @@ func ParseGetSetupResponse(rsp *http.Response) (*GetSetupResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest IsOnboarding
@@ -29423,11 +29277,6 @@ func ParseGetSetupResponse(rsp *http.Response) (*GetSetupResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29446,6 +29295,10 @@ func ParsePostSetupResponse(rsp *http.Response) (*PostSetupResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest OnboardingResponse
@@ -29461,11 +29314,6 @@ func ParsePostSetupResponse(rsp *http.Response) (*PostSetupResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29482,6 +29330,10 @@ func ParsePostSigninResponse(rsp *http.Response) (*PostSigninResponse, error) {
 	response := &PostSigninResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -29506,11 +29358,6 @@ func ParsePostSigninResponse(rsp *http.Response) (*PostSigninResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29529,6 +29376,10 @@ func ParsePostSignoutResponse(rsp *http.Response) (*PostSignoutResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest Error
@@ -29544,11 +29395,6 @@ func ParsePostSignoutResponse(rsp *http.Response) (*PostSignoutResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29567,6 +29413,10 @@ func ParseGetSourcesResponse(rsp *http.Response) (*GetSourcesResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Sources
@@ -29582,11 +29432,6 @@ func ParseGetSourcesResponse(rsp *http.Response) (*GetSourcesResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29605,6 +29450,10 @@ func ParsePostSourcesResponse(rsp *http.Response) (*PostSourcesResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Source
@@ -29620,11 +29469,6 @@ func ParsePostSourcesResponse(rsp *http.Response) (*PostSourcesResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29643,6 +29487,10 @@ func ParseDeleteSourcesIDResponse(rsp *http.Response) (*DeleteSourcesIDResponse,
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -29658,11 +29506,6 @@ func ParseDeleteSourcesIDResponse(rsp *http.Response) (*DeleteSourcesIDResponse,
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29681,6 +29524,10 @@ func ParseGetSourcesIDResponse(rsp *http.Response) (*GetSourcesIDResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Source
@@ -29703,11 +29550,6 @@ func ParseGetSourcesIDResponse(rsp *http.Response) (*GetSourcesIDResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29726,6 +29568,10 @@ func ParsePatchSourcesIDResponse(rsp *http.Response) (*PatchSourcesIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Source
@@ -29748,11 +29594,6 @@ func ParsePatchSourcesIDResponse(rsp *http.Response) (*PatchSourcesIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29769,6 +29610,10 @@ func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*GetSourcesIDBucketsR
 	response := &GetSourcesIDBucketsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -29793,11 +29638,6 @@ func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*GetSourcesIDBucketsR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29814,6 +29654,10 @@ func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*GetSourcesIDHealthRes
 	response := &GetSourcesIDHealthResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -29838,11 +29682,6 @@ func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*GetSourcesIDHealthRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29859,6 +29698,10 @@ func ParseListStacksResponse(rsp *http.Response) (*ListStacksResponse, error) {
 	response := &ListStacksResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -29878,11 +29721,6 @@ func ParseListStacksResponse(rsp *http.Response) (*ListStacksResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29901,6 +29739,10 @@ func ParseCreateStackResponse(rsp *http.Response) (*CreateStackResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Stack
@@ -29916,11 +29758,6 @@ func ParseCreateStackResponse(rsp *http.Response) (*CreateStackResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29939,6 +29776,10 @@ func ParseDeleteStackResponse(rsp *http.Response) (*DeleteStackResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -29947,11 +29788,6 @@ func ParseDeleteStackResponse(rsp *http.Response) (*DeleteStackResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -29970,6 +29806,10 @@ func ParseReadStackResponse(rsp *http.Response) (*ReadStackResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Stack
@@ -29985,11 +29825,6 @@ func ParseReadStackResponse(rsp *http.Response) (*ReadStackResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30008,6 +29843,10 @@ func ParseUpdateStackResponse(rsp *http.Response) (*UpdateStackResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Stack
@@ -30023,11 +29862,6 @@ func ParseUpdateStackResponse(rsp *http.Response) (*UpdateStackResponse, error) 
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30046,6 +29880,10 @@ func ParseUninstallStackResponse(rsp *http.Response) (*UninstallStackResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Stack
@@ -30061,11 +29899,6 @@ func ParseUninstallStackResponse(rsp *http.Response) (*UninstallStackResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30084,6 +29917,10 @@ func ParseGetTasksResponse(rsp *http.Response) (*GetTasksResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Tasks
@@ -30099,11 +29936,6 @@ func ParseGetTasksResponse(rsp *http.Response) (*GetTasksResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30122,6 +29954,10 @@ func ParsePostTasksResponse(rsp *http.Response) (*PostTasksResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Task
@@ -30137,11 +29973,6 @@ func ParsePostTasksResponse(rsp *http.Response) (*PostTasksResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30160,6 +29991,10 @@ func ParseDeleteTasksIDResponse(rsp *http.Response) (*DeleteTasksIDResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -30168,11 +30003,6 @@ func ParseDeleteTasksIDResponse(rsp *http.Response) (*DeleteTasksIDResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30191,6 +30021,10 @@ func ParseGetTasksIDResponse(rsp *http.Response) (*GetTasksIDResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Task
@@ -30206,11 +30040,6 @@ func ParseGetTasksIDResponse(rsp *http.Response) (*GetTasksIDResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30229,6 +30058,10 @@ func ParsePatchTasksIDResponse(rsp *http.Response) (*PatchTasksIDResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Task
@@ -30244,11 +30077,6 @@ func ParsePatchTasksIDResponse(rsp *http.Response) (*PatchTasksIDResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30267,6 +30095,10 @@ func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*GetTasksIDLabelsRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -30282,11 +30114,6 @@ func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*GetTasksIDLabelsRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30305,6 +30132,10 @@ func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*PostTasksIDLabelsRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -30320,11 +30151,6 @@ func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*PostTasksIDLabelsRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30343,6 +30169,10 @@ func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*DeleteTasksIDLabel
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -30358,11 +30188,6 @@ func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*DeleteTasksIDLabel
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30381,6 +30206,10 @@ func ParseGetTasksIDLogsResponse(rsp *http.Response) (*GetTasksIDLogsResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Logs
@@ -30396,11 +30225,6 @@ func ParseGetTasksIDLogsResponse(rsp *http.Response) (*GetTasksIDLogsResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30419,6 +30243,10 @@ func ParseGetTasksIDMembersResponse(rsp *http.Response) (*GetTasksIDMembersRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMembers
@@ -30434,11 +30262,6 @@ func ParseGetTasksIDMembersResponse(rsp *http.Response) (*GetTasksIDMembersRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30457,6 +30280,10 @@ func ParsePostTasksIDMembersResponse(rsp *http.Response) (*PostTasksIDMembersRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceMember
@@ -30472,11 +30299,6 @@ func ParsePostTasksIDMembersResponse(rsp *http.Response) (*PostTasksIDMembersRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30495,6 +30317,10 @@ func ParseDeleteTasksIDMembersIDResponse(rsp *http.Response) (*DeleteTasksIDMemb
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -30503,11 +30329,6 @@ func ParseDeleteTasksIDMembersIDResponse(rsp *http.Response) (*DeleteTasksIDMemb
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30526,6 +30347,10 @@ func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*GetTasksIDOwnersRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceOwners
@@ -30541,11 +30366,6 @@ func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*GetTasksIDOwnersRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30564,6 +30384,10 @@ func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*PostTasksIDOwnersRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceOwner
@@ -30579,11 +30403,6 @@ func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*PostTasksIDOwnersRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30602,6 +30421,10 @@ func ParseDeleteTasksIDOwnersIDResponse(rsp *http.Response) (*DeleteTasksIDOwner
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -30610,11 +30433,6 @@ func ParseDeleteTasksIDOwnersIDResponse(rsp *http.Response) (*DeleteTasksIDOwner
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30633,6 +30451,10 @@ func ParseGetTasksIDRunsResponse(rsp *http.Response) (*GetTasksIDRunsResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Runs
@@ -30648,11 +30470,6 @@ func ParseGetTasksIDRunsResponse(rsp *http.Response) (*GetTasksIDRunsResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30671,6 +30488,10 @@ func ParsePostTasksIDRunsResponse(rsp *http.Response) (*PostTasksIDRunsResponse,
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Run
@@ -30686,11 +30507,6 @@ func ParsePostTasksIDRunsResponse(rsp *http.Response) (*PostTasksIDRunsResponse,
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30709,6 +30525,10 @@ func ParseDeleteTasksIDRunsIDResponse(rsp *http.Response) (*DeleteTasksIDRunsIDR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -30717,11 +30537,6 @@ func ParseDeleteTasksIDRunsIDResponse(rsp *http.Response) (*DeleteTasksIDRunsIDR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30740,6 +30555,10 @@ func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*GetTasksIDRunsIDRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Run
@@ -30755,11 +30574,6 @@ func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*GetTasksIDRunsIDRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30778,6 +30592,10 @@ func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*GetTasksIDRunsIDLog
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Logs
@@ -30793,11 +30611,6 @@ func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*GetTasksIDRunsIDLog
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30816,6 +30629,10 @@ func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*PostTasksIDRunsID
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Run
@@ -30831,11 +30648,6 @@ func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*PostTasksIDRunsID
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30854,6 +30666,10 @@ func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*GetTelegrafPluginsRes
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest TelegrafPlugins
@@ -30869,11 +30685,6 @@ func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*GetTelegrafPluginsRes
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30892,6 +30703,10 @@ func ParseGetTelegrafsResponse(rsp *http.Response) (*GetTelegrafsResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Telegrafs
@@ -30907,11 +30722,6 @@ func ParseGetTelegrafsResponse(rsp *http.Response) (*GetTelegrafsResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30930,6 +30740,10 @@ func ParsePostTelegrafsResponse(rsp *http.Response) (*PostTelegrafsResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Telegraf
@@ -30945,11 +30759,6 @@ func ParsePostTelegrafsResponse(rsp *http.Response) (*PostTelegrafsResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30968,6 +30777,10 @@ func ParseDeleteTelegrafsIDResponse(rsp *http.Response) (*DeleteTelegrafsIDRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -30976,11 +30789,6 @@ func ParseDeleteTelegrafsIDResponse(rsp *http.Response) (*DeleteTelegrafsIDRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -30997,6 +30805,10 @@ func ParseGetTelegrafsIDResponse(rsp *http.Response) (*GetTelegrafsIDResponse, e
 	response := &GetTelegrafsIDResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -31017,11 +30829,6 @@ func ParseGetTelegrafsIDResponse(rsp *http.Response) (*GetTelegrafsIDResponse, e
 	case rsp.StatusCode == 200:
 		// Content-type (application/toml) unsupported
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31040,6 +30847,10 @@ func ParsePutTelegrafsIDResponse(rsp *http.Response) (*PutTelegrafsIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Telegraf
@@ -31055,11 +30866,6 @@ func ParsePutTelegrafsIDResponse(rsp *http.Response) (*PutTelegrafsIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31078,6 +30884,10 @@ func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*GetTelegrafsIDLabel
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -31093,11 +30903,6 @@ func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*GetTelegrafsIDLabel
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31116,6 +30921,10 @@ func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*PostTelegrafsIDLab
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -31131,11 +30940,6 @@ func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*PostTelegrafsIDLab
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31154,6 +30958,10 @@ func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*DeleteTelegraf
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -31169,11 +30977,6 @@ func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*DeleteTelegraf
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31192,6 +30995,10 @@ func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*GetTelegrafsIDMemb
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMembers
@@ -31207,11 +31014,6 @@ func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*GetTelegrafsIDMemb
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31230,6 +31032,10 @@ func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*PostTelegrafsIDMe
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceMember
@@ -31245,11 +31051,6 @@ func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*PostTelegrafsIDMe
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31268,6 +31069,10 @@ func ParseDeleteTelegrafsIDMembersIDResponse(rsp *http.Response) (*DeleteTelegra
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -31276,11 +31081,6 @@ func ParseDeleteTelegrafsIDMembersIDResponse(rsp *http.Response) (*DeleteTelegra
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31299,6 +31099,10 @@ func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*GetTelegrafsIDOwner
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceOwners
@@ -31314,11 +31118,6 @@ func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*GetTelegrafsIDOwner
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31337,6 +31136,10 @@ func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*PostTelegrafsIDOwn
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest ResourceOwner
@@ -31352,11 +31155,6 @@ func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*PostTelegrafsIDOwn
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31375,6 +31173,10 @@ func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*DeleteTelegraf
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -31383,11 +31185,6 @@ func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*DeleteTelegraf
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31404,6 +31201,10 @@ func ParseApplyTemplateResponse(rsp *http.Response) (*ApplyTemplateResponse, err
 	response := &ApplyTemplateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -31428,11 +31229,6 @@ func ParseApplyTemplateResponse(rsp *http.Response) (*ApplyTemplateResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31449,6 +31245,10 @@ func ParseExportTemplateResponse(rsp *http.Response) (*ExportTemplateResponse, e
 	response := &ExportTemplateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -31473,11 +31273,6 @@ func ParseExportTemplateResponse(rsp *http.Response) (*ExportTemplateResponse, e
 		}
 		response.YAML200 = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31496,6 +31291,10 @@ func ParseGetUsersResponse(rsp *http.Response) (*GetUsersResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Users
@@ -31511,11 +31310,6 @@ func ParseGetUsersResponse(rsp *http.Response) (*GetUsersResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31534,6 +31328,10 @@ func ParsePostUsersResponse(rsp *http.Response) (*PostUsersResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest UserResponse
@@ -31549,11 +31347,6 @@ func ParsePostUsersResponse(rsp *http.Response) (*PostUsersResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31572,6 +31365,10 @@ func ParseDeleteUsersIDResponse(rsp *http.Response) (*DeleteUsersIDResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -31580,11 +31377,6 @@ func ParseDeleteUsersIDResponse(rsp *http.Response) (*DeleteUsersIDResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31603,6 +31395,10 @@ func ParseGetUsersIDResponse(rsp *http.Response) (*GetUsersIDResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest UserResponse
@@ -31618,11 +31414,6 @@ func ParseGetUsersIDResponse(rsp *http.Response) (*GetUsersIDResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31641,6 +31432,10 @@ func ParsePatchUsersIDResponse(rsp *http.Response) (*PatchUsersIDResponse, error
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest UserResponse
@@ -31656,11 +31451,6 @@ func ParsePatchUsersIDResponse(rsp *http.Response) (*PatchUsersIDResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31679,6 +31469,10 @@ func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*PostUsersIDPasswordR
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -31687,11 +31481,6 @@ func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*PostUsersIDPasswordR
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31708,6 +31497,10 @@ func ParseGetVariablesResponse(rsp *http.Response) (*GetVariablesResponse, error
 	response := &GetVariablesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -31732,11 +31525,6 @@ func ParseGetVariablesResponse(rsp *http.Response) (*GetVariablesResponse, error
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31755,6 +31543,10 @@ func ParsePostVariablesResponse(rsp *http.Response) (*PostVariablesResponse, err
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Variable
@@ -31770,11 +31562,6 @@ func ParsePostVariablesResponse(rsp *http.Response) (*PostVariablesResponse, err
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31793,6 +31580,10 @@ func ParseDeleteVariablesIDResponse(rsp *http.Response) (*DeleteVariablesIDRespo
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -31801,11 +31592,6 @@ func ParseDeleteVariablesIDResponse(rsp *http.Response) (*DeleteVariablesIDRespo
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31824,6 +31610,10 @@ func ParseGetVariablesIDResponse(rsp *http.Response) (*GetVariablesIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Variable
@@ -31846,11 +31636,6 @@ func ParseGetVariablesIDResponse(rsp *http.Response) (*GetVariablesIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31869,6 +31654,10 @@ func ParsePatchVariablesIDResponse(rsp *http.Response) (*PatchVariablesIDRespons
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Variable
@@ -31884,11 +31673,6 @@ func ParsePatchVariablesIDResponse(rsp *http.Response) (*PatchVariablesIDRespons
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31907,6 +31691,10 @@ func ParsePutVariablesIDResponse(rsp *http.Response) (*PutVariablesIDResponse, e
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Variable
@@ -31922,11 +31710,6 @@ func ParsePutVariablesIDResponse(rsp *http.Response) (*PutVariablesIDResponse, e
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31945,6 +31728,10 @@ func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*GetVariablesIDLabel
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LabelsResponse
@@ -31960,11 +31747,6 @@ func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*GetVariablesIDLabel
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -31983,6 +31765,10 @@ func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*PostVariablesIDLab
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest LabelResponse
@@ -31998,11 +31784,6 @@ func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*PostVariablesIDLab
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -32021,6 +31802,10 @@ func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*DeleteVariable
 		HTTPResponse: rsp,
 	}
 
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+	}
+
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
@@ -32036,11 +31821,6 @@ func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*DeleteVariable
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil
@@ -32057,6 +31837,10 @@ func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
 	response := &PostWriteResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	if rsp.StatusCode > 299 {
+		return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
 	}
 
 	switch {
@@ -32095,11 +31879,6 @@ func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
 		}
 		response.JSONDefault = &dest
 
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
 	}
 
 	return response, nil

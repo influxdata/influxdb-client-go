@@ -92,14 +92,11 @@ func Parse{{genResponseTypeName $opid | ucFirst}}(rsp *http.Response) (*{{genRes
 
     response := {{genResponsePayload $opid}}
 
-    switch {
-    {{genResponseUnmarshal .}}
-    // Fallback for unexpected error
-    default:
-        if rsp.StatusCode > 299 {
-            return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-        }
+    if rsp.StatusCode > 299 {
+        return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
     }
+
+    {{genResponseUnmarshal .}}
 
     return response, nil
 }

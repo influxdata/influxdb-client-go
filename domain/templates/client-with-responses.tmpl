@@ -90,11 +90,11 @@ func Parse{{genResponseTypeName $opid | ucFirst}}(rsp *http.Response) (*{{genRes
         return nil, err
     }
 
-    response := {{genResponsePayload $opid}}
-
-    if rsp.StatusCode > 299 {
+    if !strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode > 299 {
         return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
     }
+
+    response := {{genResponsePayload $opid}}
 
     {{genResponseUnmarshal .}}
 

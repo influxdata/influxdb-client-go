@@ -3652,8 +3652,6 @@ func NewPostAuthorizationsRequestWithBody(server string, params *PostAuthorizati
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -3800,8 +3798,6 @@ func NewPatchAuthorizationsIDRequestWithBody(server string, authID string, param
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -4170,8 +4166,6 @@ func NewPostBucketsRequestWithBody(server string, params *PostBucketsParams, con
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -4319,8 +4313,6 @@ func NewPatchBucketsIDRequestWithBody(server string, bucketID string, params *Pa
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -4422,8 +4414,6 @@ func NewPostBucketsIDLabelsRequestWithBody(server string, bucketID string, param
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -4579,8 +4569,6 @@ func NewPostBucketsIDMembersRequestWithBody(server string, bucketID string, para
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -4734,8 +4722,6 @@ func NewPostBucketsIDOwnersRequestWithBody(server string, bucketID string, param
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -4926,8 +4912,6 @@ func NewCreateCheckRequestWithBody(server string, contentType string, body io.Re
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -5063,8 +5047,6 @@ func NewPatchChecksIDRequestWithBody(server string, checkID string, params *Patc
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -5121,8 +5103,6 @@ func NewPutChecksIDRequestWithBody(server string, checkID string, params *PutChe
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -5225,8 +5205,6 @@ func NewPostChecksIDLabelsRequestWithBody(server string, checkID string, params 
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -5545,8 +5523,6 @@ func NewPostDashboardsRequestWithBody(server string, params *PostDashboardsParam
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -5714,8 +5690,6 @@ func NewPatchDashboardsIDRequestWithBody(server string, dashboardID string, para
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -5773,8 +5747,6 @@ func NewPostDashboardsIDCellsRequestWithBody(server string, dashboardID string, 
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -5831,8 +5803,6 @@ func NewPutDashboardsIDCellsRequestWithBody(server string, dashboardID string, p
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -5950,8 +5920,6 @@ func NewPatchDashboardsIDCellsIDRequestWithBody(server string, dashboardID strin
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -6068,8 +6036,6 @@ func NewPatchDashboardsIDCellsIDViewRequestWithBody(server string, dashboardID s
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -6171,8 +6137,6 @@ func NewPostDashboardsIDLabelsRequestWithBody(server string, dashboardID string,
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -6328,8 +6292,6 @@ func NewPostDashboardsIDMembersRequestWithBody(server string, dashboardID string
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -6483,8 +6445,6 @@ func NewPostDashboardsIDOwnersRequestWithBody(server string, dashboardID string,
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -6742,8 +6702,6 @@ func NewPostDBRPRequestWithBody(server string, params *PostDBRPParams, contentTy
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -6999,8 +6957,6 @@ func NewPatchDBRPIDRequestWithBody(server string, dbrpID string, params *PatchDB
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -7118,8 +7074,6 @@ func NewPostDeleteRequestWithBody(server string, params *PostDeleteParams, conte
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -7244,8 +7198,6 @@ func NewPostDocumentsTemplatesRequestWithBody(server string, params *PostDocumen
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -7394,8 +7346,6 @@ func NewPutDocumentsTemplatesIDRequestWithBody(server string, templateID string,
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -7497,8 +7447,6 @@ func NewPostDocumentsTemplatesIDLabelsRequestWithBody(server string, templateID 
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -7737,8 +7685,6 @@ func NewPostLabelsRequestWithBody(server string, contentType string, body io.Rea
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -7873,8 +7819,6 @@ func NewPatchLabelsIDRequestWithBody(server string, labelID string, params *Patc
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -8064,8 +8008,6 @@ func NewPostLegacyAuthorizationsRequestWithBody(server string, params *PostLegac
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -8213,8 +8155,6 @@ func NewPatchLegacyAuthorizationsIDRequestWithBody(server string, authID string,
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -8271,8 +8211,6 @@ func NewPostLegacyAuthorizationsIDPasswordRequestWithBody(server string, authID 
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -8361,8 +8299,6 @@ func NewPutMePasswordRequestWithBody(server string, params *PutMePasswordParams,
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -8501,8 +8437,6 @@ func NewCreateNotificationEndpointRequestWithBody(server string, contentType str
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -8638,8 +8572,6 @@ func NewPatchNotificationEndpointsIDRequestWithBody(server string, endpointID st
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -8696,8 +8628,6 @@ func NewPutNotificationEndpointsIDRequestWithBody(server string, endpointID stri
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -8800,8 +8730,6 @@ func NewPostNotificationEndpointIDLabelsRequestWithBody(server string, endpointI
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -9024,8 +8952,6 @@ func NewCreateNotificationRuleRequestWithBody(server string, contentType string,
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -9161,8 +9087,6 @@ func NewPatchNotificationRulesIDRequestWithBody(server string, ruleID string, pa
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -9219,8 +9143,6 @@ func NewPutNotificationRulesIDRequestWithBody(server string, ruleID string, para
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -9323,8 +9245,6 @@ func NewPostNotificationRuleIDLabelsRequestWithBody(server string, ruleID string
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -9611,8 +9531,6 @@ func NewPostOrgsRequestWithBody(server string, params *PostOrgsParams, contentTy
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -9760,8 +9678,6 @@ func NewPatchOrgsIDRequestWithBody(server string, orgID string, params *PatchOrg
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -9863,8 +9779,6 @@ func NewPostOrgsIDMembersRequestWithBody(server string, orgID string, params *Po
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -10020,8 +9934,6 @@ func NewPostOrgsIDOwnersRequestWithBody(server string, orgID string, params *Pos
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -10176,8 +10088,6 @@ func NewPatchOrgsIDSecretsRequestWithBody(server string, orgID string, params *P
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -10234,8 +10144,6 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -10377,8 +10285,6 @@ func NewPostQueryRequestWithBody(server string, params *PostQueryParams, content
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -10451,8 +10357,6 @@ func NewPostQueryAnalyzeRequestWithBody(server string, params *PostQueryAnalyzeP
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -10513,8 +10417,6 @@ func NewPostQueryAstRequestWithBody(server string, params *PostQueryAstParams, c
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -10698,8 +10600,6 @@ func NewPostRestoreBucketMetadataRequestWithBody(server string, params *PostRest
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -10745,8 +10645,6 @@ func NewPostRestoreBucketIDRequestWithBody(server string, bucketID string, param
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -10797,8 +10695,6 @@ func NewPostRestoreKVRequestWithBody(server string, params *PostRestoreKVParams,
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -10868,8 +10764,6 @@ func NewPostRestoreShardIdRequestWithBody(server string, shardID string, params 
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -10930,8 +10824,6 @@ func NewPostRestoreSQLRequestWithBody(server string, params *PostRestoreSQLParam
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -11111,8 +11003,6 @@ func NewPostScrapersRequestWithBody(server string, params *PostScrapersParams, c
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -11260,8 +11150,6 @@ func NewPatchScrapersIDRequestWithBody(server string, scraperTargetID string, pa
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -11363,8 +11251,6 @@ func NewPostScrapersIDLabelsRequestWithBody(server string, scraperTargetID strin
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -11520,8 +11406,6 @@ func NewPostScrapersIDMembersRequestWithBody(server string, scraperTargetID stri
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -11676,8 +11560,6 @@ func NewPostScrapersIDOwnersRequestWithBody(server string, scraperTargetID strin
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -11817,8 +11699,6 @@ func NewPostSetupRequestWithBody(server string, params *PostSetupParams, content
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -12004,8 +11884,6 @@ func NewPostSourcesRequestWithBody(server string, params *PostSourcesParams, con
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -12152,8 +12030,6 @@ func NewPatchSourcesIDRequestWithBody(server string, sourceID string, params *Pa
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -12391,8 +12267,6 @@ func NewCreateStackRequestWithBody(server string, contentType string, body io.Re
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -12521,8 +12395,6 @@ func NewUpdateStackRequestWithBody(server string, stackId string, contentType st
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	req.Header.Add("Content-Type", contentType)
 	return req, nil
@@ -12751,8 +12623,6 @@ func NewPostTasksRequestWithBody(server string, params *PostTasksParams, content
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -12900,8 +12770,6 @@ func NewPatchTasksIDRequestWithBody(server string, taskID string, params *PatchT
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -13003,8 +12871,6 @@ func NewPostTasksIDLabelsRequestWithBody(server string, taskID string, params *P
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -13205,8 +13071,6 @@ func NewPostTasksIDMembersRequestWithBody(server string, taskID string, params *
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -13360,8 +13224,6 @@ func NewPostTasksIDOwnersRequestWithBody(server string, taskID string, params *P
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -13585,8 +13447,6 @@ func NewPostTasksIDRunsRequestWithBody(server string, taskID string, params *Pos
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -13796,8 +13656,6 @@ func NewPostTasksIDRunsIDRetryRequestWithBody(server string, taskID string, runI
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -13964,8 +13822,6 @@ func NewPostTelegrafsRequestWithBody(server string, params *PostTelegrafsParams,
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -14124,8 +13980,6 @@ func NewPutTelegrafsIDRequestWithBody(server string, telegrafID string, params *
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -14227,8 +14081,6 @@ func NewPostTelegrafsIDLabelsRequestWithBody(server string, telegrafID string, p
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -14384,8 +14236,6 @@ func NewPostTelegrafsIDMembersRequestWithBody(server string, telegrafID string, 
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -14540,8 +14390,6 @@ func NewPostTelegrafsIDOwnersRequestWithBody(server string, telegrafID string, p
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -14645,8 +14493,6 @@ func NewApplyTemplateRequestWithBody(server string, contentType string, body io.
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	req.Header.Add("Content-Type", contentType)
 	return req, nil
 }
 
@@ -14684,8 +14530,6 @@ func NewExportTemplateRequestWithBody(server string, contentType string, body io
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	req.Header.Add("Content-Type", contentType)
 	return req, nil
@@ -14848,8 +14692,6 @@ func NewPostUsersRequestWithBody(server string, params *PostUsersParams, content
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -14997,8 +14839,6 @@ func NewPatchUsersIDRequestWithBody(server string, userID string, params *PatchU
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -15055,8 +14895,6 @@ func NewPostUsersIDPasswordRequestWithBody(server string, userID string, params 
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -15181,8 +15019,6 @@ func NewPostVariablesRequestWithBody(server string, params *PostVariablesParams,
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -15331,8 +15167,6 @@ func NewPatchVariablesIDRequestWithBody(server string, variableID string, params
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
-
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
 
@@ -15389,8 +15223,6 @@ func NewPutVariablesIDRequestWithBody(server string, variableID string, params *
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -15493,8 +15325,6 @@ func NewPostVariablesIDLabelsRequestWithBody(server string, variableID string, p
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -15646,8 +15476,6 @@ func NewPostWriteRequestWithBody(server string, params *PostWriteParams, content
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string

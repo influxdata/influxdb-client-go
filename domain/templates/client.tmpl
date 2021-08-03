@@ -155,7 +155,6 @@ func New{{$opid}}Request{{if .HasBody}}WithBody{{end}}(server string{{genParamAr
         return nil, err
     }
 
-    {{if .HasBody}}req.Header.Add("Content-Type", contentType){{end}}
 {{range $paramIdx, $param := .HeaderParams}}
     {{if not .Required}} if params.{{.GoName}} != nil { {{end}}
     var headerParam{{$paramIdx}} string

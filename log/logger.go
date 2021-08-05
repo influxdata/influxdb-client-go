@@ -9,6 +9,7 @@ package log
 import (
 	"fmt"
 	"log"
+	"sync"
 )
 
 // Log is the library wide logger. Setting to nil disables logging.
@@ -49,13 +50,17 @@ type Logger interface {
 }
 
 // logger provides default implementation for Logger. It logs using Go log API
+// mutex is needed in cases when multiple clients run concurrently
 type logger struct {
 	prefix   string
 	logLevel uint
+	sync.Mutex
 }
 
 func (l *logger) SetLogLevel(logLevel uint) {
+	l.Lock()
 	l.logLevel = logLevel
+	l.Unlock()
 }
 
 func (l *logger) LogLevel() uint {
@@ -63,7 +68,9 @@ func (l *logger) LogLevel() uint {
 }
 
 func (l *logger) SetPrefix(prefix string) {
+	l.Lock()
 	l.prefix = prefix
+	l.Unlock()
 }
 
 func (l *logger) Debugf(format string, v ...interface{}) {

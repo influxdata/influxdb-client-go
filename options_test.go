@@ -20,17 +20,19 @@ import (
 
 func TestDefaultOptions(t *testing.T) {
 	opts := influxdb2.DefaultOptions()
-	assert.Equal(t, uint(5000), opts.BatchSize())
-	assert.Equal(t, false, opts.UseGZip())
-	assert.Equal(t, uint(1000), opts.FlushInterval())
-	assert.Equal(t, time.Nanosecond, opts.Precision())
-	assert.Equal(t, uint(50000), opts.RetryBufferLimit())
-	assert.Equal(t, uint(5000), opts.RetryInterval())
-	assert.Equal(t, uint(3), opts.MaxRetries())
-	assert.Equal(t, uint(300000), opts.MaxRetryInterval())
-	assert.Equal(t, (*tls.Config)(nil), opts.TLSConfig())
-	assert.Equal(t, uint(20), opts.HTTPRequestTimeout())
-	assert.Equal(t, uint(0), opts.LogLevel())
+	assert.EqualValues(t, 5_000, opts.BatchSize())
+	assert.EqualValues(t, false, opts.UseGZip())
+	assert.EqualValues(t, 1_000, opts.FlushInterval())
+	assert.EqualValues(t, time.Nanosecond, opts.Precision())
+	assert.EqualValues(t, 50_000, opts.RetryBufferLimit())
+	assert.EqualValues(t, 5_000, opts.RetryInterval())
+	assert.EqualValues(t, 5, opts.MaxRetries())
+	assert.EqualValues(t, 125_000, opts.MaxRetryInterval())
+	assert.EqualValues(t, 180_000, opts.MaxRetryTime())
+	assert.EqualValues(t, 2, opts.ExponentialBase())
+	assert.EqualValues(t, (*tls.Config)(nil), opts.TLSConfig())
+	assert.EqualValues(t, 20, opts.HTTPRequestTimeout())
+	assert.EqualValues(t, 0, opts.LogLevel())
 }
 
 func TestSettingsOptions(t *testing.T) {
@@ -40,31 +42,35 @@ func TestSettingsOptions(t *testing.T) {
 	opts := influxdb2.DefaultOptions().
 		SetBatchSize(5).
 		SetUseGZip(true).
-		SetFlushInterval(5000).
+		SetFlushInterval(5_000).
 		SetPrecision(time.Millisecond).
 		SetRetryBufferLimit(5).
-		SetRetryInterval(1000).
-		SetMaxRetryInterval(10000).
+		SetRetryInterval(1_000).
+		SetMaxRetryInterval(10_000).
 		SetMaxRetries(7).
+		SetMaxRetryTime(500_000).
+		SetExponentialBase(5).
 		SetTLSConfig(tlsConfig).
 		SetHTTPRequestTimeout(50).
 		SetLogLevel(3).
 		AddDefaultTag("t", "a")
-	assert.Equal(t, uint(5), opts.BatchSize())
-	assert.Equal(t, true, opts.UseGZip())
-	assert.Equal(t, uint(5000), opts.FlushInterval())
-	assert.Equal(t, time.Millisecond, opts.Precision())
-	assert.Equal(t, uint(5), opts.RetryBufferLimit())
-	assert.Equal(t, uint(1000), opts.RetryInterval())
-	assert.Equal(t, uint(10000), opts.MaxRetryInterval())
-	assert.Equal(t, uint(7), opts.MaxRetries())
-	assert.Equal(t, tlsConfig, opts.TLSConfig())
-	assert.Equal(t, uint(50), opts.HTTPRequestTimeout())
+	assert.EqualValues(t, 5, opts.BatchSize())
+	assert.EqualValues(t, true, opts.UseGZip())
+	assert.EqualValues(t, 5_000, opts.FlushInterval())
+	assert.EqualValues(t, time.Millisecond, opts.Precision())
+	assert.EqualValues(t, 5, opts.RetryBufferLimit())
+	assert.EqualValues(t, 1_000, opts.RetryInterval())
+	assert.EqualValues(t, 10_000, opts.MaxRetryInterval())
+	assert.EqualValues(t, 7, opts.MaxRetries())
+	assert.EqualValues(t, 500_000, opts.MaxRetryTime())
+	assert.EqualValues(t, 5, opts.ExponentialBase())
+	assert.EqualValues(t, tlsConfig, opts.TLSConfig())
+	assert.EqualValues(t, 50, opts.HTTPRequestTimeout())
 	if client := opts.HTTPClient(); assert.NotNil(t, client) {
-		assert.Equal(t, 50*time.Second, client.Timeout)
+		assert.EqualValues(t, 50*time.Second, client.Timeout)
 		assert.Equal(t, tlsConfig, client.Transport.(*http.Transport).TLSClientConfig)
 	}
-	assert.Equal(t, uint(3), opts.LogLevel())
+	assert.EqualValues(t, 3, opts.LogLevel())
 	assert.Len(t, opts.WriteOptions().DefaultTags(), 1)
 
 	client := &http.Client{

@@ -146,7 +146,7 @@ x:
 func (w *WriteAPIImpl) flushBuffer() {
 	if len(w.writeBuffer) > 0 {
 		log.Info("sending batch")
-		batch := iwrite.NewBatch(buffer(w.writeBuffer), w.writeOptions.RetryInterval())
+		batch := iwrite.NewBatch(buffer(w.writeBuffer), w.writeOptions.RetryInterval(), w.writeOptions.MaxRetryTime())
 		w.writeCh <- batch
 		w.writeBuffer = w.writeBuffer[:0]
 	}

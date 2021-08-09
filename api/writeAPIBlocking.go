@@ -72,7 +72,7 @@ func NewWriteAPIBlocking(org string, bucket string, service http2.Service, write
 }
 
 func (w *writeAPIBlocking) write(ctx context.Context, line string) error {
-	err := w.service.WriteBatch(ctx, iwrite.NewBatch(line, w.writeOptions.RetryInterval()))
+	err := w.service.WriteBatch(ctx, iwrite.NewBatch(line, w.writeOptions.RetryInterval(), w.writeOptions.MaxRetryTime()))
 	if err != nil {
 		return err.Unwrap()
 	}

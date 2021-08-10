@@ -54,13 +54,13 @@ type Logger interface {
 type logger struct {
 	prefix   string
 	logLevel uint
-	sync.Mutex
+	lock     sync.Mutex
 }
 
 func (l *logger) SetLogLevel(logLevel uint) {
-	l.Lock()
+	l.lock.Lock()
 	l.logLevel = logLevel
-	l.Unlock()
+	l.lock.Unlock()
 }
 
 func (l *logger) LogLevel() uint {
@@ -68,9 +68,9 @@ func (l *logger) LogLevel() uint {
 }
 
 func (l *logger) SetPrefix(prefix string) {
-	l.Lock()
+	l.lock.Lock()
 	l.prefix = prefix
-	l.Unlock()
+	l.lock.Unlock()
 }
 
 func (l *logger) Debugf(format string, v ...interface{}) {

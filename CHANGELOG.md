@@ -1,6 +1,9 @@
-## 2.3.0 [in progress]
+## 2.5.0 [in progress]
 ### Features
  - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 
+
+### Bug fixes
+ - [#270](https://github.com/influxdata/influxdb-client-go/pull/270) Fixed duplicate `Content-Type` header in requests to managemet API  
 
 ### Documentation
  - [#261](https://github.com/influxdata/influxdb-client-go/pull/261) Update Line Protocol document link to v2.0

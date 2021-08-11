@@ -8,6 +8,8 @@ import (
 	"context"
 	"fmt"
 
+	gohttp "net/http"
+
 	"github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 )
@@ -25,6 +27,24 @@ func ExampleClient_newClientWithOptions() {
 	// Create client and set batch size to 20
 	client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token",
 		influxdb2.DefaultOptions().SetBatchSize(20))
+
+	// Always close client at the end
+	defer client.Close()
+}
+
+type SampleDoer struct {
+	httpClient *gohttp.Client
+}
+func(doer *SampleDoer) Do(httpReq *gohttp.Request) (*gohttp.Response, error){
+	return doer.Do(httpReq)
+}
+func ExampleClient_newClientWithDoer() {
+	//create a new "Doer" - in this case it is a simple struct which implements "Do"
+	sampleDoer := &SampleDoer{} //
+
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	// Create client and set batch size to 20
+	client := influxdb2.NewClientWithDoer(sampleDoer, "my-token", influxdb2.DefaultOptions().SetBatchSize(20))
 
 	// Always close client at the end
 	defer client.Close()

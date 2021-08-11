@@ -139,6 +139,16 @@ func (o *Options) HTTPClient() *nethttp.Client {
 	return o.httpOptions.HTTPClient()
 }
 
+// SetHTTPDoer will configure the http.Client that is used
+// for HTTP requests. If set to nil, this has no effect.
+//
+// Setting the HTTPDoer will cause the other HTTP options
+// to be ignored.
+func (o *Options) SetHTTPDoer(d http.Doer) *Options {
+	o.httpOptions.SetHTTPDoer(d)
+	return o
+}
+
 // SetHTTPClient will configure the http.Client that is used
 // for HTTP requests. If set to nil, an HTTPClient will be
 // generated.

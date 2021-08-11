@@ -44,7 +44,7 @@ func ExampleClient_newClientWithDoer() {
 
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	// Create client and set batch size to 20
-	client := influxdb2.NewClientWithDoer(sampleDoer, "my-token", influxdb2.DefaultOptions().SetBatchSize(20))
+	client := influxdb2.NewClientWithDoer(sampleDoer, "http://no-ssl-influx", "my-token", influxdb2.DefaultOptions().SetBatchSize(20))
 
 	// Always close client at the end
 	defer client.Close()

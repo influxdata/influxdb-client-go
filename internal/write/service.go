@@ -79,7 +79,16 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 	return &Service{org: org, bucket: bucket, httpService: httpService, url: writeURL, writeOptions: options, retryQueue: newQueue(int(retryBufferLimit))}
 }
 
-// HandleWrite handles writes batches and handles retrying
+// HandleWrite handles writes of batches and handles retrying.
+// Retrying is triggered by new writes, there is no scheduler.
+// It first checks retry queue, cause it has highest priority.
+// If there are some batches in retry queue, those are written and incoming batch is added to end of retry queue.
+// Immediate write is allowed only in case there was success or not retryable error.
+// Otherwise delay is checked based on recent batch.
+// If write of batch fails with retryable error (connection errors and HTTP code >= 429),
+// Batch retry time is calculated based on #of attempts.
+// If writes continues failing and # of attempts reaches maximum or total retry time reaches maxRetryTime,
+// batch is discarded.
 func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 	log.Debug("Write proc: received write request")
 	batchToWrite := batch

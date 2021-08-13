@@ -204,6 +204,33 @@ func main() {
     client.Close()
 }
 ```
+### Handling of failed async writes
+WriteAPI by default continues with retrying of failed writes. 
+Retried are automatically writes that fail on a connection failure or when server returns response HTTP status code >= 429.
+
+Retrying algorithm uses random exponential strategy to set retry time.
+The delay for the next retry attempt is a random value in the interval _retryInterval * exponentialBase^(attempts)_ and _retryInterval * exponentialBase^(attempts+1)_.
+If writes of batch repeatedly fails, WriteAPI continues with retrying until _maxRetries_ is reached or the overall retry time of batch exceeds _maxRetryTime_. 
+
+The defaults parameters (part of the WriteOptions) are:
+ - _retryInterval_=5,000ms
+ - _exponentialBase_=2
+ - _maxRetryDelay_=125,000ms
+ - _maxRetries_=5
+ - _maxRetryTime_=180,000ms
+ 
+Retry delays are by default randomly distributed within the ranges:
+ 1. 5,000-10,000
+ 1. 10,000-20,000
+ 1. 20,000-40,000
+ 1. 40,000-80,000
+ 1. 80,000-125,000
+ 
+Setting _retryInterval_ to 0 disables retry strategy and any failed write will discard the batch. 
+
+[WriteFailedCallback](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteFailedCallback) allows advanced controlling of retrying. 
+It is synchronously notified in case async write fails.
+It controls further batch handling by its return value. If it returns `true`, WriteAPI continues with retrying of writes of this batch. Returned `false` means the batch should be discarded. 
 
 ### Reading async errors
 [Errors()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI.Errors) method returns a channel for reading errors which occurs during async writes. This channel is unbuffered and it 

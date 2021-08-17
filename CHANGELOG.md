@@ -1,6 +1,7 @@
 ## 2.5.0 [in progress]
 ### Features
  - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 
+ - [#271](https://github.com/influxdata/influxdb-client-go/pull/271) Use exponential _random_ retry strategy 
 
 ### Bug fixes
  - [#270](https://github.com/influxdata/influxdb-client-go/pull/270) Fixed duplicate `Content-Type` header in requests to managemet API  

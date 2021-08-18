@@ -20,8 +20,7 @@ import (
 )
 
 //
-const taskFlux = `from(bucket:"my-bucket") |> range(start: -1m) |> last()`
-const delayedTaskFlux = `from(bucket:"my-bucket") |> range(start: -1m) |> sleep(duration: 1s) |> last()`
+const taskFlux = `from(bucket:"my-bucket") |> range(start: -1h) |> last()`
 
 func TestTasksAPI_CRUDTask(t *testing.T) {
 	client := influxdb2.NewClient(serverURL, authToken)
@@ -427,18 +426,17 @@ func TestTasksAPI_Runs(t *testing.T) {
 	err = tasksAPI.DeleteTask(ctx, task)
 	assert.Nil(t, err)
 
-	task, err = tasksAPI.CreateTaskWithEvery(ctx, "delayed task", delayedTaskFlux, "2s", *org.Id)
+	task, err = tasksAPI.CreateTaskWithEvery(ctx, "task", taskFlux, "1s", *org.Id)
 	require.Nil(t, err)
 	require.NotNil(t, task)
-	//wait for task to start and be running
+	//wait for tasks to start and be running
 	<-time.After(1500 * time.Millisecond)
 
 	// we should get a running run
 	runs, err = tasksAPI.FindRuns(ctx, task, nil)
 	require.Nil(t, err)
-	if len(runs) == 1 && runs[0].FinishedAt == nil {
-		err = tasksAPI.CancelRun(ctx, &runs[0])
-		assert.Nil(t, err)
+	if assert.True(t, len(runs) > 0) {
+		_ = tasksAPI.CancelRun(ctx, &runs[0])
 	}
 
 	runm, err := tasksAPI.RunManually(ctx, task)

@@ -15,6 +15,12 @@ import (
 	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
 )
 
+// WriteFailedCallback is synchronously notified in case non-blocking write fails.
+// batch contains complete payload, error holds detailed error information,
+// retryAttempts means number of retries, 0 if it failed during first write.
+// It must return true if WriteAPI should continue with retrying, false will discard the batch.
+type WriteFailedCallback func(batch string, error http2.Error, retryAttempts uint) bool
+
 // WriteAPI is Write client interface with non-blocking methods for writing time series data asynchronously in batches into an InfluxDB server.
 // WriteAPI can be used concurrently.
 // When using multiple goroutines for writing, use a single WriteAPI instance in all goroutines.
@@ -33,6 +39,9 @@ type WriteAPI interface {
 	// Must be called before performing any writes for errors to be collected.
 	// The chan is unbuffered and must be drained or the writer will block.
 	Errors() <-chan error
+	// SetWriteFailedCallback sets callback allowing custom handling of failed writes.
+	// If callback returns true, failed batch will be retried, otherwise discarded.
+	SetWriteFailedCallback(cb WriteFailedCallback)
 }
 
 // WriteAPIImpl provides main implementation for WriteAPI
@@ -76,6 +85,14 @@ func NewWriteAPI(org string, bucket string, service http2.Service, writeOptions 
 	go w.writeProc()
 
 	return w
+}
+
+// SetWriteFailedCallback sets callback allowing custom handling of failed writes.
+// If callback returns true, failed batch will be retried, otherwise discarded.
+func (w *WriteAPIImpl) SetWriteFailedCallback(cb WriteFailedCallback) {
+	w.service.SetBatchErrorCallback(func(batch *iwrite.Batch, error2 http2.Error) bool {
+		return cb(batch.Batch, error2, batch.RetryAttempts)
+	})
 }
 
 // Errors returns a channel for reading errors which occurs during async writes.

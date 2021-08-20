@@ -9,6 +9,7 @@
 
 ### Documentation
  - [#261](https://github.com/influxdata/influxdb-client-go/pull/261) Update Line Protocol document link to v2.0
+ - [#274](https://github.com/influxdata/influxdb-client-go/pull/274) Documenting proxy configuration and HTTP redirects handling
 
 ## 2.4.0 [2021-06-04]
 ### Features

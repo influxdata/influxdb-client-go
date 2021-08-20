@@ -1,10 +1,11 @@
-## 2.5.0 [in progress]
+## 2.5.0 [2021-08-20]
 ### Features
  - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 
  - [#271](https://github.com/influxdata/influxdb-client-go/pull/271) Use exponential _random_ retry strategy 
  - [#273](https://github.com/influxdata/influxdb-client-go/pull/273) Added `WriteFailedCallback` for `WriteAPI` allowing to be _synchronously_ notified about failed writes and decide on further batch processing. 
 
 ### Bug fixes
+ - [#269](https://github.com/influxdata/influxdb-client-go/pull/269) Synchronized setters of _log.Logger_ to allow concurrent usage  
  - [#270](https://github.com/influxdata/influxdb-client-go/pull/270) Fixed duplicate `Content-Type` header in requests to managemet API  
 
 ### Documentation

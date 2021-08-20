@@ -17,6 +17,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - [Writes in Detail](#writes)
     - [Queries in Detail](#queries)
     - [Concurrency](#concurrency)
+    - [Proxy and redirects](#proxy-and-redirects)
 - [InfluxDB 1.8 API compatibility](#influxdb-18-api-compatibility)
 - [Contributing](#contributing)
 - [License](#license)
@@ -496,6 +497,39 @@ func main() {
     wg.Wait()
 }
 ```
+
+### Proxy and redirects
+You can configure InfluxDB Go client behind a proxy in two ways:
+ 1. Using environment variable  
+     Set environment variable `HTTP_PROXY` (or `HTTPS_PROXY` based on the scheme of your server url).  
+     e.g. (linux) `export HTTP_PROXY=http://my-proxy:8080` or in Go code `os.Setenv("HTTP_PROXY","http://my-proxy:8080")`
+     
+ 1. Configure `http.Client` to use proxy<br>
+     Create a custom `http.Client` with a proxy configuration:
+    ```go
+    proxyUrl, err := url.Parse("http://my-proxy:8080")
+    httpClient := &http.Client{
+        Transport: &http.Transport{
+            Proxy: http.ProxyURL(proxyUrl)
+        }
+    }
+    client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+    ```
+ 
+ Client automatically follows HTTP redirects. The default redirect policy is to follow up to 10 consecutive requests.
+ Due to a security reason _Authorization_ header is not forwarded when redirect leads to a different domain.
+ To overcome this limitation you have to set a custom redirect handler:
+```go
+token := "my-token"
+
+httpClient := &http.Client{
+    CheckRedirect: func(req *http.Request, via []*http.Request) error {
+        req.Header.Add("Authorization","Token " + token)
+        return nil
+    },
+}
+client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+``` 
 
 ## InfluxDB 1.8 API compatibility
   

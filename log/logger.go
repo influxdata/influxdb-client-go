@@ -74,42 +74,58 @@ func (l *logger) SetPrefix(prefix string) {
 }
 
 func (l *logger) Debugf(format string, v ...interface{}) {
+	l.lock.Lock()
 	if l.logLevel >= DebugLevel {
 		log.Print(l.prefix, " D! ", fmt.Sprintf(format, v...))
 	}
+	l.lock.Unlock()
 }
 func (l *logger) Debug(msg string) {
+	l.lock.Lock()
 	if l.logLevel >= DebugLevel {
 		log.Print(l.prefix, " D! ", msg)
 	}
+	l.lock.Unlock()
 }
 
 func (l *logger) Infof(format string, v ...interface{}) {
+	l.lock.Lock()
 	if l.logLevel >= InfoLevel {
 		log.Print(l.prefix, " I! ", fmt.Sprintf(format, v...))
 	}
+	l.lock.Unlock()
 }
 func (l *logger) Info(msg string) {
+	l.lock.Lock()
 	if l.logLevel >= DebugLevel {
 		log.Print(l.prefix, " I! ", msg)
 	}
+	l.lock.Unlock()
 }
 
 func (l *logger) Warnf(format string, v ...interface{}) {
+	l.lock.Lock()
 	if l.logLevel >= WarningLevel {
 		log.Print(l.prefix, " W! ", fmt.Sprintf(format, v...))
 	}
+	l.lock.Unlock()
 }
 func (l *logger) Warn(msg string) {
+	l.lock.Lock()
 	if l.logLevel >= WarningLevel {
 		log.Print(l.prefix, " W! ", msg)
 	}
+	l.lock.Unlock()
 }
 
 func (l *logger) Errorf(format string, v ...interface{}) {
+	l.lock.Lock()
 	log.Print(l.prefix, " E! ", fmt.Sprintf(format, v...))
+	l.lock.Unlock()
 }
 
 func (l *logger) Error(msg string) {
+	l.lock.Lock()
 	log.Print(l.prefix, " [E]! ", msg)
+	l.lock.Unlock()
 }

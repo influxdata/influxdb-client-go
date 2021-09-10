@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: circleci/golang:1.15.6-buster
+      - image: cimg/go:1.15.6
         environment:
           ENV: CI
           GO111MODULE: "on"

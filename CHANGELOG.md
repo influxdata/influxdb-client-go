@@ -1,3 +1,8 @@
+## 2.5.1[in progress]
+### Bug fixes
+ - [#276](https://github.com/influxdata/influxdb-client-go/pull/276) Synchronized logging methods of _log.Logger_
+ 
+### Features
 ## 2.5.0 [2021-08-20]
 ### Features
  - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 

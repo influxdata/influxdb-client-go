@@ -9,17 +9,16 @@ package influxdb2_test
 import (
 	"context"
 	"fmt"
-	"os"
-	"strconv"
-	"sync"
-	"testing"
-	"time"
-
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/influxdata/influxdb-client-go/v2/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"os"
+	"strconv"
+	"sync"
+	"testing"
+	"time"
 )
 
 var authToken string
@@ -272,7 +271,7 @@ func TestV2APIAgainstV1Server(t *testing.T) {
 }
 
 func TestHTTPService(t *testing.T) {
-	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	client := influxdb2.NewClient(serverURL, authToken)
 	apiClient := domain.NewClientWithResponses(client.HTTPService())
 	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
 	if err != nil {
@@ -310,4 +309,22 @@ from(bucket:"my-bucket") |> range(start: -1m) |> last()`
 			t.Error(err)
 		}
 	}
+}
+
+func TestLogsConcurrent(t *testing.T) {
+	var wg sync.WaitGroup
+	w := func(loc string, temp float32) {
+		client1 := influxdb2.NewClientWithOptions(serverURL, authToken, influxdb2.DefaultOptions().SetLogLevel(log.ErrorLevel))
+		for i := 0; i < 10000; i++ {
+			client1.WriteAPI("my-org", "my-bucket").WriteRecord(fmt.Sprintf("room,location=%s temp=%f", loc, temp))
+		}
+		client1.Close()
+		wg.Done()
+	}
+	for i := 0; i < 2; i++ {
+		wg.Add(1)
+		go w(fmt.Sprintf("T%d", i), 23.3+float32(i))
+		<-time.After(time.Nanosecond)
+	}
+	wg.Wait()
 }

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	logi "github.com/influxdata/influxdb-client-go/v2/internal/log"
 	dlog "github.com/influxdata/influxdb-client-go/v2/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -133,4 +134,21 @@ func (l *testLogger) Errorf(format string, v ...interface{}) {
 
 func (l *testLogger) Error(msg string) {
 	log.Print("testlogger", " [E]! ", msg)
+}
+
+type nullWriter struct{}
+
+func (m *nullWriter) Write(p []byte) (n int, err error) {
+	return len(p), nil
+}
+
+func BenchmarkLogger(b *testing.B) {
+	// run the Fib function b.N times
+	log.SetOutput(&nullWriter{})
+	dlog.Log.SetLogLevel(dlog.DebugLevel)
+	for n := 0; n < b.N; n++ {
+		for i := 0; i < 5; i++ {
+			go logi.Debug("Log nothing")
+		}
+	}
 }

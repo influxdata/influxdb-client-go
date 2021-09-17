@@ -1,6 +1,6 @@
-## 2.5.1[in progress]
+## 2.5.1[2021-09-17]
 ### Bug fixes
- - [#276](https://github.com/influxdata/influxdb-client-go/pull/276) Synchronized logging methods of _log.Logger_
+ - [#276](https://github.com/influxdata/influxdb-client-go/pull/276) Synchronized logging methods of _log.Logger_.
  
 ### Features
 ## 2.5.0 [2021-08-20]

@@ -293,7 +293,7 @@ func TestErrorInRow(t *testing.T) {
 ,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,
 
 `
-	verifyParsingError(t, csvTableErrorNoReference, `cannot decode row in error section: cannot convert value "" in column of type "long" to Go type int64 at line 5: strconv.ParseInt: parsing "": invalid syntax`, true)
+	verifyParsingError(t, csvTableErrorNoReference, `cannot decode row in error section: cannot convert value "" in column of type "long" to Go type int64 at line 5:2: strconv.ParseInt: parsing "": invalid syntax`, true)
 
 	csvTableErrorNoMessage := `#datatype,string,long
 #group,true,true

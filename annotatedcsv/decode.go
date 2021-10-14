@@ -11,8 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	ireflect "github.com/influxdata/influxdb-client-go/internal/reflect"
 )
 
 // Decode decodes the current row into x, which should be
@@ -86,7 +84,7 @@ func (r *Reader) initColumns(t reflect.Type, columns []Column) error {
 	switch et.Kind() {
 	case reflect.Struct:
 		fieldsMap := make(map[string]reflect.StructField)
-		fields := ireflect.VisibleFields(et)
+		fields := reflect.VisibleFields(et)
 		for _, f := range fields {
 			name := f.Name
 			if tag, ok := f.Tag.Lookup("csv"); ok {
@@ -194,7 +192,8 @@ func (r *Reader) initColumns(t reflect.Type, columns []Column) error {
 // to a struct or a slice field value
 func (r *Reader) convertColumnValue(v reflect.Value, colIndex int, convert valueSetter) error {
 	if err := convert(v, r.row[colIndex]); err != nil {
-		return fmt.Errorf(`cannot convert value %q in column of type %q to Go type %v at line %d: %w`, r.row[colIndex], r.cols[colIndex].Type, v.Type(), r.r.Line(), err)
+		line, col := r.r.FieldPos(colIndex)
+		return fmt.Errorf(`cannot convert value %q in column of type %q to Go type %v at line %d:%d: %w`, r.row[colIndex], r.cols[colIndex].Type, v.Type(), line, col, err)
 	}
 	return nil
 }

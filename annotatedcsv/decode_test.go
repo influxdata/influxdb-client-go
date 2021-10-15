@@ -656,7 +656,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				B []byte `csv:"bytes"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "base64Binary" to Go type []uint8 at line 4: illegal base64 data at input byte 0`,
+			expectError: `cannot convert value "#" in column of type "base64Binary" to Go type []uint8 at line 4:1: illegal base64 data at input byte 0`,
 		},
 		{
 			testName: "Invalid duration",
@@ -664,7 +664,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				D time.Duration `csv:"dur"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "duration" to Go type time.Duration at line 4: time: invalid duration "#"`,
+			expectError: `cannot convert value "#" in column of type "duration" to Go type time.Duration at line 4:1: time: invalid duration "#"`,
 		},
 		{
 			testName: "Invalid time",
@@ -672,7 +672,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				T time.Time `csv:"time"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "dateTime:RFC3339" to Go type time.Time at line 4: parsing time "#" as "2006-01-02T15:04:05.999999999Z07:00": cannot parse "#" as "2006"`,
+			expectError: `cannot convert value "#" in column of type "dateTime:RFC3339" to Go type time.Time at line 4:1: parsing time "#" as "2006-01-02T15:04:05.999999999Z07:00": cannot parse "#" as "2006"`,
 		},
 		{
 			testName: "Invalid int",
@@ -680,7 +680,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				I int8 `csv:"index"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "long" to Go type int8 at line 4: strconv.ParseInt: parsing "#": invalid syntax`,
+			expectError: `cannot convert value "#" in column of type "long" to Go type int8 at line 4:1: strconv.ParseInt: parsing "#": invalid syntax`,
 		},
 		{
 			testName: "Overflow int",
@@ -688,7 +688,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				I int8 `csv:"index"`
 			}{},
-			expectError: `cannot convert value "1600" in column of type "long" to Go type int8 at line 4: value 1600 overflows type int8`,
+			expectError: `cannot convert value "1600" in column of type "long" to Go type int8 at line 4:1: value 1600 overflows type int8`,
 		},
 		{
 			testName: "Invalid uint",
@@ -696,7 +696,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				U uint8 `csv:"index"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "unsignedLong" to Go type uint8 at line 4: strconv.ParseUint: parsing "#": invalid syntax`,
+			expectError: `cannot convert value "#" in column of type "unsignedLong" to Go type uint8 at line 4:1: strconv.ParseUint: parsing "#": invalid syntax`,
 		},
 		{
 			testName: "Overflow uint",
@@ -704,7 +704,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				U uint8 `csv:"index"`
 			}{},
-			expectError: `cannot convert value "1600" in column of type "unsignedLong" to Go type uint8 at line 4: value 1600 overflows type uint8`,
+			expectError: `cannot convert value "1600" in column of type "unsignedLong" to Go type uint8 at line 4:1: value 1600 overflows type uint8`,
 		},
 		{
 			testName: "Invalid bool",
@@ -712,7 +712,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				B bool `csv:"valid"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "boolean" to Go type bool at line 4: invalid bool value: "#"`,
+			expectError: `cannot convert value "#" in column of type "boolean" to Go type bool at line 4:1: invalid bool value: "#"`,
 		},
 		{
 			testName: "Invalid float",
@@ -720,7 +720,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				F float32 `csv:"mem"`
 			}{},
-			expectError: `cannot convert value "#" in column of type "double" to Go type float32 at line 4: strconv.ParseFloat: parsing "#": invalid syntax`,
+			expectError: `cannot convert value "#" in column of type "double" to Go type float32 at line 4:1: strconv.ParseFloat: parsing "#": invalid syntax`,
 		},
 		{
 			testName: "Overflow float",
@@ -728,7 +728,7 @@ func TestConversionErrors(t *testing.T) {
 			value: struct {
 				F float32 `csv:"mem"`
 			}{},
-			expectError: `cannot convert value "1e64" in column of type "double" to Go type float32 at line 4: value 1e64 overflows type float32`,
+			expectError: `cannot convert value "1e64" in column of type "double" to Go type float32 at line 4:1: value 1e64 overflows type float32`,
 		},
 		{
 			testName: "Invalid column type",

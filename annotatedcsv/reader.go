@@ -30,8 +30,8 @@
 package annotatedcsv
 
 import (
+	"encoding/csv"
 	"fmt"
-	"github.com/influxdata/influxdb-client-go/internal/csv"
 	"io"
 	"reflect"
 	"strings"
@@ -169,7 +169,8 @@ func (r *Reader) readRow() ([]string, error) {
 	_, _ = r.read()
 	colsCount := len(row) - 1
 	if colsCount != len(r.cols) {
-		return nil, fmt.Errorf("inconsistent number of columns at line %d (got %d items want %d)", r.r.Line(), colsCount, len(r.cols))
+		line, _ := r.r.FieldPos(0)
+		return nil, fmt.Errorf("inconsistent number of columns at line %d (got %d items want %d)", line, colsCount, len(r.cols))
 	}
 	for i, v := range row[1:] {
 		if v == "" {

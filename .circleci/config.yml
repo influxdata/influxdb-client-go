@@ -6,20 +6,12 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: cimg/go:1.15.6
+      - image: cimg/go:1.17.2
         environment:
           ENV: CI
           GO111MODULE: "on"
     steps:
       - checkout
-#      - run:
-#          name: check tidy
-#          command: |
-#            go mod tidy
-#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
-#              echo modules are not tidy, please run 'go mod tidy'
-#              exit 1
-#            fi
       - run: go get -v -t -d ./...
       - run: go vet ./...
       - run: go get honnef.co/go/tools/cmd/staticcheck  && staticcheck --checks="all" ./...

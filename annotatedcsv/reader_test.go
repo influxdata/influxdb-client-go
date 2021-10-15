@@ -953,7 +953,7 @@ func TestFailedConversion(t *testing.T) {
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,six,f,test,1,adsfasdf
 
 `
-	verifyParsingError(t, csvTable, `cannot convert value "zero" in column of type "long" to Go type interface {} at line 5: strconv.ParseInt: parsing "zero": invalid syntax`, false)
+	verifyParsingError(t, csvTable, `cannot convert value "zero" in column of type "long" to Go type interface {} at line 5:2: strconv.ParseInt: parsing "zero": invalid syntax`, false)
 
 	csvTable = `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
@@ -963,7 +963,7 @@ func TestFailedConversion(t *testing.T) {
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,six,f,test,1,adsfasdf
 
 `
-	verifyParsingError(t, csvTable, `cannot convert value "seven" in column of type "double" to Go type interface {} at line 5: strconv.ParseFloat: parsing "seven": invalid syntax`, false)
+	verifyParsingError(t, csvTable, `cannot convert value "seven" in column of type "double" to Go type interface {} at line 5:67: strconv.ParseFloat: parsing "seven": invalid syntax`, false)
 }
 
 func TestDifferentNumberOfColumns(t *testing.T) {

@@ -6,11 +6,14 @@
 package influxclient
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/influxdata/influxdb-client-go/inluxclient/model"
 )
 
 // Params holds the parameters for creating a new client.
@@ -43,6 +46,8 @@ type Client struct {
 	authorization string
 	// Cached base server API URL.
 	apiURL *url.URL
+	// generated server client
+	apiClient *model.ClientWithResponses
 }
 
 // New creates new Client with given Params, where ServerURL and AuthToken are mandatory.
@@ -69,5 +74,22 @@ func New(params Params) (*Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error parsing server URL: %w", err)
 	}
+	opts := []model.ClientOption{model.WithHTTPClient(c.params.HTTPClient)}
+	if c.authorization != "" {
+		opts = append(opts, model.WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
+			req.Header.Add("Authorization", c.authorization)
+			return nil
+		}))
+	}
+	c.apiClient, err = model.NewClientWithResponses(c.apiURL.String(), opts...)
+	if err != nil {
+		return nil, fmt.Errorf("error creating server API client: %w", err)
+	}
 	return c, nil
+}
+
+// OrganizationAPI returns a value that can be used to interact with the
+// organization-related parts of the InfluxDB API.
+func (c *Client) OrganizationAPI() *OrganizationAPI {
+	return newOrganizationAPI(c.apiClient)
 }

@@ -16,6 +16,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/influxdata/influxdb-client-go/influxclient/model"
 )
 
 // Params holds the parameters for creating a new client.
@@ -51,6 +53,8 @@ type Client struct {
 	authorization string
 	// Cached base server API URL.
 	apiURL *url.URL
+	// generated server client
+	apiClient *model.Client
 }
 
 // httpParams holds parameters for creating an HTTP request
@@ -65,6 +69,11 @@ type httpParams struct {
 	headers map[string]string
 	// HTTP POST/PUT body
 	body io.Reader
+}
+
+type authorizationDoer struct {
+	auth string
+	doer model.HTTPRequestDoer
 }
 
 // New creates new Client with given Params, where ServerURL and AuthToken are mandatory.
@@ -89,7 +98,15 @@ func New(params Params) (*Client, error) {
 	// Prepare server API URL
 	c.apiURL, err = url.Parse(serverAddress + "api/v2/")
 	if err != nil {
-		return nil, fmt.Errorf("error parsing server URL: %w", err)
+		return nil, fmt.Errorf("error parsing server URL: %v", err)
+	}
+	doer := model.HTTPRequestDoer(c.params.HTTPClient)
+	if c.authorization != "" {
+		doer = &authorizationDoer{c.authorization, doer}
+	}
+	c.apiClient, err = model.NewClient(c.apiURL.String(), doer)
+	if err != nil {
+		return nil, fmt.Errorf("error creating server API client: %v", err)
 	}
 	return c, nil
 }
@@ -166,4 +183,15 @@ func (c *Client) resolveHTTPError(r *http.Response) error {
 	}
 
 	return &httpError.ServerError
+}
+
+// OrganizationAPI returns a value that can be used to interact with the
+// organization-related parts of the InfluxDB API.
+func (c *Client) OrganizationAPI() *OrganizationAPI {
+	return newOrganizationAPI(c.apiClient)
+}
+
+func (a *authorizationDoer) Do(req *http.Request) (*http.Response, error) {
+	req.Header.Add("Authorization", a.auth)
+	return a.doer.Do(req)
 }

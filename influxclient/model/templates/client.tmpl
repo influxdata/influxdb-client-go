@@ -1,0 +1,58 @@
+
+// Doer performs HTTP requests.
+//
+// The standard http.Client implements this interface.
+type HTTPRequestDoer interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+// Client which conforms to the OpenAPI3 specification for this service.
+type Client struct {
+	// The endpoint of the server conforming to this interface, with scheme,
+	// https://api.deepmap.com for example. This can contain a path relative
+	// to the server, such as https://api.deepmap.com/dev-test, and all the
+	// paths in the swagger spec will be appended to the server.
+	Server string
+
+	// Doer for performing requests, typically a *http.Client with any
+	// customized settings, such as certificate chains.
+	Client HTTPRequestDoer
+}
+
+
+// Creates a new Client, with reasonable defaults
+func NewClient(server string, doer HTTPRequestDoer) (*Client, error) {
+    // create a client with sane default values
+    client := Client{
+        Server: server,
+        Client: doer,
+    }
+    // ensure the server URL always has a trailing slash
+    if !strings.HasSuffix(client.Server, "/") {
+        client.Server += "/"
+    }
+    // create httpClient, if not already present
+    if client.Client == nil {
+        client.Client = &http.Client{}
+    }
+    return &client, nil
+}
+
+func(e *Error) Error() error {
+	return fmt.Errorf("%s: %s", string(e.Code), e.Message)
+}
+
+func unmarshalJSONResponse(bodyBytes []byte, obj interface{}) error {
+	if err := json.Unmarshal(bodyBytes, obj); err != nil {
+		return err
+	}
+	return nil
+}
+
+func isJSON(rsp *http.Response) bool {
+	return rsp.Header.Get("Content-Type") == "application/json"
+}
+
+func newUnexpectedResponseError(rsp *http.Response) error {
+	return fmt.Errorf("unexpected content-type: %v", rsp.Header.Get("Content-Type"))
+}

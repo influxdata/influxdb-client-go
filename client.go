@@ -29,11 +29,13 @@ type Client interface {
 	// and returns details about newly created entities along with the authorization object.
 	// Retention period of zero will result to infinite retention.
 	Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error)
-	// Ready checks InfluxDB server is running. It doesn't validate authentication params.
-	Ready(ctx context.Context) (bool, error)
+	// Ready returns InfluxDB uptime info of server. It doesn't validate authentication params.
+	Ready(ctx context.Context) (*domain.Ready, error)
 	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
 	// Health doesn't validate authentication params.
 	Health(ctx context.Context) (*domain.HealthCheck, error)
+	// Ping validates InfluxDB server is running. It doesn't validate authentication params.
+	Ping(ctx context.Context) (bool, error)
 	// Close ensures all ongoing asynchronous write clients finish.
 	// Also closes all idle connections, in case of HTTP client was created internally.
 	Close()
@@ -136,16 +138,20 @@ func (c *clientImpl) HTTPService() http.Service {
 	return c.httpService
 }
 
-func (c *clientImpl) Ready(ctx context.Context) (bool, error) {
+func (c *clientImpl) Ready(ctx context.Context) (*domain.Ready, error) {
 	params := &domain.GetReadyParams{}
 	response, err := c.apiClient.GetReadyWithResponse(ctx, params)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	if response.JSONDefault != nil {
-		return false, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
+		return nil, domain.ErrorToHTTPError(response.JSONDefault, response.StatusCode())
 	}
-	return true, nil
+	if response.JSON200 == nil { //response with status 2xx, but not JSON
+		return nil, errors.New("cannot read Ready response")
+
+	}
+	return response.JSON200, nil
 }
 
 func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
@@ -189,8 +195,19 @@ func (c *clientImpl) Health(ctx context.Context) (*domain.HealthCheck, error) {
 		//unhealthy server
 		return response.JSON503, nil
 	}
+	if response.JSON200 == nil { //response with status 2xx, but not JSON
+		return nil, errors.New("cannot read Health response")
+	}
 
 	return response.JSON200, nil
+}
+
+func (c *clientImpl) Ping(ctx context.Context) (bool, error) {
+	resp, err := c.apiClient.GetPingWithResponse(ctx)
+	if err != nil {
+		return false, err
+	}
+	return resp.StatusCode() == 204, nil
 }
 
 func createKey(org, bucket string) string {

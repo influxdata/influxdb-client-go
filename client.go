@@ -34,7 +34,7 @@ type Client interface {
 	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
 	// Health doesn't validate authentication params.
 	Health(ctx context.Context) (*domain.HealthCheck, error)
-	// Ping validates InfluxDB server is running. It doesn't validate authentication params.
+	// Ping validates whether InfluxDB server is running. It doesn't validate authentication params.
 	Ping(ctx context.Context) (bool, error)
 	// Close ensures all ongoing asynchronous write clients finish.
 	// Also closes all idle connections, in case of HTTP client was created internally.

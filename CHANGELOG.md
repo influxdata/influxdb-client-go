@@ -1,12 +1,12 @@
 ## Unreleased
 ### Features
-- [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Added *Client.Ping()* function which returns status where server is available. This the only validation method available for both OSS and Cloud.
+- [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Added *Client.Ping()* function as the only validation method available in both OSS and Cloud.
 
 ### Bug fixes
-- [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Functions *Client.Health()* and *Client.Ready()* correctly reports error when calling them against InfluxDB Cloud, where those endpoints are not available.
+- [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Functions *Client.Health()* and *Client.Ready()* correctly report an error when called against InfluxDB Cloud.
 
 ### Breaking change
-- [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Functions *Client.Ready()* now returns full uptime info as returned by server.
+- [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Function *Client.Ready()* now returns `*domain.Ready` with full uptime info.
  
 
 ## 2.5.1[2021-09-17]

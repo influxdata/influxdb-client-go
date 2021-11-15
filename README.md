@@ -533,7 +533,7 @@ client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxd
 ``` 
 
 ### Checking Server State
-There are three functions for checking server is up and ready for communication:
+There are three functions for checking whether a server is up and ready for communication:
 
 | Function| Description | Availability |
 |:----------|:----------|:----------|
@@ -541,7 +541,7 @@ There are three functions for checking server is up and ready for communication:
 | [Ready()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ready) | Server uptime info | OSS |
 | [Ping()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ping) | Whether a server is up | OSS, Cloud |
 
-Only the [Ping()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ping) function is able to return status of an Influx DB Cloud server.
+Only the [Ping()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ping) function works in InfluxDB Cloud server.
 
 ## InfluxDB 1.8 API compatibility
   

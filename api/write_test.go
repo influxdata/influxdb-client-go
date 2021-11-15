@@ -95,15 +95,6 @@ func TestFlushInterval(t *testing.T) {
 	writeAPI.Close()
 
 	service.Close()
-	writeAPI = NewWriteAPI("my-org", "my-bucket", service, writeAPI.writeOptions.SetFlushInterval(500))
-	for _, p := range points {
-		writeAPI.WritePoint(p)
-	}
-	require.Len(t, service.Lines(), 0)
-	<-time.After(time.Millisecond * 550)
-	require.Len(t, service.Lines(), 5)
-
-	writeAPI.Close()
 }
 
 func TestRetry(t *testing.T) {

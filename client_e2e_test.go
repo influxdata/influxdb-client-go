@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
@@ -63,13 +64,14 @@ func TestSetup(t *testing.T) {
 func TestReady(t *testing.T) {
 	client := influxdb2.NewClient(serverURL, "")
 
-	ok, err := client.Ready(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
-	if !ok {
-		t.Fail()
-	}
+	ready, err := client.Ready(context.Background())
+	require.NoError(t, err)
+	require.NotNil(t, ready)
+	require.NotNil(t, ready.Started)
+	assert.True(t, ready.Started.Before(time.Now()))
+	dur, err := time.ParseDuration(*ready.Up)
+	require.NoError(t, err)
+	assert.True(t, dur.Seconds() > 0)
 }
 
 func TestHealth(t *testing.T) {
@@ -81,6 +83,14 @@ func TestHealth(t *testing.T) {
 	}
 	require.NotNil(t, health)
 	assert.Equal(t, domain.HealthCheckStatusPass, health.Status)
+}
+
+func TestPing(t *testing.T) {
+	client := influxdb2.NewClient(serverURL, "")
+
+	ok, err := client.Ping(context.Background())
+	require.NoError(t, err)
+	assert.True(t, ok)
 }
 
 func TestWrite(t *testing.T) {
@@ -159,6 +169,14 @@ func TestQuery(t *testing.T) {
 		}
 	}
 
+}
+
+func TestPingV1(t *testing.T) {
+	client := influxdb2.NewClient(serverV1URL, "")
+
+	ok, err := client.Ping(context.Background())
+	require.NoError(t, err)
+	assert.True(t, ok)
 }
 
 func TestHealthV1Compatibility(t *testing.T) {

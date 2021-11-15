@@ -84,26 +84,17 @@ func TestGzipWithFlushing(t *testing.T) {
 }
 func TestFlushInterval(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
-	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(10).SetFlushInterval(10))
+	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(10).SetFlushInterval(30))
 	points := test.GenPoints(5)
 	for _, p := range points {
 		writeAPI.WritePoint(p)
 	}
 	require.Len(t, service.Lines(), 0)
-	<-time.After(time.Millisecond * 15)
+	<-time.After(time.Millisecond * 50)
 	require.Len(t, service.Lines(), 5)
 	writeAPI.Close()
 
 	service.Close()
-	writeAPI = NewWriteAPI("my-org", "my-bucket", service, writeAPI.writeOptions.SetFlushInterval(50))
-	for _, p := range points {
-		writeAPI.WritePoint(p)
-	}
-	require.Len(t, service.Lines(), 0)
-	<-time.After(time.Millisecond * 60)
-	require.Len(t, service.Lines(), 5)
-
-	writeAPI.Close()
 }
 
 func TestRetry(t *testing.T) {

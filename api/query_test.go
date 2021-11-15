@@ -108,28 +108,28 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 func TestQueryCVSResultMultiTables(t *testing.T) {
 	csvTable := `#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
-#default,_result,,,,,,,,,
+#default,_result1,,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
 ,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
 
 #datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
-#default,_result,,,,,,,,,
+#default,_result2,,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
 ,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,4,i,test,1,adsfasdf
 ,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,-1,i,test,1,adsfasdf
 
 #datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,boolean,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
-#default,_result,,,,,,,,,
+#default,_result3,,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
 ,,2,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.62797864Z,false,f,test,0,adsfasdf
 ,,2,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.969100374Z,true,f,test,0,adsfasdf
 
 #datatype,string,long,dateTime:RFC3339Nano,dateTime:RFC3339Nano,dateTime:RFC3339Nano,unsignedLong,string,string,string,string
 #group,false,false,true,true,false,false,true,true,true,true
-#default,_result,,,,,,,,,
+#default,_result4,,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
 ,,3,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.62797864Z,0,i,test,0,adsfasdf
 ,,3,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.969100374Z,2,i,test,0,adsfasdf
@@ -137,7 +137,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 `
 	expectedTable1 := query.NewFluxTableMetadataFull(0,
 		[]*query.FluxColumn{
-			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("string", "_result1", "result", false, 0),
 			query.NewFluxColumnFull("long", "", "table", false, 1),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
@@ -151,7 +151,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord11 := query.NewFluxRecord(0,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result1",
 			"table":        int64(0),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -165,7 +165,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord12 := query.NewFluxRecord(0,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result1",
 			"table":        int64(0),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -180,7 +180,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 
 	expectedTable2 := query.NewFluxTableMetadataFull(1,
 		[]*query.FluxColumn{
-			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("string", "_result2", "result", false, 0),
 			query.NewFluxColumnFull("long", "", "table", false, 1),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
@@ -194,7 +194,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord21 := query.NewFluxRecord(1,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result2",
 			"table":        int64(1),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -208,7 +208,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord22 := query.NewFluxRecord(1,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result2",
 			"table":        int64(1),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -223,7 +223,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 
 	expectedTable3 := query.NewFluxTableMetadataFull(2,
 		[]*query.FluxColumn{
-			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("string", "_result3", "result", false, 0),
 			query.NewFluxColumnFull("long", "", "table", false, 1),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_start", true, 2),
 			query.NewFluxColumnFull("dateTime:RFC3339", "", "_stop", true, 3),
@@ -237,7 +237,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord31 := query.NewFluxRecord(2,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result3",
 			"table":        int64(2),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -251,7 +251,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord32 := query.NewFluxRecord(2,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result3",
 			"table":        int64(2),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -266,7 +266,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 
 	expectedTable4 := query.NewFluxTableMetadataFull(3,
 		[]*query.FluxColumn{
-			query.NewFluxColumnFull("string", "_result", "result", false, 0),
+			query.NewFluxColumnFull("string", "_result4", "result", false, 0),
 			query.NewFluxColumnFull("long", "", "table", false, 1),
 			query.NewFluxColumnFull("dateTime:RFC3339Nano", "", "_start", true, 2),
 			query.NewFluxColumnFull("dateTime:RFC3339Nano", "", "_stop", true, 3),
@@ -280,7 +280,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord41 := query.NewFluxRecord(3,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result4",
 			"table":        int64(3),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -294,7 +294,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 	expectedRecord42 := query.NewFluxRecord(3,
 		map[string]interface{}{
-			"result":       "_result",
+			"result":       "_result4",
 			"table":        int64(3),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
@@ -382,6 +382,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Equal(t, queryResult.table, expectedTable4)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord42)
+	assert.Equal(t, "_result4", queryResult.Record().ValueByKey("result"))
 
 	require.False(t, queryResult.Next())
 	require.Nil(t, queryResult.Err())
@@ -474,7 +475,7 @@ func TestQueryRawResult(t *testing.T) {
 		``,
 		`#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string`,
 		`#group,false,false,true,true,false,false,true,true,true,true`,
-		`#default,_result,,,,,,,,,`,
+		`#default,_result2,,,,,,,,,`,
 		`,result,table,_start,_stop,_time,_value,_field,_measurement,a,b`,
 		`,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,4,i,test,1,adsfasdf`,
 		`,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,1,i,test,1,adsfasdf`,

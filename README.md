@@ -18,6 +18,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - [Queries in Detail](#queries)
     - [Concurrency](#concurrency)
     - [Proxy and redirects](#proxy-and-redirects)
+    - [Checking Server State](#checking-server-state)
 - [InfluxDB 1.8 API compatibility](#influxdb-18-api-compatibility)
 - [Contributing](#contributing)
 - [License](#license)
@@ -530,6 +531,17 @@ httpClient := &http.Client{
 }
 client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxdb2.DefaultOptions().SetHTTPClient(httpClient))
 ``` 
+
+### Checking Server State
+There are three functions for checking whether a server is up and ready for communication:
+
+| Function| Description | Availability |
+|:----------|:----------|:----------|
+| [Health()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Health) | Detailed info about the server status, along with version string | OSS |
+| [Ready()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ready) | Server uptime info | OSS |
+| [Ping()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ping) | Whether a server is up | OSS, Cloud |
+
+Only the [Ping()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#Client.Ping) function works in InfluxDB Cloud server.
 
 ## InfluxDB 1.8 API compatibility
   

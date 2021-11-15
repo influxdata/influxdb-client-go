@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	ilog "log"
 	"strings"
 	"sync"
 	"testing"
@@ -132,6 +133,7 @@ func TestRetryStrategy(t *testing.T) {
 
 func TestBufferOverwrite(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
+	ilog.SetFlags(ilog.Ldate | ilog.Lmicroseconds)
 	hs := test.NewTestService(t, "http://localhost:8086")
 	// Buffer limit 15000, bach is 5000 => buffer for 3 batches
 	opts := write.DefaultOptions().SetRetryInterval(1).SetRetryBufferLimit(15000)
@@ -165,7 +167,6 @@ func TestBufferOverwrite(t *testing.T) {
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// Write early and overwrite
-	<-time.After(time.Millisecond)
 	b4 := NewBatch("4\n", opts.RetryInterval(), opts.MaxRetryTime())
 	// No write will occur, because retry delay has not passed yet
 	// However new bach will be added to retry queue. Retry queue has limit 3,

@@ -79,7 +79,7 @@ func TestUserAgent(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-time.After(100 * time.Millisecond)
 		if r.Header.Get("User-Agent") == http2.UserAgent {
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusNoContent)
 		} else {
 			w.WriteHeader(http.StatusNotFound)
 		}
@@ -87,9 +87,9 @@ func TestUserAgent(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL, "x")
-	ready, err := c.Ready(context.Background())
-	assert.True(t, ready)
-	assert.Nil(t, err)
+	up, err := c.Ping(context.Background())
+	require.NoError(t, err)
+	assert.True(t, up)
 
 	err = c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	assert.NoError(t, err)
@@ -166,4 +166,30 @@ func TestServerErrorEmptyBody(t *testing.T) {
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.Error(t, err)
 	assert.Equal(t, "Unexpected status code 404", err.Error())
+}
+
+func TestReadyFail(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte(`<html></html>`))
+	}))
+
+	defer server.Close()
+	c := NewClient(server.URL, "x")
+	r, err := c.Ready(context.Background())
+	assert.Error(t, err)
+	assert.Nil(t, r)
+}
+
+func TestHealthFail(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte(`<html></html>`))
+	}))
+
+	defer server.Close()
+	c := NewClient(server.URL, "x")
+	h, err := c.Health(context.Background())
+	assert.Error(t, err)
+	assert.Nil(t, h)
 }

@@ -1,6 +1,7 @@
 ## Unreleased
 ### Features
 - [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Added *Client.Ping()* function as the only validation method available in both OSS and Cloud.
+- [#287](https://github.com/influxdata/influxdb-client-go/pull/287) Added *FluxRecord.Result()* function as a convenient way to retrieve the Flux result name of data.
 
 ### Bug fixes
 - [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Functions *Client.Health()* and *Client.Ready()* correctly report an error when called against InfluxDB Cloud.

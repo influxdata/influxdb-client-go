@@ -382,7 +382,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.Equal(t, queryResult.table, expectedTable4)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord42)
-	assert.Equal(t, "_result4", queryResult.Record().ValueByKey("result"))
+	assert.Equal(t, "_result4", queryResult.Record().Result())
 
 	require.False(t, queryResult.Next())
 	require.Nil(t, queryResult.Err())

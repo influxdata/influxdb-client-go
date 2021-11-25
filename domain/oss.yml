@@ -2,34 +2,153 @@ openapi: 3.0.0
 info:
   title: Influx OSS API Service
   version: 2.0.0
+  description: |
+    The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint.
 servers:
   - url: /api/v2
+tags:
+  - name: Authentication
+    description: |
+      Use one of the following schemes to authenticate to the InfluxDB API:
+      - [Token authentication](#section/Authentication/TokenAuthentication)
+      - [Basic authentication](#section/Authentication/BasicAuthentication)
+      - [Querystring authentication](#section/Authentication/QuerystringAuthentication)
+      <!-- ReDoc-Inject: <security-definitions> -->
+    x-traitTag: true
+  - name: Quick start
+    x-traitTag: true
+    description: |
+      See the [**API Quick Start**](https://docs.influxdata.com/influxdb/v2.1/api-guide/api_intro/) to get up and running authenticating with tokens, writing to buckets, and querying data.
+
+      [**InfluxDB API client libraries**](https://docs.influxdata.com/influxdb/v2.1/api-guide/client-libraries/) are available for popular languages and ready to import into your application.
+  - name: Response codes
+    x-traitTag: true
+    description: |
+      The InfluxDB API uses standard HTTP status codes for success and failure responses.
+      The response body may include additional details. For details about a specific operation's response, see **Responses** and **Response Samples** for that operation.
+
+      API operations may return the following HTTP status codes:
+
+      | &nbsp;Code&nbsp; | Status                   | Description      |
+      |:-----------:|:------------------------ |:--------------------- |
+      | `200`       | Success                  |                       |
+      | `204`       | No content               | For a `POST` request, `204` indicates that InfluxDB accepted the request and request data is valid. Asynchronous operations, such as `write`, might not have completed yet. |
+      | `400`       | Bad request              | `Authorization` header is missing or malformed or the API token does not have permission for the operation. |
+      | `401`       | Unauthorized             | May indicate one of the following: <li>`Authorization: Token` header is missing or malformed</li><li>API token value is missing from the header</li><li>API token does not have permission. For more information about token types and permissions, see [Manage API tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens/)</li> |
+      | `404`       | Not found                | Requested resource was not found. `message` in the response body provides details about the requested resource. |
+      | `413`       | Request entity too large | Request payload exceeds the size limit. |
+      | `422`       | Unprocessible entity     | Request data is invalid. `code` and `message` in the response body provide details about the problem. |
+      | `429`       | Too many requests        | API token is temporarily over the request quota. The `Retry-After` header describes when to try the request again. |
+      | `500`       | Internal server error    |                       |
+      | `503`       | Service unavailable      | Server is temporarily unavailable to process the request. The `Retry-After` header describes when to try the request again. |
+  - name: Query
+    description: |
+      Retrieve data, analyze queries, and get query suggestions.
+  - name: Write
+    description: |
+      Write time series data to buckets.
+  - name: Authorizations
+    description: |
+      Create and manage API tokens. An **authorization** associates a list of permissions to an **organization** and provides a token for API access. Optionally, you can restrict an authorization and its token to a specific user.
+
+      For more information and examples, see the following:
+        - [Authorize API requests](https://docs.influxdata.com/influxdb/v2.1/api-guide/api_intro/#authentication).
+        - [Manage API tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens).
+        - [Assign a token to a specific user](https://docs.influxdata.com/influxdb/v2.1/security/tokens/create-token).
+x-tagGroups:
+  - name: Overview
+    tags:
+      - Quick start
+      - Authentication
+      - Response codes
+  - name: Data I/O endpoints
+    tags:
+      - Write
+      - Query
+  - name: Resource endpoints
+    tags:
+      - Buckets
+      - Dashboards
+      - Tasks
+      - Resources
+  - name: Security and access endpoints
+    tags:
+      - Authorizations
+      - Organizations
+      - Users
+  - name: System information endpoints
+    tags:
+      - Health
+      - Ping
+      - Ready
+      - Routes
+  - name: All endpoints
+    tags:
+      - Authorizations
+      - Backup
+      - Buckets
+      - Cells
+      - Checks
+      - DBRPs
+      - Dashboards
+      - Delete
+      - Health
+      - Labels
+      - Legacy Authorizations
+      - NotificationEndpoints
+      - NotificationRules
+      - Organizations
+      - Ping
+      - Query
+      - Ready
+      - RemoteConnections
+      - Replications
+      - Resources
+      - Restore
+      - Routes
+      - Rules
+      - Scraper Targets
+      - Secrets
+      - Setup
+      - Signin
+      - Signout
+      - Sources
+      - Tasks
+      - Telegraf Plugins
+      - Telegrafs
+      - Templates
+      - Users
+      - Variables
+      - Write
 paths:
   /signin:
     post:
       operationId: PostSignin
-      summary: Exchange basic auth credentials for session
+      summary: Create a user session.
+      description: 'Authenticates ***Basic Auth*** credentials for a user. If successful, creates a new UI session for the user.'
+      tags:
+        - Signin
       security:
-        - BasicAuth: []
+        - BasicAuthentication: []
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
       responses:
         '204':
-          description: Successfully authenticated
+          description: Success. User authenticated.
         '401':
-          description: Unauthorized access
+          description: Unauthorized access.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: user account is disabled
+          description: User account is disabled.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         default:
-          description: Unsuccessful authentication
+          description: Unsuccessful authentication.
           content:
             application/json:
               schema:
@@ -37,7 +156,10 @@ paths:
   /signout:
     post:
       operationId: PostSignout
-      summary: Expire the current session
+      summary: Expire the current UI session
+      tags:
+        - Signout
+      description: Expires the current UI session for the user.
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
       responses:
@@ -56,11 +178,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /ping:
-    servers:
-      - url: ''
     get:
       operationId: GetPing
       summary: Checks the status of InfluxDB instance and version of InfluxDB.
+      servers:
+        - url: ''
+      tags:
+        - Ping
       responses:
         '204':
           description: OK
@@ -76,6 +200,10 @@ paths:
     head:
       operationId: HeadPing
       summary: Checks the status of InfluxDB instance and version of InfluxDB.
+      servers:
+        - url: ''
+      tags:
+        - Ping
       responses:
         '204':
           description: OK
@@ -103,247 +231,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Routes'
-  /documents/templates:
-    get:
-      operationId: GetDocumentsTemplates
-      tags:
-        - Templates
-      summary: List all templates
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: query
-          name: org
-          description: Specifies the name of the organization of the template.
-          schema:
-            type: string
-        - in: query
-          name: orgID
-          description: Specifies the organization ID of the template.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: A list of template documents
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Documents'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      operationId: PostDocumentsTemplates
-      tags:
-        - Templates
-      summary: Create a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-      requestBody:
-        description: Template that will be created
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DocumentCreate'
-      responses:
-        '201':
-          description: Template created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  '/documents/templates/{templateID}':
-    get:
-      operationId: GetDocumentsTemplatesID
-      tags:
-        - Templates
-      summary: Retrieve a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: templateID
-          schema:
-            type: string
-          required: true
-          description: The template ID.
-      responses:
-        '200':
-          description: The template requested
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    put:
-      operationId: PutDocumentsTemplatesID
-      tags:
-        - Templates
-      summary: Update a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: templateID
-          schema:
-            type: string
-          required: true
-          description: The template ID.
-      requestBody:
-        description: Template that will be updated
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DocumentUpdate'
-      responses:
-        '200':
-          description: The newly updated template
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    delete:
-      operationId: DeleteDocumentsTemplatesID
-      tags:
-        - Templates
-      summary: Delete a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: templateID
-          schema:
-            type: string
-          required: true
-          description: The template ID.
-      responses:
-        '204':
-          description: Delete has been accepted
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  '/documents/templates/{templateID}/labels':
-    get:
-      operationId: GetDocumentsTemplatesIDLabels
-      tags:
-        - Templates
-      summary: List all labels for a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: templateID
-          schema:
-            type: string
-          required: true
-          description: The template ID.
-      responses:
-        '200':
-          description: A list of all labels for a template
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LabelsResponse'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      operationId: PostDocumentsTemplatesIDLabels
-      tags:
-        - Templates
-      summary: Add a label to a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: templateID
-          schema:
-            type: string
-          required: true
-          description: The template ID.
-      requestBody:
-        description: Label to add
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LabelMapping'
-      responses:
-        '201':
-          description: The label added to the template
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LabelResponse'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  '/documents/templates/{templateID}/labels/{labelID}':
-    delete:
-      operationId: DeleteDocumentsTemplatesIDLabelsID
-      tags:
-        - Templates
-      summary: Delete a label from a template
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: templateID
-          schema:
-            type: string
-          required: true
-          description: The template ID.
-        - in: path
-          name: labelID
-          schema:
-            type: string
-          required: true
-          description: The label ID.
-      responses:
-        '204':
-          description: Delete has been accepted
-        '404':
-          description: Template not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
   /dbrps:
     get:
       operationId: GetDBRPs
       tags:
         - DBRPs
-      summary: List all database retention policy mappings
+      summary: List database retention policy mappings
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: query
@@ -383,13 +276,13 @@ paths:
             type: string
       responses:
         '200':
-          description: A list of all database retention policy mappings
+          description: Success. Returns a list of database retention policy mappings.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DBRPs'
         '400':
-          description: if any of the parameter passed is invalid
+          description: Bad request. The request has one or more invalid parameters.
           content:
             application/json:
               schema:
@@ -416,13 +309,13 @@ paths:
               $ref: '#/components/schemas/DBRPCreate'
       responses:
         '201':
-          description: Database retention policy mapping created
+          description: Created. Returns the created database retention policy mapping.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DBRP'
         '400':
-          description: if any of the IDs in the mapping is invalid
+          description: Bad request. The mapping in the request has one or more invalid IDs.
           content:
             application/json:
               schema:
@@ -1120,139 +1013,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /write:
-    post:
-      operationId: PostWrite
-      tags:
-        - Write
-      summary: Write time series data into InfluxDB
-      requestBody:
-        description: Line protocol body
-        required: true
-        content:
-          text/plain:
-            schema:
-              type: string
-              format: byte
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: header
-          name: Content-Encoding
-          description: 'When present, its value indicates to the database that compression is applied to the line-protocol body.'
-          schema:
-            type: string
-            description: Specifies that the line protocol in the body is encoded with gzip or not encoded with identity.
-            default: identity
-            enum:
-              - gzip
-              - identity
-        - in: header
-          name: Content-Type
-          description: Content-Type is used to indicate the format of the data sent to the server.
-          schema:
-            type: string
-            description: Text/plain specifies the text line protocol; charset is assumed to be utf-8.
-            default: text/plain; charset=utf-8
-            enum:
-              - text/plain
-              - text/plain; charset=utf-8
-              - application/vnd.influx.arrow
-        - in: header
-          name: Content-Length
-          description: 'Content-Length is an entity header is indicating the size of the entity-body, in bytes, sent to the database. If the length is greater than the database max body configuration option, a 413 response is sent.'
-          schema:
-            type: integer
-            description: The length in decimal number of octets.
-        - in: header
-          name: Accept
-          description: Specifies the return content format.
-          schema:
-            type: string
-            description: The return format for errors.
-            default: application/json
-            enum:
-              - application/json
-        - in: query
-          name: org
-          description: 'Specifies the destination organization for writes. Takes either the ID or Name interchangeably. If both `orgID` and `org` are specified, `org` takes precedence.'
-          required: true
-          schema:
-            type: string
-            description: All points within batch are written to this organization.
-        - in: query
-          name: orgID
-          description: 'Specifies the ID of the destination organization for writes. If both `orgID` and `org` are specified, `org` takes precedence.'
-          schema:
-            type: string
-        - in: query
-          name: bucket
-          description: The destination bucket for writes.
-          required: true
-          schema:
-            type: string
-            description: All points within batch are written to this bucket.
-        - in: query
-          name: precision
-          description: The precision for the unix timestamps within the body line-protocol.
-          schema:
-            $ref: '#/components/schemas/WritePrecision'
-      responses:
-        '204':
-          description: Write data is correctly formatted and accepted for writing to the bucket.
-        '400':
-          description: Line protocol poorly formed and no points were written.  Response can be used to determine the first malformed line in the body line-protocol. All data in body was rejected and not written.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LineProtocolError'
-        '401':
-          description: Token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: No token was sent and they are required.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '413':
-          description: Write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LineProtocolLengthError'
-        '429':
-          description: Token is temporarily over quota. The Retry-After header describes when to try the write again.
-          headers:
-            Retry-After:
-              description: A non-negative decimal integer indicating the seconds to delay after the response is received.
-              schema:
-                type: integer
-                format: int32
-        '503':
-          description: Server is temporarily unavailable to accept writes.  The Retry-After header describes when to try the write again.
-          headers:
-            Retry-After:
-              description: A non-negative decimal integer indicating the seconds to delay after the response is received.
-              schema:
-                type: integer
-                format: int32
-        default:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
   /delete:
     post:
       operationId: PostDelete
       tags:
         - Delete
-      summary: Delete time series data from InfluxDB
+      summary: Delete data
       requestBody:
-        description: Predicate delete request
+        description: Deletes data from an InfluxDB bucket.
         required: true
         content:
           application/json:
@@ -1449,90 +1217,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /dashboards:
-    post:
-      operationId: PostDashboards
-      tags:
-        - Dashboards
-      summary: Create a dashboard
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-      requestBody:
-        description: Dashboard to create
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateDashboardRequest'
-      responses:
-        '201':
-          description: Added dashboard
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Dashboard'
-                  - $ref: '#/components/schemas/DashboardWithViewProperties'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    get:
-      operationId: GetDashboards
-      tags:
-        - Dashboards
-      summary: List all dashboards
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/Descending'
-        - in: query
-          name: owner
-          description: A user identifier. Returns only dashboards where this user has the `owner` role.
-          schema:
-            type: string
-        - in: query
-          name: sortBy
-          description: The column to sort by.
-          schema:
-            type: string
-            enum:
-              - ID
-              - CreatedAt
-              - UpdatedAt
-        - in: query
-          name: id
-          description: 'A list of dashboard identifiers. Returns only the listed dashboards. If both `id` and `owner` are specified, only `id` is used.'
-          schema:
-            type: array
-            items:
-              type: string
-        - in: query
-          name: orgID
-          description: The identifier of the organization.
-          schema:
-            type: string
-        - in: query
-          name: org
-          description: The name of the organization.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: All dashboards
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dashboards'
         default:
           description: Unexpected error
           content:
@@ -2270,7 +1954,7 @@ paths:
       operationId: PostQueryAnalyze
       tags:
         - Query
-      summary: Analyze an InfluxQL or Flux query
+      summary: Analyze a Flux query
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
@@ -2280,7 +1964,7 @@ paths:
             enum:
               - application/json
       requestBody:
-        description: Flux or InfluxQL query to analyze
+        description: Flux query to analyze
         content:
           application/json:
             schema:
@@ -2312,15 +1996,26 @@ paths:
       operationId: PostQuery
       tags:
         - Query
-      summary: Query InfluxDB
+      summary: Query data
+      description: |
+        Retrieves data from InfluxDB buckets.
+
+        To query data, you need the following:
+        - **organization** – _See [View organizations](https://docs.influxdata.com/influxdb/v2.1/organizations/view-orgs/#view-your-organization-id) for instructions on viewing your organization ID._
+        - **API token** – _See [View tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens/view-tokens/)
+         for instructions on viewing your API token._
+        - **InfluxDB URL** – _See [InfluxDB URLs](https://docs.influxdata.com/influxdb/v2.1/reference/urls/)_.
+        - **Flux query** – _See [Flux](https://docs.influxdata.com/flux/v0.x/)._
+
+        For more information and examples, see [Query with the InfluxDB API](https://docs.influxdata.com/influxdb/v2.1/query-data/execute-queries/influx-api/).
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
           name: Accept-Encoding
-          description: 'The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.'
+          description: Indicates the content encoding (usually a compression algorithm) that the client can understand.
           schema:
             type: string
-            description: Specifies that the query response in the body should be encoded with gzip or not encoded with identity.
+            description: 'The content coding.  Use `gzip` for compressed data or `identity` for unmodified, uncompressed data.'
             default: identity
             enum:
               - gzip
@@ -2334,7 +2029,7 @@ paths:
               - application/vnd.flux
         - in: query
           name: org
-          description: 'Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both `orgID` and `org` are specified, `org` takes precedence.'
+          description: 'Specifies the name of the organization executing the query. Takes either the ID or Name. If both `orgID` and `org` are specified, `org` takes precedence.'
           schema:
             type: string
         - in: query
@@ -2347,21 +2042,24 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/Query'
-                - $ref: '#/components/schemas/InfluxQLQuery'
+              $ref: '#/components/schemas/Query'
           application/vnd.flux:
             schema:
               type: string
+            example: |
+              from(bucket: "example-bucket")
+                  |> range(start: -5m)
+                  |> filter(fn: (r) => r._measurement == "example-measurement")
       responses:
         '200':
-          description: Query results
+          description: Success. Returns query results.
           headers:
             Content-Encoding:
-              description: 'The Content-Encoding entity header is used to compress the media-type.  When present, its value indicates which encodings were applied to the entity-body'
+              description: Lists any encodings (usually compression algorithms) that have been applied to the response payload.
               schema:
                 type: string
-                description: Specifies that the response in the body is encoded with gzip or not encoded with identity.
+                description: |
+                  The content coding: `gzip` for compressed data or `identity` for unmodified, uncompressed data.
                 default: identity
                 enum:
                   - gzip
@@ -3233,19 +2931,99 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  '/orgs/{orgID}/secrets/delete':
+    post:
+      deprecated: true
+      operationId: PostOrgsIDSecrets
+      tags:
+        - Secrets
+      summary: Delete secrets from an organization
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: path
+          name: orgID
+          schema:
+            type: string
+          required: true
+          description: The organization ID.
+      requestBody:
+        description: Secret key to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretKeys'
+      responses:
+        '204':
+          description: Keys successfully patched
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/orgs/{orgID}/secrets/{secretID}':
+    delete:
+      operationId: DeleteOrgsIDSecretsID
+      tags:
+        - Secrets
+      summary: Delete a secret from an organization
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: path
+          name: orgID
+          schema:
+            type: string
+          required: true
+          description: The organization ID.
+        - in: path
+          name: secretID
+          schema:
+            type: string
+          required: true
+          description: The secret ID.
+      responses:
+        '204':
+          description: Keys successfully deleted
+        default:
+          description: Unexpected error
+          $ref: '#/components/responses/ServerError'
+  /resources:
+    get:
+      operationId: GetResources
+      tags:
+        - Resources
+      summary: List all known resources
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+      responses:
+        '200':
+          description: All resources targets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        default:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /stacks:
     get:
       operationId: ListStacks
       tags:
-        - InfluxDB Templates
-      summary: List all installed InfluxDB templates
+        - Templates
+      summary: List installed templates
       parameters:
         - in: query
           name: orgID
           required: true
           schema:
             type: string
-          description: The organization id of the stacks
+          description: The organization ID of the stacks
         - in: query
           name: name
           schema:
@@ -3258,7 +3036,7 @@ paths:
           description: A collection of stackIDs to filter the list by.
       responses:
         '200':
-          description: Influx stacks found
+          description: Success. Returns the list of stacks.
           content:
             application/json:
               schema:
@@ -3277,10 +3055,10 @@ paths:
     post:
       operationId: CreateStack
       tags:
-        - InfluxDB Templates
+        - Templates
       summary: Create a new stack
       requestBody:
-        description: Stack to create.
+        description: The stack to create.
         required: true
         content:
           application/json:
@@ -3300,7 +3078,7 @@ paths:
                     type: string
       responses:
         '201':
-          description: InfluxDB Stack created
+          description: Success. Returns the newly created stack.
           content:
             application/json:
               schema:
@@ -3315,7 +3093,7 @@ paths:
     get:
       operationId: ReadStack
       tags:
-        - InfluxDB Templates
+        - Templates
       summary: Retrieve a stack
       parameters:
         - in: path
@@ -3323,10 +3101,10 @@ paths:
           required: true
           schema:
             type: string
-          description: Theidentifier of the stack.
+          description: The identifier of the stack.
       responses:
         '200':
-          description: The InfluxDB stack
+          description: Returns the stack.
           content:
             application/json:
               schema:
@@ -3340,17 +3118,17 @@ paths:
     patch:
       operationId: UpdateStack
       tags:
-        - InfluxDB Templates
-      summary: Update an InfluxDB Stack
+        - Templates
+      summary: Update a stack
       parameters:
         - in: path
           name: stack_id
           required: true
           schema:
             type: string
-          description: Theidentifier of the stack.
+          description: The identifier of the stack.
       requestBody:
-        description: Influx stack to update.
+        description: The stack to update.
         required: true
         content:
           application/json:
@@ -3385,7 +3163,7 @@ paths:
                       - resourceID
       responses:
         '200':
-          description: Influx stack updated
+          description: Returns the updated stack.
           content:
             application/json:
               schema:
@@ -3399,7 +3177,7 @@ paths:
     delete:
       operationId: DeleteStack
       tags:
-        - InfluxDB Templates
+        - Templates
       summary: Delete a stack and associated resources
       parameters:
         - in: path
@@ -3407,7 +3185,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Theidentifier of the stack.
+          description: The identifier of the stack.
         - in: query
           name: orgID
           required: true
@@ -3416,7 +3194,7 @@ paths:
           description: The identifier of the organization.
       responses:
         '204':
-          description: The stack and its associated resources are deleted
+          description: The stack and its associated resources were deleted.
         default:
           description: Unexpected error
           content:
@@ -3427,18 +3205,18 @@ paths:
     post:
       operationId: UninstallStack
       tags:
-        - InfluxDB Templates
-      summary: Uninstall an InfluxDB Stack
+        - Templates
+      summary: Uninstall a stack
       parameters:
         - in: path
           name: stack_id
           required: true
           schema:
             type: string
-          description: The stack id
+          description: The identifier of the stack.
       responses:
         '200':
-          description: Influx stack uninstalled
+          description: Returns the uninstalled stack.
           content:
             application/json:
               schema:
@@ -3453,8 +3231,9 @@ paths:
     post:
       operationId: ApplyTemplate
       tags:
-        - InfluxDB Templates
-      summary: Apply or dry-run an InfluxDB Template
+        - Templates
+      summary: Apply or dry-run a template
+      description: Applies or performs a dry-run of template in an organization.
       requestBody:
         required: true
         content:
@@ -3470,14 +3249,14 @@ paths:
       responses:
         '200':
           description: |
-            Influx package dry-run successful, no new resources created. The provided diff and summary will not have IDs for resources that do not exist at the time of the dry run.
+            Success. The package dry-run succeeded. No new resources were created. Returns a diff and summary of the dry-run. The diff and summary won't contain IDs for resources that didn't exist at the time of the dry-run.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TemplateSummary'
         '201':
           description: |
-            Influx package applied successfully. Newly created resources created available in summary. The diff compares the state of the world before the package is applied with the changes the application will impose. This corresponds to `"dryRun": true`
+            Success. The package applied successfully. Returns a diff and summary of the run. The summary contains newly created resources. The diff compares the initial state to the state after the package applied. This corresponds to `"dryRun": true`.
           content:
             application/json:
               schema:
@@ -3492,8 +3271,8 @@ paths:
     post:
       operationId: ExportTemplate
       tags:
-        - InfluxDB Templates
-      summary: Export a new Influx Template
+        - Templates
+      summary: Export a new template
       requestBody:
         description: Export resources as an InfluxDB template.
         required: false
@@ -3505,7 +3284,7 @@ paths:
                 - $ref: '#/components/schemas/TemplateExportByName'
       responses:
         '200':
-          description: InfluxDB template created
+          description: The template was created successfully. Returns the newly created template.
           content:
             application/json:
               schema:
@@ -3513,95 +3292,6 @@ paths:
             application/x-yaml:
               schema:
                 $ref: '#/components/schemas/Template'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /tasks:
-    get:
-      operationId: GetTasks
-      tags:
-        - Tasks
-      summary: List all tasks
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - in: query
-          name: name
-          description: Returns task with a specific name.
-          schema:
-            type: string
-        - in: query
-          name: after
-          schema:
-            type: string
-          description: Return tasks after a specified ID.
-        - in: query
-          name: user
-          schema:
-            type: string
-          description: Filter tasks to a specific user ID.
-        - in: query
-          name: org
-          schema:
-            type: string
-          description: Filter tasks to a specific organization name.
-        - in: query
-          name: orgID
-          schema:
-            type: string
-          description: Filter tasks to a specific organization ID.
-        - in: query
-          name: status
-          schema:
-            type: string
-            enum:
-              - active
-              - inactive
-          description: Filter tasks by a status--"inactive" or "active".
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 500
-            default: 100
-          description: The number of tasks to return
-      responses:
-        '200':
-          description: A list of tasks
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tasks'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      operationId: PostTasks
-      tags:
-        - Tasks
-      summary: Create a new task
-      parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-      requestBody:
-        description: Task to create
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TaskCreateRequest'
-      responses:
-        '201':
-          description: Task created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
         default:
           description: Unexpected error
           content:
@@ -4077,7 +3767,7 @@ paths:
         - Users
       summary: Update a password
       security:
-        - BasicAuth: []
+        - BasicAuthentication: []
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
       requestBody:
@@ -4281,7 +3971,7 @@ paths:
         - Users
       summary: Update a password
       security:
-        - BasicAuth: []
+        - BasicAuthentication: []
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: path
@@ -5243,13 +4933,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /health:
-    servers:
-      - url: ''
     get:
       operationId: GetHealth
       tags:
         - Health
       summary: Get the health of an instance
+      servers:
+        - url: ''
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
       responses:
@@ -5269,13 +4959,13 @@ paths:
           description: Unexpected error
           $ref: '#/components/responses/ServerError'
   /ready:
-    servers:
-      - url: ''
     get:
       operationId: GetReady
       tags:
         - Ready
       summary: Get the readiness of an instance at startup
+      servers:
+        - url: ''
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
       responses:
@@ -5566,7 +5256,7 @@ paths:
           description: The ID of the authorization to update.
       responses:
         '200':
-          description: The active or inactie authorization
+          description: The active or inactive authorization
           content:
             application/json:
               schema:
@@ -6584,7 +6274,7 @@ paths:
       operationId: GetBackupKV
       tags:
         - Backup
-      summary: 'Download snapshot of metadata stored in the server''s embedded KV store. Should not be used in versions > 2.1.x, as it doesn''t include metadata stored in embedded SQL.'
+      summary: 'Download snapshot of metadata stored in the server''s embedded KV store. Should not be used in versions greater than 2.1.x, as it doesn''t include metadata stored in embedded SQL.'
       deprecated: true
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
@@ -6609,10 +6299,10 @@ paths:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
           name: Accept-Encoding
-          description: 'The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.'
+          description: Indicates the content encoding (usually a compression algorithm) that the client can understand.
           schema:
             type: string
-            description: Specifies that the query response in the body should be encoded with gzip or not encoded with identity.
+            description: 'The content coding.  Use `gzip` for compressed data or `identity` for unmodified, uncompressed data.'
             default: identity
             enum:
               - gzip
@@ -6622,10 +6312,11 @@ paths:
           description: Snapshot of metadata
           headers:
             Content-Encoding:
-              description: 'The Content-Encoding entity header is used to compress the media-type.  When present, its value indicates which encodings were applied to the entity-body'
+              description: Lists any encodings (usually compression algorithms) that have been applied to the response payload.
               schema:
                 type: string
-                description: Specifies that the response in the body is encoded with gzip or not encoded with identity.
+                description: |
+                  The content coding: `gzip` for compressed data or `identity` for unmodified, uncompressed data.
                 default: identity
                 enum:
                   - gzip
@@ -6647,10 +6338,10 @@ paths:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
           name: Accept-Encoding
-          description: 'The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.'
+          description: Indicates the content encoding (usually a compression algorithm) that the client can understand.
           schema:
             type: string
-            description: Specifies that the query response in the body should be encoded with gzip or not encoded with identity.
+            description: 'The content coding.  Use `gzip` for compressed data or `identity` for unmodified, uncompressed data.'
             default: identity
             enum:
               - gzip
@@ -6673,10 +6364,11 @@ paths:
           description: TSM snapshot.
           headers:
             Content-Encoding:
-              description: 'The Content-Encoding entity header is used to compress the media-type.  When present, its value indicates which encodings were applied to the entity-body'
+              description: Lists any encodings (usually compression algorithms) that have been applied to the response payload.
               schema:
                 type: string
-                description: Specifies that the response in the body is encoded with gzip or not encoded with identity.
+                description: |
+                  The content coding: `gzip` for compressed data or `identity` for unmodified, uncompressed data.
                 default: identity
                 enum:
                   - gzip
@@ -6705,10 +6397,12 @@ paths:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
           name: Content-Encoding
-          description: 'When present, its value indicates to the database that compression is applied to the line-protocol body.'
+          description: |
+            The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+            To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
           schema:
             type: string
-            description: Specifies that the line protocol in the body is encoded with gzip or not encoded with identity.
+            description: 'The content coding.  Use `gzip` for compressed data or `identity` for unmodified, uncompressed data.'
             default: identity
             enum:
               - gzip
@@ -6729,6 +6423,16 @@ paths:
               type: string
               format: binary
       responses:
+        '200':
+          description: KV store successfully overwritten.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    description: token is the root token for the instance after restore (this is overwritten during the restore)
+                    type: string
         '204':
           description: KV store successfully overwritten.
         default:
@@ -6744,7 +6448,9 @@ paths:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
           name: Content-Encoding
-          description: 'When present, its value indicates to the database that compression is applied to the line-protocol body.'
+          description: |
+            The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+            To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
           schema:
             type: string
             description: Specifies that the line protocol in the body is encoded with gzip or not encoded with identity.
@@ -6814,7 +6520,7 @@ paths:
         default:
           description: Unexpected error
           $ref: '#/components/responses/ServerError'
-  /restore/bucket-metadata:
+  /restore/bucketMetadata:
     post:
       operationId: PostRestoreBucketMetadata
       tags:
@@ -6849,7 +6555,9 @@ paths:
         - $ref: '#/components/parameters/TraceSpan'
         - in: header
           name: Content-Encoding
-          description: 'When present, its value indicates to the database that compression is applied to the line-protocol body.'
+          description: |
+            The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+            To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
           schema:
             type: string
             description: Specifies that the line protocol in the body is encoded with gzip or not encoded with identity.
@@ -6884,36 +6592,354 @@ paths:
         default:
           description: Unexpected error
           $ref: '#/components/responses/ServerError'
-  '/orgs/{orgID}/secrets/delete':
+  /dashboards:
     post:
-      operationId: PostOrgsIDSecrets
+      operationId: PostDashboards
       tags:
-        - Secrets
-      summary: Delete secrets from an organization
+        - Dashboards
+      summary: Create a dashboard
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
-        - in: path
-          name: orgID
-          schema:
-            type: string
-          required: true
-          description: The organization ID.
       requestBody:
-        description: Secret key to delete
+        description: Dashboard to create
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SecretKeys'
+              $ref: '#/components/schemas/CreateDashboardRequest'
       responses:
-        '204':
-          description: Keys successfully patched
+        '201':
+          description: Added dashboard
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Dashboard'
+                  - $ref: '#/components/schemas/DashboardWithViewProperties'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      operationId: GetDashboards
+      tags:
+        - Dashboards
+      summary: List all dashboards
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Descending'
+        - in: query
+          name: owner
+          description: A user identifier. Returns only dashboards where this user has the `owner` role.
+          schema:
+            type: string
+        - in: query
+          name: sortBy
+          description: The column to sort by.
+          schema:
+            type: string
+            enum:
+              - ID
+              - CreatedAt
+              - UpdatedAt
+        - in: query
+          name: id
+          description: 'A list of dashboard identifiers. Returns only the listed dashboards. If both `id` and `owner` are specified, only `id` is used.'
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: orgID
+          description: The identifier of the organization.
+          schema:
+            type: string
+        - in: query
+          name: org
+          description: The name of the organization.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All dashboards
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboards'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /tasks:
+    get:
+      operationId: GetTasks
+      tags:
+        - Tasks
+      summary: List all tasks
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: query
+          name: name
+          description: Returns task with a specific name.
+          schema:
+            type: string
+        - in: query
+          name: after
+          schema:
+            type: string
+          description: Return tasks after a specified ID.
+        - in: query
+          name: user
+          schema:
+            type: string
+          description: Filter tasks to a specific user ID.
+        - in: query
+          name: org
+          schema:
+            type: string
+          description: Filter tasks to a specific organization name.
+        - in: query
+          name: orgID
+          schema:
+            type: string
+          description: Filter tasks to a specific organization ID.
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - active
+              - inactive
+          description: Filter tasks by a status--"inactive" or "active".
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+          description: The number of tasks to return
+        - in: query
+          name: type
+          description: 'Type of task, unset by default.'
+          required: false
+          schema:
+            default: ''
+            type: string
+            enum:
+              - basic
+              - system
+      responses:
+        '200':
+          description: A list of tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tasks'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: PostTasks
+      tags:
+        - Tasks
+      summary: Create a new task
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+      requestBody:
+        description: Task to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreateRequest'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /write:
+    post:
+      operationId: PostWrite
+      tags:
+        - Write
+      summary: Write data
+      description: |
+        Writes data to a bucket.
+
+        To write data into InfluxDB, you need the following:
+        - **organization** – _See [View organizations](https://docs.influxdata.com/influxdb/v2.1/organizations/view-orgs/#view-your-organization-id) for instructions on viewing your organization ID._
+        - **bucket** – _See [View buckets](https://docs.influxdata.com/influxdb/v2.1/organizations/buckets/view-buckets/) for
+         instructions on viewing your bucket ID._
+        - **API token** – _See [View tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens/view-tokens/)
+         for instructions on viewing your API token._
+        - **InfluxDB URL** – _See [InfluxDB URLs](https://docs.influxdata.com/influxdb/v2.1/reference/urls/)_.
+        - data in [line protocol](https://docs.influxdata.com/influxdb/v2.1/reference/syntax/line-protocol) format.
+
+        For more information and examples, see the following:
+        - [Write data with the InfluxDB API](https://docs.influxdata.com/influxdb/v2.1/write-data/developer-tools/api).
+        - [Optimize writes to InfluxDB](https://docs.influxdata.com/influxdb/v2.1/write-data/best-practices/optimize-writes/).
+      requestBody:
+        description: Data in line protocol format.
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              format: byte
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: header
+          name: Content-Encoding
+          description: |
+            The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+            To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
+          schema:
+            type: string
+            description: The header value specifies that the line protocol in the request body is encoded with gzip or not encoded with identity.
+            default: identity
+            enum:
+              - gzip
+              - identity
+        - in: header
+          name: Content-Type
+          description: The header value indicates the format of the data in the request body.
+          schema:
+            type: string
+            description: |
+              `text/plain` specifies line protocol. `UTF-8` is the default character set.
+            default: text/plain; charset=utf-8
+            enum:
+              - text/plain
+              - text/plain; charset=utf-8
+              - application/vnd.influx.arrow
+        - in: header
+          name: Content-Length
+          description: 'The header value indicates the size of the entity-body, in bytes, sent to the database. If the length is greater than the database''s `max body` configuration option, the server responds with status code `413`.'
+          schema:
+            type: integer
+            description: The length in decimal number of octets.
+        - in: header
+          name: Accept
+          description: The header value specifies the response format.
+          schema:
+            type: string
+            description: The response format for errors.
+            default: application/json
+            enum:
+              - application/json
+        - in: query
+          name: org
+          description: 'The parameter value specifies the destination organization for writes. The database writes all points in the batch to this organization. If you provide both `orgID` and `org` parameters, `org` takes precedence.'
+          required: true
+          schema:
+            type: string
+            description: Organization name or ID.
+        - in: query
+          name: orgID
+          description: 'The parameter value specifies the ID of the destination organization for writes. If both `orgID` and `org` are specified, `org` takes precedence.'
+          schema:
+            type: string
+        - in: query
+          name: bucket
+          description: The destination bucket for writes.
+          required: true
+          schema:
+            type: string
+            description: All points within batch are written to this bucket.
+        - in: query
+          name: precision
+          description: The precision for the unix timestamps within the body line-protocol.
+          schema:
+            $ref: '#/components/schemas/WritePrecision'
+      responses:
+        '204':
+          description: 'InfluxDB validated the request data format and accepted the data for writing to the bucket. `204` doesn''t indicate a successful write operation since writes are asynchronous. See [how to check for write errors](https://docs.influxdata.com/influxdb/v2.1/write-data/troubleshoot).'
+        '400':
+          description: Bad request. The line protocol data in the request is malformed. The response body contains the first malformed line in the data. InfluxDB rejected the batch and did not write any data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineProtocolError'
+              examples:
+                measurementSchemaFieldTypeConflict:
+                  summary: Example of a field type conflict thrown by an explicit bucket schema
+                  value:
+                    code: invalid
+                    message: 'partial write error (2 written): unable to parse ''air_sensor,service=S1,sensor=L1 temperature="90.5",humidity=70.0 1632850122'': schema: field type for field "temperature" not permitted by schema; got String but expected Float'
+        '401':
+          description: |
+            Unauthorized. The error may indicate one of the following:
+              * The `Authorization: Token` header is missing or malformed.
+              * The API token value is missing from the header.
+              * The token does not have sufficient permissions to write to this organization and bucket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                tokenNotAuthorized:
+                  summary: Token is not authorized to access the organization or resource
+                  value:
+                    code: unauthorized
+                    message: unauthorized access
+        '404':
+          description: 'Not found. A requested resource was not found. The response body contains the requested resource type, e.g. `organization name` or `bucket`, and name.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                resource-not-found:
+                  summary: Not found error
+                  value:
+                    code: not found
+                    message: bucket "air_sensor" not found
+        '413':
+          description: |
+            All request data was rejected and not written. InfluxDB OSS only returns this error if the [Go (golang) `ioutil.ReadAll()`](https://pkg.go.dev/io/ioutil#ReadAll) function raises an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineProtocolLengthError'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                internalError:
+                  summary: Internal error example
+                  value:
+                    code: internal error
+        '503':
+          description: The server is temporarily unavailable to accept writes.  The `Retry-After` header describes when to try the write again.
+          headers:
+            Retry-After:
+              description: A non-negative decimal integer indicating the seconds to delay after the response is received.
+              schema:
+                type: integer
+                format: int32
+        default:
+          $ref: '#/components/responses/ServerError'
 components:
   parameters:
     TraceSpan:
@@ -7002,23 +7028,6 @@ components:
           description: Specifies the time that should be reported as "now" in the query. Default is the server's now time.
           type: string
           format: date-time
-    InfluxQLQuery:
-      description: Query influx using the InfluxQL language
-      type: object
-      required:
-        - query
-      properties:
-        query:
-          description: InfluxQL query execute.
-          type: string
-        type:
-          description: The type of query. Must be "influxql".
-          type: string
-          enum:
-            - influxql
-        bucket:
-          description: Bucket is to be used instead of the database and retention policy specified in the InfluxQL query.
-          type: string
     Package:
       description: Represents a complete package source tree.
       type: object
@@ -10209,6 +10218,35 @@ components:
           type: string
         decimalPlaces:
           $ref: '#/components/schemas/DecimalPlaces'
+    SimpleTableViewProperties:
+      type: object
+      required:
+        - type
+        - showAll
+        - queries
+        - shape
+        - note
+        - showNoteWhenEmpty
+      properties:
+        type:
+          type: string
+          enum:
+            - simple-table
+        showAll:
+          type: boolean
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardQuery'
+        shape:
+          type: string
+          enum:
+            - chronograf-v2
+        note:
+          type: string
+        showNoteWhenEmpty:
+          description: 'If true, will display note when empty'
+          type: boolean
     MarkdownViewProperties:
       type: object
       required:
@@ -10589,6 +10627,7 @@ components:
         - $ref: '#/components/schemas/HistogramViewProperties'
         - $ref: '#/components/schemas/GaugeViewProperties'
         - $ref: '#/components/schemas/TableViewProperties'
+        - $ref: '#/components/schemas/SimpleTableViewProperties'
         - $ref: '#/components/schemas/MarkdownViewProperties'
         - $ref: '#/components/schemas/CheckViewProperties'
         - $ref: '#/components/schemas/ScatterViewProperties'
@@ -10858,112 +10897,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Dashboard'
-    DocumentMeta:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-        templateID:
-          type: string
-        description:
-          type: string
-        version:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-          readOnly: true
-        updatedAt:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-        - name
-        - version
-    Document:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        meta:
-          $ref: '#/components/schemas/DocumentMeta'
-        content:
-          type: object
-        labels:
-          $ref: '#/components/schemas/Labels'
-        links:
-          type: object
-          readOnly: true
-          example:
-            self: /api/v2/documents/templates/1
-          properties:
-            self:
-              description: The document URL.
-              $ref: '#/components/schemas/Link'
-      required:
-        - id
-        - meta
-        - content
-    DocumentCreate:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/DocumentMeta'
-        content:
-          type: object
-        org:
-          type: string
-          description: The organization Name. Specify either `orgID` or `org`.
-        orgID:
-          type: string
-          description: The organization Name. Specify either `orgID` or `org`.
-        labels:
-          type: array
-          description: An array of label IDs to be added as labels to the document.
-          items:
-            type: string
-      required:
-        - meta
-        - content
-    DocumentUpdate:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/DocumentMeta'
-        content:
-          type: object
-    DocumentListEntry:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        meta:
-          $ref: '#/components/schemas/DocumentMeta'
-        labels:
-          $ref: '#/components/schemas/Labels'
-        links:
-          type: object
-          readOnly: true
-          example:
-            self: /api/v2/documents/templates/1
-          properties:
-            self:
-              description: The document URL.
-              $ref: '#/components/schemas/Link'
-      required:
-        - id
-        - meta
-    Documents:
-      type: object
-      properties:
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentListEntry'
     TelegrafRequest:
       type: object
       properties:
@@ -12203,6 +12136,9 @@ components:
             - checks
             - dbrp
             - notebooks
+            - annotations
+            - remotes
+            - replications
         id:
           type: string
           description: If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
@@ -12687,6 +12623,90 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   securitySchemes:
-    BasicAuth:
+    TokenAuthentication:
+      type: http
+      scheme: token
+      bearerFormat: InfluxDB Token String
+      description: |
+        ### Token authentication scheme
+
+        InfluxDB API tokens enable authentication and authorization of API clients.
+        A token belongs to an organization and identifies InfluxDB permissions within the organization.
+
+        Include your API token in an `Authorization: Token` HTTP header with each request.
+
+        #### Example
+
+          `curl http://localhost:8086/ping
+             --header "Authorization: Token INFLUX_API_TOKEN"`
+
+        Replace *`INFLUX_API_TOKEN`* with your [InfluxDB API token](https://docs.influxdata.com/influxdb/v2.1/reference/glossary/#token).
+
+        For more information and examples, see the following:
+          - [`/authorizations`](#tag/Authorizations) endpoint.
+          - [Authorize API requests](https://docs.influxdata.com/influxdb/v2.1/api-guide/api_intro/#authentication).
+          - [Manage API tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens).
+          - [Assign a token to a specific user](https://docs.influxdata.com/influxdb/v2.1/security/tokens/create-token).
+    BasicAuthentication:
       type: http
       scheme: basic
+      description: |
+        ### Basic authentication scheme
+
+        Use HTTP Basic Auth with clients that support the InfluxDB 1.x convention of username and password (that don't support the `Authorization: Token` scheme).
+
+        Username and password schemes require the following credentials:
+          - **username**: 1.x username (this is separate from the UI login username)
+          - **password**: 1.x password or InfluxDB API token
+
+        #### API token example
+
+        `curl --get "http://localhost:8086/query"
+              --user "1.x_USERNAME":"INFLUX_API_TOKEN"`
+
+        #### 1.x password example
+
+        `curl --get "http://localhost:8086/query"
+              --user "1.x_USERNAME":"1.x_PASSWORD"`
+
+        Replace the following:
+        - *`1.x_USERNAME`*: your InfluxDB v1.x username
+        - *`1.x_PASSWORD`*: your InfluxDB v1.x password
+        - *`INFLUX_API_TOKEN`*: your [InfluxDB API token](https://docs.influxdata.com/influxdb/v2.1/reference/glossary/#token)
+
+        For more information and examples, see how to [authenticate with a username and password scheme](https://docs.influxdata.com/influxdb/v2.1/reference/api/influxdb-1x/)
+    QuerystringAuthentication:
+      type: apiKey
+      in: query
+      name: u=&p=
+      description: |
+        ### Querystring authentication scheme
+
+        Use InfluxDB 1.x API parameters to provide credentials through the query string.
+
+        Username and password schemes require the following credentials:
+          - **username**: 1.x username (this is separate from the UI login username)
+          - **password**: 1.x password or InfluxDB API token
+
+        #### API token example
+
+        `curl --get "http://localhost:8086/query"
+              --data-urlencode "u=1.x_USERNAME"
+              --data-urlencode "p=INFLUX_API_TOKEN"`
+
+        #### 1.x password example
+
+        `curl --get "http://localhost:8086/query"
+              --data-urlencode "u=1.x_USERNAME"
+              --data-urlencode "p=1.x_PASSWORD"`
+
+        Replace the following:
+        - *`1.x_USERNAME`*: your InfluxDB v1.x username
+        - *`1.x_PASSWORD`*: your InfluxDB v1.x password
+        - *`INFLUX_API_TOKEN`*: your [InfluxDB API token](https://docs.influxdata.com/influxdb/v2.1/reference/glossary/#token)
+
+        For more information and examples, see how to [authenticate with a username and password scheme](https://docs.influxdata.com/influxdb/v2.1/reference/api/influxdb-1x/)
+security:
+  - TokenAuthentication: []
+  - BasicAuthentication: []
+  - QuerystringAuthentication: []

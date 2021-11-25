@@ -12,7 +12,9 @@ import (
 )
 
 const (
-	BasicAuthScopes = "BasicAuth.Scopes"
+	BasicAuthenticationScopes       = "BasicAuthentication.Scopes"
+	QuerystringAuthenticationScopes = "QuerystringAuthentication.Scopes"
+	TokenAuthenticationScopes       = "TokenAuthentication.Scopes"
 )
 
 // Defines values for AuthorizationUpdateRequestStatus.
@@ -295,11 +297,6 @@ const (
 	HistogramViewPropertiesTypeHistogram HistogramViewPropertiesType = "histogram"
 )
 
-// Defines values for InfluxQLQueryType.
-const (
-	InfluxQLQueryTypeInfluxql InfluxQLQueryType = "influxql"
-)
-
 // Defines values for LesserThresholdType.
 const (
 	LesserThresholdTypeLesser LesserThresholdType = "lesser"
@@ -483,6 +480,8 @@ const (
 
 // Defines values for ResourceType.
 const (
+	ResourceTypeAnnotations ResourceType = "annotations"
+
 	ResourceTypeAuthorizations ResourceType = "authorizations"
 
 	ResourceTypeBuckets ResourceType = "buckets"
@@ -504,6 +503,10 @@ const (
 	ResourceTypeNotificationRules ResourceType = "notificationRules"
 
 	ResourceTypeOrgs ResourceType = "orgs"
+
+	ResourceTypeRemotes ResourceType = "remotes"
+
+	ResourceTypeReplications ResourceType = "replications"
 
 	ResourceTypeScrapers ResourceType = "scrapers"
 
@@ -590,6 +593,16 @@ const (
 // Defines values for ScraperTargetRequestType.
 const (
 	ScraperTargetRequestTypePrometheus ScraperTargetRequestType = "prometheus"
+)
+
+// Defines values for SimpleTableViewPropertiesShape.
+const (
+	SimpleTableViewPropertiesShapeChronografV2 SimpleTableViewPropertiesShape = "chronograf-v2"
+)
+
+// Defines values for SimpleTableViewPropertiesType.
+const (
+	SimpleTableViewPropertiesTypeSimpleTable SimpleTableViewPropertiesType = "simple-table"
 )
 
 // Defines values for SingleStatViewPropertiesShape.
@@ -1577,66 +1590,6 @@ type DictItem struct {
 	Val  *Expression `json:"val,omitempty"`
 }
 
-// Document defines model for Document.
-type Document struct {
-	Content map[string]interface{} `json:"content"`
-	Id      string                 `json:"id"`
-	Labels  *Labels                `json:"labels,omitempty"`
-	Links   *struct {
-		// URI of resource.
-		Self *Link `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-	Meta DocumentMeta `json:"meta"`
-}
-
-// DocumentCreate defines model for DocumentCreate.
-type DocumentCreate struct {
-	Content map[string]interface{} `json:"content"`
-
-	// An array of label IDs to be added as labels to the document.
-	Labels *[]string    `json:"labels,omitempty"`
-	Meta   DocumentMeta `json:"meta"`
-
-	// The organization Name. Specify either `orgID` or `org`.
-	Org *string `json:"org,omitempty"`
-
-	// The organization Name. Specify either `orgID` or `org`.
-	OrgID *string `json:"orgID,omitempty"`
-}
-
-// DocumentListEntry defines model for DocumentListEntry.
-type DocumentListEntry struct {
-	Id     string  `json:"id"`
-	Labels *Labels `json:"labels,omitempty"`
-	Links  *struct {
-		// URI of resource.
-		Self *Link `json:"self,omitempty"`
-	} `json:"links,omitempty"`
-	Meta DocumentMeta `json:"meta"`
-}
-
-// DocumentMeta defines model for DocumentMeta.
-type DocumentMeta struct {
-	CreatedAt   *time.Time `json:"createdAt,omitempty"`
-	Description *string    `json:"description,omitempty"`
-	Name        string     `json:"name"`
-	TemplateID  *string    `json:"templateID,omitempty"`
-	Type        *string    `json:"type,omitempty"`
-	UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
-	Version     string     `json:"version"`
-}
-
-// DocumentUpdate defines model for DocumentUpdate.
-type DocumentUpdate struct {
-	Content *map[string]interface{} `json:"content,omitempty"`
-	Meta    *DocumentMeta           `json:"meta,omitempty"`
-}
-
-// Documents defines model for Documents.
-type Documents struct {
-	Documents *[]DocumentListEntry `json:"documents,omitempty"`
-}
-
 // A pair consisting of length of time and the unit of time measured. It is the atomic unit from which all duration literals are composed.
 type Duration struct {
 	Magnitude *int `json:"magnitude,omitempty"`
@@ -2104,21 +2057,6 @@ type IndexExpression struct {
 	// Type of AST node
 	Type *NodeType `json:"type,omitempty"`
 }
-
-// Query influx using the InfluxQL language
-type InfluxQLQuery struct {
-	// Bucket is to be used instead of the database and retention policy specified in the InfluxQL query.
-	Bucket *string `json:"bucket,omitempty"`
-
-	// InfluxQL query execute.
-	Query string `json:"query"`
-
-	// The type of query. Must be "influxql".
-	Type *InfluxQLQueryType `json:"type,omitempty"`
-}
-
-// The type of query. Must be "influxql".
-type InfluxQLQueryType string
 
 // Represents integer numbers
 type IntegerLiteral struct {
@@ -3341,6 +3279,24 @@ type ShardOwner struct {
 // ShardOwners defines model for ShardOwners.
 type ShardOwners []ShardOwner
 
+// SimpleTableViewProperties defines model for SimpleTableViewProperties.
+type SimpleTableViewProperties struct {
+	Note    string                         `json:"note"`
+	Queries []DashboardQuery               `json:"queries"`
+	Shape   SimpleTableViewPropertiesShape `json:"shape"`
+	ShowAll bool                           `json:"showAll"`
+
+	// If true, will display note when empty
+	ShowNoteWhenEmpty bool                          `json:"showNoteWhenEmpty"`
+	Type              SimpleTableViewPropertiesType `json:"type"`
+}
+
+// SimpleTableViewPropertiesShape defines model for SimpleTableViewProperties.Shape.
+type SimpleTableViewPropertiesShape string
+
+// SimpleTableViewPropertiesType defines model for SimpleTableViewProperties.Type.
+type SimpleTableViewPropertiesType string
+
 // SingleStatViewProperties defines model for SingleStatViewProperties.
 type SingleStatViewProperties struct {
 	// Colors define color encoding of data into a visualization
@@ -4479,7 +4435,7 @@ type GetBackupMetadataParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
+	// Indicates the content encoding (usually a compression algorithm) that the client can understand.
 	AcceptEncoding *GetBackupMetadataParamsAcceptEncoding `json:"Accept-Encoding,omitempty"`
 }
 
@@ -4494,7 +4450,7 @@ type GetBackupShardIdParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
+	// Indicates the content encoding (usually a compression algorithm) that the client can understand.
 	AcceptEncoding *GetBackupShardIdParamsAcceptEncoding `json:"Accept-Encoding,omitempty"`
 }
 
@@ -4969,69 +4925,6 @@ type PostDeleteParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// GetDocumentsTemplatesParams defines parameters for GetDocumentsTemplates.
-type GetDocumentsTemplatesParams struct {
-	// Specifies the name of the organization of the template.
-	Org *string `json:"org,omitempty"`
-
-	// Specifies the organization ID of the template.
-	OrgID *string `json:"orgID,omitempty"`
-
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// PostDocumentsTemplatesJSONBody defines parameters for PostDocumentsTemplates.
-type PostDocumentsTemplatesJSONBody DocumentCreate
-
-// PostDocumentsTemplatesParams defines parameters for PostDocumentsTemplates.
-type PostDocumentsTemplatesParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// DeleteDocumentsTemplatesIDParams defines parameters for DeleteDocumentsTemplatesID.
-type DeleteDocumentsTemplatesIDParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetDocumentsTemplatesIDParams defines parameters for GetDocumentsTemplatesID.
-type GetDocumentsTemplatesIDParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// PutDocumentsTemplatesIDJSONBody defines parameters for PutDocumentsTemplatesID.
-type PutDocumentsTemplatesIDJSONBody DocumentUpdate
-
-// PutDocumentsTemplatesIDParams defines parameters for PutDocumentsTemplatesID.
-type PutDocumentsTemplatesIDParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// GetDocumentsTemplatesIDLabelsParams defines parameters for GetDocumentsTemplatesIDLabels.
-type GetDocumentsTemplatesIDLabelsParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// PostDocumentsTemplatesIDLabelsJSONBody defines parameters for PostDocumentsTemplatesIDLabels.
-type PostDocumentsTemplatesIDLabelsJSONBody LabelMapping
-
-// PostDocumentsTemplatesIDLabelsParams defines parameters for PostDocumentsTemplatesIDLabels.
-type PostDocumentsTemplatesIDLabelsParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
-// DeleteDocumentsTemplatesIDLabelsIDParams defines parameters for DeleteDocumentsTemplatesIDLabelsID.
-type DeleteDocumentsTemplatesIDLabelsIDParams struct {
-	// OpenTracing span context
-	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
-}
-
 // GetFlagsParams defines parameters for GetFlags.
 type GetFlagsParams struct {
 	// OpenTracing span context
@@ -5414,12 +5307,18 @@ type PostOrgsIDSecretsParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// DeleteOrgsIDSecretsIDParams defines parameters for DeleteOrgsIDSecretsID.
+type DeleteOrgsIDSecretsIDParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
 // PostQueryJSONBody defines parameters for PostQuery.
-type PostQueryJSONBody interface{}
+type PostQueryJSONBody Query
 
 // PostQueryParams defines parameters for PostQuery.
 type PostQueryParams struct {
-	// Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both `orgID` and `org` are specified, `org` takes precedence.
+	// Specifies the name of the organization executing the query. Takes either the ID or Name. If both `orgID` and `org` are specified, `org` takes precedence.
 	Org *string `json:"org,omitempty"`
 
 	// Specifies the ID of the organization executing the query. If both `orgID` and `org` are specified, `org` takes precedence.
@@ -5428,7 +5327,7 @@ type PostQueryParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
+	// Indicates the content encoding (usually a compression algorithm) that the client can understand.
 	AcceptEncoding *PostQueryParamsAcceptEncoding `json:"Accept-Encoding,omitempty"`
 	ContentType    *PostQueryParamsContentType    `json:"Content-Type,omitempty"`
 }
@@ -5483,11 +5382,8 @@ type GetReadyParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
-// PostRestoreBucketMetadataJSONBody defines parameters for PostRestoreBucketMetadata.
-type PostRestoreBucketMetadataJSONBody BucketMetadataManifest
-
-// PostRestoreBucketMetadataParams defines parameters for PostRestoreBucketMetadata.
-type PostRestoreBucketMetadataParams struct {
+// GetResourcesParams defines parameters for GetResources.
+type GetResourcesParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
@@ -5502,12 +5398,22 @@ type PostRestoreBucketIDParams struct {
 // PostRestoreBucketIDParamsContentType defines parameters for PostRestoreBucketID.
 type PostRestoreBucketIDParamsContentType string
 
+// PostRestoreBucketMetadataJSONBody defines parameters for PostRestoreBucketMetadata.
+type PostRestoreBucketMetadataJSONBody BucketMetadataManifest
+
+// PostRestoreBucketMetadataParams defines parameters for PostRestoreBucketMetadata.
+type PostRestoreBucketMetadataParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
 // PostRestoreKVParams defines parameters for PostRestoreKV.
 type PostRestoreKVParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	// The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+	// To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
 	ContentEncoding *PostRestoreKVParamsContentEncoding `json:"Content-Encoding,omitempty"`
 	ContentType     *PostRestoreKVParamsContentType     `json:"Content-Type,omitempty"`
 }
@@ -5523,7 +5429,8 @@ type PostRestoreShardIdParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	// The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+	// To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
 	ContentEncoding *PostRestoreShardIdParamsContentEncoding `json:"Content-Encoding,omitempty"`
 	ContentType     *PostRestoreShardIdParamsContentType     `json:"Content-Type,omitempty"`
 }
@@ -5539,7 +5446,8 @@ type PostRestoreSQLParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	// The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+	// To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
 	ContentEncoding *PostRestoreSQLParamsContentEncoding `json:"Content-Encoding,omitempty"`
 	ContentType     *PostRestoreSQLParamsContentType     `json:"Content-Type,omitempty"`
 }
@@ -5744,7 +5652,7 @@ type GetSourcesIDHealthParams struct {
 
 // ListStacksParams defines parameters for ListStacks.
 type ListStacksParams struct {
-	// The organization id of the stacks
+	// The organization ID of the stacks
 	OrgID string `json:"orgID"`
 
 	// A collection of names to filter the list by.
@@ -5803,12 +5711,18 @@ type GetTasksParams struct {
 	// The number of tasks to return
 	Limit *int `json:"limit,omitempty"`
 
+	// Type of task, unset by default.
+	Type *GetTasksParamsType `json:"type,omitempty"`
+
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
 // GetTasksParamsStatus defines parameters for GetTasks.
 type GetTasksParamsStatus string
+
+// GetTasksParamsType defines parameters for GetTasks.
+type GetTasksParamsType string
 
 // PostTasksJSONBody defines parameters for PostTasks.
 type PostTasksJSONBody TaskCreateRequest
@@ -6208,10 +6122,10 @@ type DeleteVariablesIDLabelsIDParams struct {
 
 // PostWriteParams defines parameters for PostWrite.
 type PostWriteParams struct {
-	// Specifies the destination organization for writes. Takes either the ID or Name interchangeably. If both `orgID` and `org` are specified, `org` takes precedence.
+	// The parameter value specifies the destination organization for writes. The database writes all points in the batch to this organization. If you provide both `orgID` and `org` parameters, `org` takes precedence.
 	Org string `json:"org"`
 
-	// Specifies the ID of the destination organization for writes. If both `orgID` and `org` are specified, `org` takes precedence.
+	// The parameter value specifies the ID of the destination organization for writes. If both `orgID` and `org` are specified, `org` takes precedence.
 	OrgID *string `json:"orgID,omitempty"`
 
 	// The destination bucket for writes.
@@ -6223,16 +6137,17 @@ type PostWriteParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 
-	// When present, its value indicates to the database that compression is applied to the line-protocol body.
+	// The value tells InfluxDB what compression is applied to the line protocol in the request payload.
+	// To make an API request with a GZIP payload, send `Content-Encoding: gzip` as a request header.
 	ContentEncoding *PostWriteParamsContentEncoding `json:"Content-Encoding,omitempty"`
 
-	// Content-Type is used to indicate the format of the data sent to the server.
+	// The header value indicates the format of the data in the request body.
 	ContentType *PostWriteParamsContentType `json:"Content-Type,omitempty"`
 
-	// Content-Length is an entity header is indicating the size of the entity-body, in bytes, sent to the database. If the length is greater than the database max body configuration option, a 413 response is sent.
+	// The header value indicates the size of the entity-body, in bytes, sent to the database. If the length is greater than the database's `max body` configuration option, the server responds with status code `413`.
 	ContentLength *int `json:"Content-Length,omitempty"`
 
-	// Specifies the return content format.
+	// The header value specifies the response format.
 	Accept *PostWriteParamsAccept `json:"Accept,omitempty"`
 }
 
@@ -6313,15 +6228,6 @@ type PatchDBRPIDJSONRequestBody PatchDBRPIDJSONBody
 
 // PostDeleteJSONRequestBody defines body for PostDelete for application/json ContentType.
 type PostDeleteJSONRequestBody PostDeleteJSONBody
-
-// PostDocumentsTemplatesJSONRequestBody defines body for PostDocumentsTemplates for application/json ContentType.
-type PostDocumentsTemplatesJSONRequestBody PostDocumentsTemplatesJSONBody
-
-// PutDocumentsTemplatesIDJSONRequestBody defines body for PutDocumentsTemplatesID for application/json ContentType.
-type PutDocumentsTemplatesIDJSONRequestBody PutDocumentsTemplatesIDJSONBody
-
-// PostDocumentsTemplatesIDLabelsJSONRequestBody defines body for PostDocumentsTemplatesIDLabels for application/json ContentType.
-type PostDocumentsTemplatesIDLabelsJSONRequestBody PostDocumentsTemplatesIDLabelsJSONBody
 
 // PostLabelsJSONRequestBody defines body for PostLabels for application/json ContentType.
 type PostLabelsJSONRequestBody PostLabelsJSONBody

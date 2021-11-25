@@ -259,36 +259,6 @@ type ClientInterface interface {
 
 	PostDelete(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*http.Response, error)
 
-	// GetDocumentsTemplates request
-	GetDocumentsTemplates(ctx context.Context, params *GetDocumentsTemplatesParams) (*http.Response, error)
-
-	// PostDocumentsTemplates request  with any body
-	PostDocumentsTemplatesWithBody(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*http.Response, error)
-
-	PostDocumentsTemplates(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*http.Response, error)
-
-	// DeleteDocumentsTemplatesID request
-	DeleteDocumentsTemplatesID(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*http.Response, error)
-
-	// GetDocumentsTemplatesID request
-	GetDocumentsTemplatesID(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*http.Response, error)
-
-	// PutDocumentsTemplatesID request  with any body
-	PutDocumentsTemplatesIDWithBody(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*http.Response, error)
-
-	PutDocumentsTemplatesID(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*http.Response, error)
-
-	// GetDocumentsTemplatesIDLabels request
-	GetDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*http.Response, error)
-
-	// PostDocumentsTemplatesIDLabels request  with any body
-	PostDocumentsTemplatesIDLabelsWithBody(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*http.Response, error)
-
-	PostDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*http.Response, error)
-
-	// DeleteDocumentsTemplatesIDLabelsID request
-	DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Response, error)
-
 	// GetFlags request
 	GetFlags(ctx context.Context, params *GetFlagsParams) (*http.Response, error)
 
@@ -473,6 +443,9 @@ type ClientInterface interface {
 
 	PostOrgsIDSecrets(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*http.Response, error)
 
+	// DeleteOrgsIDSecretsID request
+	DeleteOrgsIDSecretsID(ctx context.Context, orgID string, secretID string, params *DeleteOrgsIDSecretsIDParams) (*http.Response, error)
+
 	// GetPing request
 	GetPing(ctx context.Context) (*http.Response, error)
 
@@ -503,13 +476,16 @@ type ClientInterface interface {
 	// GetReady request
 	GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error)
 
+	// GetResources request
+	GetResources(ctx context.Context, params *GetResourcesParams) (*http.Response, error)
+
+	// PostRestoreBucketID request  with any body
+	PostRestoreBucketIDWithBody(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Response, error)
+
 	// PostRestoreBucketMetadata request  with any body
 	PostRestoreBucketMetadataWithBody(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Response, error)
 
 	PostRestoreBucketMetadata(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Response, error)
-
-	// PostRestoreBucketID request  with any body
-	PostRestoreBucketIDWithBody(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Response, error)
 
 	// PostRestoreKV request  with any body
 	PostRestoreKVWithBody(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader) (*http.Response, error)
@@ -1574,105 +1550,6 @@ func (c *Client) PostDelete(ctx context.Context, params *PostDeleteParams, body 
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
-func (c *Client) GetDocumentsTemplates(ctx context.Context, params *GetDocumentsTemplatesParams) (*http.Response, error) {
-	req, err := NewGetDocumentsTemplatesRequest(c.service.ServerAPIURL(), params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostDocumentsTemplatesWithBody(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostDocumentsTemplates(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesRequest(c.service.ServerAPIURL(), params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) DeleteDocumentsTemplatesID(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*http.Response, error) {
-	req, err := NewDeleteDocumentsTemplatesIDRequest(c.service.ServerAPIURL(), templateID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetDocumentsTemplatesID(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*http.Response, error) {
-	req, err := NewGetDocumentsTemplatesIDRequest(c.service.ServerAPIURL(), templateID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PutDocumentsTemplatesIDWithBody(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPutDocumentsTemplatesIDRequestWithBody(c.service.ServerAPIURL(), templateID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PutDocumentsTemplatesID(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*http.Response, error) {
-	req, err := NewPutDocumentsTemplatesIDRequest(c.service.ServerAPIURL(), templateID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) GetDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*http.Response, error) {
-	req, err := NewGetDocumentsTemplatesIDLabelsRequest(c.service.ServerAPIURL(), templateID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostDocumentsTemplatesIDLabelsWithBody(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesIDLabelsRequestWithBody(c.service.ServerAPIURL(), templateID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostDocumentsTemplatesIDLabels(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*http.Response, error) {
-	req, err := NewPostDocumentsTemplatesIDLabelsRequest(c.service.ServerAPIURL(), templateID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) DeleteDocumentsTemplatesIDLabelsID(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Response, error) {
-	req, err := NewDeleteDocumentsTemplatesIDLabelsIDRequest(c.service.ServerAPIURL(), templateID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
 func (c *Client) GetFlags(ctx context.Context, params *GetFlagsParams) (*http.Response, error) {
 	req, err := NewGetFlagsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
@@ -2285,6 +2162,15 @@ func (c *Client) PostOrgsIDSecrets(ctx context.Context, orgID string, params *Po
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
+func (c *Client) DeleteOrgsIDSecretsID(ctx context.Context, orgID string, secretID string, params *DeleteOrgsIDSecretsIDParams) (*http.Response, error) {
+	req, err := NewDeleteOrgsIDSecretsIDRequest(c.service.ServerAPIURL(), orgID, secretID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
 func (c *Client) GetPing(ctx context.Context) (*http.Response, error) {
 	req, err := NewGetPingRequest(c.service.ServerURL())
 	if err != nil {
@@ -2384,6 +2270,24 @@ func (c *Client) GetReady(ctx context.Context, params *GetReadyParams) (*http.Re
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetResources(ctx context.Context, params *GetResourcesParams) (*http.Response, error) {
+	req, err := NewGetResourcesRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRestoreBucketIDWithBody(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRestoreBucketIDRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
 func (c *Client) PostRestoreBucketMetadataWithBody(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Response, error) {
 	req, err := NewPostRestoreBucketMetadataRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
 	if err != nil {
@@ -2395,15 +2299,6 @@ func (c *Client) PostRestoreBucketMetadataWithBody(ctx context.Context, params *
 
 func (c *Client) PostRestoreBucketMetadata(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Response, error) {
 	req, err := NewPostRestoreBucketMetadataRequest(c.service.ServerAPIURL(), params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.service.DoHTTPRequestWithResponse(req, nil)
-}
-
-func (c *Client) PostRestoreBucketIDWithBody(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*http.Response, error) {
-	req, err := NewPostRestoreBucketIDRequestWithBody(c.service.ServerAPIURL(), bucketID, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -7113,434 +7008,6 @@ func NewPostDeleteRequestWithBody(server string, params *PostDeleteParams, conte
 	return req, nil
 }
 
-// NewGetDocumentsTemplatesRequest generates requests for GetDocumentsTemplates
-func NewGetDocumentsTemplatesRequest(server string, params *GetDocumentsTemplatesParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if params.Org != nil {
-
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "org", runtime.ParamLocationQuery, *params.Org); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	if params.OrgID != nil {
-
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, *params.OrgID); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewPostDocumentsTemplatesRequest calls the generic PostDocumentsTemplates builder with application/json body
-func NewPostDocumentsTemplatesRequest(server string, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostDocumentsTemplatesRequestWithBody(server, params, "application/json", bodyReader)
-}
-
-// NewPostDocumentsTemplatesRequestWithBody generates requests for PostDocumentsTemplates with any type of body
-func NewPostDocumentsTemplatesRequestWithBody(server string, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewDeleteDocumentsTemplatesIDRequest generates requests for DeleteDocumentsTemplatesID
-func NewDeleteDocumentsTemplatesIDRequest(server string, templateID string, params *DeleteDocumentsTemplatesIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "templateID", runtime.ParamLocationPath, templateID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewGetDocumentsTemplatesIDRequest generates requests for GetDocumentsTemplatesID
-func NewGetDocumentsTemplatesIDRequest(server string, templateID string, params *GetDocumentsTemplatesIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "templateID", runtime.ParamLocationPath, templateID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewPutDocumentsTemplatesIDRequest calls the generic PutDocumentsTemplatesID builder with application/json body
-func NewPutDocumentsTemplatesIDRequest(server string, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPutDocumentsTemplatesIDRequestWithBody(server, templateID, params, "application/json", bodyReader)
-}
-
-// NewPutDocumentsTemplatesIDRequestWithBody generates requests for PutDocumentsTemplatesID with any type of body
-func NewPutDocumentsTemplatesIDRequestWithBody(server string, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "templateID", runtime.ParamLocationPath, templateID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewGetDocumentsTemplatesIDLabelsRequest generates requests for GetDocumentsTemplatesIDLabels
-func NewGetDocumentsTemplatesIDLabelsRequest(server string, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "templateID", runtime.ParamLocationPath, templateID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates/%s/labels", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewPostDocumentsTemplatesIDLabelsRequest calls the generic PostDocumentsTemplatesIDLabels builder with application/json body
-func NewPostDocumentsTemplatesIDLabelsRequest(server string, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostDocumentsTemplatesIDLabelsRequestWithBody(server, templateID, params, "application/json", bodyReader)
-}
-
-// NewPostDocumentsTemplatesIDLabelsRequestWithBody generates requests for PostDocumentsTemplatesIDLabels with any type of body
-func NewPostDocumentsTemplatesIDLabelsRequestWithBody(server string, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "templateID", runtime.ParamLocationPath, templateID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates/%s/labels", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
-// NewDeleteDocumentsTemplatesIDLabelsIDRequest generates requests for DeleteDocumentsTemplatesIDLabelsID
-func NewDeleteDocumentsTemplatesIDLabelsIDRequest(server string, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "templateID", runtime.ParamLocationPath, templateID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "labelID", runtime.ParamLocationPath, labelID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/documents/templates/%s/labels/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params.ZapTraceSpan != nil {
-		var headerParam0 string
-
-		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
-		if err != nil {
-			return nil, err
-		}
-
-		req.Header.Set("Zap-Trace-Span", headerParam0)
-	}
-
-	return req, nil
-}
-
 // NewGetFlagsRequest generates requests for GetFlags
 func NewGetFlagsRequest(server string, params *GetFlagsParams) (*http.Request, error) {
 	var err error
@@ -10206,6 +9673,58 @@ func NewPostOrgsIDSecretsRequestWithBody(server string, orgID string, params *Po
 	return req, nil
 }
 
+// NewDeleteOrgsIDSecretsIDRequest generates requests for DeleteOrgsIDSecretsID
+func NewDeleteOrgsIDSecretsIDRequest(server string, orgID string, secretID string, params *DeleteOrgsIDSecretsIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "orgID", runtime.ParamLocationPath, orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "secretID", runtime.ParamLocationPath, secretID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/orgs/%s/secrets/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
 // NewGetPingRequest generates requests for GetPing
 func NewGetPingRequest(server string) (*http.Request, error) {
 	var err error
@@ -10614,19 +10133,8 @@ func NewGetReadyRequest(server string, params *GetReadyParams) (*http.Request, e
 	return req, nil
 }
 
-// NewPostRestoreBucketMetadataRequest calls the generic PostRestoreBucketMetadata builder with application/json body
-func NewPostRestoreBucketMetadataRequest(server string, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostRestoreBucketMetadataRequestWithBody(server, params, "application/json", bodyReader)
-}
-
-// NewPostRestoreBucketMetadataRequestWithBody generates requests for PostRestoreBucketMetadata with any type of body
-func NewPostRestoreBucketMetadataRequestWithBody(server string, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewGetResourcesRequest generates requests for GetResources
+func NewGetResourcesRequest(server string, params *GetResourcesParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -10634,7 +10142,7 @@ func NewPostRestoreBucketMetadataRequestWithBody(server string, params *PostRest
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/restore/bucket-metadata")
+	operationPath := fmt.Sprintf("/resources")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -10644,12 +10152,10 @@ func NewPostRestoreBucketMetadataRequestWithBody(server string, params *PostRest
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params.ZapTraceSpan != nil {
 		var headerParam0 string
@@ -10718,6 +10224,57 @@ func NewPostRestoreBucketIDRequestWithBody(server string, bucketID string, param
 		}
 
 		req.Header.Set("Content-Type", headerParam1)
+	}
+
+	return req, nil
+}
+
+// NewPostRestoreBucketMetadataRequest calls the generic PostRestoreBucketMetadata builder with application/json body
+func NewPostRestoreBucketMetadataRequest(server string, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostRestoreBucketMetadataRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostRestoreBucketMetadataRequestWithBody generates requests for PostRestoreBucketMetadata with any type of body
+func NewPostRestoreBucketMetadataRequestWithBody(server string, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/restore/bucketMetadata")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
 	}
 
 	return req, nil
@@ -12618,6 +12175,22 @@ func NewGetTasksRequest(server string, params *GetTasksParams) (*http.Request, e
 	if params.Limit != nil {
 
 		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Type != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "type", runtime.ParamLocationQuery, *params.Type); err != nil {
 			return nil, err
 		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 			return nil, err
@@ -15859,36 +15432,6 @@ type ClientWithResponsesInterface interface {
 
 	PostDeleteWithResponse(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody) (*PostDeleteResponse, error)
 
-	// GetDocumentsTemplates request
-	GetDocumentsTemplatesWithResponse(ctx context.Context, params *GetDocumentsTemplatesParams) (*GetDocumentsTemplatesResponse, error)
-
-	// PostDocumentsTemplates request  with any body
-	PostDocumentsTemplatesWithBodyWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*PostDocumentsTemplatesResponse, error)
-
-	PostDocumentsTemplatesWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*PostDocumentsTemplatesResponse, error)
-
-	// DeleteDocumentsTemplatesID request
-	DeleteDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*DeleteDocumentsTemplatesIDResponse, error)
-
-	// GetDocumentsTemplatesID request
-	GetDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*GetDocumentsTemplatesIDResponse, error)
-
-	// PutDocumentsTemplatesID request  with any body
-	PutDocumentsTemplatesIDWithBodyWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*PutDocumentsTemplatesIDResponse, error)
-
-	PutDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*PutDocumentsTemplatesIDResponse, error)
-
-	// GetDocumentsTemplatesIDLabels request
-	GetDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*GetDocumentsTemplatesIDLabelsResponse, error)
-
-	// PostDocumentsTemplatesIDLabels request  with any body
-	PostDocumentsTemplatesIDLabelsWithBodyWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*PostDocumentsTemplatesIDLabelsResponse, error)
-
-	PostDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*PostDocumentsTemplatesIDLabelsResponse, error)
-
-	// DeleteDocumentsTemplatesIDLabelsID request
-	DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error)
-
 	// GetFlags request
 	GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams) (*GetFlagsResponse, error)
 
@@ -16073,6 +15616,9 @@ type ClientWithResponsesInterface interface {
 
 	PostOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody) (*PostOrgsIDSecretsResponse, error)
 
+	// DeleteOrgsIDSecretsID request
+	DeleteOrgsIDSecretsIDWithResponse(ctx context.Context, orgID string, secretID string, params *DeleteOrgsIDSecretsIDParams) (*DeleteOrgsIDSecretsIDResponse, error)
+
 	// GetPing request
 	GetPingWithResponse(ctx context.Context) (*GetPingResponse, error)
 
@@ -16103,13 +15649,16 @@ type ClientWithResponsesInterface interface {
 	// GetReady request
 	GetReadyWithResponse(ctx context.Context, params *GetReadyParams) (*GetReadyResponse, error)
 
+	// GetResources request
+	GetResourcesWithResponse(ctx context.Context, params *GetResourcesParams) (*GetResourcesResponse, error)
+
+	// PostRestoreBucketID request  with any body
+	PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*PostRestoreBucketIDResponse, error)
+
 	// PostRestoreBucketMetadata request  with any body
 	PostRestoreBucketMetadataWithBodyWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*PostRestoreBucketMetadataResponse, error)
 
 	PostRestoreBucketMetadataWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody) (*PostRestoreBucketMetadataResponse, error)
-
-	// PostRestoreBucketID request  with any body
-	PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*PostRestoreBucketIDResponse, error)
 
 	// PostRestoreKV request  with any body
 	PostRestoreKVWithBodyWithResponse(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader) (*PostRestoreKVResponse, error)
@@ -17805,189 +17354,6 @@ func (r PostDeleteResponse) StatusCode() int {
 	return 0
 }
 
-type GetDocumentsTemplatesResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Documents
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r GetDocumentsTemplatesResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetDocumentsTemplatesResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PostDocumentsTemplatesResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *Document
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r PostDocumentsTemplatesResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostDocumentsTemplatesResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteDocumentsTemplatesIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteDocumentsTemplatesIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteDocumentsTemplatesIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetDocumentsTemplatesIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Document
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r GetDocumentsTemplatesIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetDocumentsTemplatesIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PutDocumentsTemplatesIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Document
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r PutDocumentsTemplatesIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PutDocumentsTemplatesIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetDocumentsTemplatesIDLabelsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r GetDocumentsTemplatesIDLabelsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetDocumentsTemplatesIDLabelsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PostDocumentsTemplatesIDLabelsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r PostDocumentsTemplatesIDLabelsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostDocumentsTemplatesIDLabelsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteDocumentsTemplatesIDLabelsIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteDocumentsTemplatesIDLabelsIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteDocumentsTemplatesIDLabelsIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type GetFlagsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -19096,6 +18462,28 @@ func (r PostOrgsIDSecretsResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteOrgsIDSecretsIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteOrgsIDSecretsIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteOrgsIDSecretsIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetPingResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -19275,15 +18663,15 @@ func (r GetReadyResponse) StatusCode() int {
 	return 0
 }
 
-type PostRestoreBucketMetadataResponse struct {
+type GetResourcesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *RestoredBucketMappings
+	JSON200      *[]string
 	JSONDefault  *Error
 }
 
 // Status returns HTTPResponse.Status
-func (r PostRestoreBucketMetadataResponse) Status() string {
+func (r GetResourcesResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -19291,7 +18679,7 @@ func (r PostRestoreBucketMetadataResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r PostRestoreBucketMetadataResponse) StatusCode() int {
+func (r GetResourcesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19321,10 +18709,37 @@ func (r PostRestoreBucketIDResponse) StatusCode() int {
 	return 0
 }
 
+type PostRestoreBucketMetadataResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *RestoredBucketMappings
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRestoreBucketMetadataResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRestoreBucketMetadataResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type PostRestoreKVResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSON200      *struct {
+		// token is the root token for the instance after restore (this is overwritten during the restore)
+		Token *string `json:"token,omitempty"`
+	}
+	JSONDefault *Error
 }
 
 // Status returns HTTPResponse.Status
@@ -21319,8 +20734,9 @@ type PostWriteResponse struct {
 	HTTPResponse *http.Response
 	JSON400      *LineProtocolError
 	JSON401      *Error
-	JSON403      *Error
+	JSON404      *Error
 	JSON413      *LineProtocolLengthError
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -22055,102 +21471,6 @@ func (c *ClientWithResponses) PostDeleteWithResponse(ctx context.Context, params
 	return ParsePostDeleteResponse(rsp)
 }
 
-// GetDocumentsTemplatesWithResponse request returning *GetDocumentsTemplatesResponse
-func (c *ClientWithResponses) GetDocumentsTemplatesWithResponse(ctx context.Context, params *GetDocumentsTemplatesParams) (*GetDocumentsTemplatesResponse, error) {
-	rsp, err := c.GetDocumentsTemplates(ctx, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetDocumentsTemplatesResponse(rsp)
-}
-
-// PostDocumentsTemplatesWithBodyWithResponse request with arbitrary body returning *PostDocumentsTemplatesResponse
-func (c *ClientWithResponses) PostDocumentsTemplatesWithBodyWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader) (*PostDocumentsTemplatesResponse, error) {
-	rsp, err := c.PostDocumentsTemplatesWithBody(ctx, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostDocumentsTemplatesResponse(rsp)
-}
-
-func (c *ClientWithResponses) PostDocumentsTemplatesWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody) (*PostDocumentsTemplatesResponse, error) {
-	rsp, err := c.PostDocumentsTemplates(ctx, params, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostDocumentsTemplatesResponse(rsp)
-}
-
-// DeleteDocumentsTemplatesIDWithResponse request returning *DeleteDocumentsTemplatesIDResponse
-func (c *ClientWithResponses) DeleteDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams) (*DeleteDocumentsTemplatesIDResponse, error) {
-	rsp, err := c.DeleteDocumentsTemplatesID(ctx, templateID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteDocumentsTemplatesIDResponse(rsp)
-}
-
-// GetDocumentsTemplatesIDWithResponse request returning *GetDocumentsTemplatesIDResponse
-func (c *ClientWithResponses) GetDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams) (*GetDocumentsTemplatesIDResponse, error) {
-	rsp, err := c.GetDocumentsTemplatesID(ctx, templateID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetDocumentsTemplatesIDResponse(rsp)
-}
-
-// PutDocumentsTemplatesIDWithBodyWithResponse request with arbitrary body returning *PutDocumentsTemplatesIDResponse
-func (c *ClientWithResponses) PutDocumentsTemplatesIDWithBodyWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader) (*PutDocumentsTemplatesIDResponse, error) {
-	rsp, err := c.PutDocumentsTemplatesIDWithBody(ctx, templateID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutDocumentsTemplatesIDResponse(rsp)
-}
-
-func (c *ClientWithResponses) PutDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody) (*PutDocumentsTemplatesIDResponse, error) {
-	rsp, err := c.PutDocumentsTemplatesID(ctx, templateID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutDocumentsTemplatesIDResponse(rsp)
-}
-
-// GetDocumentsTemplatesIDLabelsWithResponse request returning *GetDocumentsTemplatesIDLabelsResponse
-func (c *ClientWithResponses) GetDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams) (*GetDocumentsTemplatesIDLabelsResponse, error) {
-	rsp, err := c.GetDocumentsTemplatesIDLabels(ctx, templateID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetDocumentsTemplatesIDLabelsResponse(rsp)
-}
-
-// PostDocumentsTemplatesIDLabelsWithBodyWithResponse request with arbitrary body returning *PostDocumentsTemplatesIDLabelsResponse
-func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithBodyWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader) (*PostDocumentsTemplatesIDLabelsResponse, error) {
-	rsp, err := c.PostDocumentsTemplatesIDLabelsWithBody(ctx, templateID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostDocumentsTemplatesIDLabelsResponse(rsp)
-}
-
-func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody) (*PostDocumentsTemplatesIDLabelsResponse, error) {
-	rsp, err := c.PostDocumentsTemplatesIDLabels(ctx, templateID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostDocumentsTemplatesIDLabelsResponse(rsp)
-}
-
-// DeleteDocumentsTemplatesIDLabelsIDWithResponse request returning *DeleteDocumentsTemplatesIDLabelsIDResponse
-func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
-	rsp, err := c.DeleteDocumentsTemplatesIDLabelsID(ctx, templateID, labelID, params)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp)
-}
-
 // GetFlagsWithResponse request returning *GetFlagsResponse
 func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams) (*GetFlagsResponse, error) {
 	rsp, err := c.GetFlags(ctx, params)
@@ -22743,6 +22063,15 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context,
 	return ParsePostOrgsIDSecretsResponse(rsp)
 }
 
+// DeleteOrgsIDSecretsIDWithResponse request returning *DeleteOrgsIDSecretsIDResponse
+func (c *ClientWithResponses) DeleteOrgsIDSecretsIDWithResponse(ctx context.Context, orgID string, secretID string, params *DeleteOrgsIDSecretsIDParams) (*DeleteOrgsIDSecretsIDResponse, error) {
+	rsp, err := c.DeleteOrgsIDSecretsID(ctx, orgID, secretID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteOrgsIDSecretsIDResponse(rsp)
+}
+
 // GetPingWithResponse request returning *GetPingResponse
 func (c *ClientWithResponses) GetPingWithResponse(ctx context.Context) (*GetPingResponse, error) {
 	rsp, err := c.GetPing(ctx)
@@ -22839,6 +22168,24 @@ func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *
 	return ParseGetReadyResponse(rsp)
 }
 
+// GetResourcesWithResponse request returning *GetResourcesResponse
+func (c *ClientWithResponses) GetResourcesWithResponse(ctx context.Context, params *GetResourcesParams) (*GetResourcesResponse, error) {
+	rsp, err := c.GetResources(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetResourcesResponse(rsp)
+}
+
+// PostRestoreBucketIDWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketIDResponse
+func (c *ClientWithResponses) PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*PostRestoreBucketIDResponse, error) {
+	rsp, err := c.PostRestoreBucketIDWithBody(ctx, bucketID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRestoreBucketIDResponse(rsp)
+}
+
 // PostRestoreBucketMetadataWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketMetadataResponse
 func (c *ClientWithResponses) PostRestoreBucketMetadataWithBodyWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader) (*PostRestoreBucketMetadataResponse, error) {
 	rsp, err := c.PostRestoreBucketMetadataWithBody(ctx, params, contentType, body)
@@ -22854,15 +22201,6 @@ func (c *ClientWithResponses) PostRestoreBucketMetadataWithResponse(ctx context.
 		return nil, err
 	}
 	return ParsePostRestoreBucketMetadataResponse(rsp)
-}
-
-// PostRestoreBucketIDWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketIDResponse
-func (c *ClientWithResponses) PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader) (*PostRestoreBucketIDResponse, error) {
-	rsp, err := c.PostRestoreBucketIDWithBody(ctx, bucketID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostRestoreBucketIDResponse(rsp)
 }
 
 // PostRestoreKVWithBodyWithResponse request with arbitrary body returning *PostRestoreKVResponse
@@ -26223,303 +25561,6 @@ func ParsePostDeleteResponse(rsp *http.Response) (*PostDeleteResponse, error) {
 	return response, nil
 }
 
-// ParseGetDocumentsTemplatesResponse parses an HTTP response from a GetDocumentsTemplatesWithResponse call
-func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*GetDocumentsTemplatesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetDocumentsTemplatesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Documents
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParsePostDocumentsTemplatesResponse parses an HTTP response from a PostDocumentsTemplatesWithResponse call
-func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*PostDocumentsTemplatesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostDocumentsTemplatesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Document
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParseDeleteDocumentsTemplatesIDResponse parses an HTTP response from a DeleteDocumentsTemplatesIDWithResponse call
-func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*DeleteDocumentsTemplatesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteDocumentsTemplatesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParseGetDocumentsTemplatesIDResponse parses an HTTP response from a GetDocumentsTemplatesIDWithResponse call
-func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*GetDocumentsTemplatesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetDocumentsTemplatesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Document
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParsePutDocumentsTemplatesIDResponse parses an HTTP response from a PutDocumentsTemplatesIDWithResponse call
-func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*PutDocumentsTemplatesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PutDocumentsTemplatesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Document
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParseGetDocumentsTemplatesIDLabelsResponse parses an HTTP response from a GetDocumentsTemplatesIDLabelsWithResponse call
-func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*GetDocumentsTemplatesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetDocumentsTemplatesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParsePostDocumentsTemplatesIDLabelsResponse parses an HTTP response from a PostDocumentsTemplatesIDLabelsWithResponse call
-func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*PostDocumentsTemplatesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostDocumentsTemplatesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
-// ParseDeleteDocumentsTemplatesIDLabelsIDResponse parses an HTTP response from a DeleteDocumentsTemplatesIDLabelsIDWithResponse call
-func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteDocumentsTemplatesIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
-		}
-	}
-
-	return response, nil
-}
-
 // ParseGetFlagsResponse parses an HTTP response from a GetFlagsWithResponse call
 func ParseGetFlagsResponse(rsp *http.Response) (*GetFlagsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -28372,6 +27413,37 @@ func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*PostOrgsIDSecretsRespo
 	return response, nil
 }
 
+// ParseDeleteOrgsIDSecretsIDResponse parses an HTTP response from a DeleteOrgsIDSecretsIDWithResponse call
+func ParseDeleteOrgsIDSecretsIDResponse(rsp *http.Response) (*DeleteOrgsIDSecretsIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteOrgsIDSecretsIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
 // ParseGetPingResponse parses an HTTP response from a GetPingWithResponse call
 func ParseGetPingResponse(rsp *http.Response) (*GetPingResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -28643,26 +27715,26 @@ func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
 	return response, nil
 }
 
-// ParsePostRestoreBucketMetadataResponse parses an HTTP response from a PostRestoreBucketMetadataWithResponse call
-func ParsePostRestoreBucketMetadataResponse(rsp *http.Response) (*PostRestoreBucketMetadataResponse, error) {
+// ParseGetResourcesResponse parses an HTTP response from a GetResourcesWithResponse call
+func ParseGetResourcesResponse(rsp *http.Response) (*GetResourcesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &PostRestoreBucketMetadataResponse{
+	response := &GetResourcesResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest RestoredBucketMappings
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []string
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON201 = &dest
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -28719,6 +27791,44 @@ func ParsePostRestoreBucketIDResponse(rsp *http.Response) (*PostRestoreBucketIDR
 	return response, nil
 }
 
+// ParsePostRestoreBucketMetadataResponse parses an HTTP response from a PostRestoreBucketMetadataWithResponse call
+func ParsePostRestoreBucketMetadataResponse(rsp *http.Response) (*PostRestoreBucketMetadataResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRestoreBucketMetadataResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest RestoredBucketMappings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
 // ParsePostRestoreKVResponse parses an HTTP response from a PostRestoreKVWithResponse call
 func ParsePostRestoreKVResponse(rsp *http.Response) (*PostRestoreKVResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -28733,6 +27843,16 @@ func ParsePostRestoreKVResponse(rsp *http.Response) (*PostRestoreKVResponse, err
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// token is the root token for the instance after restore (this is overwritten during the restore)
+			Token *string `json:"token,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31988,12 +31108,12 @@ func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
 		}
 		response.JSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON403 = &dest
+		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 413:
 		var dest LineProtocolLengthError
@@ -32001,6 +31121,13 @@ func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
 			return nil, err
 		}
 		response.JSON413 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error

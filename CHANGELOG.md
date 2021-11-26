@@ -1,4 +1,4 @@
-## Unreleased
+## 2.6.0[2021-11-26]
 ### Features
 - [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Added *Client.Ping()* function as the only validation method available in both OSS and Cloud.
 - [#286](https://github.com/influxdata/influxdb-client-go/pull/286) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml).
@@ -9,7 +9,6 @@
 
 ### Breaking change
 - [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Function *Client.Ready()* now returns `*domain.Ready` with full uptime info.
- 
 
 ## 2.5.1[2021-09-17]
 ### Bug fixes

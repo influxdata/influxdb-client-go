@@ -85,6 +85,7 @@ func TestRecord(t *testing.T) {
 	assert.Equal(t, mustParseTime("2020-02-17T22:19:49.747562847Z"), record.Start())
 	assert.Equal(t, mustParseTime("2020-02-18T22:19:49.747562847Z"), record.Stop())
 	assert.Equal(t, mustParseTime("2020-02-18T10:34:08.135814545Z"), record.Time())
+	assert.Equal(t, "_result", record.Result())
 	assert.Equal(t, "f", record.Field())
 	assert.Equal(t, 1.4, record.Value())
 	assert.Equal(t, "test", record.Measurement())
@@ -92,18 +93,18 @@ func TestRecord(t *testing.T) {
 
 	agRec := &FluxRecord{table: 0,
 		values: map[string]interface{}{
-			"result": "_result",
 			"room":   "bathroom",
 			"sensor": "SHT",
 			"temp":   24.3,
 			"hum":    42,
 		},
 	}
-	require.Len(t, agRec.values, 5)
+	require.Len(t, agRec.values, 4)
 	assert.Equal(t, time.Time{}, agRec.Start())
 	assert.Equal(t, time.Time{}, agRec.Stop())
 	assert.Equal(t, time.Time{}, agRec.Time())
 	assert.Equal(t, "", agRec.Field())
+	assert.Equal(t, "", agRec.Result())
 	assert.Nil(t, agRec.Value())
 	assert.Equal(t, "", agRec.Measurement())
 	assert.Equal(t, 0, agRec.Table())

@@ -180,6 +180,12 @@ func (r *FluxRecord) Field() string {
 	return stringValue(r.values, "_field")
 }
 
+// Result returns the value of the _result column, which represents result name.
+// Returns empty string if there is no column "result".
+func (r *FluxRecord) Result() string {
+	return stringValue(r.values, "result")
+}
+
 // Measurement returns the measurement name of the record
 // Returns empty string if there is no column "_measurement".
 func (r *FluxRecord) Measurement() string {

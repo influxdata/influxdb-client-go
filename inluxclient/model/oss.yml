@@ -574,6 +574,7 @@ paths:
       operationId: GetTelegrafPlugins
       tags:
         - Telegraf Plugins
+        - generate
       summary: List all Telegraf plugins
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
@@ -12048,7 +12049,8 @@ components:
       properties:
         content:
           $ref: '#/components/schemas/DBRP'
-          required: true
+      required:
+        - content
     SchemaType:
       type: string
       enum:

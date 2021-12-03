@@ -9,15 +9,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	"github.com/pkg/errors"
 )
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -16572,6 +16568,866 @@ func (c *Client) applyEditors(ctx context.Context, req *http.Request, additional
 	return nil
 }
 
+/* summary{
+
+GetRoutes
+	default Routes application/json
+
+GetAuthorizations
+	200 Authorizations application/json
+	default Error application/json
+
+PostAuthorizations
+	201 Authorization application/json
+	400 Error application/json
+	default Error application/json
+
+DeleteAuthorizationsID
+	default Error application/json
+
+GetAuthorizationsID
+	200 Authorization application/json
+	default Error application/json
+
+PatchAuthorizationsID
+	200 Authorization application/json
+	default Error application/json
+
+GetBackupKV
+	default Error application/json
+
+GetBackupMetadata
+	default Error application/json
+
+GetBackupShardId
+	404 Error application/json
+	default Error application/json
+
+GetBuckets
+	200 Buckets application/json
+	default Error application/json
+
+PostBuckets
+	201 Bucket application/json
+	422 Error application/json
+	default Error application/json
+
+DeleteBucketsID
+	404 Error application/json
+	default Error application/json
+
+GetBucketsID
+	200 Bucket application/json
+	default Error application/json
+
+PatchBucketsID
+	200 Bucket application/json
+	default Error application/json
+
+GetBucketsIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostBucketsIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteBucketsIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetBucketsIDMembers
+	200 ResourceMembers application/json
+	default Error application/json
+
+PostBucketsIDMembers
+	201 ResourceMember application/json
+	default Error application/json
+
+DeleteBucketsIDMembersID
+	default Error application/json
+
+GetBucketsIDOwners
+	200 ResourceOwners application/json
+	default Error application/json
+
+PostBucketsIDOwners
+	201 ResourceOwner application/json
+	default Error application/json
+
+DeleteBucketsIDOwnersID
+	default Error application/json
+
+GetChecks
+	200 Checks application/json
+	default Error application/json
+
+CreateCheck
+	201 Check application/json
+	default Error application/json
+
+DeleteChecksID
+	404 Error application/json
+	default Error application/json
+
+GetChecksID
+	200 Check application/json
+	default Error application/json
+
+PatchChecksID
+	200 Check application/json
+	404 Error application/json
+	default Error application/json
+
+PutChecksID
+	200 Check application/json
+	404 Error application/json
+	default Error application/json
+
+GetChecksIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostChecksIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteChecksIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetChecksIDQuery
+	200 FluxResponse application/json
+	400 Error application/json
+	404 Error application/json
+	default Error application/json
+
+GetDashboards
+	200 Dashboards application/json
+	default Error application/json
+
+PostDashboards
+	201 interface{} application/json
+	default Error application/json
+
+DeleteDashboardsID
+	404 Error application/json
+	default Error application/json
+
+GetDashboardsID
+	200 interface{} application/json
+	404 Error application/json
+	default Error application/json
+
+PatchDashboardsID
+	200 Dashboard application/json
+	404 Error application/json
+	default Error application/json
+
+PostDashboardsIDCells
+	201 Cell application/json
+	404 Error application/json
+	default Error application/json
+
+PutDashboardsIDCells
+	201 Dashboard application/json
+	404 Error application/json
+	default Error application/json
+
+DeleteDashboardsIDCellsID
+	404 Error application/json
+	default Error application/json
+
+PatchDashboardsIDCellsID
+	200 Cell application/json
+	404 Error application/json
+	default Error application/json
+
+GetDashboardsIDCellsIDView
+	200 View application/json
+	404 Error application/json
+	default Error application/json
+
+PatchDashboardsIDCellsIDView
+	200 View application/json
+	404 Error application/json
+	default Error application/json
+
+GetDashboardsIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostDashboardsIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteDashboardsIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetDashboardsIDMembers
+	200 ResourceMembers application/json
+	default Error application/json
+
+PostDashboardsIDMembers
+	201 ResourceMember application/json
+	default Error application/json
+
+DeleteDashboardsIDMembersID
+	default Error application/json
+
+GetDashboardsIDOwners
+	200 ResourceOwners application/json
+	default Error application/json
+
+PostDashboardsIDOwners
+	201 ResourceOwner application/json
+	default Error application/json
+
+DeleteDashboardsIDOwnersID
+	default Error application/json
+
+GetDBRPs
+	200 DBRPs application/json
+	400 Error application/json
+	default Error application/json
+
+PostDBRP
+	201 DBRP application/json
+	400 Error application/json
+	default Error application/json
+
+DeleteDBRPID
+	400 Error application/json
+	default Error application/json
+
+GetDBRPsID
+	200 DBRPGet application/json
+	400 Error application/json
+	default Error application/json
+
+PatchDBRPID
+	200 DBRPGet application/json
+	400 Error application/json
+	404 Error application/json
+	default Error application/json
+
+PostDelete
+	400 Error application/json
+	403 Error application/json
+	404 Error application/json
+	default Error application/json
+
+GetDocumentsTemplates
+	200 Documents application/json
+	default Error application/json
+
+PostDocumentsTemplates
+	201 Document application/json
+	default Error application/json
+
+DeleteDocumentsTemplatesID
+	default Error application/json
+
+GetDocumentsTemplatesID
+	200 Document application/json
+	default Error application/json
+
+PutDocumentsTemplatesID
+	200 Document application/json
+	default Error application/json
+
+GetDocumentsTemplatesIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostDocumentsTemplatesIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteDocumentsTemplatesIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetFlags
+	200 Flags application/json
+	default Error application/json
+
+GetHealth
+	200 HealthCheck application/json
+	503 HealthCheck application/json
+	default Error application/json
+
+GetLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetLabelsID
+	200 LabelResponse application/json
+	default Error application/json
+
+PatchLabelsID
+	200 LabelResponse application/json
+	404 Error application/json
+	default Error application/json
+
+GetLegacyAuthorizations
+	200 Authorizations application/json
+	default Error application/json
+
+PostLegacyAuthorizations
+	201 Authorization application/json
+	400 Error application/json
+	default Error application/json
+
+DeleteLegacyAuthorizationsID
+	default Error application/json
+
+GetLegacyAuthorizationsID
+	200 Authorization application/json
+	default Error application/json
+
+PatchLegacyAuthorizationsID
+	200 Authorization application/json
+	default Error application/json
+
+PostLegacyAuthorizationsIDPassword
+	default Error application/json
+
+GetMe
+	200 UserResponse application/json
+	default Error application/json
+
+PutMePassword
+	default Error application/json
+
+GetNotificationEndpoints
+	200 NotificationEndpoints application/json
+	default Error application/json
+
+CreateNotificationEndpoint
+	201 NotificationEndpoint application/json
+	default Error application/json
+
+DeleteNotificationEndpointsID
+	404 Error application/json
+	default Error application/json
+
+GetNotificationEndpointsID
+	200 NotificationEndpoint application/json
+	default Error application/json
+
+PatchNotificationEndpointsID
+	200 NotificationEndpoint application/json
+	404 Error application/json
+	default Error application/json
+
+PutNotificationEndpointsID
+	200 NotificationEndpoint application/json
+	404 Error application/json
+	default Error application/json
+
+GetNotificationEndpointsIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostNotificationEndpointIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteNotificationEndpointsIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetNotificationRules
+	200 NotificationRules application/json
+	default Error application/json
+
+CreateNotificationRule
+	201 NotificationRule application/json
+	default Error application/json
+
+DeleteNotificationRulesID
+	404 Error application/json
+	default Error application/json
+
+GetNotificationRulesID
+	200 NotificationRule application/json
+	default Error application/json
+
+PatchNotificationRulesID
+	200 NotificationRule application/json
+	404 Error application/json
+	default Error application/json
+
+PutNotificationRulesID
+	200 NotificationRule application/json
+	404 Error application/json
+	default Error application/json
+
+GetNotificationRulesIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostNotificationRuleIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteNotificationRulesIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetNotificationRulesIDQuery
+	200 FluxResponse application/json
+	400 Error application/json
+	404 Error application/json
+	default Error application/json
+
+GetOrgs
+	200 Organizations application/json
+	default Error application/json
+
+PostOrgs
+	201 Organization application/json
+	default Error application/json
+
+DeleteOrgsID
+	404 Error application/json
+	default Error application/json
+
+GetOrgsID
+	200 Organization application/json
+	default Error application/json
+
+PatchOrgsID
+	200 Organization application/json
+	default Error application/json
+
+GetOrgsIDMembers
+	200 ResourceMembers application/json
+	404 Error application/json
+	default Error application/json
+
+PostOrgsIDMembers
+	201 ResourceMember application/json
+	default Error application/json
+
+DeleteOrgsIDMembersID
+	default Error application/json
+
+GetOrgsIDOwners
+	200 ResourceOwners application/json
+	404 Error application/json
+	default Error application/json
+
+PostOrgsIDOwners
+	201 ResourceOwner application/json
+	default Error application/json
+
+DeleteOrgsIDOwnersID
+	default Error application/json
+
+GetOrgsIDSecrets
+	200 SecretKeysResponse application/json
+	default Error application/json
+
+PatchOrgsIDSecrets
+	default Error application/json
+
+PostOrgsIDSecrets
+	default Error application/json
+
+GetPing
+
+HeadPing
+
+PostQuery
+	default Error application/json
+
+PostQueryAnalyze
+	200 AnalyzeQueryResponse application/json
+	default Error application/json
+
+PostQueryAst
+	200 ASTResponse application/json
+	default Error application/json
+
+GetQuerySuggestions
+	200 FluxSuggestions application/json
+	default Error application/json
+
+GetQuerySuggestionsName
+	200 FluxSuggestion application/json
+	default Error application/json
+
+GetReady
+	200 Ready application/json
+	default Error application/json
+
+PostRestoreBucketMetadata
+	201 RestoredBucketMappings application/json
+	default Error application/json
+
+PostRestoreBucketID
+	200 []byte application/json
+	default Error application/json
+
+PostRestoreKV
+	default Error application/json
+
+PostRestoreShardId
+	default Error application/json
+
+PostRestoreSQL
+	default Error application/json
+
+GetScrapers
+	200 ScraperTargetResponses application/json
+
+PostScrapers
+	201 ScraperTargetResponse application/json
+	default Error application/json
+
+DeleteScrapersID
+	default Error application/json
+
+GetScrapersID
+	200 ScraperTargetResponse application/json
+	default Error application/json
+
+PatchScrapersID
+	200 ScraperTargetResponse application/json
+	default Error application/json
+
+GetScrapersIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostScrapersIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteScrapersIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetScrapersIDMembers
+	200 ResourceMembers application/json
+	default Error application/json
+
+PostScrapersIDMembers
+	201 ResourceMember application/json
+	default Error application/json
+
+DeleteScrapersIDMembersID
+	default Error application/json
+
+GetScrapersIDOwners
+	200 ResourceOwners application/json
+	default Error application/json
+
+PostScrapersIDOwners
+	201 ResourceOwner application/json
+	default Error application/json
+
+DeleteScrapersIDOwnersID
+	default Error application/json
+
+GetSetup
+	200 IsOnboarding application/json
+
+PostSetup
+	201 OnboardingResponse application/json
+	default Error application/json
+
+PostSignin
+	401 Error application/json
+	403 Error application/json
+	default Error application/json
+
+PostSignout
+	401 Error application/json
+	default Error application/json
+
+GetSources
+	200 Sources application/json
+	default Error application/json
+
+PostSources
+	201 Source application/json
+	default Error application/json
+
+DeleteSourcesID
+	404 Error application/json
+	default Error application/json
+
+GetSourcesID
+	200 Source application/json
+	404 Error application/json
+	default Error application/json
+
+PatchSourcesID
+	200 Source application/json
+	404 Error application/json
+	default Error application/json
+
+GetSourcesIDBuckets
+	200 Buckets application/json
+	404 Error application/json
+	default Error application/json
+
+GetSourcesIDHealth
+	200 HealthCheck application/json
+	503 HealthCheck application/json
+	default Error application/json
+
+ListStacks
+	200 struct {
+    Stacks *[]Stack`json:"stacks,omitempty"`
+} application/json
+	default Error application/json
+
+CreateStack
+	201 Stack application/json
+	default Error application/json
+
+DeleteStack
+	default Error application/json
+
+ReadStack
+	200 Stack application/json
+	default Error application/json
+
+UpdateStack
+	200 Stack application/json
+	default Error application/json
+
+UninstallStack
+	200 Stack application/json
+	default Error application/json
+
+GetTasks
+	200 Tasks application/json
+	default Error application/json
+
+PostTasks
+	201 Task application/json
+	default Error application/json
+
+DeleteTasksID
+	default Error application/json
+
+GetTasksID
+	200 Task application/json
+	default Error application/json
+
+PatchTasksID
+	200 Task application/json
+	default Error application/json
+
+GetTasksIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostTasksIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteTasksIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetTasksIDLogs
+	200 Logs application/json
+	default Error application/json
+
+GetTasksIDMembers
+	200 ResourceMembers application/json
+	default Error application/json
+
+PostTasksIDMembers
+	201 ResourceMember application/json
+	default Error application/json
+
+DeleteTasksIDMembersID
+	default Error application/json
+
+GetTasksIDOwners
+	200 ResourceOwners application/json
+	default Error application/json
+
+PostTasksIDOwners
+	201 ResourceOwner application/json
+	default Error application/json
+
+DeleteTasksIDOwnersID
+	default Error application/json
+
+GetTasksIDRuns
+	200 Runs application/json
+	default Error application/json
+
+PostTasksIDRuns
+	201 Run application/json
+	default Error application/json
+
+DeleteTasksIDRunsID
+	default Error application/json
+
+GetTasksIDRunsID
+	200 Run application/json
+	default Error application/json
+
+GetTasksIDRunsIDLogs
+	200 Logs application/json
+	default Error application/json
+
+PostTasksIDRunsIDRetry
+	200 Run application/json
+	default Error application/json
+
+GetTelegrafPlugins
+	200 TelegrafPlugins application/json
+	default Error application/json
+
+GetTelegrafs
+	200 Telegrafs application/json
+	default Error application/json
+
+PostTelegrafs
+	201 Telegraf application/json
+	default Error application/json
+
+DeleteTelegrafsID
+	default Error application/json
+
+GetTelegrafsID
+	200 Telegraf application/json
+	default Error application/json
+
+PutTelegrafsID
+	200 Telegraf application/json
+	default Error application/json
+
+GetTelegrafsIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostTelegrafsIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteTelegrafsIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+GetTelegrafsIDMembers
+	200 ResourceMembers application/json
+	default Error application/json
+
+PostTelegrafsIDMembers
+	201 ResourceMember application/json
+	default Error application/json
+
+DeleteTelegrafsIDMembersID
+	default Error application/json
+
+GetTelegrafsIDOwners
+	200 ResourceOwners application/json
+	default Error application/json
+
+PostTelegrafsIDOwners
+	201 ResourceOwner application/json
+	default Error application/json
+
+DeleteTelegrafsIDOwnersID
+	default Error application/json
+
+ApplyTemplate
+	200 TemplateSummary application/json
+	201 TemplateSummary application/json
+	default Error application/json
+
+ExportTemplate
+	200 Template application/json
+	200 Template application/x-yaml
+	default Error application/json
+
+GetUsers
+	200 Users application/json
+	default Error application/json
+
+PostUsers
+	201 UserResponse application/json
+	default Error application/json
+
+DeleteUsersID
+	default Error application/json
+
+GetUsersID
+	200 UserResponse application/json
+	default Error application/json
+
+PatchUsersID
+	200 UserResponse application/json
+	default Error application/json
+
+PostUsersIDPassword
+	default Error application/json
+
+GetVariables
+	200 Variables application/json
+	400 Error application/json
+	default Error application/json
+
+PostVariables
+	201 Variable application/json
+	default Error application/json
+
+DeleteVariablesID
+	default Error application/json
+
+GetVariablesID
+	200 Variable application/json
+	404 Error application/json
+	default Error application/json
+
+PatchVariablesID
+	200 Variable application/json
+	default Error application/json
+
+PutVariablesID
+	200 Variable application/json
+	default Error application/json
+
+GetVariablesIDLabels
+	200 LabelsResponse application/json
+	default Error application/json
+
+PostVariablesIDLabels
+	201 LabelResponse application/json
+	default Error application/json
+
+DeleteVariablesIDLabelsID
+	404 Error application/json
+	default Error application/json
+
+PostWrite
+	400 LineProtocolError application/json
+	401 Error application/json
+	403 Error application/json
+	413 LineProtocolLengthError application/json
+	default Error application/json
+
+}*/
 // ClientWithResponses builds on ClientInterface to offer response payloads
 type ClientWithResponses struct {
 	ClientInterface
@@ -17402,9 +18258,8 @@ type ClientWithResponsesInterface interface {
 }
 
 type GetRoutesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Routes
+	JSONDefault  *Routes // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Routes", RefType:"Routes", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17424,10 +18279,9 @@ func (r GetRoutesResponse) StatusCode() int {
 }
 
 type GetAuthorizationsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Authorizations
-	JSONDefault  *Error
+	JSON200      *Authorizations // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Authorizations", RefType:"Authorizations", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17447,11 +18301,10 @@ func (r GetAuthorizationsResponse) StatusCode() int {
 }
 
 type PostAuthorizationsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Authorization
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON201      *Authorization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Authorization", RefType:"Authorization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSON400      *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17471,9 +18324,8 @@ func (r PostAuthorizationsResponse) StatusCode() int {
 }
 
 type DeleteAuthorizationsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17493,10 +18345,9 @@ func (r DeleteAuthorizationsIDResponse) StatusCode() int {
 }
 
 type GetAuthorizationsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Authorization
-	JSONDefault  *Error
+	JSON200      *Authorization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Authorization", RefType:"Authorization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17516,10 +18367,9 @@ func (r GetAuthorizationsIDResponse) StatusCode() int {
 }
 
 type PatchAuthorizationsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Authorization
-	JSONDefault  *Error
+	JSON200      *Authorization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Authorization", RefType:"Authorization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17539,9 +18389,8 @@ func (r PatchAuthorizationsIDResponse) StatusCode() int {
 }
 
 type GetBackupKVResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17561,9 +18410,8 @@ func (r GetBackupKVResponse) StatusCode() int {
 }
 
 type GetBackupMetadataResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17583,10 +18431,9 @@ func (r GetBackupMetadataResponse) StatusCode() int {
 }
 
 type GetBackupShardIdResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17606,10 +18453,9 @@ func (r GetBackupShardIdResponse) StatusCode() int {
 }
 
 type GetBucketsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Buckets
-	JSONDefault  *Error
+	JSON200      *Buckets // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Buckets", RefType:"Buckets", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17629,11 +18475,10 @@ func (r GetBucketsResponse) StatusCode() int {
 }
 
 type PostBucketsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Bucket
-	JSON422      *Error
-	JSONDefault  *Error
+	JSON201      *Bucket // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Bucket", RefType:"Bucket", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSON422      *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON422", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"422"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17653,10 +18498,9 @@ func (r PostBucketsResponse) StatusCode() int {
 }
 
 type DeleteBucketsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17676,10 +18520,9 @@ func (r DeleteBucketsIDResponse) StatusCode() int {
 }
 
 type GetBucketsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Bucket
-	JSONDefault  *Error
+	JSON200      *Bucket // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Bucket", RefType:"Bucket", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17699,10 +18542,9 @@ func (r GetBucketsIDResponse) StatusCode() int {
 }
 
 type PatchBucketsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Bucket
-	JSONDefault  *Error
+	JSON200      *Bucket // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Bucket", RefType:"Bucket", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17722,10 +18564,9 @@ func (r PatchBucketsIDResponse) StatusCode() int {
 }
 
 type GetBucketsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17745,10 +18586,9 @@ func (r GetBucketsIDLabelsResponse) StatusCode() int {
 }
 
 type PostBucketsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17768,10 +18608,9 @@ func (r PostBucketsIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteBucketsIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17791,10 +18630,9 @@ func (r DeleteBucketsIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetBucketsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceMembers
-	JSONDefault  *Error
+	JSON200      *ResourceMembers // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMembers", RefType:"ResourceMembers", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17814,10 +18652,9 @@ func (r GetBucketsIDMembersResponse) StatusCode() int {
 }
 
 type PostBucketsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceMember
-	JSONDefault  *Error
+	JSON201      *ResourceMember // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMember", RefType:"ResourceMember", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17837,9 +18674,8 @@ func (r PostBucketsIDMembersResponse) StatusCode() int {
 }
 
 type DeleteBucketsIDMembersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17859,10 +18695,9 @@ func (r DeleteBucketsIDMembersIDResponse) StatusCode() int {
 }
 
 type GetBucketsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceOwners
-	JSONDefault  *Error
+	JSON200      *ResourceOwners // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwners", RefType:"ResourceOwners", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17882,10 +18717,9 @@ func (r GetBucketsIDOwnersResponse) StatusCode() int {
 }
 
 type PostBucketsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceOwner
-	JSONDefault  *Error
+	JSON201      *ResourceOwner // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwner", RefType:"ResourceOwner", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17905,9 +18739,8 @@ func (r PostBucketsIDOwnersResponse) StatusCode() int {
 }
 
 type DeleteBucketsIDOwnersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17927,10 +18760,9 @@ func (r DeleteBucketsIDOwnersIDResponse) StatusCode() int {
 }
 
 type GetChecksResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Checks
-	JSONDefault  *Error
+	JSON200      *Checks // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Checks", RefType:"Checks", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17950,10 +18782,9 @@ func (r GetChecksResponse) StatusCode() int {
 }
 
 type CreateCheckResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Check
-	JSONDefault  *Error
+	JSON201      *Check // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Check", RefType:"Check", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17973,10 +18804,9 @@ func (r CreateCheckResponse) StatusCode() int {
 }
 
 type DeleteChecksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -17996,10 +18826,9 @@ func (r DeleteChecksIDResponse) StatusCode() int {
 }
 
 type GetChecksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Check
-	JSONDefault  *Error
+	JSON200      *Check // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Check", RefType:"Check", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18019,11 +18848,10 @@ func (r GetChecksIDResponse) StatusCode() int {
 }
 
 type PatchChecksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Check
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Check // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Check", RefType:"Check", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18043,11 +18871,10 @@ func (r PatchChecksIDResponse) StatusCode() int {
 }
 
 type PutChecksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Check
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Check // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Check", RefType:"Check", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18067,10 +18894,9 @@ func (r PutChecksIDResponse) StatusCode() int {
 }
 
 type GetChecksIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18090,10 +18916,9 @@ func (r GetChecksIDLabelsResponse) StatusCode() int {
 }
 
 type PostChecksIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18113,10 +18938,9 @@ func (r PostChecksIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteChecksIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18136,12 +18960,11 @@ func (r DeleteChecksIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetChecksIDQueryResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *FluxResponse
-	JSON400      *Error
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *FluxResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"FluxResponse", RefType:"FluxResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"// Rendered flux that backs the check or notification.", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON400      *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSON404      *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18161,10 +18984,9 @@ func (r GetChecksIDQueryResponse) StatusCode() int {
 }
 
 type GetDashboardsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Dashboards
-	JSONDefault  *Error
+	JSON200      *Dashboards // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Dashboards", RefType:"Dashboards", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error      // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18184,10 +19006,9 @@ func (r GetDashboardsResponse) StatusCode() int {
 }
 
 type PostDashboardsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *interface{}
-	JSONDefault  *Error
+	JSON201      *interface{} // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"interface{}", RefType:"", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(0xc0001bf380)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18207,10 +19028,9 @@ func (r PostDashboardsResponse) StatusCode() int {
 }
 
 type DeleteDashboardsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18230,11 +19050,10 @@ func (r DeleteDashboardsIDResponse) StatusCode() int {
 }
 
 type GetDashboardsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *interface{}
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *interface{} // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"interface{}", RefType:"", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(0xc0001bfa00)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18254,11 +19073,10 @@ func (r GetDashboardsIDResponse) StatusCode() int {
 }
 
 type PatchDashboardsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Dashboard
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Dashboard // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Dashboard", RefType:"Dashboard", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18278,11 +19096,10 @@ func (r PatchDashboardsIDResponse) StatusCode() int {
 }
 
 type PostDashboardsIDCellsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Cell
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON201      *Cell  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Cell", RefType:"Cell", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18302,11 +19119,10 @@ func (r PostDashboardsIDCellsResponse) StatusCode() int {
 }
 
 type PutDashboardsIDCellsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Dashboard
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON201      *Dashboard // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Dashboard", RefType:"Dashboard", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSON404      *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18326,10 +19142,9 @@ func (r PutDashboardsIDCellsResponse) StatusCode() int {
 }
 
 type DeleteDashboardsIDCellsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18349,11 +19164,10 @@ func (r DeleteDashboardsIDCellsIDResponse) StatusCode() int {
 }
 
 type PatchDashboardsIDCellsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Cell
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Cell  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Cell", RefType:"Cell", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18373,11 +19187,10 @@ func (r PatchDashboardsIDCellsIDResponse) StatusCode() int {
 }
 
 type GetDashboardsIDCellsIDViewResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *View
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *View  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"View", RefType:"View", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18397,11 +19210,10 @@ func (r GetDashboardsIDCellsIDViewResponse) StatusCode() int {
 }
 
 type PatchDashboardsIDCellsIDViewResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *View
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *View  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"View", RefType:"View", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18421,10 +19233,9 @@ func (r PatchDashboardsIDCellsIDViewResponse) StatusCode() int {
 }
 
 type GetDashboardsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18444,10 +19255,9 @@ func (r GetDashboardsIDLabelsResponse) StatusCode() int {
 }
 
 type PostDashboardsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18467,10 +19277,9 @@ func (r PostDashboardsIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteDashboardsIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18490,10 +19299,9 @@ func (r DeleteDashboardsIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetDashboardsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceMembers
-	JSONDefault  *Error
+	JSON200      *ResourceMembers // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMembers", RefType:"ResourceMembers", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18513,10 +19321,9 @@ func (r GetDashboardsIDMembersResponse) StatusCode() int {
 }
 
 type PostDashboardsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceMember
-	JSONDefault  *Error
+	JSON201      *ResourceMember // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMember", RefType:"ResourceMember", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18536,9 +19343,8 @@ func (r PostDashboardsIDMembersResponse) StatusCode() int {
 }
 
 type DeleteDashboardsIDMembersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18558,10 +19364,9 @@ func (r DeleteDashboardsIDMembersIDResponse) StatusCode() int {
 }
 
 type GetDashboardsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceOwners
-	JSONDefault  *Error
+	JSON200      *ResourceOwners // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwners", RefType:"ResourceOwners", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18581,10 +19386,9 @@ func (r GetDashboardsIDOwnersResponse) StatusCode() int {
 }
 
 type PostDashboardsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceOwner
-	JSONDefault  *Error
+	JSON201      *ResourceOwner // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwner", RefType:"ResourceOwner", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18604,9 +19408,8 @@ func (r PostDashboardsIDOwnersResponse) StatusCode() int {
 }
 
 type DeleteDashboardsIDOwnersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18626,11 +19429,10 @@ func (r DeleteDashboardsIDOwnersIDResponse) StatusCode() int {
 }
 
 type GetDBRPsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *DBRPs
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON200      *DBRPs // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"DBRPs", RefType:"DBRPs", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON400      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18650,11 +19452,10 @@ func (r GetDBRPsResponse) StatusCode() int {
 }
 
 type PostDBRPResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *DBRP
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON201      *DBRP  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"DBRP", RefType:"DBRP", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSON400      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18674,10 +19475,9 @@ func (r PostDBRPResponse) StatusCode() int {
 }
 
 type DeleteDBRPIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON400      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18697,11 +19497,10 @@ func (r DeleteDBRPIDResponse) StatusCode() int {
 }
 
 type GetDBRPsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *DBRPGet
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON200      *DBRPGet // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"DBRPGet", RefType:"DBRPGet", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON400      *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18721,12 +19520,11 @@ func (r GetDBRPsIDResponse) StatusCode() int {
 }
 
 type PatchDBRPIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *DBRPGet
-	JSON400      *Error
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *DBRPGet // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"DBRPGet", RefType:"DBRPGet", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON400      *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSON404      *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18746,12 +19544,11 @@ func (r PatchDBRPIDResponse) StatusCode() int {
 }
 
 type PostDeleteResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *Error
-	JSON403      *Error
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON400      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSON403      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON403", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"403"}
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18771,10 +19568,9 @@ func (r PostDeleteResponse) StatusCode() int {
 }
 
 type GetDocumentsTemplatesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Documents
-	JSONDefault  *Error
+	JSON200      *Documents // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Documents", RefType:"Documents", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18794,10 +19590,9 @@ func (r GetDocumentsTemplatesResponse) StatusCode() int {
 }
 
 type PostDocumentsTemplatesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Document
-	JSONDefault  *Error
+	JSON201      *Document // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Document", RefType:"Document", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18817,9 +19612,8 @@ func (r PostDocumentsTemplatesResponse) StatusCode() int {
 }
 
 type DeleteDocumentsTemplatesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18839,10 +19633,9 @@ func (r DeleteDocumentsTemplatesIDResponse) StatusCode() int {
 }
 
 type GetDocumentsTemplatesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Document
-	JSONDefault  *Error
+	JSON200      *Document // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Document", RefType:"Document", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18862,10 +19655,9 @@ func (r GetDocumentsTemplatesIDResponse) StatusCode() int {
 }
 
 type PutDocumentsTemplatesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Document
-	JSONDefault  *Error
+	JSON200      *Document // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Document", RefType:"Document", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18885,10 +19677,9 @@ func (r PutDocumentsTemplatesIDResponse) StatusCode() int {
 }
 
 type GetDocumentsTemplatesIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18908,10 +19699,9 @@ func (r GetDocumentsTemplatesIDLabelsResponse) StatusCode() int {
 }
 
 type PostDocumentsTemplatesIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18931,10 +19721,9 @@ func (r PostDocumentsTemplatesIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteDocumentsTemplatesIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18954,10 +19743,9 @@ func (r DeleteDocumentsTemplatesIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetFlagsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Flags
-	JSONDefault  *Error
+	JSON200      *Flags // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Flags", RefType:"Flags", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -18977,11 +19765,10 @@ func (r GetFlagsResponse) StatusCode() int {
 }
 
 type GetHealthResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *HealthCheck
-	JSON503      *HealthCheck
-	JSONDefault  *Error
+	JSON200      *HealthCheck // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"HealthCheck", RefType:"HealthCheck", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON503      *HealthCheck // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON503", JsonName:"", Schema:codegen.Schema{GoType:"HealthCheck", RefType:"HealthCheck", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"503"}
+	JSONDefault  *Error       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19001,10 +19788,9 @@ func (r GetHealthResponse) StatusCode() int {
 }
 
 type GetLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19024,10 +19810,9 @@ func (r GetLabelsResponse) StatusCode() int {
 }
 
 type PostLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19047,10 +19832,9 @@ func (r PostLabelsResponse) StatusCode() int {
 }
 
 type DeleteLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19070,10 +19854,9 @@ func (r DeleteLabelsIDResponse) StatusCode() int {
 }
 
 type GetLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelResponse
-	JSONDefault  *Error
+	JSON200      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19093,11 +19876,10 @@ func (r GetLabelsIDResponse) StatusCode() int {
 }
 
 type PatchLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelResponse
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19117,10 +19899,9 @@ func (r PatchLabelsIDResponse) StatusCode() int {
 }
 
 type GetLegacyAuthorizationsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Authorizations
-	JSONDefault  *Error
+	JSON200      *Authorizations // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Authorizations", RefType:"Authorizations", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19140,11 +19921,10 @@ func (r GetLegacyAuthorizationsResponse) StatusCode() int {
 }
 
 type PostLegacyAuthorizationsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Authorization
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON201      *Authorization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Authorization", RefType:"Authorization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSON400      *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19164,9 +19944,8 @@ func (r PostLegacyAuthorizationsResponse) StatusCode() int {
 }
 
 type DeleteLegacyAuthorizationsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19186,10 +19965,9 @@ func (r DeleteLegacyAuthorizationsIDResponse) StatusCode() int {
 }
 
 type GetLegacyAuthorizationsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Authorization
-	JSONDefault  *Error
+	JSON200      *Authorization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Authorization", RefType:"Authorization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19209,10 +19987,9 @@ func (r GetLegacyAuthorizationsIDResponse) StatusCode() int {
 }
 
 type PatchLegacyAuthorizationsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Authorization
-	JSONDefault  *Error
+	JSON200      *Authorization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Authorization", RefType:"Authorization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19232,9 +20009,8 @@ func (r PatchLegacyAuthorizationsIDResponse) StatusCode() int {
 }
 
 type PostLegacyAuthorizationsIDPasswordResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19254,10 +20030,9 @@ func (r PostLegacyAuthorizationsIDPasswordResponse) StatusCode() int {
 }
 
 type GetMeResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *UserResponse
-	JSONDefault  *Error
+	JSON200      *UserResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"UserResponse", RefType:"UserResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19277,9 +20052,8 @@ func (r GetMeResponse) StatusCode() int {
 }
 
 type PutMePasswordResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19299,10 +20073,9 @@ func (r PutMePasswordResponse) StatusCode() int {
 }
 
 type GetNotificationEndpointsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationEndpoints
-	JSONDefault  *Error
+	JSON200      *NotificationEndpoints // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationEndpoints", RefType:"NotificationEndpoints", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error                 // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19322,10 +20095,9 @@ func (r GetNotificationEndpointsResponse) StatusCode() int {
 }
 
 type CreateNotificationEndpointResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *NotificationEndpoint
-	JSONDefault  *Error
+	JSON201      *NotificationEndpoint // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"NotificationEndpoint", RefType:"NotificationEndpoint", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19345,10 +20117,9 @@ func (r CreateNotificationEndpointResponse) StatusCode() int {
 }
 
 type DeleteNotificationEndpointsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19368,10 +20139,9 @@ func (r DeleteNotificationEndpointsIDResponse) StatusCode() int {
 }
 
 type GetNotificationEndpointsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationEndpoint
-	JSONDefault  *Error
+	JSON200      *NotificationEndpoint // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationEndpoint", RefType:"NotificationEndpoint", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19391,11 +20161,10 @@ func (r GetNotificationEndpointsIDResponse) StatusCode() int {
 }
 
 type PatchNotificationEndpointsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationEndpoint
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *NotificationEndpoint // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationEndpoint", RefType:"NotificationEndpoint", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19415,11 +20184,10 @@ func (r PatchNotificationEndpointsIDResponse) StatusCode() int {
 }
 
 type PutNotificationEndpointsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationEndpoint
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *NotificationEndpoint // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationEndpoint", RefType:"NotificationEndpoint", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19439,10 +20207,9 @@ func (r PutNotificationEndpointsIDResponse) StatusCode() int {
 }
 
 type GetNotificationEndpointsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19462,10 +20229,9 @@ func (r GetNotificationEndpointsIDLabelsResponse) StatusCode() int {
 }
 
 type PostNotificationEndpointIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19485,10 +20251,9 @@ func (r PostNotificationEndpointIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteNotificationEndpointsIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19508,10 +20273,9 @@ func (r DeleteNotificationEndpointsIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetNotificationRulesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationRules
-	JSONDefault  *Error
+	JSON200      *NotificationRules // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationRules", RefType:"NotificationRules", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error             // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19531,10 +20295,9 @@ func (r GetNotificationRulesResponse) StatusCode() int {
 }
 
 type CreateNotificationRuleResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *NotificationRule
-	JSONDefault  *Error
+	JSON201      *NotificationRule // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"NotificationRule", RefType:"NotificationRule", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error            // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19554,10 +20317,9 @@ func (r CreateNotificationRuleResponse) StatusCode() int {
 }
 
 type DeleteNotificationRulesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19577,10 +20339,9 @@ func (r DeleteNotificationRulesIDResponse) StatusCode() int {
 }
 
 type GetNotificationRulesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationRule
-	JSONDefault  *Error
+	JSON200      *NotificationRule // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationRule", RefType:"NotificationRule", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error            // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19600,11 +20361,10 @@ func (r GetNotificationRulesIDResponse) StatusCode() int {
 }
 
 type PatchNotificationRulesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationRule
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *NotificationRule // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationRule", RefType:"NotificationRule", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error            // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error            // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19624,11 +20384,10 @@ func (r PatchNotificationRulesIDResponse) StatusCode() int {
 }
 
 type PutNotificationRulesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *NotificationRule
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *NotificationRule // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"NotificationRule", RefType:"NotificationRule", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error            // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error            // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19648,10 +20407,9 @@ func (r PutNotificationRulesIDResponse) StatusCode() int {
 }
 
 type GetNotificationRulesIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19671,10 +20429,9 @@ func (r GetNotificationRulesIDLabelsResponse) StatusCode() int {
 }
 
 type PostNotificationRuleIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19694,10 +20451,9 @@ func (r PostNotificationRuleIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteNotificationRulesIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19717,12 +20473,11 @@ func (r DeleteNotificationRulesIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetNotificationRulesIDQueryResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *FluxResponse
-	JSON400      *Error
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *FluxResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"FluxResponse", RefType:"FluxResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"// Rendered flux that backs the check or notification.", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON400      *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSON404      *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19742,10 +20497,9 @@ func (r GetNotificationRulesIDQueryResponse) StatusCode() int {
 }
 
 type GetOrgsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Organizations
-	JSONDefault  *Error
+	JSON200      *Organizations // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Organizations", RefType:"Organizations", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19765,10 +20519,9 @@ func (r GetOrgsResponse) StatusCode() int {
 }
 
 type PostOrgsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Organization
-	JSONDefault  *Error
+	JSON201      *Organization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Organization", RefType:"Organization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19788,10 +20541,9 @@ func (r PostOrgsResponse) StatusCode() int {
 }
 
 type DeleteOrgsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19811,10 +20563,9 @@ func (r DeleteOrgsIDResponse) StatusCode() int {
 }
 
 type GetOrgsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Organization
-	JSONDefault  *Error
+	JSON200      *Organization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Organization", RefType:"Organization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19834,10 +20585,9 @@ func (r GetOrgsIDResponse) StatusCode() int {
 }
 
 type PatchOrgsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Organization
-	JSONDefault  *Error
+	JSON200      *Organization // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Organization", RefType:"Organization", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19857,11 +20607,10 @@ func (r PatchOrgsIDResponse) StatusCode() int {
 }
 
 type GetOrgsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceMembers
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *ResourceMembers // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMembers", RefType:"ResourceMembers", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19881,10 +20630,9 @@ func (r GetOrgsIDMembersResponse) StatusCode() int {
 }
 
 type PostOrgsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceMember
-	JSONDefault  *Error
+	JSON201      *ResourceMember // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMember", RefType:"ResourceMember", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19904,9 +20652,8 @@ func (r PostOrgsIDMembersResponse) StatusCode() int {
 }
 
 type DeleteOrgsIDMembersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19926,11 +20673,10 @@ func (r DeleteOrgsIDMembersIDResponse) StatusCode() int {
 }
 
 type GetOrgsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceOwners
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *ResourceOwners // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwners", RefType:"ResourceOwners", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19950,10 +20696,9 @@ func (r GetOrgsIDOwnersResponse) StatusCode() int {
 }
 
 type PostOrgsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceOwner
-	JSONDefault  *Error
+	JSON201      *ResourceOwner // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwner", RefType:"ResourceOwner", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19973,9 +20718,8 @@ func (r PostOrgsIDOwnersResponse) StatusCode() int {
 }
 
 type DeleteOrgsIDOwnersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -19995,10 +20739,9 @@ func (r DeleteOrgsIDOwnersIDResponse) StatusCode() int {
 }
 
 type GetOrgsIDSecretsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *SecretKeysResponse
-	JSONDefault  *Error
+	JSON200      *SecretKeysResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"SecretKeysResponse", RefType:"SecretKeysResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error              // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20018,9 +20761,8 @@ func (r GetOrgsIDSecretsResponse) StatusCode() int {
 }
 
 type PatchOrgsIDSecretsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20040,9 +20782,8 @@ func (r PatchOrgsIDSecretsResponse) StatusCode() int {
 }
 
 type PostOrgsIDSecretsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20062,7 +20803,6 @@ func (r PostOrgsIDSecretsResponse) StatusCode() int {
 }
 
 type GetPingResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
 }
 
@@ -20083,7 +20823,6 @@ func (r GetPingResponse) StatusCode() int {
 }
 
 type HeadPingResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
 }
 
@@ -20104,9 +20843,8 @@ func (r HeadPingResponse) StatusCode() int {
 }
 
 type PostQueryResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20126,10 +20864,9 @@ func (r PostQueryResponse) StatusCode() int {
 }
 
 type PostQueryAnalyzeResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *AnalyzeQueryResponse
-	JSONDefault  *Error
+	JSON200      *AnalyzeQueryResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"AnalyzeQueryResponse", RefType:"AnalyzeQueryResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error                // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20149,10 +20886,9 @@ func (r PostQueryAnalyzeResponse) StatusCode() int {
 }
 
 type PostQueryAstResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ASTResponse
-	JSONDefault  *Error
+	JSON200      *ASTResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ASTResponse", RefType:"ASTResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"// Contains the AST for the supplied Flux query", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20172,10 +20908,9 @@ func (r PostQueryAstResponse) StatusCode() int {
 }
 
 type GetQuerySuggestionsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *FluxSuggestions
-	JSONDefault  *Error
+	JSON200      *FluxSuggestions // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"FluxSuggestions", RefType:"FluxSuggestions", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20195,10 +20930,9 @@ func (r GetQuerySuggestionsResponse) StatusCode() int {
 }
 
 type GetQuerySuggestionsNameResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *FluxSuggestion
-	JSONDefault  *Error
+	JSON200      *FluxSuggestion // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"FluxSuggestion", RefType:"FluxSuggestion", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20218,10 +20952,9 @@ func (r GetQuerySuggestionsNameResponse) StatusCode() int {
 }
 
 type GetReadyResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Ready
-	JSONDefault  *Error
+	JSON200      *Ready // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Ready", RefType:"Ready", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20241,10 +20974,9 @@ func (r GetReadyResponse) StatusCode() int {
 }
 
 type PostRestoreBucketMetadataResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *RestoredBucketMappings
-	JSONDefault  *Error
+	JSON201      *RestoredBucketMappings // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"RestoredBucketMappings", RefType:"RestoredBucketMappings", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error                  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20264,10 +20996,9 @@ func (r PostRestoreBucketMetadataResponse) StatusCode() int {
 }
 
 type PostRestoreBucketIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]byte
-	JSONDefault  *Error
+	JSON200      *[]byte // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"[]byte", RefType:"", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(0xc0000b0ea0)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20287,9 +21018,8 @@ func (r PostRestoreBucketIDResponse) StatusCode() int {
 }
 
 type PostRestoreKVResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20309,9 +21039,8 @@ func (r PostRestoreKVResponse) StatusCode() int {
 }
 
 type PostRestoreShardIdResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20331,9 +21060,8 @@ func (r PostRestoreShardIdResponse) StatusCode() int {
 }
 
 type PostRestoreSQLResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20353,9 +21081,8 @@ func (r PostRestoreSQLResponse) StatusCode() int {
 }
 
 type GetScrapersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ScraperTargetResponses
+	JSON200      *ScraperTargetResponses // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ScraperTargetResponses", RefType:"ScraperTargetResponses", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20375,10 +21102,9 @@ func (r GetScrapersResponse) StatusCode() int {
 }
 
 type PostScrapersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ScraperTargetResponse
-	JSONDefault  *Error
+	JSON201      *ScraperTargetResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ScraperTargetResponse", RefType:"ScraperTargetResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error                 // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20398,9 +21124,8 @@ func (r PostScrapersResponse) StatusCode() int {
 }
 
 type DeleteScrapersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20420,10 +21145,9 @@ func (r DeleteScrapersIDResponse) StatusCode() int {
 }
 
 type GetScrapersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ScraperTargetResponse
-	JSONDefault  *Error
+	JSON200      *ScraperTargetResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ScraperTargetResponse", RefType:"ScraperTargetResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error                 // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20443,10 +21167,9 @@ func (r GetScrapersIDResponse) StatusCode() int {
 }
 
 type PatchScrapersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ScraperTargetResponse
-	JSONDefault  *Error
+	JSON200      *ScraperTargetResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ScraperTargetResponse", RefType:"ScraperTargetResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error                 // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20466,10 +21189,9 @@ func (r PatchScrapersIDResponse) StatusCode() int {
 }
 
 type GetScrapersIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20489,10 +21211,9 @@ func (r GetScrapersIDLabelsResponse) StatusCode() int {
 }
 
 type PostScrapersIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20512,10 +21233,9 @@ func (r PostScrapersIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteScrapersIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20535,10 +21255,9 @@ func (r DeleteScrapersIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetScrapersIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceMembers
-	JSONDefault  *Error
+	JSON200      *ResourceMembers // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMembers", RefType:"ResourceMembers", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20558,10 +21277,9 @@ func (r GetScrapersIDMembersResponse) StatusCode() int {
 }
 
 type PostScrapersIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceMember
-	JSONDefault  *Error
+	JSON201      *ResourceMember // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMember", RefType:"ResourceMember", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20581,9 +21299,8 @@ func (r PostScrapersIDMembersResponse) StatusCode() int {
 }
 
 type DeleteScrapersIDMembersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20603,10 +21320,9 @@ func (r DeleteScrapersIDMembersIDResponse) StatusCode() int {
 }
 
 type GetScrapersIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceOwners
-	JSONDefault  *Error
+	JSON200      *ResourceOwners // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwners", RefType:"ResourceOwners", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20626,10 +21342,9 @@ func (r GetScrapersIDOwnersResponse) StatusCode() int {
 }
 
 type PostScrapersIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceOwner
-	JSONDefault  *Error
+	JSON201      *ResourceOwner // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwner", RefType:"ResourceOwner", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20649,9 +21364,8 @@ func (r PostScrapersIDOwnersResponse) StatusCode() int {
 }
 
 type DeleteScrapersIDOwnersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20671,9 +21385,8 @@ func (r DeleteScrapersIDOwnersIDResponse) StatusCode() int {
 }
 
 type GetSetupResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *IsOnboarding
+	JSON200      *IsOnboarding // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"IsOnboarding", RefType:"IsOnboarding", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20693,10 +21406,9 @@ func (r GetSetupResponse) StatusCode() int {
 }
 
 type PostSetupResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *OnboardingResponse
-	JSONDefault  *Error
+	JSON201      *OnboardingResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"OnboardingResponse", RefType:"OnboardingResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error              // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20716,11 +21428,10 @@ func (r PostSetupResponse) StatusCode() int {
 }
 
 type PostSigninResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON401      *Error
-	JSON403      *Error
-	JSONDefault  *Error
+	JSON401      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON401", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"401"}
+	JSON403      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON403", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"403"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20740,10 +21451,9 @@ func (r PostSigninResponse) StatusCode() int {
 }
 
 type PostSignoutResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON401      *Error
-	JSONDefault  *Error
+	JSON401      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON401", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"401"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20763,10 +21473,9 @@ func (r PostSignoutResponse) StatusCode() int {
 }
 
 type GetSourcesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Sources
-	JSONDefault  *Error
+	JSON200      *Sources // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Sources", RefType:"Sources", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20786,10 +21495,9 @@ func (r GetSourcesResponse) StatusCode() int {
 }
 
 type PostSourcesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Source
-	JSONDefault  *Error
+	JSON201      *Source // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Source", RefType:"Source", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20809,10 +21517,9 @@ func (r PostSourcesResponse) StatusCode() int {
 }
 
 type DeleteSourcesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20832,11 +21539,10 @@ func (r DeleteSourcesIDResponse) StatusCode() int {
 }
 
 type GetSourcesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Source
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Source // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Source", RefType:"Source", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20856,11 +21562,10 @@ func (r GetSourcesIDResponse) StatusCode() int {
 }
 
 type PatchSourcesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Source
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Source // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Source", RefType:"Source", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20880,11 +21585,10 @@ func (r PatchSourcesIDResponse) StatusCode() int {
 }
 
 type GetSourcesIDBucketsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Buckets
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Buckets // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Buckets", RefType:"Buckets", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20904,11 +21608,10 @@ func (r GetSourcesIDBucketsResponse) StatusCode() int {
 }
 
 type GetSourcesIDHealthResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *HealthCheck
-	JSON503      *HealthCheck
-	JSONDefault  *Error
+	JSON200      *HealthCheck // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"HealthCheck", RefType:"HealthCheck", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON503      *HealthCheck // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON503", JsonName:"", Schema:codegen.Schema{GoType:"HealthCheck", RefType:"HealthCheck", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"503"}
+	JSONDefault  *Error       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20928,12 +21631,11 @@ func (r GetSourcesIDHealthResponse) StatusCode() int {
 }
 
 type ListStacksResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
 		Stacks *[]Stack `json:"stacks,omitempty"`
-	}
-	JSONDefault *Error
+	} // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"struct {\n    Stacks *[]Stack`json:\"stacks,omitempty\"`\n}", RefType:"", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property{codegen.Property{Description:"", JsonFieldName:"stacks", Schema:codegen.Schema{GoType:"[]Stack", RefType:"", ArrayType:(*codegen.Schema)(0xc000424000), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(0xc000217520)}, Required:false, Nullable:false, ExtensionProps:(*openapi3.ExtensionProps)(0xc000217520)}}, HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(0xc000424090), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(0xc000217380)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20953,10 +21655,9 @@ func (r ListStacksResponse) StatusCode() int {
 }
 
 type CreateStackResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Stack
-	JSONDefault  *Error
+	JSON201      *Stack // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Stack", RefType:"Stack", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20976,9 +21677,8 @@ func (r CreateStackResponse) StatusCode() int {
 }
 
 type DeleteStackResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -20998,10 +21698,9 @@ func (r DeleteStackResponse) StatusCode() int {
 }
 
 type ReadStackResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Stack
-	JSONDefault  *Error
+	JSON200      *Stack // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Stack", RefType:"Stack", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21021,10 +21720,9 @@ func (r ReadStackResponse) StatusCode() int {
 }
 
 type UpdateStackResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Stack
-	JSONDefault  *Error
+	JSON200      *Stack // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Stack", RefType:"Stack", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21044,10 +21742,9 @@ func (r UpdateStackResponse) StatusCode() int {
 }
 
 type UninstallStackResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Stack
-	JSONDefault  *Error
+	JSON200      *Stack // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Stack", RefType:"Stack", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21067,10 +21764,9 @@ func (r UninstallStackResponse) StatusCode() int {
 }
 
 type GetTasksResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Tasks
-	JSONDefault  *Error
+	JSON200      *Tasks // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Tasks", RefType:"Tasks", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21090,10 +21786,9 @@ func (r GetTasksResponse) StatusCode() int {
 }
 
 type PostTasksResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Task
-	JSONDefault  *Error
+	JSON201      *Task  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Task", RefType:"Task", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21113,9 +21808,8 @@ func (r PostTasksResponse) StatusCode() int {
 }
 
 type DeleteTasksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21135,10 +21829,9 @@ func (r DeleteTasksIDResponse) StatusCode() int {
 }
 
 type GetTasksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Task
-	JSONDefault  *Error
+	JSON200      *Task  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Task", RefType:"Task", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21158,10 +21851,9 @@ func (r GetTasksIDResponse) StatusCode() int {
 }
 
 type PatchTasksIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Task
-	JSONDefault  *Error
+	JSON200      *Task  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Task", RefType:"Task", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21181,10 +21873,9 @@ func (r PatchTasksIDResponse) StatusCode() int {
 }
 
 type GetTasksIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21204,10 +21895,9 @@ func (r GetTasksIDLabelsResponse) StatusCode() int {
 }
 
 type PostTasksIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21227,10 +21917,9 @@ func (r PostTasksIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteTasksIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21250,10 +21939,9 @@ func (r DeleteTasksIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetTasksIDLogsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Logs
-	JSONDefault  *Error
+	JSON200      *Logs  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Logs", RefType:"Logs", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21273,10 +21961,9 @@ func (r GetTasksIDLogsResponse) StatusCode() int {
 }
 
 type GetTasksIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceMembers
-	JSONDefault  *Error
+	JSON200      *ResourceMembers // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMembers", RefType:"ResourceMembers", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21296,10 +21983,9 @@ func (r GetTasksIDMembersResponse) StatusCode() int {
 }
 
 type PostTasksIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceMember
-	JSONDefault  *Error
+	JSON201      *ResourceMember // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMember", RefType:"ResourceMember", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21319,9 +22005,8 @@ func (r PostTasksIDMembersResponse) StatusCode() int {
 }
 
 type DeleteTasksIDMembersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21341,10 +22026,9 @@ func (r DeleteTasksIDMembersIDResponse) StatusCode() int {
 }
 
 type GetTasksIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceOwners
-	JSONDefault  *Error
+	JSON200      *ResourceOwners // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwners", RefType:"ResourceOwners", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21364,10 +22048,9 @@ func (r GetTasksIDOwnersResponse) StatusCode() int {
 }
 
 type PostTasksIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceOwner
-	JSONDefault  *Error
+	JSON201      *ResourceOwner // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwner", RefType:"ResourceOwner", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21387,9 +22070,8 @@ func (r PostTasksIDOwnersResponse) StatusCode() int {
 }
 
 type DeleteTasksIDOwnersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21409,10 +22091,9 @@ func (r DeleteTasksIDOwnersIDResponse) StatusCode() int {
 }
 
 type GetTasksIDRunsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Runs
-	JSONDefault  *Error
+	JSON200      *Runs  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Runs", RefType:"Runs", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21432,10 +22113,9 @@ func (r GetTasksIDRunsResponse) StatusCode() int {
 }
 
 type PostTasksIDRunsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Run
-	JSONDefault  *Error
+	JSON201      *Run   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Run", RefType:"Run", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21455,9 +22135,8 @@ func (r PostTasksIDRunsResponse) StatusCode() int {
 }
 
 type DeleteTasksIDRunsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21477,10 +22156,9 @@ func (r DeleteTasksIDRunsIDResponse) StatusCode() int {
 }
 
 type GetTasksIDRunsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Run
-	JSONDefault  *Error
+	JSON200      *Run   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Run", RefType:"Run", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21500,10 +22178,9 @@ func (r GetTasksIDRunsIDResponse) StatusCode() int {
 }
 
 type GetTasksIDRunsIDLogsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Logs
-	JSONDefault  *Error
+	JSON200      *Logs  // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Logs", RefType:"Logs", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21523,10 +22200,9 @@ func (r GetTasksIDRunsIDLogsResponse) StatusCode() int {
 }
 
 type PostTasksIDRunsIDRetryResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Run
-	JSONDefault  *Error
+	JSON200      *Run   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Run", RefType:"Run", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21546,10 +22222,9 @@ func (r PostTasksIDRunsIDRetryResponse) StatusCode() int {
 }
 
 type GetTelegrafPluginsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *TelegrafPlugins
-	JSONDefault  *Error
+	JSON200      *TelegrafPlugins // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"TelegrafPlugins", RefType:"TelegrafPlugins", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21569,10 +22244,9 @@ func (r GetTelegrafPluginsResponse) StatusCode() int {
 }
 
 type GetTelegrafsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Telegrafs
-	JSONDefault  *Error
+	JSON200      *Telegrafs // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Telegrafs", RefType:"Telegrafs", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21592,10 +22266,9 @@ func (r GetTelegrafsResponse) StatusCode() int {
 }
 
 type PostTelegrafsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Telegraf
-	JSONDefault  *Error
+	JSON201      *Telegraf // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Telegraf", RefType:"Telegraf", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21615,9 +22288,8 @@ func (r PostTelegrafsResponse) StatusCode() int {
 }
 
 type DeleteTelegrafsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21637,10 +22309,9 @@ func (r DeleteTelegrafsIDResponse) StatusCode() int {
 }
 
 type GetTelegrafsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Telegraf
-	JSONDefault  *Error
+	JSON200      *Telegraf // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Telegraf", RefType:"Telegraf", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21660,10 +22331,9 @@ func (r GetTelegrafsIDResponse) StatusCode() int {
 }
 
 type PutTelegrafsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Telegraf
-	JSONDefault  *Error
+	JSON200      *Telegraf // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Telegraf", RefType:"Telegraf", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21683,10 +22353,9 @@ func (r PutTelegrafsIDResponse) StatusCode() int {
 }
 
 type GetTelegrafsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21706,10 +22375,9 @@ func (r GetTelegrafsIDLabelsResponse) StatusCode() int {
 }
 
 type PostTelegrafsIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21729,10 +22397,9 @@ func (r PostTelegrafsIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteTelegrafsIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21752,10 +22419,9 @@ func (r DeleteTelegrafsIDLabelsIDResponse) StatusCode() int {
 }
 
 type GetTelegrafsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceMembers
-	JSONDefault  *Error
+	JSON200      *ResourceMembers // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMembers", RefType:"ResourceMembers", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21775,10 +22441,9 @@ func (r GetTelegrafsIDMembersResponse) StatusCode() int {
 }
 
 type PostTelegrafsIDMembersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceMember
-	JSONDefault  *Error
+	JSON201      *ResourceMember // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceMember", RefType:"ResourceMember", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21798,9 +22463,8 @@ func (r PostTelegrafsIDMembersResponse) StatusCode() int {
 }
 
 type DeleteTelegrafsIDMembersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21820,10 +22484,9 @@ func (r DeleteTelegrafsIDMembersIDResponse) StatusCode() int {
 }
 
 type GetTelegrafsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceOwners
-	JSONDefault  *Error
+	JSON200      *ResourceOwners // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwners", RefType:"ResourceOwners", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21843,10 +22506,9 @@ func (r GetTelegrafsIDOwnersResponse) StatusCode() int {
 }
 
 type PostTelegrafsIDOwnersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *ResourceOwner
-	JSONDefault  *Error
+	JSON201      *ResourceOwner // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"ResourceOwner", RefType:"ResourceOwner", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21866,9 +22528,8 @@ func (r PostTelegrafsIDOwnersResponse) StatusCode() int {
 }
 
 type DeleteTelegrafsIDOwnersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21888,11 +22549,10 @@ func (r DeleteTelegrafsIDOwnersIDResponse) StatusCode() int {
 }
 
 type ApplyTemplateResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *TemplateSummary
-	JSON201      *TemplateSummary
-	JSONDefault  *Error
+	JSON200      *TemplateSummary // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"TemplateSummary", RefType:"TemplateSummary", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON201      *TemplateSummary // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"TemplateSummary", RefType:"TemplateSummary", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error           // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21912,11 +22572,10 @@ func (r ApplyTemplateResponse) StatusCode() int {
 }
 
 type ExportTemplateResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Template
-	YAML200      *Template
-	JSONDefault  *Error
+	JSON200      *Template // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Template", RefType:"Template", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	YAML200      *Template // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"YAML200", JsonName:"", Schema:codegen.Schema{GoType:"Template", RefType:"Template", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/x-yaml", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21936,10 +22595,9 @@ func (r ExportTemplateResponse) StatusCode() int {
 }
 
 type GetUsersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Users
-	JSONDefault  *Error
+	JSON200      *Users // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Users", RefType:"Users", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21959,10 +22617,9 @@ func (r GetUsersResponse) StatusCode() int {
 }
 
 type PostUsersResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *UserResponse
-	JSONDefault  *Error
+	JSON201      *UserResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"UserResponse", RefType:"UserResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -21982,9 +22639,8 @@ func (r PostUsersResponse) StatusCode() int {
 }
 
 type DeleteUsersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22004,10 +22660,9 @@ func (r DeleteUsersIDResponse) StatusCode() int {
 }
 
 type GetUsersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *UserResponse
-	JSONDefault  *Error
+	JSON200      *UserResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"UserResponse", RefType:"UserResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22027,10 +22682,9 @@ func (r GetUsersIDResponse) StatusCode() int {
 }
 
 type PatchUsersIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *UserResponse
-	JSONDefault  *Error
+	JSON200      *UserResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"UserResponse", RefType:"UserResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error        // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22050,9 +22704,8 @@ func (r PatchUsersIDResponse) StatusCode() int {
 }
 
 type PostUsersIDPasswordResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22072,11 +22725,10 @@ func (r PostUsersIDPasswordResponse) StatusCode() int {
 }
 
 type GetVariablesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Variables
-	JSON400      *Error
-	JSONDefault  *Error
+	JSON200      *Variables // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Variables", RefType:"Variables", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON400      *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSONDefault  *Error     // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22096,10 +22748,9 @@ func (r GetVariablesResponse) StatusCode() int {
 }
 
 type PostVariablesResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Variable
-	JSONDefault  *Error
+	JSON201      *Variable // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"Variable", RefType:"Variable", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22119,9 +22770,8 @@ func (r PostVariablesResponse) StatusCode() int {
 }
 
 type DeleteVariablesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSONDefault  *Error
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22141,11 +22791,10 @@ func (r DeleteVariablesIDResponse) StatusCode() int {
 }
 
 type GetVariablesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Variable
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON200      *Variable // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Variable", RefType:"Variable", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSON404      *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22165,10 +22814,9 @@ func (r GetVariablesIDResponse) StatusCode() int {
 }
 
 type PatchVariablesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Variable
-	JSONDefault  *Error
+	JSON200      *Variable // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Variable", RefType:"Variable", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22188,10 +22836,9 @@ func (r PatchVariablesIDResponse) StatusCode() int {
 }
 
 type PutVariablesIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Variable
-	JSONDefault  *Error
+	JSON200      *Variable // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"Variable", RefType:"Variable", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error    // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22211,10 +22858,9 @@ func (r PutVariablesIDResponse) StatusCode() int {
 }
 
 type GetVariablesIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *LabelsResponse
-	JSONDefault  *Error
+	JSON200      *LabelsResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON200", JsonName:"", Schema:codegen.Schema{GoType:"LabelsResponse", RefType:"LabelsResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"200"}
+	JSONDefault  *Error          // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22234,10 +22880,9 @@ func (r GetVariablesIDLabelsResponse) StatusCode() int {
 }
 
 type PostVariablesIDLabelsResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *LabelResponse
-	JSONDefault  *Error
+	JSON201      *LabelResponse // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON201", JsonName:"", Schema:codegen.Schema{GoType:"LabelResponse", RefType:"LabelResponse", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"201"}
+	JSONDefault  *Error         // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22257,10 +22902,9 @@ func (r PostVariablesIDLabelsResponse) StatusCode() int {
 }
 
 type DeleteVariablesIDLabelsIDResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *Error
-	JSONDefault  *Error
+	JSON404      *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON404", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"404"}
+	JSONDefault  *Error // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22280,13 +22924,12 @@ func (r DeleteVariablesIDLabelsIDResponse) StatusCode() int {
 }
 
 type PostWriteResponse struct {
-	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *LineProtocolError
-	JSON401      *Error
-	JSON403      *Error
-	JSON413      *LineProtocolLengthError
-	JSONDefault  *Error
+	JSON400      *LineProtocolError       // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON400", JsonName:"", Schema:codegen.Schema{GoType:"LineProtocolError", RefType:"LineProtocolError", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"400"}
+	JSON401      *Error                   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON401", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"401"}
+	JSON403      *Error                   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON403", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"403"}
+	JSON413      *LineProtocolLengthError // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSON413", JsonName:"", Schema:codegen.Schema{GoType:"LineProtocolLengthError", RefType:"LineProtocolLengthError", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"413"}
+	JSONDefault  *Error                   // codegen.ResponseTypeDefinition{TypeDefinition:codegen.TypeDefinition{TypeName:"JSONDefault", JsonName:"", Schema:codegen.Schema{GoType:"Error", RefType:"Error", ArrayType:(*codegen.Schema)(nil), EnumValues:map[string]string(nil), Properties:[]codegen.Property(nil), HasAdditionalProperties:false, AdditionalPropertiesType:(*codegen.Schema)(nil), AdditionalTypes:[]codegen.TypeDefinition(nil), SkipOptionalPointer:false, Description:"", OAPISchema:(*openapi3.Schema)(nil)}}, ContentTypeName:"application/json", ResponseName:"default"}
 }
 
 // Status returns HTTPResponse.Status
@@ -22308,6 +22951,7 @@ func (r PostWriteResponse) StatusCode() int {
 // GetRoutesWithResponse request returning *GetRoutesResponse
 func (c *ClientWithResponses) GetRoutesWithResponse(ctx context.Context, params *GetRoutesParams, reqEditors ...RequestEditorFn) (*GetRoutesResponse, error) {
 	rsp, err := c.GetRoutes(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22317,6 +22961,7 @@ func (c *ClientWithResponses) GetRoutesWithResponse(ctx context.Context, params 
 // GetAuthorizationsWithResponse request returning *GetAuthorizationsResponse
 func (c *ClientWithResponses) GetAuthorizationsWithResponse(ctx context.Context, params *GetAuthorizationsParams, reqEditors ...RequestEditorFn) (*GetAuthorizationsResponse, error) {
 	rsp, err := c.GetAuthorizations(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22326,6 +22971,7 @@ func (c *ClientWithResponses) GetAuthorizationsWithResponse(ctx context.Context,
 // PostAuthorizationsWithBodyWithResponse request with arbitrary body returning *PostAuthorizationsResponse
 func (c *ClientWithResponses) PostAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostAuthorizationsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostAuthorizationsResponse, error) {
 	rsp, err := c.PostAuthorizationsWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22333,6 +22979,7 @@ func (c *ClientWithResponses) PostAuthorizationsWithBodyWithResponse(ctx context
 }
 
 func (c *ClientWithResponses) PostAuthorizationsWithResponse(ctx context.Context, params *PostAuthorizationsParams, body PostAuthorizationsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostAuthorizationsResponse, error) {
+	// SECOND
 	rsp, err := c.PostAuthorizations(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22343,6 +22990,7 @@ func (c *ClientWithResponses) PostAuthorizationsWithResponse(ctx context.Context
 // DeleteAuthorizationsIDWithResponse request returning *DeleteAuthorizationsIDResponse
 func (c *ClientWithResponses) DeleteAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteAuthorizationsIDParams, reqEditors ...RequestEditorFn) (*DeleteAuthorizationsIDResponse, error) {
 	rsp, err := c.DeleteAuthorizationsID(ctx, authID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22352,6 +23000,7 @@ func (c *ClientWithResponses) DeleteAuthorizationsIDWithResponse(ctx context.Con
 // GetAuthorizationsIDWithResponse request returning *GetAuthorizationsIDResponse
 func (c *ClientWithResponses) GetAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetAuthorizationsIDParams, reqEditors ...RequestEditorFn) (*GetAuthorizationsIDResponse, error) {
 	rsp, err := c.GetAuthorizationsID(ctx, authID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22361,6 +23010,7 @@ func (c *ClientWithResponses) GetAuthorizationsIDWithResponse(ctx context.Contex
 // PatchAuthorizationsIDWithBodyWithResponse request with arbitrary body returning *PatchAuthorizationsIDResponse
 func (c *ClientWithResponses) PatchAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchAuthorizationsIDResponse, error) {
 	rsp, err := c.PatchAuthorizationsIDWithBody(ctx, authID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22368,6 +23018,7 @@ func (c *ClientWithResponses) PatchAuthorizationsIDWithBodyWithResponse(ctx cont
 }
 
 func (c *ClientWithResponses) PatchAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchAuthorizationsIDParams, body PatchAuthorizationsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchAuthorizationsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchAuthorizationsID(ctx, authID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22378,6 +23029,7 @@ func (c *ClientWithResponses) PatchAuthorizationsIDWithResponse(ctx context.Cont
 // GetBackupKVWithResponse request returning *GetBackupKVResponse
 func (c *ClientWithResponses) GetBackupKVWithResponse(ctx context.Context, params *GetBackupKVParams, reqEditors ...RequestEditorFn) (*GetBackupKVResponse, error) {
 	rsp, err := c.GetBackupKV(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22387,6 +23039,7 @@ func (c *ClientWithResponses) GetBackupKVWithResponse(ctx context.Context, param
 // GetBackupMetadataWithResponse request returning *GetBackupMetadataResponse
 func (c *ClientWithResponses) GetBackupMetadataWithResponse(ctx context.Context, params *GetBackupMetadataParams, reqEditors ...RequestEditorFn) (*GetBackupMetadataResponse, error) {
 	rsp, err := c.GetBackupMetadata(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22396,6 +23049,7 @@ func (c *ClientWithResponses) GetBackupMetadataWithResponse(ctx context.Context,
 // GetBackupShardIdWithResponse request returning *GetBackupShardIdResponse
 func (c *ClientWithResponses) GetBackupShardIdWithResponse(ctx context.Context, shardID int64, params *GetBackupShardIdParams, reqEditors ...RequestEditorFn) (*GetBackupShardIdResponse, error) {
 	rsp, err := c.GetBackupShardId(ctx, shardID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22405,6 +23059,7 @@ func (c *ClientWithResponses) GetBackupShardIdWithResponse(ctx context.Context, 
 // GetBucketsWithResponse request returning *GetBucketsResponse
 func (c *ClientWithResponses) GetBucketsWithResponse(ctx context.Context, params *GetBucketsParams, reqEditors ...RequestEditorFn) (*GetBucketsResponse, error) {
 	rsp, err := c.GetBuckets(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22414,6 +23069,7 @@ func (c *ClientWithResponses) GetBucketsWithResponse(ctx context.Context, params
 // PostBucketsWithBodyWithResponse request with arbitrary body returning *PostBucketsResponse
 func (c *ClientWithResponses) PostBucketsWithBodyWithResponse(ctx context.Context, params *PostBucketsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostBucketsResponse, error) {
 	rsp, err := c.PostBucketsWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22421,6 +23077,7 @@ func (c *ClientWithResponses) PostBucketsWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) PostBucketsWithResponse(ctx context.Context, params *PostBucketsParams, body PostBucketsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostBucketsResponse, error) {
+	// SECOND
 	rsp, err := c.PostBuckets(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22431,6 +23088,7 @@ func (c *ClientWithResponses) PostBucketsWithResponse(ctx context.Context, param
 // DeleteBucketsIDWithResponse request returning *DeleteBucketsIDResponse
 func (c *ClientWithResponses) DeleteBucketsIDWithResponse(ctx context.Context, bucketID string, params *DeleteBucketsIDParams, reqEditors ...RequestEditorFn) (*DeleteBucketsIDResponse, error) {
 	rsp, err := c.DeleteBucketsID(ctx, bucketID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22440,6 +23098,7 @@ func (c *ClientWithResponses) DeleteBucketsIDWithResponse(ctx context.Context, b
 // GetBucketsIDWithResponse request returning *GetBucketsIDResponse
 func (c *ClientWithResponses) GetBucketsIDWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDParams, reqEditors ...RequestEditorFn) (*GetBucketsIDResponse, error) {
 	rsp, err := c.GetBucketsID(ctx, bucketID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22449,6 +23108,7 @@ func (c *ClientWithResponses) GetBucketsIDWithResponse(ctx context.Context, buck
 // PatchBucketsIDWithBodyWithResponse request with arbitrary body returning *PatchBucketsIDResponse
 func (c *ClientWithResponses) PatchBucketsIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchBucketsIDResponse, error) {
 	rsp, err := c.PatchBucketsIDWithBody(ctx, bucketID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22456,6 +23116,7 @@ func (c *ClientWithResponses) PatchBucketsIDWithBodyWithResponse(ctx context.Con
 }
 
 func (c *ClientWithResponses) PatchBucketsIDWithResponse(ctx context.Context, bucketID string, params *PatchBucketsIDParams, body PatchBucketsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchBucketsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchBucketsID(ctx, bucketID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22466,6 +23127,7 @@ func (c *ClientWithResponses) PatchBucketsIDWithResponse(ctx context.Context, bu
 // GetBucketsIDLabelsWithResponse request returning *GetBucketsIDLabelsResponse
 func (c *ClientWithResponses) GetBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDLabelsParams, reqEditors ...RequestEditorFn) (*GetBucketsIDLabelsResponse, error) {
 	rsp, err := c.GetBucketsIDLabels(ctx, bucketID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22475,6 +23137,7 @@ func (c *ClientWithResponses) GetBucketsIDLabelsWithResponse(ctx context.Context
 // PostBucketsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostBucketsIDLabelsResponse
 func (c *ClientWithResponses) PostBucketsIDLabelsWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostBucketsIDLabelsResponse, error) {
 	rsp, err := c.PostBucketsIDLabelsWithBody(ctx, bucketID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22482,6 +23145,7 @@ func (c *ClientWithResponses) PostBucketsIDLabelsWithBodyWithResponse(ctx contex
 }
 
 func (c *ClientWithResponses) PostBucketsIDLabelsWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDLabelsParams, body PostBucketsIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostBucketsIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostBucketsIDLabels(ctx, bucketID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22492,6 +23156,7 @@ func (c *ClientWithResponses) PostBucketsIDLabelsWithResponse(ctx context.Contex
 // DeleteBucketsIDLabelsIDWithResponse request returning *DeleteBucketsIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteBucketsIDLabelsIDWithResponse(ctx context.Context, bucketID string, labelID string, params *DeleteBucketsIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteBucketsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteBucketsIDLabelsID(ctx, bucketID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22501,6 +23166,7 @@ func (c *ClientWithResponses) DeleteBucketsIDLabelsIDWithResponse(ctx context.Co
 // GetBucketsIDMembersWithResponse request returning *GetBucketsIDMembersResponse
 func (c *ClientWithResponses) GetBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDMembersParams, reqEditors ...RequestEditorFn) (*GetBucketsIDMembersResponse, error) {
 	rsp, err := c.GetBucketsIDMembers(ctx, bucketID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22510,6 +23176,7 @@ func (c *ClientWithResponses) GetBucketsIDMembersWithResponse(ctx context.Contex
 // PostBucketsIDMembersWithBodyWithResponse request with arbitrary body returning *PostBucketsIDMembersResponse
 func (c *ClientWithResponses) PostBucketsIDMembersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostBucketsIDMembersResponse, error) {
 	rsp, err := c.PostBucketsIDMembersWithBody(ctx, bucketID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22517,6 +23184,7 @@ func (c *ClientWithResponses) PostBucketsIDMembersWithBodyWithResponse(ctx conte
 }
 
 func (c *ClientWithResponses) PostBucketsIDMembersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDMembersParams, body PostBucketsIDMembersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostBucketsIDMembersResponse, error) {
+	// SECOND
 	rsp, err := c.PostBucketsIDMembers(ctx, bucketID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22527,6 +23195,7 @@ func (c *ClientWithResponses) PostBucketsIDMembersWithResponse(ctx context.Conte
 // DeleteBucketsIDMembersIDWithResponse request returning *DeleteBucketsIDMembersIDResponse
 func (c *ClientWithResponses) DeleteBucketsIDMembersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDMembersIDParams, reqEditors ...RequestEditorFn) (*DeleteBucketsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteBucketsIDMembersID(ctx, bucketID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22536,6 +23205,7 @@ func (c *ClientWithResponses) DeleteBucketsIDMembersIDWithResponse(ctx context.C
 // GetBucketsIDOwnersWithResponse request returning *GetBucketsIDOwnersResponse
 func (c *ClientWithResponses) GetBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *GetBucketsIDOwnersParams, reqEditors ...RequestEditorFn) (*GetBucketsIDOwnersResponse, error) {
 	rsp, err := c.GetBucketsIDOwners(ctx, bucketID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22545,6 +23215,7 @@ func (c *ClientWithResponses) GetBucketsIDOwnersWithResponse(ctx context.Context
 // PostBucketsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostBucketsIDOwnersResponse
 func (c *ClientWithResponses) PostBucketsIDOwnersWithBodyWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostBucketsIDOwnersResponse, error) {
 	rsp, err := c.PostBucketsIDOwnersWithBody(ctx, bucketID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22552,6 +23223,7 @@ func (c *ClientWithResponses) PostBucketsIDOwnersWithBodyWithResponse(ctx contex
 }
 
 func (c *ClientWithResponses) PostBucketsIDOwnersWithResponse(ctx context.Context, bucketID string, params *PostBucketsIDOwnersParams, body PostBucketsIDOwnersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostBucketsIDOwnersResponse, error) {
+	// SECOND
 	rsp, err := c.PostBucketsIDOwners(ctx, bucketID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22562,6 +23234,7 @@ func (c *ClientWithResponses) PostBucketsIDOwnersWithResponse(ctx context.Contex
 // DeleteBucketsIDOwnersIDWithResponse request returning *DeleteBucketsIDOwnersIDResponse
 func (c *ClientWithResponses) DeleteBucketsIDOwnersIDWithResponse(ctx context.Context, bucketID string, userID string, params *DeleteBucketsIDOwnersIDParams, reqEditors ...RequestEditorFn) (*DeleteBucketsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteBucketsIDOwnersID(ctx, bucketID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22571,6 +23244,7 @@ func (c *ClientWithResponses) DeleteBucketsIDOwnersIDWithResponse(ctx context.Co
 // GetChecksWithResponse request returning *GetChecksResponse
 func (c *ClientWithResponses) GetChecksWithResponse(ctx context.Context, params *GetChecksParams, reqEditors ...RequestEditorFn) (*GetChecksResponse, error) {
 	rsp, err := c.GetChecks(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22580,6 +23254,7 @@ func (c *ClientWithResponses) GetChecksWithResponse(ctx context.Context, params 
 // CreateCheckWithBodyWithResponse request with arbitrary body returning *CreateCheckResponse
 func (c *ClientWithResponses) CreateCheckWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateCheckResponse, error) {
 	rsp, err := c.CreateCheckWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22587,6 +23262,7 @@ func (c *ClientWithResponses) CreateCheckWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) CreateCheckWithResponse(ctx context.Context, body CreateCheckJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateCheckResponse, error) {
+	// SECOND
 	rsp, err := c.CreateCheck(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22597,6 +23273,7 @@ func (c *ClientWithResponses) CreateCheckWithResponse(ctx context.Context, body 
 // DeleteChecksIDWithResponse request returning *DeleteChecksIDResponse
 func (c *ClientWithResponses) DeleteChecksIDWithResponse(ctx context.Context, checkID string, params *DeleteChecksIDParams, reqEditors ...RequestEditorFn) (*DeleteChecksIDResponse, error) {
 	rsp, err := c.DeleteChecksID(ctx, checkID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22606,6 +23283,7 @@ func (c *ClientWithResponses) DeleteChecksIDWithResponse(ctx context.Context, ch
 // GetChecksIDWithResponse request returning *GetChecksIDResponse
 func (c *ClientWithResponses) GetChecksIDWithResponse(ctx context.Context, checkID string, params *GetChecksIDParams, reqEditors ...RequestEditorFn) (*GetChecksIDResponse, error) {
 	rsp, err := c.GetChecksID(ctx, checkID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22615,6 +23293,7 @@ func (c *ClientWithResponses) GetChecksIDWithResponse(ctx context.Context, check
 // PatchChecksIDWithBodyWithResponse request with arbitrary body returning *PatchChecksIDResponse
 func (c *ClientWithResponses) PatchChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchChecksIDResponse, error) {
 	rsp, err := c.PatchChecksIDWithBody(ctx, checkID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22622,6 +23301,7 @@ func (c *ClientWithResponses) PatchChecksIDWithBodyWithResponse(ctx context.Cont
 }
 
 func (c *ClientWithResponses) PatchChecksIDWithResponse(ctx context.Context, checkID string, params *PatchChecksIDParams, body PatchChecksIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchChecksIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchChecksID(ctx, checkID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22632,6 +23312,7 @@ func (c *ClientWithResponses) PatchChecksIDWithResponse(ctx context.Context, che
 // PutChecksIDWithBodyWithResponse request with arbitrary body returning *PutChecksIDResponse
 func (c *ClientWithResponses) PutChecksIDWithBodyWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutChecksIDResponse, error) {
 	rsp, err := c.PutChecksIDWithBody(ctx, checkID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22639,6 +23320,7 @@ func (c *ClientWithResponses) PutChecksIDWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) PutChecksIDWithResponse(ctx context.Context, checkID string, params *PutChecksIDParams, body PutChecksIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutChecksIDResponse, error) {
+	// SECOND
 	rsp, err := c.PutChecksID(ctx, checkID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22649,6 +23331,7 @@ func (c *ClientWithResponses) PutChecksIDWithResponse(ctx context.Context, check
 // GetChecksIDLabelsWithResponse request returning *GetChecksIDLabelsResponse
 func (c *ClientWithResponses) GetChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *GetChecksIDLabelsParams, reqEditors ...RequestEditorFn) (*GetChecksIDLabelsResponse, error) {
 	rsp, err := c.GetChecksIDLabels(ctx, checkID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22658,6 +23341,7 @@ func (c *ClientWithResponses) GetChecksIDLabelsWithResponse(ctx context.Context,
 // PostChecksIDLabelsWithBodyWithResponse request with arbitrary body returning *PostChecksIDLabelsResponse
 func (c *ClientWithResponses) PostChecksIDLabelsWithBodyWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostChecksIDLabelsResponse, error) {
 	rsp, err := c.PostChecksIDLabelsWithBody(ctx, checkID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22665,6 +23349,7 @@ func (c *ClientWithResponses) PostChecksIDLabelsWithBodyWithResponse(ctx context
 }
 
 func (c *ClientWithResponses) PostChecksIDLabelsWithResponse(ctx context.Context, checkID string, params *PostChecksIDLabelsParams, body PostChecksIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostChecksIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostChecksIDLabels(ctx, checkID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22675,6 +23360,7 @@ func (c *ClientWithResponses) PostChecksIDLabelsWithResponse(ctx context.Context
 // DeleteChecksIDLabelsIDWithResponse request returning *DeleteChecksIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteChecksIDLabelsIDWithResponse(ctx context.Context, checkID string, labelID string, params *DeleteChecksIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteChecksIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteChecksIDLabelsID(ctx, checkID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22684,6 +23370,7 @@ func (c *ClientWithResponses) DeleteChecksIDLabelsIDWithResponse(ctx context.Con
 // GetChecksIDQueryWithResponse request returning *GetChecksIDQueryResponse
 func (c *ClientWithResponses) GetChecksIDQueryWithResponse(ctx context.Context, checkID string, params *GetChecksIDQueryParams, reqEditors ...RequestEditorFn) (*GetChecksIDQueryResponse, error) {
 	rsp, err := c.GetChecksIDQuery(ctx, checkID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22693,6 +23380,7 @@ func (c *ClientWithResponses) GetChecksIDQueryWithResponse(ctx context.Context, 
 // GetDashboardsWithResponse request returning *GetDashboardsResponse
 func (c *ClientWithResponses) GetDashboardsWithResponse(ctx context.Context, params *GetDashboardsParams, reqEditors ...RequestEditorFn) (*GetDashboardsResponse, error) {
 	rsp, err := c.GetDashboards(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22702,6 +23390,7 @@ func (c *ClientWithResponses) GetDashboardsWithResponse(ctx context.Context, par
 // PostDashboardsWithBodyWithResponse request with arbitrary body returning *PostDashboardsResponse
 func (c *ClientWithResponses) PostDashboardsWithBodyWithResponse(ctx context.Context, params *PostDashboardsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDashboardsResponse, error) {
 	rsp, err := c.PostDashboardsWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22709,6 +23398,7 @@ func (c *ClientWithResponses) PostDashboardsWithBodyWithResponse(ctx context.Con
 }
 
 func (c *ClientWithResponses) PostDashboardsWithResponse(ctx context.Context, params *PostDashboardsParams, body PostDashboardsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDashboardsResponse, error) {
+	// SECOND
 	rsp, err := c.PostDashboards(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22719,6 +23409,7 @@ func (c *ClientWithResponses) PostDashboardsWithResponse(ctx context.Context, pa
 // DeleteDashboardsIDWithResponse request returning *DeleteDashboardsIDResponse
 func (c *ClientWithResponses) DeleteDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *DeleteDashboardsIDParams, reqEditors ...RequestEditorFn) (*DeleteDashboardsIDResponse, error) {
 	rsp, err := c.DeleteDashboardsID(ctx, dashboardID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22728,6 +23419,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDWithResponse(ctx context.Context
 // GetDashboardsIDWithResponse request returning *GetDashboardsIDResponse
 func (c *ClientWithResponses) GetDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDParams, reqEditors ...RequestEditorFn) (*GetDashboardsIDResponse, error) {
 	rsp, err := c.GetDashboardsID(ctx, dashboardID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22737,6 +23429,7 @@ func (c *ClientWithResponses) GetDashboardsIDWithResponse(ctx context.Context, d
 // PatchDashboardsIDWithBodyWithResponse request with arbitrary body returning *PatchDashboardsIDResponse
 func (c *ClientWithResponses) PatchDashboardsIDWithBodyWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDashboardsIDResponse, error) {
 	rsp, err := c.PatchDashboardsIDWithBody(ctx, dashboardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22744,6 +23437,7 @@ func (c *ClientWithResponses) PatchDashboardsIDWithBodyWithResponse(ctx context.
 }
 
 func (c *ClientWithResponses) PatchDashboardsIDWithResponse(ctx context.Context, dashboardID string, params *PatchDashboardsIDParams, body PatchDashboardsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDashboardsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchDashboardsID(ctx, dashboardID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22754,6 +23448,7 @@ func (c *ClientWithResponses) PatchDashboardsIDWithResponse(ctx context.Context,
 // PostDashboardsIDCellsWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDCellsResponse
 func (c *ClientWithResponses) PostDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDashboardsIDCellsResponse, error) {
 	rsp, err := c.PostDashboardsIDCellsWithBody(ctx, dashboardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22761,6 +23456,7 @@ func (c *ClientWithResponses) PostDashboardsIDCellsWithBodyWithResponse(ctx cont
 }
 
 func (c *ClientWithResponses) PostDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDCellsParams, body PostDashboardsIDCellsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDashboardsIDCellsResponse, error) {
+	// SECOND
 	rsp, err := c.PostDashboardsIDCells(ctx, dashboardID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22771,6 +23467,7 @@ func (c *ClientWithResponses) PostDashboardsIDCellsWithResponse(ctx context.Cont
 // PutDashboardsIDCellsWithBodyWithResponse request with arbitrary body returning *PutDashboardsIDCellsResponse
 func (c *ClientWithResponses) PutDashboardsIDCellsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutDashboardsIDCellsResponse, error) {
 	rsp, err := c.PutDashboardsIDCellsWithBody(ctx, dashboardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22778,6 +23475,7 @@ func (c *ClientWithResponses) PutDashboardsIDCellsWithBodyWithResponse(ctx conte
 }
 
 func (c *ClientWithResponses) PutDashboardsIDCellsWithResponse(ctx context.Context, dashboardID string, params *PutDashboardsIDCellsParams, body PutDashboardsIDCellsJSONRequestBody, reqEditors ...RequestEditorFn) (*PutDashboardsIDCellsResponse, error) {
+	// SECOND
 	rsp, err := c.PutDashboardsIDCells(ctx, dashboardID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22788,6 +23486,7 @@ func (c *ClientWithResponses) PutDashboardsIDCellsWithResponse(ctx context.Conte
 // DeleteDashboardsIDCellsIDWithResponse request returning *DeleteDashboardsIDCellsIDResponse
 func (c *ClientWithResponses) DeleteDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *DeleteDashboardsIDCellsIDParams, reqEditors ...RequestEditorFn) (*DeleteDashboardsIDCellsIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDCellsID(ctx, dashboardID, cellID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22797,6 +23496,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDCellsIDWithResponse(ctx context.
 // PatchDashboardsIDCellsIDWithBodyWithResponse request with arbitrary body returning *PatchDashboardsIDCellsIDResponse
 func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDashboardsIDCellsIDResponse, error) {
 	rsp, err := c.PatchDashboardsIDCellsIDWithBody(ctx, dashboardID, cellID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22804,6 +23504,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithBodyWithResponse(ctx c
 }
 
 func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDParams, body PatchDashboardsIDCellsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDashboardsIDCellsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchDashboardsIDCellsID(ctx, dashboardID, cellID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22814,6 +23515,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDWithResponse(ctx context.C
 // GetDashboardsIDCellsIDViewWithResponse request returning *GetDashboardsIDCellsIDViewResponse
 func (c *ClientWithResponses) GetDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *GetDashboardsIDCellsIDViewParams, reqEditors ...RequestEditorFn) (*GetDashboardsIDCellsIDViewResponse, error) {
 	rsp, err := c.GetDashboardsIDCellsIDView(ctx, dashboardID, cellID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22823,6 +23525,7 @@ func (c *ClientWithResponses) GetDashboardsIDCellsIDViewWithResponse(ctx context
 // PatchDashboardsIDCellsIDViewWithBodyWithResponse request with arbitrary body returning *PatchDashboardsIDCellsIDViewResponse
 func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithBodyWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDashboardsIDCellsIDViewResponse, error) {
 	rsp, err := c.PatchDashboardsIDCellsIDViewWithBody(ctx, dashboardID, cellID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22830,6 +23533,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithBodyWithResponse(c
 }
 
 func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithResponse(ctx context.Context, dashboardID string, cellID string, params *PatchDashboardsIDCellsIDViewParams, body PatchDashboardsIDCellsIDViewJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDashboardsIDCellsIDViewResponse, error) {
+	// SECOND
 	rsp, err := c.PatchDashboardsIDCellsIDView(ctx, dashboardID, cellID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22840,6 +23544,7 @@ func (c *ClientWithResponses) PatchDashboardsIDCellsIDViewWithResponse(ctx conte
 // GetDashboardsIDLabelsWithResponse request returning *GetDashboardsIDLabelsResponse
 func (c *ClientWithResponses) GetDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDLabelsParams, reqEditors ...RequestEditorFn) (*GetDashboardsIDLabelsResponse, error) {
 	rsp, err := c.GetDashboardsIDLabels(ctx, dashboardID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22849,6 +23554,7 @@ func (c *ClientWithResponses) GetDashboardsIDLabelsWithResponse(ctx context.Cont
 // PostDashboardsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDLabelsResponse
 func (c *ClientWithResponses) PostDashboardsIDLabelsWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDashboardsIDLabelsResponse, error) {
 	rsp, err := c.PostDashboardsIDLabelsWithBody(ctx, dashboardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22856,6 +23562,7 @@ func (c *ClientWithResponses) PostDashboardsIDLabelsWithBodyWithResponse(ctx con
 }
 
 func (c *ClientWithResponses) PostDashboardsIDLabelsWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDLabelsParams, body PostDashboardsIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDashboardsIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostDashboardsIDLabels(ctx, dashboardID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22866,6 +23573,7 @@ func (c *ClientWithResponses) PostDashboardsIDLabelsWithResponse(ctx context.Con
 // DeleteDashboardsIDLabelsIDWithResponse request returning *DeleteDashboardsIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteDashboardsIDLabelsIDWithResponse(ctx context.Context, dashboardID string, labelID string, params *DeleteDashboardsIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteDashboardsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDLabelsID(ctx, dashboardID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22875,6 +23583,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDLabelsIDWithResponse(ctx context
 // GetDashboardsIDMembersWithResponse request returning *GetDashboardsIDMembersResponse
 func (c *ClientWithResponses) GetDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDMembersParams, reqEditors ...RequestEditorFn) (*GetDashboardsIDMembersResponse, error) {
 	rsp, err := c.GetDashboardsIDMembers(ctx, dashboardID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22884,6 +23593,7 @@ func (c *ClientWithResponses) GetDashboardsIDMembersWithResponse(ctx context.Con
 // PostDashboardsIDMembersWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDMembersResponse
 func (c *ClientWithResponses) PostDashboardsIDMembersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDashboardsIDMembersResponse, error) {
 	rsp, err := c.PostDashboardsIDMembersWithBody(ctx, dashboardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22891,6 +23601,7 @@ func (c *ClientWithResponses) PostDashboardsIDMembersWithBodyWithResponse(ctx co
 }
 
 func (c *ClientWithResponses) PostDashboardsIDMembersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDMembersParams, body PostDashboardsIDMembersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDashboardsIDMembersResponse, error) {
+	// SECOND
 	rsp, err := c.PostDashboardsIDMembers(ctx, dashboardID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22901,6 +23612,7 @@ func (c *ClientWithResponses) PostDashboardsIDMembersWithResponse(ctx context.Co
 // DeleteDashboardsIDMembersIDWithResponse request returning *DeleteDashboardsIDMembersIDResponse
 func (c *ClientWithResponses) DeleteDashboardsIDMembersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDMembersIDParams, reqEditors ...RequestEditorFn) (*DeleteDashboardsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDMembersID(ctx, dashboardID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22910,6 +23622,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDMembersIDWithResponse(ctx contex
 // GetDashboardsIDOwnersWithResponse request returning *GetDashboardsIDOwnersResponse
 func (c *ClientWithResponses) GetDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *GetDashboardsIDOwnersParams, reqEditors ...RequestEditorFn) (*GetDashboardsIDOwnersResponse, error) {
 	rsp, err := c.GetDashboardsIDOwners(ctx, dashboardID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22919,6 +23632,7 @@ func (c *ClientWithResponses) GetDashboardsIDOwnersWithResponse(ctx context.Cont
 // PostDashboardsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostDashboardsIDOwnersResponse
 func (c *ClientWithResponses) PostDashboardsIDOwnersWithBodyWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDashboardsIDOwnersResponse, error) {
 	rsp, err := c.PostDashboardsIDOwnersWithBody(ctx, dashboardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22926,6 +23640,7 @@ func (c *ClientWithResponses) PostDashboardsIDOwnersWithBodyWithResponse(ctx con
 }
 
 func (c *ClientWithResponses) PostDashboardsIDOwnersWithResponse(ctx context.Context, dashboardID string, params *PostDashboardsIDOwnersParams, body PostDashboardsIDOwnersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDashboardsIDOwnersResponse, error) {
+	// SECOND
 	rsp, err := c.PostDashboardsIDOwners(ctx, dashboardID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22936,6 +23651,7 @@ func (c *ClientWithResponses) PostDashboardsIDOwnersWithResponse(ctx context.Con
 // DeleteDashboardsIDOwnersIDWithResponse request returning *DeleteDashboardsIDOwnersIDResponse
 func (c *ClientWithResponses) DeleteDashboardsIDOwnersIDWithResponse(ctx context.Context, dashboardID string, userID string, params *DeleteDashboardsIDOwnersIDParams, reqEditors ...RequestEditorFn) (*DeleteDashboardsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteDashboardsIDOwnersID(ctx, dashboardID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22945,6 +23661,7 @@ func (c *ClientWithResponses) DeleteDashboardsIDOwnersIDWithResponse(ctx context
 // GetDBRPsWithResponse request returning *GetDBRPsResponse
 func (c *ClientWithResponses) GetDBRPsWithResponse(ctx context.Context, params *GetDBRPsParams, reqEditors ...RequestEditorFn) (*GetDBRPsResponse, error) {
 	rsp, err := c.GetDBRPs(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22954,6 +23671,7 @@ func (c *ClientWithResponses) GetDBRPsWithResponse(ctx context.Context, params *
 // PostDBRPWithBodyWithResponse request with arbitrary body returning *PostDBRPResponse
 func (c *ClientWithResponses) PostDBRPWithBodyWithResponse(ctx context.Context, params *PostDBRPParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDBRPResponse, error) {
 	rsp, err := c.PostDBRPWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22961,6 +23679,7 @@ func (c *ClientWithResponses) PostDBRPWithBodyWithResponse(ctx context.Context, 
 }
 
 func (c *ClientWithResponses) PostDBRPWithResponse(ctx context.Context, params *PostDBRPParams, body PostDBRPJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDBRPResponse, error) {
+	// SECOND
 	rsp, err := c.PostDBRP(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -22971,6 +23690,7 @@ func (c *ClientWithResponses) PostDBRPWithResponse(ctx context.Context, params *
 // DeleteDBRPIDWithResponse request returning *DeleteDBRPIDResponse
 func (c *ClientWithResponses) DeleteDBRPIDWithResponse(ctx context.Context, dbrpID string, params *DeleteDBRPIDParams, reqEditors ...RequestEditorFn) (*DeleteDBRPIDResponse, error) {
 	rsp, err := c.DeleteDBRPID(ctx, dbrpID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22980,6 +23700,7 @@ func (c *ClientWithResponses) DeleteDBRPIDWithResponse(ctx context.Context, dbrp
 // GetDBRPsIDWithResponse request returning *GetDBRPsIDResponse
 func (c *ClientWithResponses) GetDBRPsIDWithResponse(ctx context.Context, dbrpID string, params *GetDBRPsIDParams, reqEditors ...RequestEditorFn) (*GetDBRPsIDResponse, error) {
 	rsp, err := c.GetDBRPsID(ctx, dbrpID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22989,6 +23710,7 @@ func (c *ClientWithResponses) GetDBRPsIDWithResponse(ctx context.Context, dbrpID
 // PatchDBRPIDWithBodyWithResponse request with arbitrary body returning *PatchDBRPIDResponse
 func (c *ClientWithResponses) PatchDBRPIDWithBodyWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDBRPIDResponse, error) {
 	rsp, err := c.PatchDBRPIDWithBody(ctx, dbrpID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -22996,6 +23718,7 @@ func (c *ClientWithResponses) PatchDBRPIDWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) PatchDBRPIDWithResponse(ctx context.Context, dbrpID string, params *PatchDBRPIDParams, body PatchDBRPIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDBRPIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchDBRPID(ctx, dbrpID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23006,6 +23729,7 @@ func (c *ClientWithResponses) PatchDBRPIDWithResponse(ctx context.Context, dbrpI
 // PostDeleteWithBodyWithResponse request with arbitrary body returning *PostDeleteResponse
 func (c *ClientWithResponses) PostDeleteWithBodyWithResponse(ctx context.Context, params *PostDeleteParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDeleteResponse, error) {
 	rsp, err := c.PostDeleteWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23013,6 +23737,7 @@ func (c *ClientWithResponses) PostDeleteWithBodyWithResponse(ctx context.Context
 }
 
 func (c *ClientWithResponses) PostDeleteWithResponse(ctx context.Context, params *PostDeleteParams, body PostDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDeleteResponse, error) {
+	// SECOND
 	rsp, err := c.PostDelete(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23023,6 +23748,7 @@ func (c *ClientWithResponses) PostDeleteWithResponse(ctx context.Context, params
 // GetDocumentsTemplatesWithResponse request returning *GetDocumentsTemplatesResponse
 func (c *ClientWithResponses) GetDocumentsTemplatesWithResponse(ctx context.Context, params *GetDocumentsTemplatesParams, reqEditors ...RequestEditorFn) (*GetDocumentsTemplatesResponse, error) {
 	rsp, err := c.GetDocumentsTemplates(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23032,6 +23758,7 @@ func (c *ClientWithResponses) GetDocumentsTemplatesWithResponse(ctx context.Cont
 // PostDocumentsTemplatesWithBodyWithResponse request with arbitrary body returning *PostDocumentsTemplatesResponse
 func (c *ClientWithResponses) PostDocumentsTemplatesWithBodyWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDocumentsTemplatesResponse, error) {
 	rsp, err := c.PostDocumentsTemplatesWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23039,6 +23766,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesWithBodyWithResponse(ctx con
 }
 
 func (c *ClientWithResponses) PostDocumentsTemplatesWithResponse(ctx context.Context, params *PostDocumentsTemplatesParams, body PostDocumentsTemplatesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDocumentsTemplatesResponse, error) {
+	// SECOND
 	rsp, err := c.PostDocumentsTemplates(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23049,6 +23777,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesWithResponse(ctx context.Con
 // DeleteDocumentsTemplatesIDWithResponse request returning *DeleteDocumentsTemplatesIDResponse
 func (c *ClientWithResponses) DeleteDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *DeleteDocumentsTemplatesIDParams, reqEditors ...RequestEditorFn) (*DeleteDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.DeleteDocumentsTemplatesID(ctx, templateID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23058,6 +23787,7 @@ func (c *ClientWithResponses) DeleteDocumentsTemplatesIDWithResponse(ctx context
 // GetDocumentsTemplatesIDWithResponse request returning *GetDocumentsTemplatesIDResponse
 func (c *ClientWithResponses) GetDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDParams, reqEditors ...RequestEditorFn) (*GetDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.GetDocumentsTemplatesID(ctx, templateID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23067,6 +23797,7 @@ func (c *ClientWithResponses) GetDocumentsTemplatesIDWithResponse(ctx context.Co
 // PutDocumentsTemplatesIDWithBodyWithResponse request with arbitrary body returning *PutDocumentsTemplatesIDResponse
 func (c *ClientWithResponses) PutDocumentsTemplatesIDWithBodyWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutDocumentsTemplatesIDResponse, error) {
 	rsp, err := c.PutDocumentsTemplatesIDWithBody(ctx, templateID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23074,6 +23805,7 @@ func (c *ClientWithResponses) PutDocumentsTemplatesIDWithBodyWithResponse(ctx co
 }
 
 func (c *ClientWithResponses) PutDocumentsTemplatesIDWithResponse(ctx context.Context, templateID string, params *PutDocumentsTemplatesIDParams, body PutDocumentsTemplatesIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutDocumentsTemplatesIDResponse, error) {
+	// SECOND
 	rsp, err := c.PutDocumentsTemplatesID(ctx, templateID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23084,6 +23816,7 @@ func (c *ClientWithResponses) PutDocumentsTemplatesIDWithResponse(ctx context.Co
 // GetDocumentsTemplatesIDLabelsWithResponse request returning *GetDocumentsTemplatesIDLabelsResponse
 func (c *ClientWithResponses) GetDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *GetDocumentsTemplatesIDLabelsParams, reqEditors ...RequestEditorFn) (*GetDocumentsTemplatesIDLabelsResponse, error) {
 	rsp, err := c.GetDocumentsTemplatesIDLabels(ctx, templateID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23093,6 +23826,7 @@ func (c *ClientWithResponses) GetDocumentsTemplatesIDLabelsWithResponse(ctx cont
 // PostDocumentsTemplatesIDLabelsWithBodyWithResponse request with arbitrary body returning *PostDocumentsTemplatesIDLabelsResponse
 func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithBodyWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDocumentsTemplatesIDLabelsResponse, error) {
 	rsp, err := c.PostDocumentsTemplatesIDLabelsWithBody(ctx, templateID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23100,6 +23834,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithBodyWithResponse
 }
 
 func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithResponse(ctx context.Context, templateID string, params *PostDocumentsTemplatesIDLabelsParams, body PostDocumentsTemplatesIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDocumentsTemplatesIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostDocumentsTemplatesIDLabels(ctx, templateID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23110,6 +23845,7 @@ func (c *ClientWithResponses) PostDocumentsTemplatesIDLabelsWithResponse(ctx con
 // DeleteDocumentsTemplatesIDLabelsIDWithResponse request returning *DeleteDocumentsTemplatesIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx context.Context, templateID string, labelID string, params *DeleteDocumentsTemplatesIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteDocumentsTemplatesIDLabelsID(ctx, templateID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23119,6 +23855,7 @@ func (c *ClientWithResponses) DeleteDocumentsTemplatesIDLabelsIDWithResponse(ctx
 // GetFlagsWithResponse request returning *GetFlagsResponse
 func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *GetFlagsParams, reqEditors ...RequestEditorFn) (*GetFlagsResponse, error) {
 	rsp, err := c.GetFlags(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23128,6 +23865,7 @@ func (c *ClientWithResponses) GetFlagsWithResponse(ctx context.Context, params *
 // GetHealthWithResponse request returning *GetHealthResponse
 func (c *ClientWithResponses) GetHealthWithResponse(ctx context.Context, params *GetHealthParams, reqEditors ...RequestEditorFn) (*GetHealthResponse, error) {
 	rsp, err := c.GetHealth(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23137,6 +23875,7 @@ func (c *ClientWithResponses) GetHealthWithResponse(ctx context.Context, params 
 // GetLabelsWithResponse request returning *GetLabelsResponse
 func (c *ClientWithResponses) GetLabelsWithResponse(ctx context.Context, params *GetLabelsParams, reqEditors ...RequestEditorFn) (*GetLabelsResponse, error) {
 	rsp, err := c.GetLabels(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23146,6 +23885,7 @@ func (c *ClientWithResponses) GetLabelsWithResponse(ctx context.Context, params 
 // PostLabelsWithBodyWithResponse request with arbitrary body returning *PostLabelsResponse
 func (c *ClientWithResponses) PostLabelsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostLabelsResponse, error) {
 	rsp, err := c.PostLabelsWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23153,6 +23893,7 @@ func (c *ClientWithResponses) PostLabelsWithBodyWithResponse(ctx context.Context
 }
 
 func (c *ClientWithResponses) PostLabelsWithResponse(ctx context.Context, body PostLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostLabels(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23163,6 +23904,7 @@ func (c *ClientWithResponses) PostLabelsWithResponse(ctx context.Context, body P
 // DeleteLabelsIDWithResponse request returning *DeleteLabelsIDResponse
 func (c *ClientWithResponses) DeleteLabelsIDWithResponse(ctx context.Context, labelID string, params *DeleteLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteLabelsIDResponse, error) {
 	rsp, err := c.DeleteLabelsID(ctx, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23172,6 +23914,7 @@ func (c *ClientWithResponses) DeleteLabelsIDWithResponse(ctx context.Context, la
 // GetLabelsIDWithResponse request returning *GetLabelsIDResponse
 func (c *ClientWithResponses) GetLabelsIDWithResponse(ctx context.Context, labelID string, params *GetLabelsIDParams, reqEditors ...RequestEditorFn) (*GetLabelsIDResponse, error) {
 	rsp, err := c.GetLabelsID(ctx, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23181,6 +23924,7 @@ func (c *ClientWithResponses) GetLabelsIDWithResponse(ctx context.Context, label
 // PatchLabelsIDWithBodyWithResponse request with arbitrary body returning *PatchLabelsIDResponse
 func (c *ClientWithResponses) PatchLabelsIDWithBodyWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchLabelsIDResponse, error) {
 	rsp, err := c.PatchLabelsIDWithBody(ctx, labelID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23188,6 +23932,7 @@ func (c *ClientWithResponses) PatchLabelsIDWithBodyWithResponse(ctx context.Cont
 }
 
 func (c *ClientWithResponses) PatchLabelsIDWithResponse(ctx context.Context, labelID string, params *PatchLabelsIDParams, body PatchLabelsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchLabelsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchLabelsID(ctx, labelID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23198,6 +23943,7 @@ func (c *ClientWithResponses) PatchLabelsIDWithResponse(ctx context.Context, lab
 // GetLegacyAuthorizationsWithResponse request returning *GetLegacyAuthorizationsResponse
 func (c *ClientWithResponses) GetLegacyAuthorizationsWithResponse(ctx context.Context, params *GetLegacyAuthorizationsParams, reqEditors ...RequestEditorFn) (*GetLegacyAuthorizationsResponse, error) {
 	rsp, err := c.GetLegacyAuthorizations(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23207,6 +23953,7 @@ func (c *ClientWithResponses) GetLegacyAuthorizationsWithResponse(ctx context.Co
 // PostLegacyAuthorizationsWithBodyWithResponse request with arbitrary body returning *PostLegacyAuthorizationsResponse
 func (c *ClientWithResponses) PostLegacyAuthorizationsWithBodyWithResponse(ctx context.Context, params *PostLegacyAuthorizationsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostLegacyAuthorizationsResponse, error) {
 	rsp, err := c.PostLegacyAuthorizationsWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23214,6 +23961,7 @@ func (c *ClientWithResponses) PostLegacyAuthorizationsWithBodyWithResponse(ctx c
 }
 
 func (c *ClientWithResponses) PostLegacyAuthorizationsWithResponse(ctx context.Context, params *PostLegacyAuthorizationsParams, body PostLegacyAuthorizationsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostLegacyAuthorizationsResponse, error) {
+	// SECOND
 	rsp, err := c.PostLegacyAuthorizations(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23224,6 +23972,7 @@ func (c *ClientWithResponses) PostLegacyAuthorizationsWithResponse(ctx context.C
 // DeleteLegacyAuthorizationsIDWithResponse request returning *DeleteLegacyAuthorizationsIDResponse
 func (c *ClientWithResponses) DeleteLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *DeleteLegacyAuthorizationsIDParams, reqEditors ...RequestEditorFn) (*DeleteLegacyAuthorizationsIDResponse, error) {
 	rsp, err := c.DeleteLegacyAuthorizationsID(ctx, authID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23233,6 +23982,7 @@ func (c *ClientWithResponses) DeleteLegacyAuthorizationsIDWithResponse(ctx conte
 // GetLegacyAuthorizationsIDWithResponse request returning *GetLegacyAuthorizationsIDResponse
 func (c *ClientWithResponses) GetLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *GetLegacyAuthorizationsIDParams, reqEditors ...RequestEditorFn) (*GetLegacyAuthorizationsIDResponse, error) {
 	rsp, err := c.GetLegacyAuthorizationsID(ctx, authID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23242,6 +23992,7 @@ func (c *ClientWithResponses) GetLegacyAuthorizationsIDWithResponse(ctx context.
 // PatchLegacyAuthorizationsIDWithBodyWithResponse request with arbitrary body returning *PatchLegacyAuthorizationsIDResponse
 func (c *ClientWithResponses) PatchLegacyAuthorizationsIDWithBodyWithResponse(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchLegacyAuthorizationsIDResponse, error) {
 	rsp, err := c.PatchLegacyAuthorizationsIDWithBody(ctx, authID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23249,6 +24000,7 @@ func (c *ClientWithResponses) PatchLegacyAuthorizationsIDWithBodyWithResponse(ct
 }
 
 func (c *ClientWithResponses) PatchLegacyAuthorizationsIDWithResponse(ctx context.Context, authID string, params *PatchLegacyAuthorizationsIDParams, body PatchLegacyAuthorizationsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchLegacyAuthorizationsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchLegacyAuthorizationsID(ctx, authID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23259,6 +24011,7 @@ func (c *ClientWithResponses) PatchLegacyAuthorizationsIDWithResponse(ctx contex
 // PostLegacyAuthorizationsIDPasswordWithBodyWithResponse request with arbitrary body returning *PostLegacyAuthorizationsIDPasswordResponse
 func (c *ClientWithResponses) PostLegacyAuthorizationsIDPasswordWithBodyWithResponse(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
 	rsp, err := c.PostLegacyAuthorizationsIDPasswordWithBody(ctx, authID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23266,6 +24019,7 @@ func (c *ClientWithResponses) PostLegacyAuthorizationsIDPasswordWithBodyWithResp
 }
 
 func (c *ClientWithResponses) PostLegacyAuthorizationsIDPasswordWithResponse(ctx context.Context, authID string, params *PostLegacyAuthorizationsIDPasswordParams, body PostLegacyAuthorizationsIDPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
+	// SECOND
 	rsp, err := c.PostLegacyAuthorizationsIDPassword(ctx, authID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23276,6 +24030,7 @@ func (c *ClientWithResponses) PostLegacyAuthorizationsIDPasswordWithResponse(ctx
 // GetMeWithResponse request returning *GetMeResponse
 func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, params *GetMeParams, reqEditors ...RequestEditorFn) (*GetMeResponse, error) {
 	rsp, err := c.GetMe(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23285,6 +24040,7 @@ func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, params *Get
 // PutMePasswordWithBodyWithResponse request with arbitrary body returning *PutMePasswordResponse
 func (c *ClientWithResponses) PutMePasswordWithBodyWithResponse(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutMePasswordResponse, error) {
 	rsp, err := c.PutMePasswordWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23292,6 +24048,7 @@ func (c *ClientWithResponses) PutMePasswordWithBodyWithResponse(ctx context.Cont
 }
 
 func (c *ClientWithResponses) PutMePasswordWithResponse(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*PutMePasswordResponse, error) {
+	// SECOND
 	rsp, err := c.PutMePassword(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23302,6 +24059,7 @@ func (c *ClientWithResponses) PutMePasswordWithResponse(ctx context.Context, par
 // GetNotificationEndpointsWithResponse request returning *GetNotificationEndpointsResponse
 func (c *ClientWithResponses) GetNotificationEndpointsWithResponse(ctx context.Context, params *GetNotificationEndpointsParams, reqEditors ...RequestEditorFn) (*GetNotificationEndpointsResponse, error) {
 	rsp, err := c.GetNotificationEndpoints(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23311,6 +24069,7 @@ func (c *ClientWithResponses) GetNotificationEndpointsWithResponse(ctx context.C
 // CreateNotificationEndpointWithBodyWithResponse request with arbitrary body returning *CreateNotificationEndpointResponse
 func (c *ClientWithResponses) CreateNotificationEndpointWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateNotificationEndpointResponse, error) {
 	rsp, err := c.CreateNotificationEndpointWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23318,6 +24077,7 @@ func (c *ClientWithResponses) CreateNotificationEndpointWithBodyWithResponse(ctx
 }
 
 func (c *ClientWithResponses) CreateNotificationEndpointWithResponse(ctx context.Context, body CreateNotificationEndpointJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateNotificationEndpointResponse, error) {
+	// SECOND
 	rsp, err := c.CreateNotificationEndpoint(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23328,6 +24088,7 @@ func (c *ClientWithResponses) CreateNotificationEndpointWithResponse(ctx context
 // DeleteNotificationEndpointsIDWithResponse request returning *DeleteNotificationEndpointsIDResponse
 func (c *ClientWithResponses) DeleteNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *DeleteNotificationEndpointsIDParams, reqEditors ...RequestEditorFn) (*DeleteNotificationEndpointsIDResponse, error) {
 	rsp, err := c.DeleteNotificationEndpointsID(ctx, endpointID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23337,6 +24098,7 @@ func (c *ClientWithResponses) DeleteNotificationEndpointsIDWithResponse(ctx cont
 // GetNotificationEndpointsIDWithResponse request returning *GetNotificationEndpointsIDResponse
 func (c *ClientWithResponses) GetNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDParams, reqEditors ...RequestEditorFn) (*GetNotificationEndpointsIDResponse, error) {
 	rsp, err := c.GetNotificationEndpointsID(ctx, endpointID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23346,6 +24108,7 @@ func (c *ClientWithResponses) GetNotificationEndpointsIDWithResponse(ctx context
 // PatchNotificationEndpointsIDWithBodyWithResponse request with arbitrary body returning *PatchNotificationEndpointsIDResponse
 func (c *ClientWithResponses) PatchNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchNotificationEndpointsIDResponse, error) {
 	rsp, err := c.PatchNotificationEndpointsIDWithBody(ctx, endpointID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23353,6 +24116,7 @@ func (c *ClientWithResponses) PatchNotificationEndpointsIDWithBodyWithResponse(c
 }
 
 func (c *ClientWithResponses) PatchNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PatchNotificationEndpointsIDParams, body PatchNotificationEndpointsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchNotificationEndpointsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchNotificationEndpointsID(ctx, endpointID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23363,6 +24127,7 @@ func (c *ClientWithResponses) PatchNotificationEndpointsIDWithResponse(ctx conte
 // PutNotificationEndpointsIDWithBodyWithResponse request with arbitrary body returning *PutNotificationEndpointsIDResponse
 func (c *ClientWithResponses) PutNotificationEndpointsIDWithBodyWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutNotificationEndpointsIDResponse, error) {
 	rsp, err := c.PutNotificationEndpointsIDWithBody(ctx, endpointID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23370,6 +24135,7 @@ func (c *ClientWithResponses) PutNotificationEndpointsIDWithBodyWithResponse(ctx
 }
 
 func (c *ClientWithResponses) PutNotificationEndpointsIDWithResponse(ctx context.Context, endpointID string, params *PutNotificationEndpointsIDParams, body PutNotificationEndpointsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutNotificationEndpointsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PutNotificationEndpointsID(ctx, endpointID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23380,6 +24146,7 @@ func (c *ClientWithResponses) PutNotificationEndpointsIDWithResponse(ctx context
 // GetNotificationEndpointsIDLabelsWithResponse request returning *GetNotificationEndpointsIDLabelsResponse
 func (c *ClientWithResponses) GetNotificationEndpointsIDLabelsWithResponse(ctx context.Context, endpointID string, params *GetNotificationEndpointsIDLabelsParams, reqEditors ...RequestEditorFn) (*GetNotificationEndpointsIDLabelsResponse, error) {
 	rsp, err := c.GetNotificationEndpointsIDLabels(ctx, endpointID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23389,6 +24156,7 @@ func (c *ClientWithResponses) GetNotificationEndpointsIDLabelsWithResponse(ctx c
 // PostNotificationEndpointIDLabelsWithBodyWithResponse request with arbitrary body returning *PostNotificationEndpointIDLabelsResponse
 func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithBodyWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostNotificationEndpointIDLabelsResponse, error) {
 	rsp, err := c.PostNotificationEndpointIDLabelsWithBody(ctx, endpointID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23396,6 +24164,7 @@ func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithBodyWithRespon
 }
 
 func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithResponse(ctx context.Context, endpointID string, params *PostNotificationEndpointIDLabelsParams, body PostNotificationEndpointIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostNotificationEndpointIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostNotificationEndpointIDLabels(ctx, endpointID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23406,6 +24175,7 @@ func (c *ClientWithResponses) PostNotificationEndpointIDLabelsWithResponse(ctx c
 // DeleteNotificationEndpointsIDLabelsIDWithResponse request returning *DeleteNotificationEndpointsIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteNotificationEndpointsIDLabelsIDWithResponse(ctx context.Context, endpointID string, labelID string, params *DeleteNotificationEndpointsIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteNotificationEndpointsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteNotificationEndpointsIDLabelsID(ctx, endpointID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23415,6 +24185,7 @@ func (c *ClientWithResponses) DeleteNotificationEndpointsIDLabelsIDWithResponse(
 // GetNotificationRulesWithResponse request returning *GetNotificationRulesResponse
 func (c *ClientWithResponses) GetNotificationRulesWithResponse(ctx context.Context, params *GetNotificationRulesParams, reqEditors ...RequestEditorFn) (*GetNotificationRulesResponse, error) {
 	rsp, err := c.GetNotificationRules(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23424,6 +24195,7 @@ func (c *ClientWithResponses) GetNotificationRulesWithResponse(ctx context.Conte
 // CreateNotificationRuleWithBodyWithResponse request with arbitrary body returning *CreateNotificationRuleResponse
 func (c *ClientWithResponses) CreateNotificationRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateNotificationRuleResponse, error) {
 	rsp, err := c.CreateNotificationRuleWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23431,6 +24203,7 @@ func (c *ClientWithResponses) CreateNotificationRuleWithBodyWithResponse(ctx con
 }
 
 func (c *ClientWithResponses) CreateNotificationRuleWithResponse(ctx context.Context, body CreateNotificationRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateNotificationRuleResponse, error) {
+	// SECOND
 	rsp, err := c.CreateNotificationRule(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23441,6 +24214,7 @@ func (c *ClientWithResponses) CreateNotificationRuleWithResponse(ctx context.Con
 // DeleteNotificationRulesIDWithResponse request returning *DeleteNotificationRulesIDResponse
 func (c *ClientWithResponses) DeleteNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *DeleteNotificationRulesIDParams, reqEditors ...RequestEditorFn) (*DeleteNotificationRulesIDResponse, error) {
 	rsp, err := c.DeleteNotificationRulesID(ctx, ruleID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23450,6 +24224,7 @@ func (c *ClientWithResponses) DeleteNotificationRulesIDWithResponse(ctx context.
 // GetNotificationRulesIDWithResponse request returning *GetNotificationRulesIDResponse
 func (c *ClientWithResponses) GetNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDParams, reqEditors ...RequestEditorFn) (*GetNotificationRulesIDResponse, error) {
 	rsp, err := c.GetNotificationRulesID(ctx, ruleID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23459,6 +24234,7 @@ func (c *ClientWithResponses) GetNotificationRulesIDWithResponse(ctx context.Con
 // PatchNotificationRulesIDWithBodyWithResponse request with arbitrary body returning *PatchNotificationRulesIDResponse
 func (c *ClientWithResponses) PatchNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchNotificationRulesIDResponse, error) {
 	rsp, err := c.PatchNotificationRulesIDWithBody(ctx, ruleID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23466,6 +24242,7 @@ func (c *ClientWithResponses) PatchNotificationRulesIDWithBodyWithResponse(ctx c
 }
 
 func (c *ClientWithResponses) PatchNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PatchNotificationRulesIDParams, body PatchNotificationRulesIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchNotificationRulesIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchNotificationRulesID(ctx, ruleID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23476,6 +24253,7 @@ func (c *ClientWithResponses) PatchNotificationRulesIDWithResponse(ctx context.C
 // PutNotificationRulesIDWithBodyWithResponse request with arbitrary body returning *PutNotificationRulesIDResponse
 func (c *ClientWithResponses) PutNotificationRulesIDWithBodyWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutNotificationRulesIDResponse, error) {
 	rsp, err := c.PutNotificationRulesIDWithBody(ctx, ruleID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23483,6 +24261,7 @@ func (c *ClientWithResponses) PutNotificationRulesIDWithBodyWithResponse(ctx con
 }
 
 func (c *ClientWithResponses) PutNotificationRulesIDWithResponse(ctx context.Context, ruleID string, params *PutNotificationRulesIDParams, body PutNotificationRulesIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutNotificationRulesIDResponse, error) {
+	// SECOND
 	rsp, err := c.PutNotificationRulesID(ctx, ruleID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23493,6 +24272,7 @@ func (c *ClientWithResponses) PutNotificationRulesIDWithResponse(ctx context.Con
 // GetNotificationRulesIDLabelsWithResponse request returning *GetNotificationRulesIDLabelsResponse
 func (c *ClientWithResponses) GetNotificationRulesIDLabelsWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDLabelsParams, reqEditors ...RequestEditorFn) (*GetNotificationRulesIDLabelsResponse, error) {
 	rsp, err := c.GetNotificationRulesIDLabels(ctx, ruleID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23502,6 +24282,7 @@ func (c *ClientWithResponses) GetNotificationRulesIDLabelsWithResponse(ctx conte
 // PostNotificationRuleIDLabelsWithBodyWithResponse request with arbitrary body returning *PostNotificationRuleIDLabelsResponse
 func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithBodyWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostNotificationRuleIDLabelsResponse, error) {
 	rsp, err := c.PostNotificationRuleIDLabelsWithBody(ctx, ruleID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23509,6 +24290,7 @@ func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithBodyWithResponse(c
 }
 
 func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithResponse(ctx context.Context, ruleID string, params *PostNotificationRuleIDLabelsParams, body PostNotificationRuleIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostNotificationRuleIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostNotificationRuleIDLabels(ctx, ruleID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23519,6 +24301,7 @@ func (c *ClientWithResponses) PostNotificationRuleIDLabelsWithResponse(ctx conte
 // DeleteNotificationRulesIDLabelsIDWithResponse request returning *DeleteNotificationRulesIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteNotificationRulesIDLabelsIDWithResponse(ctx context.Context, ruleID string, labelID string, params *DeleteNotificationRulesIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteNotificationRulesIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteNotificationRulesIDLabelsID(ctx, ruleID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23528,6 +24311,7 @@ func (c *ClientWithResponses) DeleteNotificationRulesIDLabelsIDWithResponse(ctx 
 // GetNotificationRulesIDQueryWithResponse request returning *GetNotificationRulesIDQueryResponse
 func (c *ClientWithResponses) GetNotificationRulesIDQueryWithResponse(ctx context.Context, ruleID string, params *GetNotificationRulesIDQueryParams, reqEditors ...RequestEditorFn) (*GetNotificationRulesIDQueryResponse, error) {
 	rsp, err := c.GetNotificationRulesIDQuery(ctx, ruleID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23537,6 +24321,7 @@ func (c *ClientWithResponses) GetNotificationRulesIDQueryWithResponse(ctx contex
 // GetOrgsWithResponse request returning *GetOrgsResponse
 func (c *ClientWithResponses) GetOrgsWithResponse(ctx context.Context, params *GetOrgsParams, reqEditors ...RequestEditorFn) (*GetOrgsResponse, error) {
 	rsp, err := c.GetOrgs(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23546,6 +24331,7 @@ func (c *ClientWithResponses) GetOrgsWithResponse(ctx context.Context, params *G
 // PostOrgsWithBodyWithResponse request with arbitrary body returning *PostOrgsResponse
 func (c *ClientWithResponses) PostOrgsWithBodyWithResponse(ctx context.Context, params *PostOrgsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrgsResponse, error) {
 	rsp, err := c.PostOrgsWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23553,6 +24339,7 @@ func (c *ClientWithResponses) PostOrgsWithBodyWithResponse(ctx context.Context, 
 }
 
 func (c *ClientWithResponses) PostOrgsWithResponse(ctx context.Context, params *PostOrgsParams, body PostOrgsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrgsResponse, error) {
+	// SECOND
 	rsp, err := c.PostOrgs(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23563,6 +24350,7 @@ func (c *ClientWithResponses) PostOrgsWithResponse(ctx context.Context, params *
 // DeleteOrgsIDWithResponse request returning *DeleteOrgsIDResponse
 func (c *ClientWithResponses) DeleteOrgsIDWithResponse(ctx context.Context, orgID string, params *DeleteOrgsIDParams, reqEditors ...RequestEditorFn) (*DeleteOrgsIDResponse, error) {
 	rsp, err := c.DeleteOrgsID(ctx, orgID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23572,6 +24360,7 @@ func (c *ClientWithResponses) DeleteOrgsIDWithResponse(ctx context.Context, orgI
 // GetOrgsIDWithResponse request returning *GetOrgsIDResponse
 func (c *ClientWithResponses) GetOrgsIDWithResponse(ctx context.Context, orgID string, params *GetOrgsIDParams, reqEditors ...RequestEditorFn) (*GetOrgsIDResponse, error) {
 	rsp, err := c.GetOrgsID(ctx, orgID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23581,6 +24370,7 @@ func (c *ClientWithResponses) GetOrgsIDWithResponse(ctx context.Context, orgID s
 // PatchOrgsIDWithBodyWithResponse request with arbitrary body returning *PatchOrgsIDResponse
 func (c *ClientWithResponses) PatchOrgsIDWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchOrgsIDResponse, error) {
 	rsp, err := c.PatchOrgsIDWithBody(ctx, orgID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23588,6 +24378,7 @@ func (c *ClientWithResponses) PatchOrgsIDWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDParams, body PatchOrgsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchOrgsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchOrgsID(ctx, orgID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23598,6 +24389,7 @@ func (c *ClientWithResponses) PatchOrgsIDWithResponse(ctx context.Context, orgID
 // GetOrgsIDMembersWithResponse request returning *GetOrgsIDMembersResponse
 func (c *ClientWithResponses) GetOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDMembersParams, reqEditors ...RequestEditorFn) (*GetOrgsIDMembersResponse, error) {
 	rsp, err := c.GetOrgsIDMembers(ctx, orgID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23607,6 +24399,7 @@ func (c *ClientWithResponses) GetOrgsIDMembersWithResponse(ctx context.Context, 
 // PostOrgsIDMembersWithBodyWithResponse request with arbitrary body returning *PostOrgsIDMembersResponse
 func (c *ClientWithResponses) PostOrgsIDMembersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrgsIDMembersResponse, error) {
 	rsp, err := c.PostOrgsIDMembersWithBody(ctx, orgID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23614,6 +24407,7 @@ func (c *ClientWithResponses) PostOrgsIDMembersWithBodyWithResponse(ctx context.
 }
 
 func (c *ClientWithResponses) PostOrgsIDMembersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDMembersParams, body PostOrgsIDMembersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrgsIDMembersResponse, error) {
+	// SECOND
 	rsp, err := c.PostOrgsIDMembers(ctx, orgID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23624,6 +24418,7 @@ func (c *ClientWithResponses) PostOrgsIDMembersWithResponse(ctx context.Context,
 // DeleteOrgsIDMembersIDWithResponse request returning *DeleteOrgsIDMembersIDResponse
 func (c *ClientWithResponses) DeleteOrgsIDMembersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDMembersIDParams, reqEditors ...RequestEditorFn) (*DeleteOrgsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteOrgsIDMembersID(ctx, orgID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23633,6 +24428,7 @@ func (c *ClientWithResponses) DeleteOrgsIDMembersIDWithResponse(ctx context.Cont
 // GetOrgsIDOwnersWithResponse request returning *GetOrgsIDOwnersResponse
 func (c *ClientWithResponses) GetOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *GetOrgsIDOwnersParams, reqEditors ...RequestEditorFn) (*GetOrgsIDOwnersResponse, error) {
 	rsp, err := c.GetOrgsIDOwners(ctx, orgID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23642,6 +24438,7 @@ func (c *ClientWithResponses) GetOrgsIDOwnersWithResponse(ctx context.Context, o
 // PostOrgsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostOrgsIDOwnersResponse
 func (c *ClientWithResponses) PostOrgsIDOwnersWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrgsIDOwnersResponse, error) {
 	rsp, err := c.PostOrgsIDOwnersWithBody(ctx, orgID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23649,6 +24446,7 @@ func (c *ClientWithResponses) PostOrgsIDOwnersWithBodyWithResponse(ctx context.C
 }
 
 func (c *ClientWithResponses) PostOrgsIDOwnersWithResponse(ctx context.Context, orgID string, params *PostOrgsIDOwnersParams, body PostOrgsIDOwnersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrgsIDOwnersResponse, error) {
+	// SECOND
 	rsp, err := c.PostOrgsIDOwners(ctx, orgID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23659,6 +24457,7 @@ func (c *ClientWithResponses) PostOrgsIDOwnersWithResponse(ctx context.Context, 
 // DeleteOrgsIDOwnersIDWithResponse request returning *DeleteOrgsIDOwnersIDResponse
 func (c *ClientWithResponses) DeleteOrgsIDOwnersIDWithResponse(ctx context.Context, orgID string, userID string, params *DeleteOrgsIDOwnersIDParams, reqEditors ...RequestEditorFn) (*DeleteOrgsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteOrgsIDOwnersID(ctx, orgID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23668,6 +24467,7 @@ func (c *ClientWithResponses) DeleteOrgsIDOwnersIDWithResponse(ctx context.Conte
 // GetOrgsIDSecretsWithResponse request returning *GetOrgsIDSecretsResponse
 func (c *ClientWithResponses) GetOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *GetOrgsIDSecretsParams, reqEditors ...RequestEditorFn) (*GetOrgsIDSecretsResponse, error) {
 	rsp, err := c.GetOrgsIDSecrets(ctx, orgID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23677,6 +24477,7 @@ func (c *ClientWithResponses) GetOrgsIDSecretsWithResponse(ctx context.Context, 
 // PatchOrgsIDSecretsWithBodyWithResponse request with arbitrary body returning *PatchOrgsIDSecretsResponse
 func (c *ClientWithResponses) PatchOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchOrgsIDSecretsResponse, error) {
 	rsp, err := c.PatchOrgsIDSecretsWithBody(ctx, orgID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23684,6 +24485,7 @@ func (c *ClientWithResponses) PatchOrgsIDSecretsWithBodyWithResponse(ctx context
 }
 
 func (c *ClientWithResponses) PatchOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PatchOrgsIDSecretsParams, body PatchOrgsIDSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchOrgsIDSecretsResponse, error) {
+	// SECOND
 	rsp, err := c.PatchOrgsIDSecrets(ctx, orgID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23694,6 +24496,7 @@ func (c *ClientWithResponses) PatchOrgsIDSecretsWithResponse(ctx context.Context
 // PostOrgsIDSecretsWithBodyWithResponse request with arbitrary body returning *PostOrgsIDSecretsResponse
 func (c *ClientWithResponses) PostOrgsIDSecretsWithBodyWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrgsIDSecretsResponse, error) {
 	rsp, err := c.PostOrgsIDSecretsWithBody(ctx, orgID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23701,6 +24504,7 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithBodyWithResponse(ctx context.
 }
 
 func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context, orgID string, params *PostOrgsIDSecretsParams, body PostOrgsIDSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrgsIDSecretsResponse, error) {
+	// SECOND
 	rsp, err := c.PostOrgsIDSecrets(ctx, orgID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23711,6 +24515,7 @@ func (c *ClientWithResponses) PostOrgsIDSecretsWithResponse(ctx context.Context,
 // GetPingWithResponse request returning *GetPingResponse
 func (c *ClientWithResponses) GetPingWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetPingResponse, error) {
 	rsp, err := c.GetPing(ctx, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23720,6 +24525,7 @@ func (c *ClientWithResponses) GetPingWithResponse(ctx context.Context, reqEditor
 // HeadPingWithResponse request returning *HeadPingResponse
 func (c *ClientWithResponses) HeadPingWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*HeadPingResponse, error) {
 	rsp, err := c.HeadPing(ctx, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23729,6 +24535,7 @@ func (c *ClientWithResponses) HeadPingWithResponse(ctx context.Context, reqEdito
 // PostQueryWithBodyWithResponse request with arbitrary body returning *PostQueryResponse
 func (c *ClientWithResponses) PostQueryWithBodyWithResponse(ctx context.Context, params *PostQueryParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostQueryResponse, error) {
 	rsp, err := c.PostQueryWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23736,6 +24543,7 @@ func (c *ClientWithResponses) PostQueryWithBodyWithResponse(ctx context.Context,
 }
 
 func (c *ClientWithResponses) PostQueryWithResponse(ctx context.Context, params *PostQueryParams, body PostQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*PostQueryResponse, error) {
+	// SECOND
 	rsp, err := c.PostQuery(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23746,6 +24554,7 @@ func (c *ClientWithResponses) PostQueryWithResponse(ctx context.Context, params 
 // PostQueryAnalyzeWithBodyWithResponse request with arbitrary body returning *PostQueryAnalyzeResponse
 func (c *ClientWithResponses) PostQueryAnalyzeWithBodyWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostQueryAnalyzeResponse, error) {
 	rsp, err := c.PostQueryAnalyzeWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23753,6 +24562,7 @@ func (c *ClientWithResponses) PostQueryAnalyzeWithBodyWithResponse(ctx context.C
 }
 
 func (c *ClientWithResponses) PostQueryAnalyzeWithResponse(ctx context.Context, params *PostQueryAnalyzeParams, body PostQueryAnalyzeJSONRequestBody, reqEditors ...RequestEditorFn) (*PostQueryAnalyzeResponse, error) {
+	// SECOND
 	rsp, err := c.PostQueryAnalyze(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23763,6 +24573,7 @@ func (c *ClientWithResponses) PostQueryAnalyzeWithResponse(ctx context.Context, 
 // PostQueryAstWithBodyWithResponse request with arbitrary body returning *PostQueryAstResponse
 func (c *ClientWithResponses) PostQueryAstWithBodyWithResponse(ctx context.Context, params *PostQueryAstParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostQueryAstResponse, error) {
 	rsp, err := c.PostQueryAstWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23770,6 +24581,7 @@ func (c *ClientWithResponses) PostQueryAstWithBodyWithResponse(ctx context.Conte
 }
 
 func (c *ClientWithResponses) PostQueryAstWithResponse(ctx context.Context, params *PostQueryAstParams, body PostQueryAstJSONRequestBody, reqEditors ...RequestEditorFn) (*PostQueryAstResponse, error) {
+	// SECOND
 	rsp, err := c.PostQueryAst(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23780,6 +24592,7 @@ func (c *ClientWithResponses) PostQueryAstWithResponse(ctx context.Context, para
 // GetQuerySuggestionsWithResponse request returning *GetQuerySuggestionsResponse
 func (c *ClientWithResponses) GetQuerySuggestionsWithResponse(ctx context.Context, params *GetQuerySuggestionsParams, reqEditors ...RequestEditorFn) (*GetQuerySuggestionsResponse, error) {
 	rsp, err := c.GetQuerySuggestions(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23789,6 +24602,7 @@ func (c *ClientWithResponses) GetQuerySuggestionsWithResponse(ctx context.Contex
 // GetQuerySuggestionsNameWithResponse request returning *GetQuerySuggestionsNameResponse
 func (c *ClientWithResponses) GetQuerySuggestionsNameWithResponse(ctx context.Context, name string, params *GetQuerySuggestionsNameParams, reqEditors ...RequestEditorFn) (*GetQuerySuggestionsNameResponse, error) {
 	rsp, err := c.GetQuerySuggestionsName(ctx, name, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23798,6 +24612,7 @@ func (c *ClientWithResponses) GetQuerySuggestionsNameWithResponse(ctx context.Co
 // GetReadyWithResponse request returning *GetReadyResponse
 func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *GetReadyParams, reqEditors ...RequestEditorFn) (*GetReadyResponse, error) {
 	rsp, err := c.GetReady(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23807,6 +24622,7 @@ func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *
 // PostRestoreBucketMetadataWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketMetadataResponse
 func (c *ClientWithResponses) PostRestoreBucketMetadataWithBodyWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostRestoreBucketMetadataResponse, error) {
 	rsp, err := c.PostRestoreBucketMetadataWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23814,6 +24630,7 @@ func (c *ClientWithResponses) PostRestoreBucketMetadataWithBodyWithResponse(ctx 
 }
 
 func (c *ClientWithResponses) PostRestoreBucketMetadataWithResponse(ctx context.Context, params *PostRestoreBucketMetadataParams, body PostRestoreBucketMetadataJSONRequestBody, reqEditors ...RequestEditorFn) (*PostRestoreBucketMetadataResponse, error) {
+	// SECOND
 	rsp, err := c.PostRestoreBucketMetadata(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23824,6 +24641,7 @@ func (c *ClientWithResponses) PostRestoreBucketMetadataWithResponse(ctx context.
 // PostRestoreBucketIDWithBodyWithResponse request with arbitrary body returning *PostRestoreBucketIDResponse
 func (c *ClientWithResponses) PostRestoreBucketIDWithBodyWithResponse(ctx context.Context, bucketID string, params *PostRestoreBucketIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostRestoreBucketIDResponse, error) {
 	rsp, err := c.PostRestoreBucketIDWithBody(ctx, bucketID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23833,6 +24651,7 @@ func (c *ClientWithResponses) PostRestoreBucketIDWithBodyWithResponse(ctx contex
 // PostRestoreKVWithBodyWithResponse request with arbitrary body returning *PostRestoreKVResponse
 func (c *ClientWithResponses) PostRestoreKVWithBodyWithResponse(ctx context.Context, params *PostRestoreKVParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostRestoreKVResponse, error) {
 	rsp, err := c.PostRestoreKVWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23842,6 +24661,7 @@ func (c *ClientWithResponses) PostRestoreKVWithBodyWithResponse(ctx context.Cont
 // PostRestoreShardIdWithBodyWithResponse request with arbitrary body returning *PostRestoreShardIdResponse
 func (c *ClientWithResponses) PostRestoreShardIdWithBodyWithResponse(ctx context.Context, shardID string, params *PostRestoreShardIdParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostRestoreShardIdResponse, error) {
 	rsp, err := c.PostRestoreShardIdWithBody(ctx, shardID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23851,6 +24671,7 @@ func (c *ClientWithResponses) PostRestoreShardIdWithBodyWithResponse(ctx context
 // PostRestoreSQLWithBodyWithResponse request with arbitrary body returning *PostRestoreSQLResponse
 func (c *ClientWithResponses) PostRestoreSQLWithBodyWithResponse(ctx context.Context, params *PostRestoreSQLParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostRestoreSQLResponse, error) {
 	rsp, err := c.PostRestoreSQLWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23860,6 +24681,7 @@ func (c *ClientWithResponses) PostRestoreSQLWithBodyWithResponse(ctx context.Con
 // GetScrapersWithResponse request returning *GetScrapersResponse
 func (c *ClientWithResponses) GetScrapersWithResponse(ctx context.Context, params *GetScrapersParams, reqEditors ...RequestEditorFn) (*GetScrapersResponse, error) {
 	rsp, err := c.GetScrapers(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23869,6 +24691,7 @@ func (c *ClientWithResponses) GetScrapersWithResponse(ctx context.Context, param
 // PostScrapersWithBodyWithResponse request with arbitrary body returning *PostScrapersResponse
 func (c *ClientWithResponses) PostScrapersWithBodyWithResponse(ctx context.Context, params *PostScrapersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostScrapersResponse, error) {
 	rsp, err := c.PostScrapersWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23876,6 +24699,7 @@ func (c *ClientWithResponses) PostScrapersWithBodyWithResponse(ctx context.Conte
 }
 
 func (c *ClientWithResponses) PostScrapersWithResponse(ctx context.Context, params *PostScrapersParams, body PostScrapersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostScrapersResponse, error) {
+	// SECOND
 	rsp, err := c.PostScrapers(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23886,6 +24710,7 @@ func (c *ClientWithResponses) PostScrapersWithResponse(ctx context.Context, para
 // DeleteScrapersIDWithResponse request returning *DeleteScrapersIDResponse
 func (c *ClientWithResponses) DeleteScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *DeleteScrapersIDParams, reqEditors ...RequestEditorFn) (*DeleteScrapersIDResponse, error) {
 	rsp, err := c.DeleteScrapersID(ctx, scraperTargetID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23895,6 +24720,7 @@ func (c *ClientWithResponses) DeleteScrapersIDWithResponse(ctx context.Context, 
 // GetScrapersIDWithResponse request returning *GetScrapersIDResponse
 func (c *ClientWithResponses) GetScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDParams, reqEditors ...RequestEditorFn) (*GetScrapersIDResponse, error) {
 	rsp, err := c.GetScrapersID(ctx, scraperTargetID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23904,6 +24730,7 @@ func (c *ClientWithResponses) GetScrapersIDWithResponse(ctx context.Context, scr
 // PatchScrapersIDWithBodyWithResponse request with arbitrary body returning *PatchScrapersIDResponse
 func (c *ClientWithResponses) PatchScrapersIDWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchScrapersIDResponse, error) {
 	rsp, err := c.PatchScrapersIDWithBody(ctx, scraperTargetID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23911,6 +24738,7 @@ func (c *ClientWithResponses) PatchScrapersIDWithBodyWithResponse(ctx context.Co
 }
 
 func (c *ClientWithResponses) PatchScrapersIDWithResponse(ctx context.Context, scraperTargetID string, params *PatchScrapersIDParams, body PatchScrapersIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchScrapersIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchScrapersID(ctx, scraperTargetID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23921,6 +24749,7 @@ func (c *ClientWithResponses) PatchScrapersIDWithResponse(ctx context.Context, s
 // GetScrapersIDLabelsWithResponse request returning *GetScrapersIDLabelsResponse
 func (c *ClientWithResponses) GetScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDLabelsParams, reqEditors ...RequestEditorFn) (*GetScrapersIDLabelsResponse, error) {
 	rsp, err := c.GetScrapersIDLabels(ctx, scraperTargetID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23930,6 +24759,7 @@ func (c *ClientWithResponses) GetScrapersIDLabelsWithResponse(ctx context.Contex
 // PostScrapersIDLabelsWithBodyWithResponse request with arbitrary body returning *PostScrapersIDLabelsResponse
 func (c *ClientWithResponses) PostScrapersIDLabelsWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostScrapersIDLabelsResponse, error) {
 	rsp, err := c.PostScrapersIDLabelsWithBody(ctx, scraperTargetID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23937,6 +24767,7 @@ func (c *ClientWithResponses) PostScrapersIDLabelsWithBodyWithResponse(ctx conte
 }
 
 func (c *ClientWithResponses) PostScrapersIDLabelsWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDLabelsParams, body PostScrapersIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostScrapersIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostScrapersIDLabels(ctx, scraperTargetID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23947,6 +24778,7 @@ func (c *ClientWithResponses) PostScrapersIDLabelsWithResponse(ctx context.Conte
 // DeleteScrapersIDLabelsIDWithResponse request returning *DeleteScrapersIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteScrapersIDLabelsIDWithResponse(ctx context.Context, scraperTargetID string, labelID string, params *DeleteScrapersIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteScrapersIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteScrapersIDLabelsID(ctx, scraperTargetID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23956,6 +24788,7 @@ func (c *ClientWithResponses) DeleteScrapersIDLabelsIDWithResponse(ctx context.C
 // GetScrapersIDMembersWithResponse request returning *GetScrapersIDMembersResponse
 func (c *ClientWithResponses) GetScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDMembersParams, reqEditors ...RequestEditorFn) (*GetScrapersIDMembersResponse, error) {
 	rsp, err := c.GetScrapersIDMembers(ctx, scraperTargetID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23965,6 +24798,7 @@ func (c *ClientWithResponses) GetScrapersIDMembersWithResponse(ctx context.Conte
 // PostScrapersIDMembersWithBodyWithResponse request with arbitrary body returning *PostScrapersIDMembersResponse
 func (c *ClientWithResponses) PostScrapersIDMembersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostScrapersIDMembersResponse, error) {
 	rsp, err := c.PostScrapersIDMembersWithBody(ctx, scraperTargetID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23972,6 +24806,7 @@ func (c *ClientWithResponses) PostScrapersIDMembersWithBodyWithResponse(ctx cont
 }
 
 func (c *ClientWithResponses) PostScrapersIDMembersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDMembersParams, body PostScrapersIDMembersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostScrapersIDMembersResponse, error) {
+	// SECOND
 	rsp, err := c.PostScrapersIDMembers(ctx, scraperTargetID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -23982,6 +24817,7 @@ func (c *ClientWithResponses) PostScrapersIDMembersWithResponse(ctx context.Cont
 // DeleteScrapersIDMembersIDWithResponse request returning *DeleteScrapersIDMembersIDResponse
 func (c *ClientWithResponses) DeleteScrapersIDMembersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDMembersIDParams, reqEditors ...RequestEditorFn) (*DeleteScrapersIDMembersIDResponse, error) {
 	rsp, err := c.DeleteScrapersIDMembersID(ctx, scraperTargetID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -23991,6 +24827,7 @@ func (c *ClientWithResponses) DeleteScrapersIDMembersIDWithResponse(ctx context.
 // GetScrapersIDOwnersWithResponse request returning *GetScrapersIDOwnersResponse
 func (c *ClientWithResponses) GetScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *GetScrapersIDOwnersParams, reqEditors ...RequestEditorFn) (*GetScrapersIDOwnersResponse, error) {
 	rsp, err := c.GetScrapersIDOwners(ctx, scraperTargetID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24000,6 +24837,7 @@ func (c *ClientWithResponses) GetScrapersIDOwnersWithResponse(ctx context.Contex
 // PostScrapersIDOwnersWithBodyWithResponse request with arbitrary body returning *PostScrapersIDOwnersResponse
 func (c *ClientWithResponses) PostScrapersIDOwnersWithBodyWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostScrapersIDOwnersResponse, error) {
 	rsp, err := c.PostScrapersIDOwnersWithBody(ctx, scraperTargetID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24007,6 +24845,7 @@ func (c *ClientWithResponses) PostScrapersIDOwnersWithBodyWithResponse(ctx conte
 }
 
 func (c *ClientWithResponses) PostScrapersIDOwnersWithResponse(ctx context.Context, scraperTargetID string, params *PostScrapersIDOwnersParams, body PostScrapersIDOwnersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostScrapersIDOwnersResponse, error) {
+	// SECOND
 	rsp, err := c.PostScrapersIDOwners(ctx, scraperTargetID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24017,6 +24856,7 @@ func (c *ClientWithResponses) PostScrapersIDOwnersWithResponse(ctx context.Conte
 // DeleteScrapersIDOwnersIDWithResponse request returning *DeleteScrapersIDOwnersIDResponse
 func (c *ClientWithResponses) DeleteScrapersIDOwnersIDWithResponse(ctx context.Context, scraperTargetID string, userID string, params *DeleteScrapersIDOwnersIDParams, reqEditors ...RequestEditorFn) (*DeleteScrapersIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteScrapersIDOwnersID(ctx, scraperTargetID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24026,6 +24866,7 @@ func (c *ClientWithResponses) DeleteScrapersIDOwnersIDWithResponse(ctx context.C
 // GetSetupWithResponse request returning *GetSetupResponse
 func (c *ClientWithResponses) GetSetupWithResponse(ctx context.Context, params *GetSetupParams, reqEditors ...RequestEditorFn) (*GetSetupResponse, error) {
 	rsp, err := c.GetSetup(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24035,6 +24876,7 @@ func (c *ClientWithResponses) GetSetupWithResponse(ctx context.Context, params *
 // PostSetupWithBodyWithResponse request with arbitrary body returning *PostSetupResponse
 func (c *ClientWithResponses) PostSetupWithBodyWithResponse(ctx context.Context, params *PostSetupParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostSetupResponse, error) {
 	rsp, err := c.PostSetupWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24042,6 +24884,7 @@ func (c *ClientWithResponses) PostSetupWithBodyWithResponse(ctx context.Context,
 }
 
 func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params *PostSetupParams, body PostSetupJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSetupResponse, error) {
+	// SECOND
 	rsp, err := c.PostSetup(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24052,6 +24895,7 @@ func (c *ClientWithResponses) PostSetupWithResponse(ctx context.Context, params 
 // PostSigninWithResponse request returning *PostSigninResponse
 func (c *ClientWithResponses) PostSigninWithResponse(ctx context.Context, params *PostSigninParams, reqEditors ...RequestEditorFn) (*PostSigninResponse, error) {
 	rsp, err := c.PostSignin(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24061,6 +24905,7 @@ func (c *ClientWithResponses) PostSigninWithResponse(ctx context.Context, params
 // PostSignoutWithResponse request returning *PostSignoutResponse
 func (c *ClientWithResponses) PostSignoutWithResponse(ctx context.Context, params *PostSignoutParams, reqEditors ...RequestEditorFn) (*PostSignoutResponse, error) {
 	rsp, err := c.PostSignout(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24070,6 +24915,7 @@ func (c *ClientWithResponses) PostSignoutWithResponse(ctx context.Context, param
 // GetSourcesWithResponse request returning *GetSourcesResponse
 func (c *ClientWithResponses) GetSourcesWithResponse(ctx context.Context, params *GetSourcesParams, reqEditors ...RequestEditorFn) (*GetSourcesResponse, error) {
 	rsp, err := c.GetSources(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24079,6 +24925,7 @@ func (c *ClientWithResponses) GetSourcesWithResponse(ctx context.Context, params
 // PostSourcesWithBodyWithResponse request with arbitrary body returning *PostSourcesResponse
 func (c *ClientWithResponses) PostSourcesWithBodyWithResponse(ctx context.Context, params *PostSourcesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostSourcesResponse, error) {
 	rsp, err := c.PostSourcesWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24086,6 +24933,7 @@ func (c *ClientWithResponses) PostSourcesWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) PostSourcesWithResponse(ctx context.Context, params *PostSourcesParams, body PostSourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSourcesResponse, error) {
+	// SECOND
 	rsp, err := c.PostSources(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24096,6 +24944,7 @@ func (c *ClientWithResponses) PostSourcesWithResponse(ctx context.Context, param
 // DeleteSourcesIDWithResponse request returning *DeleteSourcesIDResponse
 func (c *ClientWithResponses) DeleteSourcesIDWithResponse(ctx context.Context, sourceID string, params *DeleteSourcesIDParams, reqEditors ...RequestEditorFn) (*DeleteSourcesIDResponse, error) {
 	rsp, err := c.DeleteSourcesID(ctx, sourceID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24105,6 +24954,7 @@ func (c *ClientWithResponses) DeleteSourcesIDWithResponse(ctx context.Context, s
 // GetSourcesIDWithResponse request returning *GetSourcesIDResponse
 func (c *ClientWithResponses) GetSourcesIDWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDParams, reqEditors ...RequestEditorFn) (*GetSourcesIDResponse, error) {
 	rsp, err := c.GetSourcesID(ctx, sourceID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24114,6 +24964,7 @@ func (c *ClientWithResponses) GetSourcesIDWithResponse(ctx context.Context, sour
 // PatchSourcesIDWithBodyWithResponse request with arbitrary body returning *PatchSourcesIDResponse
 func (c *ClientWithResponses) PatchSourcesIDWithBodyWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSourcesIDResponse, error) {
 	rsp, err := c.PatchSourcesIDWithBody(ctx, sourceID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24121,6 +24972,7 @@ func (c *ClientWithResponses) PatchSourcesIDWithBodyWithResponse(ctx context.Con
 }
 
 func (c *ClientWithResponses) PatchSourcesIDWithResponse(ctx context.Context, sourceID string, params *PatchSourcesIDParams, body PatchSourcesIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSourcesIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchSourcesID(ctx, sourceID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24131,6 +24983,7 @@ func (c *ClientWithResponses) PatchSourcesIDWithResponse(ctx context.Context, so
 // GetSourcesIDBucketsWithResponse request returning *GetSourcesIDBucketsResponse
 func (c *ClientWithResponses) GetSourcesIDBucketsWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDBucketsParams, reqEditors ...RequestEditorFn) (*GetSourcesIDBucketsResponse, error) {
 	rsp, err := c.GetSourcesIDBuckets(ctx, sourceID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24140,6 +24993,7 @@ func (c *ClientWithResponses) GetSourcesIDBucketsWithResponse(ctx context.Contex
 // GetSourcesIDHealthWithResponse request returning *GetSourcesIDHealthResponse
 func (c *ClientWithResponses) GetSourcesIDHealthWithResponse(ctx context.Context, sourceID string, params *GetSourcesIDHealthParams, reqEditors ...RequestEditorFn) (*GetSourcesIDHealthResponse, error) {
 	rsp, err := c.GetSourcesIDHealth(ctx, sourceID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24149,6 +25003,7 @@ func (c *ClientWithResponses) GetSourcesIDHealthWithResponse(ctx context.Context
 // ListStacksWithResponse request returning *ListStacksResponse
 func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params *ListStacksParams, reqEditors ...RequestEditorFn) (*ListStacksResponse, error) {
 	rsp, err := c.ListStacks(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24158,6 +25013,7 @@ func (c *ClientWithResponses) ListStacksWithResponse(ctx context.Context, params
 // CreateStackWithBodyWithResponse request with arbitrary body returning *CreateStackResponse
 func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateStackResponse, error) {
 	rsp, err := c.CreateStackWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24165,6 +25021,7 @@ func (c *ClientWithResponses) CreateStackWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body CreateStackJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateStackResponse, error) {
+	// SECOND
 	rsp, err := c.CreateStack(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24175,6 +25032,7 @@ func (c *ClientWithResponses) CreateStackWithResponse(ctx context.Context, body 
 // DeleteStackWithResponse request returning *DeleteStackResponse
 func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stackId string, params *DeleteStackParams, reqEditors ...RequestEditorFn) (*DeleteStackResponse, error) {
 	rsp, err := c.DeleteStack(ctx, stackId, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24184,6 +25042,7 @@ func (c *ClientWithResponses) DeleteStackWithResponse(ctx context.Context, stack
 // ReadStackWithResponse request returning *ReadStackResponse
 func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId string, reqEditors ...RequestEditorFn) (*ReadStackResponse, error) {
 	rsp, err := c.ReadStack(ctx, stackId, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24193,6 +25052,7 @@ func (c *ClientWithResponses) ReadStackWithResponse(ctx context.Context, stackId
 // UpdateStackWithBodyWithResponse request with arbitrary body returning *UpdateStackResponse
 func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Context, stackId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateStackResponse, error) {
 	rsp, err := c.UpdateStackWithBody(ctx, stackId, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24200,6 +25060,7 @@ func (c *ClientWithResponses) UpdateStackWithBodyWithResponse(ctx context.Contex
 }
 
 func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stackId string, body UpdateStackJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateStackResponse, error) {
+	// SECOND
 	rsp, err := c.UpdateStack(ctx, stackId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24210,6 +25071,7 @@ func (c *ClientWithResponses) UpdateStackWithResponse(ctx context.Context, stack
 // UninstallStackWithResponse request returning *UninstallStackResponse
 func (c *ClientWithResponses) UninstallStackWithResponse(ctx context.Context, stackId string, reqEditors ...RequestEditorFn) (*UninstallStackResponse, error) {
 	rsp, err := c.UninstallStack(ctx, stackId, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24219,6 +25081,7 @@ func (c *ClientWithResponses) UninstallStackWithResponse(ctx context.Context, st
 // GetTasksWithResponse request returning *GetTasksResponse
 func (c *ClientWithResponses) GetTasksWithResponse(ctx context.Context, params *GetTasksParams, reqEditors ...RequestEditorFn) (*GetTasksResponse, error) {
 	rsp, err := c.GetTasks(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24228,6 +25091,7 @@ func (c *ClientWithResponses) GetTasksWithResponse(ctx context.Context, params *
 // PostTasksWithBodyWithResponse request with arbitrary body returning *PostTasksResponse
 func (c *ClientWithResponses) PostTasksWithBodyWithResponse(ctx context.Context, params *PostTasksParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTasksResponse, error) {
 	rsp, err := c.PostTasksWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24235,6 +25099,7 @@ func (c *ClientWithResponses) PostTasksWithBodyWithResponse(ctx context.Context,
 }
 
 func (c *ClientWithResponses) PostTasksWithResponse(ctx context.Context, params *PostTasksParams, body PostTasksJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTasksResponse, error) {
+	// SECOND
 	rsp, err := c.PostTasks(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24245,6 +25110,7 @@ func (c *ClientWithResponses) PostTasksWithResponse(ctx context.Context, params 
 // DeleteTasksIDWithResponse request returning *DeleteTasksIDResponse
 func (c *ClientWithResponses) DeleteTasksIDWithResponse(ctx context.Context, taskID string, params *DeleteTasksIDParams, reqEditors ...RequestEditorFn) (*DeleteTasksIDResponse, error) {
 	rsp, err := c.DeleteTasksID(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24254,6 +25120,7 @@ func (c *ClientWithResponses) DeleteTasksIDWithResponse(ctx context.Context, tas
 // GetTasksIDWithResponse request returning *GetTasksIDResponse
 func (c *ClientWithResponses) GetTasksIDWithResponse(ctx context.Context, taskID string, params *GetTasksIDParams, reqEditors ...RequestEditorFn) (*GetTasksIDResponse, error) {
 	rsp, err := c.GetTasksID(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24263,6 +25130,7 @@ func (c *ClientWithResponses) GetTasksIDWithResponse(ctx context.Context, taskID
 // PatchTasksIDWithBodyWithResponse request with arbitrary body returning *PatchTasksIDResponse
 func (c *ClientWithResponses) PatchTasksIDWithBodyWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchTasksIDResponse, error) {
 	rsp, err := c.PatchTasksIDWithBody(ctx, taskID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24270,6 +25138,7 @@ func (c *ClientWithResponses) PatchTasksIDWithBodyWithResponse(ctx context.Conte
 }
 
 func (c *ClientWithResponses) PatchTasksIDWithResponse(ctx context.Context, taskID string, params *PatchTasksIDParams, body PatchTasksIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchTasksIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchTasksID(ctx, taskID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24280,6 +25149,7 @@ func (c *ClientWithResponses) PatchTasksIDWithResponse(ctx context.Context, task
 // GetTasksIDLabelsWithResponse request returning *GetTasksIDLabelsResponse
 func (c *ClientWithResponses) GetTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLabelsParams, reqEditors ...RequestEditorFn) (*GetTasksIDLabelsResponse, error) {
 	rsp, err := c.GetTasksIDLabels(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24289,6 +25159,7 @@ func (c *ClientWithResponses) GetTasksIDLabelsWithResponse(ctx context.Context, 
 // PostTasksIDLabelsWithBodyWithResponse request with arbitrary body returning *PostTasksIDLabelsResponse
 func (c *ClientWithResponses) PostTasksIDLabelsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTasksIDLabelsResponse, error) {
 	rsp, err := c.PostTasksIDLabelsWithBody(ctx, taskID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24296,6 +25167,7 @@ func (c *ClientWithResponses) PostTasksIDLabelsWithBodyWithResponse(ctx context.
 }
 
 func (c *ClientWithResponses) PostTasksIDLabelsWithResponse(ctx context.Context, taskID string, params *PostTasksIDLabelsParams, body PostTasksIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTasksIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostTasksIDLabels(ctx, taskID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24306,6 +25178,7 @@ func (c *ClientWithResponses) PostTasksIDLabelsWithResponse(ctx context.Context,
 // DeleteTasksIDLabelsIDWithResponse request returning *DeleteTasksIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteTasksIDLabelsIDWithResponse(ctx context.Context, taskID string, labelID string, params *DeleteTasksIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteTasksIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteTasksIDLabelsID(ctx, taskID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24315,6 +25188,7 @@ func (c *ClientWithResponses) DeleteTasksIDLabelsIDWithResponse(ctx context.Cont
 // GetTasksIDLogsWithResponse request returning *GetTasksIDLogsResponse
 func (c *ClientWithResponses) GetTasksIDLogsWithResponse(ctx context.Context, taskID string, params *GetTasksIDLogsParams, reqEditors ...RequestEditorFn) (*GetTasksIDLogsResponse, error) {
 	rsp, err := c.GetTasksIDLogs(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24324,6 +25198,7 @@ func (c *ClientWithResponses) GetTasksIDLogsWithResponse(ctx context.Context, ta
 // GetTasksIDMembersWithResponse request returning *GetTasksIDMembersResponse
 func (c *ClientWithResponses) GetTasksIDMembersWithResponse(ctx context.Context, taskID string, params *GetTasksIDMembersParams, reqEditors ...RequestEditorFn) (*GetTasksIDMembersResponse, error) {
 	rsp, err := c.GetTasksIDMembers(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24333,6 +25208,7 @@ func (c *ClientWithResponses) GetTasksIDMembersWithResponse(ctx context.Context,
 // PostTasksIDMembersWithBodyWithResponse request with arbitrary body returning *PostTasksIDMembersResponse
 func (c *ClientWithResponses) PostTasksIDMembersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTasksIDMembersResponse, error) {
 	rsp, err := c.PostTasksIDMembersWithBody(ctx, taskID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24340,6 +25216,7 @@ func (c *ClientWithResponses) PostTasksIDMembersWithBodyWithResponse(ctx context
 }
 
 func (c *ClientWithResponses) PostTasksIDMembersWithResponse(ctx context.Context, taskID string, params *PostTasksIDMembersParams, body PostTasksIDMembersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTasksIDMembersResponse, error) {
+	// SECOND
 	rsp, err := c.PostTasksIDMembers(ctx, taskID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24350,6 +25227,7 @@ func (c *ClientWithResponses) PostTasksIDMembersWithResponse(ctx context.Context
 // DeleteTasksIDMembersIDWithResponse request returning *DeleteTasksIDMembersIDResponse
 func (c *ClientWithResponses) DeleteTasksIDMembersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDMembersIDParams, reqEditors ...RequestEditorFn) (*DeleteTasksIDMembersIDResponse, error) {
 	rsp, err := c.DeleteTasksIDMembersID(ctx, taskID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24359,6 +25237,7 @@ func (c *ClientWithResponses) DeleteTasksIDMembersIDWithResponse(ctx context.Con
 // GetTasksIDOwnersWithResponse request returning *GetTasksIDOwnersResponse
 func (c *ClientWithResponses) GetTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *GetTasksIDOwnersParams, reqEditors ...RequestEditorFn) (*GetTasksIDOwnersResponse, error) {
 	rsp, err := c.GetTasksIDOwners(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24368,6 +25247,7 @@ func (c *ClientWithResponses) GetTasksIDOwnersWithResponse(ctx context.Context, 
 // PostTasksIDOwnersWithBodyWithResponse request with arbitrary body returning *PostTasksIDOwnersResponse
 func (c *ClientWithResponses) PostTasksIDOwnersWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTasksIDOwnersResponse, error) {
 	rsp, err := c.PostTasksIDOwnersWithBody(ctx, taskID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24375,6 +25255,7 @@ func (c *ClientWithResponses) PostTasksIDOwnersWithBodyWithResponse(ctx context.
 }
 
 func (c *ClientWithResponses) PostTasksIDOwnersWithResponse(ctx context.Context, taskID string, params *PostTasksIDOwnersParams, body PostTasksIDOwnersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTasksIDOwnersResponse, error) {
+	// SECOND
 	rsp, err := c.PostTasksIDOwners(ctx, taskID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24385,6 +25266,7 @@ func (c *ClientWithResponses) PostTasksIDOwnersWithResponse(ctx context.Context,
 // DeleteTasksIDOwnersIDWithResponse request returning *DeleteTasksIDOwnersIDResponse
 func (c *ClientWithResponses) DeleteTasksIDOwnersIDWithResponse(ctx context.Context, taskID string, userID string, params *DeleteTasksIDOwnersIDParams, reqEditors ...RequestEditorFn) (*DeleteTasksIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteTasksIDOwnersID(ctx, taskID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24394,6 +25276,7 @@ func (c *ClientWithResponses) DeleteTasksIDOwnersIDWithResponse(ctx context.Cont
 // GetTasksIDRunsWithResponse request returning *GetTasksIDRunsResponse
 func (c *ClientWithResponses) GetTasksIDRunsWithResponse(ctx context.Context, taskID string, params *GetTasksIDRunsParams, reqEditors ...RequestEditorFn) (*GetTasksIDRunsResponse, error) {
 	rsp, err := c.GetTasksIDRuns(ctx, taskID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24403,6 +25286,7 @@ func (c *ClientWithResponses) GetTasksIDRunsWithResponse(ctx context.Context, ta
 // PostTasksIDRunsWithBodyWithResponse request with arbitrary body returning *PostTasksIDRunsResponse
 func (c *ClientWithResponses) PostTasksIDRunsWithBodyWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTasksIDRunsResponse, error) {
 	rsp, err := c.PostTasksIDRunsWithBody(ctx, taskID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24410,6 +25294,7 @@ func (c *ClientWithResponses) PostTasksIDRunsWithBodyWithResponse(ctx context.Co
 }
 
 func (c *ClientWithResponses) PostTasksIDRunsWithResponse(ctx context.Context, taskID string, params *PostTasksIDRunsParams, body PostTasksIDRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTasksIDRunsResponse, error) {
+	// SECOND
 	rsp, err := c.PostTasksIDRuns(ctx, taskID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24420,6 +25305,7 @@ func (c *ClientWithResponses) PostTasksIDRunsWithResponse(ctx context.Context, t
 // DeleteTasksIDRunsIDWithResponse request returning *DeleteTasksIDRunsIDResponse
 func (c *ClientWithResponses) DeleteTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *DeleteTasksIDRunsIDParams, reqEditors ...RequestEditorFn) (*DeleteTasksIDRunsIDResponse, error) {
 	rsp, err := c.DeleteTasksIDRunsID(ctx, taskID, runID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24429,6 +25315,7 @@ func (c *ClientWithResponses) DeleteTasksIDRunsIDWithResponse(ctx context.Contex
 // GetTasksIDRunsIDWithResponse request returning *GetTasksIDRunsIDResponse
 func (c *ClientWithResponses) GetTasksIDRunsIDWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDParams, reqEditors ...RequestEditorFn) (*GetTasksIDRunsIDResponse, error) {
 	rsp, err := c.GetTasksIDRunsID(ctx, taskID, runID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24438,6 +25325,7 @@ func (c *ClientWithResponses) GetTasksIDRunsIDWithResponse(ctx context.Context, 
 // GetTasksIDRunsIDLogsWithResponse request returning *GetTasksIDRunsIDLogsResponse
 func (c *ClientWithResponses) GetTasksIDRunsIDLogsWithResponse(ctx context.Context, taskID string, runID string, params *GetTasksIDRunsIDLogsParams, reqEditors ...RequestEditorFn) (*GetTasksIDRunsIDLogsResponse, error) {
 	rsp, err := c.GetTasksIDRunsIDLogs(ctx, taskID, runID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24447,6 +25335,7 @@ func (c *ClientWithResponses) GetTasksIDRunsIDLogsWithResponse(ctx context.Conte
 // PostTasksIDRunsIDRetryWithBodyWithResponse request with arbitrary body returning *PostTasksIDRunsIDRetryResponse
 func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithBodyWithResponse(ctx context.Context, taskID string, runID string, params *PostTasksIDRunsIDRetryParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTasksIDRunsIDRetryResponse, error) {
 	rsp, err := c.PostTasksIDRunsIDRetryWithBody(ctx, taskID, runID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24456,6 +25345,7 @@ func (c *ClientWithResponses) PostTasksIDRunsIDRetryWithBodyWithResponse(ctx con
 // GetTelegrafPluginsWithResponse request returning *GetTelegrafPluginsResponse
 func (c *ClientWithResponses) GetTelegrafPluginsWithResponse(ctx context.Context, params *GetTelegrafPluginsParams, reqEditors ...RequestEditorFn) (*GetTelegrafPluginsResponse, error) {
 	rsp, err := c.GetTelegrafPlugins(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24465,6 +25355,7 @@ func (c *ClientWithResponses) GetTelegrafPluginsWithResponse(ctx context.Context
 // GetTelegrafsWithResponse request returning *GetTelegrafsResponse
 func (c *ClientWithResponses) GetTelegrafsWithResponse(ctx context.Context, params *GetTelegrafsParams, reqEditors ...RequestEditorFn) (*GetTelegrafsResponse, error) {
 	rsp, err := c.GetTelegrafs(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24474,6 +25365,7 @@ func (c *ClientWithResponses) GetTelegrafsWithResponse(ctx context.Context, para
 // PostTelegrafsWithBodyWithResponse request with arbitrary body returning *PostTelegrafsResponse
 func (c *ClientWithResponses) PostTelegrafsWithBodyWithResponse(ctx context.Context, params *PostTelegrafsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTelegrafsResponse, error) {
 	rsp, err := c.PostTelegrafsWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24481,6 +25373,7 @@ func (c *ClientWithResponses) PostTelegrafsWithBodyWithResponse(ctx context.Cont
 }
 
 func (c *ClientWithResponses) PostTelegrafsWithResponse(ctx context.Context, params *PostTelegrafsParams, body PostTelegrafsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTelegrafsResponse, error) {
+	// SECOND
 	rsp, err := c.PostTelegrafs(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24491,6 +25384,7 @@ func (c *ClientWithResponses) PostTelegrafsWithResponse(ctx context.Context, par
 // DeleteTelegrafsIDWithResponse request returning *DeleteTelegrafsIDResponse
 func (c *ClientWithResponses) DeleteTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *DeleteTelegrafsIDParams, reqEditors ...RequestEditorFn) (*DeleteTelegrafsIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsID(ctx, telegrafID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24500,6 +25394,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDWithResponse(ctx context.Context,
 // GetTelegrafsIDWithResponse request returning *GetTelegrafsIDResponse
 func (c *ClientWithResponses) GetTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDParams, reqEditors ...RequestEditorFn) (*GetTelegrafsIDResponse, error) {
 	rsp, err := c.GetTelegrafsID(ctx, telegrafID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24509,6 +25404,7 @@ func (c *ClientWithResponses) GetTelegrafsIDWithResponse(ctx context.Context, te
 // PutTelegrafsIDWithBodyWithResponse request with arbitrary body returning *PutTelegrafsIDResponse
 func (c *ClientWithResponses) PutTelegrafsIDWithBodyWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutTelegrafsIDResponse, error) {
 	rsp, err := c.PutTelegrafsIDWithBody(ctx, telegrafID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24516,6 +25412,7 @@ func (c *ClientWithResponses) PutTelegrafsIDWithBodyWithResponse(ctx context.Con
 }
 
 func (c *ClientWithResponses) PutTelegrafsIDWithResponse(ctx context.Context, telegrafID string, params *PutTelegrafsIDParams, body PutTelegrafsIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutTelegrafsIDResponse, error) {
+	// SECOND
 	rsp, err := c.PutTelegrafsID(ctx, telegrafID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24526,6 +25423,7 @@ func (c *ClientWithResponses) PutTelegrafsIDWithResponse(ctx context.Context, te
 // GetTelegrafsIDLabelsWithResponse request returning *GetTelegrafsIDLabelsResponse
 func (c *ClientWithResponses) GetTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDLabelsParams, reqEditors ...RequestEditorFn) (*GetTelegrafsIDLabelsResponse, error) {
 	rsp, err := c.GetTelegrafsIDLabels(ctx, telegrafID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24535,6 +25433,7 @@ func (c *ClientWithResponses) GetTelegrafsIDLabelsWithResponse(ctx context.Conte
 // PostTelegrafsIDLabelsWithBodyWithResponse request with arbitrary body returning *PostTelegrafsIDLabelsResponse
 func (c *ClientWithResponses) PostTelegrafsIDLabelsWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTelegrafsIDLabelsResponse, error) {
 	rsp, err := c.PostTelegrafsIDLabelsWithBody(ctx, telegrafID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24542,6 +25441,7 @@ func (c *ClientWithResponses) PostTelegrafsIDLabelsWithBodyWithResponse(ctx cont
 }
 
 func (c *ClientWithResponses) PostTelegrafsIDLabelsWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDLabelsParams, body PostTelegrafsIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTelegrafsIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostTelegrafsIDLabels(ctx, telegrafID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24552,6 +25452,7 @@ func (c *ClientWithResponses) PostTelegrafsIDLabelsWithResponse(ctx context.Cont
 // DeleteTelegrafsIDLabelsIDWithResponse request returning *DeleteTelegrafsIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteTelegrafsIDLabelsIDWithResponse(ctx context.Context, telegrafID string, labelID string, params *DeleteTelegrafsIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteTelegrafsIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsIDLabelsID(ctx, telegrafID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24561,6 +25462,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDLabelsIDWithResponse(ctx context.
 // GetTelegrafsIDMembersWithResponse request returning *GetTelegrafsIDMembersResponse
 func (c *ClientWithResponses) GetTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDMembersParams, reqEditors ...RequestEditorFn) (*GetTelegrafsIDMembersResponse, error) {
 	rsp, err := c.GetTelegrafsIDMembers(ctx, telegrafID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24570,6 +25472,7 @@ func (c *ClientWithResponses) GetTelegrafsIDMembersWithResponse(ctx context.Cont
 // PostTelegrafsIDMembersWithBodyWithResponse request with arbitrary body returning *PostTelegrafsIDMembersResponse
 func (c *ClientWithResponses) PostTelegrafsIDMembersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTelegrafsIDMembersResponse, error) {
 	rsp, err := c.PostTelegrafsIDMembersWithBody(ctx, telegrafID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24577,6 +25480,7 @@ func (c *ClientWithResponses) PostTelegrafsIDMembersWithBodyWithResponse(ctx con
 }
 
 func (c *ClientWithResponses) PostTelegrafsIDMembersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDMembersParams, body PostTelegrafsIDMembersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTelegrafsIDMembersResponse, error) {
+	// SECOND
 	rsp, err := c.PostTelegrafsIDMembers(ctx, telegrafID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24587,6 +25491,7 @@ func (c *ClientWithResponses) PostTelegrafsIDMembersWithResponse(ctx context.Con
 // DeleteTelegrafsIDMembersIDWithResponse request returning *DeleteTelegrafsIDMembersIDResponse
 func (c *ClientWithResponses) DeleteTelegrafsIDMembersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDMembersIDParams, reqEditors ...RequestEditorFn) (*DeleteTelegrafsIDMembersIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsIDMembersID(ctx, telegrafID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24596,6 +25501,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDMembersIDWithResponse(ctx context
 // GetTelegrafsIDOwnersWithResponse request returning *GetTelegrafsIDOwnersResponse
 func (c *ClientWithResponses) GetTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *GetTelegrafsIDOwnersParams, reqEditors ...RequestEditorFn) (*GetTelegrafsIDOwnersResponse, error) {
 	rsp, err := c.GetTelegrafsIDOwners(ctx, telegrafID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24605,6 +25511,7 @@ func (c *ClientWithResponses) GetTelegrafsIDOwnersWithResponse(ctx context.Conte
 // PostTelegrafsIDOwnersWithBodyWithResponse request with arbitrary body returning *PostTelegrafsIDOwnersResponse
 func (c *ClientWithResponses) PostTelegrafsIDOwnersWithBodyWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostTelegrafsIDOwnersResponse, error) {
 	rsp, err := c.PostTelegrafsIDOwnersWithBody(ctx, telegrafID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24612,6 +25519,7 @@ func (c *ClientWithResponses) PostTelegrafsIDOwnersWithBodyWithResponse(ctx cont
 }
 
 func (c *ClientWithResponses) PostTelegrafsIDOwnersWithResponse(ctx context.Context, telegrafID string, params *PostTelegrafsIDOwnersParams, body PostTelegrafsIDOwnersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostTelegrafsIDOwnersResponse, error) {
+	// SECOND
 	rsp, err := c.PostTelegrafsIDOwners(ctx, telegrafID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24622,6 +25530,7 @@ func (c *ClientWithResponses) PostTelegrafsIDOwnersWithResponse(ctx context.Cont
 // DeleteTelegrafsIDOwnersIDWithResponse request returning *DeleteTelegrafsIDOwnersIDResponse
 func (c *ClientWithResponses) DeleteTelegrafsIDOwnersIDWithResponse(ctx context.Context, telegrafID string, userID string, params *DeleteTelegrafsIDOwnersIDParams, reqEditors ...RequestEditorFn) (*DeleteTelegrafsIDOwnersIDResponse, error) {
 	rsp, err := c.DeleteTelegrafsIDOwnersID(ctx, telegrafID, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24631,6 +25540,7 @@ func (c *ClientWithResponses) DeleteTelegrafsIDOwnersIDWithResponse(ctx context.
 // ApplyTemplateWithBodyWithResponse request with arbitrary body returning *ApplyTemplateResponse
 func (c *ClientWithResponses) ApplyTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApplyTemplateResponse, error) {
 	rsp, err := c.ApplyTemplateWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24638,6 +25548,7 @@ func (c *ClientWithResponses) ApplyTemplateWithBodyWithResponse(ctx context.Cont
 }
 
 func (c *ClientWithResponses) ApplyTemplateWithResponse(ctx context.Context, body ApplyTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*ApplyTemplateResponse, error) {
+	// SECOND
 	rsp, err := c.ApplyTemplate(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24648,6 +25559,7 @@ func (c *ClientWithResponses) ApplyTemplateWithResponse(ctx context.Context, bod
 // ExportTemplateWithBodyWithResponse request with arbitrary body returning *ExportTemplateResponse
 func (c *ClientWithResponses) ExportTemplateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExportTemplateResponse, error) {
 	rsp, err := c.ExportTemplateWithBody(ctx, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24655,6 +25567,7 @@ func (c *ClientWithResponses) ExportTemplateWithBodyWithResponse(ctx context.Con
 }
 
 func (c *ClientWithResponses) ExportTemplateWithResponse(ctx context.Context, body ExportTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*ExportTemplateResponse, error) {
+	// SECOND
 	rsp, err := c.ExportTemplate(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24665,6 +25578,7 @@ func (c *ClientWithResponses) ExportTemplateWithResponse(ctx context.Context, bo
 // GetUsersWithResponse request returning *GetUsersResponse
 func (c *ClientWithResponses) GetUsersWithResponse(ctx context.Context, params *GetUsersParams, reqEditors ...RequestEditorFn) (*GetUsersResponse, error) {
 	rsp, err := c.GetUsers(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24674,6 +25588,7 @@ func (c *ClientWithResponses) GetUsersWithResponse(ctx context.Context, params *
 // PostUsersWithBodyWithResponse request with arbitrary body returning *PostUsersResponse
 func (c *ClientWithResponses) PostUsersWithBodyWithResponse(ctx context.Context, params *PostUsersParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostUsersResponse, error) {
 	rsp, err := c.PostUsersWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24681,6 +25596,7 @@ func (c *ClientWithResponses) PostUsersWithBodyWithResponse(ctx context.Context,
 }
 
 func (c *ClientWithResponses) PostUsersWithResponse(ctx context.Context, params *PostUsersParams, body PostUsersJSONRequestBody, reqEditors ...RequestEditorFn) (*PostUsersResponse, error) {
+	// SECOND
 	rsp, err := c.PostUsers(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24691,6 +25607,7 @@ func (c *ClientWithResponses) PostUsersWithResponse(ctx context.Context, params 
 // DeleteUsersIDWithResponse request returning *DeleteUsersIDResponse
 func (c *ClientWithResponses) DeleteUsersIDWithResponse(ctx context.Context, userID string, params *DeleteUsersIDParams, reqEditors ...RequestEditorFn) (*DeleteUsersIDResponse, error) {
 	rsp, err := c.DeleteUsersID(ctx, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24700,6 +25617,7 @@ func (c *ClientWithResponses) DeleteUsersIDWithResponse(ctx context.Context, use
 // GetUsersIDWithResponse request returning *GetUsersIDResponse
 func (c *ClientWithResponses) GetUsersIDWithResponse(ctx context.Context, userID string, params *GetUsersIDParams, reqEditors ...RequestEditorFn) (*GetUsersIDResponse, error) {
 	rsp, err := c.GetUsersID(ctx, userID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24709,6 +25627,7 @@ func (c *ClientWithResponses) GetUsersIDWithResponse(ctx context.Context, userID
 // PatchUsersIDWithBodyWithResponse request with arbitrary body returning *PatchUsersIDResponse
 func (c *ClientWithResponses) PatchUsersIDWithBodyWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchUsersIDResponse, error) {
 	rsp, err := c.PatchUsersIDWithBody(ctx, userID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24716,6 +25635,7 @@ func (c *ClientWithResponses) PatchUsersIDWithBodyWithResponse(ctx context.Conte
 }
 
 func (c *ClientWithResponses) PatchUsersIDWithResponse(ctx context.Context, userID string, params *PatchUsersIDParams, body PatchUsersIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchUsersIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchUsersID(ctx, userID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24726,6 +25646,7 @@ func (c *ClientWithResponses) PatchUsersIDWithResponse(ctx context.Context, user
 // PostUsersIDPasswordWithBodyWithResponse request with arbitrary body returning *PostUsersIDPasswordResponse
 func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostUsersIDPasswordResponse, error) {
 	rsp, err := c.PostUsersIDPasswordWithBody(ctx, userID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24733,6 +25654,7 @@ func (c *ClientWithResponses) PostUsersIDPasswordWithBodyWithResponse(ctx contex
 }
 
 func (c *ClientWithResponses) PostUsersIDPasswordWithResponse(ctx context.Context, userID string, params *PostUsersIDPasswordParams, body PostUsersIDPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*PostUsersIDPasswordResponse, error) {
+	// SECOND
 	rsp, err := c.PostUsersIDPassword(ctx, userID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24743,6 +25665,7 @@ func (c *ClientWithResponses) PostUsersIDPasswordWithResponse(ctx context.Contex
 // GetVariablesWithResponse request returning *GetVariablesResponse
 func (c *ClientWithResponses) GetVariablesWithResponse(ctx context.Context, params *GetVariablesParams, reqEditors ...RequestEditorFn) (*GetVariablesResponse, error) {
 	rsp, err := c.GetVariables(ctx, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24752,6 +25675,7 @@ func (c *ClientWithResponses) GetVariablesWithResponse(ctx context.Context, para
 // PostVariablesWithBodyWithResponse request with arbitrary body returning *PostVariablesResponse
 func (c *ClientWithResponses) PostVariablesWithBodyWithResponse(ctx context.Context, params *PostVariablesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVariablesResponse, error) {
 	rsp, err := c.PostVariablesWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24759,6 +25683,7 @@ func (c *ClientWithResponses) PostVariablesWithBodyWithResponse(ctx context.Cont
 }
 
 func (c *ClientWithResponses) PostVariablesWithResponse(ctx context.Context, params *PostVariablesParams, body PostVariablesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVariablesResponse, error) {
+	// SECOND
 	rsp, err := c.PostVariables(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24769,6 +25694,7 @@ func (c *ClientWithResponses) PostVariablesWithResponse(ctx context.Context, par
 // DeleteVariablesIDWithResponse request returning *DeleteVariablesIDResponse
 func (c *ClientWithResponses) DeleteVariablesIDWithResponse(ctx context.Context, variableID string, params *DeleteVariablesIDParams, reqEditors ...RequestEditorFn) (*DeleteVariablesIDResponse, error) {
 	rsp, err := c.DeleteVariablesID(ctx, variableID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24778,6 +25704,7 @@ func (c *ClientWithResponses) DeleteVariablesIDWithResponse(ctx context.Context,
 // GetVariablesIDWithResponse request returning *GetVariablesIDResponse
 func (c *ClientWithResponses) GetVariablesIDWithResponse(ctx context.Context, variableID string, params *GetVariablesIDParams, reqEditors ...RequestEditorFn) (*GetVariablesIDResponse, error) {
 	rsp, err := c.GetVariablesID(ctx, variableID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24787,6 +25714,7 @@ func (c *ClientWithResponses) GetVariablesIDWithResponse(ctx context.Context, va
 // PatchVariablesIDWithBodyWithResponse request with arbitrary body returning *PatchVariablesIDResponse
 func (c *ClientWithResponses) PatchVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchVariablesIDResponse, error) {
 	rsp, err := c.PatchVariablesIDWithBody(ctx, variableID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24794,6 +25722,7 @@ func (c *ClientWithResponses) PatchVariablesIDWithBodyWithResponse(ctx context.C
 }
 
 func (c *ClientWithResponses) PatchVariablesIDWithResponse(ctx context.Context, variableID string, params *PatchVariablesIDParams, body PatchVariablesIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchVariablesIDResponse, error) {
+	// SECOND
 	rsp, err := c.PatchVariablesID(ctx, variableID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24804,6 +25733,7 @@ func (c *ClientWithResponses) PatchVariablesIDWithResponse(ctx context.Context, 
 // PutVariablesIDWithBodyWithResponse request with arbitrary body returning *PutVariablesIDResponse
 func (c *ClientWithResponses) PutVariablesIDWithBodyWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutVariablesIDResponse, error) {
 	rsp, err := c.PutVariablesIDWithBody(ctx, variableID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24811,6 +25741,7 @@ func (c *ClientWithResponses) PutVariablesIDWithBodyWithResponse(ctx context.Con
 }
 
 func (c *ClientWithResponses) PutVariablesIDWithResponse(ctx context.Context, variableID string, params *PutVariablesIDParams, body PutVariablesIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutVariablesIDResponse, error) {
+	// SECOND
 	rsp, err := c.PutVariablesID(ctx, variableID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24821,6 +25752,7 @@ func (c *ClientWithResponses) PutVariablesIDWithResponse(ctx context.Context, va
 // GetVariablesIDLabelsWithResponse request returning *GetVariablesIDLabelsResponse
 func (c *ClientWithResponses) GetVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *GetVariablesIDLabelsParams, reqEditors ...RequestEditorFn) (*GetVariablesIDLabelsResponse, error) {
 	rsp, err := c.GetVariablesIDLabels(ctx, variableID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24830,6 +25762,7 @@ func (c *ClientWithResponses) GetVariablesIDLabelsWithResponse(ctx context.Conte
 // PostVariablesIDLabelsWithBodyWithResponse request with arbitrary body returning *PostVariablesIDLabelsResponse
 func (c *ClientWithResponses) PostVariablesIDLabelsWithBodyWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVariablesIDLabelsResponse, error) {
 	rsp, err := c.PostVariablesIDLabelsWithBody(ctx, variableID, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24837,6 +25770,7 @@ func (c *ClientWithResponses) PostVariablesIDLabelsWithBodyWithResponse(ctx cont
 }
 
 func (c *ClientWithResponses) PostVariablesIDLabelsWithResponse(ctx context.Context, variableID string, params *PostVariablesIDLabelsParams, body PostVariablesIDLabelsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVariablesIDLabelsResponse, error) {
+	// SECOND
 	rsp, err := c.PostVariablesIDLabels(ctx, variableID, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -24847,6 +25781,7 @@ func (c *ClientWithResponses) PostVariablesIDLabelsWithResponse(ctx context.Cont
 // DeleteVariablesIDLabelsIDWithResponse request returning *DeleteVariablesIDLabelsIDResponse
 func (c *ClientWithResponses) DeleteVariablesIDLabelsIDWithResponse(ctx context.Context, variableID string, labelID string, params *DeleteVariablesIDLabelsIDParams, reqEditors ...RequestEditorFn) (*DeleteVariablesIDLabelsIDResponse, error) {
 	rsp, err := c.DeleteVariablesIDLabelsID(ctx, variableID, labelID, params, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24856,6 +25791,7 @@ func (c *ClientWithResponses) DeleteVariablesIDLabelsIDWithResponse(ctx context.
 // PostWriteWithBodyWithResponse request with arbitrary body returning *PostWriteResponse
 func (c *ClientWithResponses) PostWriteWithBodyWithResponse(ctx context.Context, params *PostWriteParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostWriteResponse, error) {
 	rsp, err := c.PostWriteWithBody(ctx, params, contentType, body, reqEditors...)
+	// FIRST
 	if err != nil {
 		return nil, err
 	}
@@ -24863,8336 +25799,4495 @@ func (c *ClientWithResponses) PostWriteWithBodyWithResponse(ctx context.Context,
 }
 
 // ParseGetRoutesResponse parses an HTTP response from a GetRoutesWithResponse call
-func ParseGetRoutesResponse(rsp *http.Response) (*GetRoutesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetRoutesResponse(hresp *http.Response) (*GetRoutesResponse, error) {
+	var response GetRoutesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetRoutesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Routes
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetAuthorizationsResponse parses an HTTP response from a GetAuthorizationsWithResponse call
-func ParseGetAuthorizationsResponse(rsp *http.Response) (*GetAuthorizationsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetAuthorizationsResponse(hresp *http.Response) (*GetAuthorizationsResponse, error) {
+	var response GetAuthorizationsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetAuthorizationsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Authorizations
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostAuthorizationsResponse parses an HTTP response from a PostAuthorizationsWithResponse call
-func ParsePostAuthorizationsResponse(rsp *http.Response) (*PostAuthorizationsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostAuthorizationsResponse(hresp *http.Response) (*PostAuthorizationsResponse, error) {
+	var response PostAuthorizationsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostAuthorizationsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Authorization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteAuthorizationsIDResponse parses an HTTP response from a DeleteAuthorizationsIDWithResponse call
-func ParseDeleteAuthorizationsIDResponse(rsp *http.Response) (*DeleteAuthorizationsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteAuthorizationsIDResponse(hresp *http.Response) (*DeleteAuthorizationsIDResponse, error) {
+	var response DeleteAuthorizationsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteAuthorizationsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetAuthorizationsIDResponse parses an HTTP response from a GetAuthorizationsIDWithResponse call
-func ParseGetAuthorizationsIDResponse(rsp *http.Response) (*GetAuthorizationsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetAuthorizationsIDResponse(hresp *http.Response) (*GetAuthorizationsIDResponse, error) {
+	var response GetAuthorizationsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetAuthorizationsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Authorization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchAuthorizationsIDResponse parses an HTTP response from a PatchAuthorizationsIDWithResponse call
-func ParsePatchAuthorizationsIDResponse(rsp *http.Response) (*PatchAuthorizationsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchAuthorizationsIDResponse(hresp *http.Response) (*PatchAuthorizationsIDResponse, error) {
+	var response PatchAuthorizationsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchAuthorizationsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Authorization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBackupKVResponse parses an HTTP response from a GetBackupKVWithResponse call
-func ParseGetBackupKVResponse(rsp *http.Response) (*GetBackupKVResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBackupKVResponse(hresp *http.Response) (*GetBackupKVResponse, error) {
+	var response GetBackupKVResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBackupKVResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBackupMetadataResponse parses an HTTP response from a GetBackupMetadataWithResponse call
-func ParseGetBackupMetadataResponse(rsp *http.Response) (*GetBackupMetadataResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBackupMetadataResponse(hresp *http.Response) (*GetBackupMetadataResponse, error) {
+	var response GetBackupMetadataResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBackupMetadataResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBackupShardIdResponse parses an HTTP response from a GetBackupShardIdWithResponse call
-func ParseGetBackupShardIdResponse(rsp *http.Response) (*GetBackupShardIdResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBackupShardIdResponse(hresp *http.Response) (*GetBackupShardIdResponse, error) {
+	var response GetBackupShardIdResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBackupShardIdResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBucketsResponse parses an HTTP response from a GetBucketsWithResponse call
-func ParseGetBucketsResponse(rsp *http.Response) (*GetBucketsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBucketsResponse(hresp *http.Response) (*GetBucketsResponse, error) {
+	var response GetBucketsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBucketsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Buckets
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostBucketsResponse parses an HTTP response from a PostBucketsWithResponse call
-func ParsePostBucketsResponse(rsp *http.Response) (*PostBucketsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostBucketsResponse(hresp *http.Response) (*PostBucketsResponse, error) {
+	var response PostBucketsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostBucketsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Bucket
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
+	case 422:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON422)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteBucketsIDResponse parses an HTTP response from a DeleteBucketsIDWithResponse call
-func ParseDeleteBucketsIDResponse(rsp *http.Response) (*DeleteBucketsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteBucketsIDResponse(hresp *http.Response) (*DeleteBucketsIDResponse, error) {
+	var response DeleteBucketsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteBucketsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBucketsIDResponse parses an HTTP response from a GetBucketsIDWithResponse call
-func ParseGetBucketsIDResponse(rsp *http.Response) (*GetBucketsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBucketsIDResponse(hresp *http.Response) (*GetBucketsIDResponse, error) {
+	var response GetBucketsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBucketsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Bucket
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchBucketsIDResponse parses an HTTP response from a PatchBucketsIDWithResponse call
-func ParsePatchBucketsIDResponse(rsp *http.Response) (*PatchBucketsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchBucketsIDResponse(hresp *http.Response) (*PatchBucketsIDResponse, error) {
+	var response PatchBucketsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchBucketsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Bucket
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBucketsIDLabelsResponse parses an HTTP response from a GetBucketsIDLabelsWithResponse call
-func ParseGetBucketsIDLabelsResponse(rsp *http.Response) (*GetBucketsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBucketsIDLabelsResponse(hresp *http.Response) (*GetBucketsIDLabelsResponse, error) {
+	var response GetBucketsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBucketsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostBucketsIDLabelsResponse parses an HTTP response from a PostBucketsIDLabelsWithResponse call
-func ParsePostBucketsIDLabelsResponse(rsp *http.Response) (*PostBucketsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostBucketsIDLabelsResponse(hresp *http.Response) (*PostBucketsIDLabelsResponse, error) {
+	var response PostBucketsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostBucketsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteBucketsIDLabelsIDResponse parses an HTTP response from a DeleteBucketsIDLabelsIDWithResponse call
-func ParseDeleteBucketsIDLabelsIDResponse(rsp *http.Response) (*DeleteBucketsIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteBucketsIDLabelsIDResponse(hresp *http.Response) (*DeleteBucketsIDLabelsIDResponse, error) {
+	var response DeleteBucketsIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteBucketsIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBucketsIDMembersResponse parses an HTTP response from a GetBucketsIDMembersWithResponse call
-func ParseGetBucketsIDMembersResponse(rsp *http.Response) (*GetBucketsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBucketsIDMembersResponse(hresp *http.Response) (*GetBucketsIDMembersResponse, error) {
+	var response GetBucketsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBucketsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMembers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostBucketsIDMembersResponse parses an HTTP response from a PostBucketsIDMembersWithResponse call
-func ParsePostBucketsIDMembersResponse(rsp *http.Response) (*PostBucketsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostBucketsIDMembersResponse(hresp *http.Response) (*PostBucketsIDMembersResponse, error) {
+	var response PostBucketsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostBucketsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceMember
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteBucketsIDMembersIDResponse parses an HTTP response from a DeleteBucketsIDMembersIDWithResponse call
-func ParseDeleteBucketsIDMembersIDResponse(rsp *http.Response) (*DeleteBucketsIDMembersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteBucketsIDMembersIDResponse(hresp *http.Response) (*DeleteBucketsIDMembersIDResponse, error) {
+	var response DeleteBucketsIDMembersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteBucketsIDMembersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetBucketsIDOwnersResponse parses an HTTP response from a GetBucketsIDOwnersWithResponse call
-func ParseGetBucketsIDOwnersResponse(rsp *http.Response) (*GetBucketsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetBucketsIDOwnersResponse(hresp *http.Response) (*GetBucketsIDOwnersResponse, error) {
+	var response GetBucketsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetBucketsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceOwners
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostBucketsIDOwnersResponse parses an HTTP response from a PostBucketsIDOwnersWithResponse call
-func ParsePostBucketsIDOwnersResponse(rsp *http.Response) (*PostBucketsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostBucketsIDOwnersResponse(hresp *http.Response) (*PostBucketsIDOwnersResponse, error) {
+	var response PostBucketsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostBucketsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceOwner
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteBucketsIDOwnersIDResponse parses an HTTP response from a DeleteBucketsIDOwnersIDWithResponse call
-func ParseDeleteBucketsIDOwnersIDResponse(rsp *http.Response) (*DeleteBucketsIDOwnersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteBucketsIDOwnersIDResponse(hresp *http.Response) (*DeleteBucketsIDOwnersIDResponse, error) {
+	var response DeleteBucketsIDOwnersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteBucketsIDOwnersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetChecksResponse parses an HTTP response from a GetChecksWithResponse call
-func ParseGetChecksResponse(rsp *http.Response) (*GetChecksResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetChecksResponse(hresp *http.Response) (*GetChecksResponse, error) {
+	var response GetChecksResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetChecksResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Checks
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseCreateCheckResponse parses an HTTP response from a CreateCheckWithResponse call
-func ParseCreateCheckResponse(rsp *http.Response) (*CreateCheckResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseCreateCheckResponse(hresp *http.Response) (*CreateCheckResponse, error) {
+	var response CreateCheckResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &CreateCheckResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Check
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteChecksIDResponse parses an HTTP response from a DeleteChecksIDWithResponse call
-func ParseDeleteChecksIDResponse(rsp *http.Response) (*DeleteChecksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteChecksIDResponse(hresp *http.Response) (*DeleteChecksIDResponse, error) {
+	var response DeleteChecksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteChecksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetChecksIDResponse parses an HTTP response from a GetChecksIDWithResponse call
-func ParseGetChecksIDResponse(rsp *http.Response) (*GetChecksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetChecksIDResponse(hresp *http.Response) (*GetChecksIDResponse, error) {
+	var response GetChecksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetChecksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Check
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchChecksIDResponse parses an HTTP response from a PatchChecksIDWithResponse call
-func ParsePatchChecksIDResponse(rsp *http.Response) (*PatchChecksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchChecksIDResponse(hresp *http.Response) (*PatchChecksIDResponse, error) {
+	var response PatchChecksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchChecksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Check
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutChecksIDResponse parses an HTTP response from a PutChecksIDWithResponse call
-func ParsePutChecksIDResponse(rsp *http.Response) (*PutChecksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutChecksIDResponse(hresp *http.Response) (*PutChecksIDResponse, error) {
+	var response PutChecksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutChecksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Check
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetChecksIDLabelsResponse parses an HTTP response from a GetChecksIDLabelsWithResponse call
-func ParseGetChecksIDLabelsResponse(rsp *http.Response) (*GetChecksIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetChecksIDLabelsResponse(hresp *http.Response) (*GetChecksIDLabelsResponse, error) {
+	var response GetChecksIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetChecksIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostChecksIDLabelsResponse parses an HTTP response from a PostChecksIDLabelsWithResponse call
-func ParsePostChecksIDLabelsResponse(rsp *http.Response) (*PostChecksIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostChecksIDLabelsResponse(hresp *http.Response) (*PostChecksIDLabelsResponse, error) {
+	var response PostChecksIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostChecksIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteChecksIDLabelsIDResponse parses an HTTP response from a DeleteChecksIDLabelsIDWithResponse call
-func ParseDeleteChecksIDLabelsIDResponse(rsp *http.Response) (*DeleteChecksIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteChecksIDLabelsIDResponse(hresp *http.Response) (*DeleteChecksIDLabelsIDResponse, error) {
+	var response DeleteChecksIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteChecksIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetChecksIDQueryResponse parses an HTTP response from a GetChecksIDQueryWithResponse call
-func ParseGetChecksIDQueryResponse(rsp *http.Response) (*GetChecksIDQueryResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetChecksIDQueryResponse(hresp *http.Response) (*GetChecksIDQueryResponse, error) {
+	var response GetChecksIDQueryResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetChecksIDQueryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest FluxResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDashboardsResponse parses an HTTP response from a GetDashboardsWithResponse call
-func ParseGetDashboardsResponse(rsp *http.Response) (*GetDashboardsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDashboardsResponse(hresp *http.Response) (*GetDashboardsResponse, error) {
+	var response GetDashboardsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDashboardsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboards
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDashboardsResponse parses an HTTP response from a PostDashboardsWithResponse call
-func ParsePostDashboardsResponse(rsp *http.Response) (*PostDashboardsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDashboardsResponse(hresp *http.Response) (*PostDashboardsResponse, error) {
+	var response PostDashboardsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDashboardsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest interface{}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDashboardsIDResponse parses an HTTP response from a DeleteDashboardsIDWithResponse call
-func ParseDeleteDashboardsIDResponse(rsp *http.Response) (*DeleteDashboardsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDashboardsIDResponse(hresp *http.Response) (*DeleteDashboardsIDResponse, error) {
+	var response DeleteDashboardsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDashboardsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDashboardsIDResponse parses an HTTP response from a GetDashboardsIDWithResponse call
-func ParseGetDashboardsIDResponse(rsp *http.Response) (*GetDashboardsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDashboardsIDResponse(hresp *http.Response) (*GetDashboardsIDResponse, error) {
+	var response GetDashboardsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDashboardsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest interface{}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchDashboardsIDResponse parses an HTTP response from a PatchDashboardsIDWithResponse call
-func ParsePatchDashboardsIDResponse(rsp *http.Response) (*PatchDashboardsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchDashboardsIDResponse(hresp *http.Response) (*PatchDashboardsIDResponse, error) {
+	var response PatchDashboardsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchDashboardsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDashboardsIDCellsResponse parses an HTTP response from a PostDashboardsIDCellsWithResponse call
-func ParsePostDashboardsIDCellsResponse(rsp *http.Response) (*PostDashboardsIDCellsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDashboardsIDCellsResponse(hresp *http.Response) (*PostDashboardsIDCellsResponse, error) {
+	var response PostDashboardsIDCellsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDashboardsIDCellsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Cell
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutDashboardsIDCellsResponse parses an HTTP response from a PutDashboardsIDCellsWithResponse call
-func ParsePutDashboardsIDCellsResponse(rsp *http.Response) (*PutDashboardsIDCellsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutDashboardsIDCellsResponse(hresp *http.Response) (*PutDashboardsIDCellsResponse, error) {
+	var response PutDashboardsIDCellsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutDashboardsIDCellsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDashboardsIDCellsIDResponse parses an HTTP response from a DeleteDashboardsIDCellsIDWithResponse call
-func ParseDeleteDashboardsIDCellsIDResponse(rsp *http.Response) (*DeleteDashboardsIDCellsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDashboardsIDCellsIDResponse(hresp *http.Response) (*DeleteDashboardsIDCellsIDResponse, error) {
+	var response DeleteDashboardsIDCellsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDashboardsIDCellsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchDashboardsIDCellsIDResponse parses an HTTP response from a PatchDashboardsIDCellsIDWithResponse call
-func ParsePatchDashboardsIDCellsIDResponse(rsp *http.Response) (*PatchDashboardsIDCellsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchDashboardsIDCellsIDResponse(hresp *http.Response) (*PatchDashboardsIDCellsIDResponse, error) {
+	var response PatchDashboardsIDCellsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchDashboardsIDCellsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Cell
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDashboardsIDCellsIDViewResponse parses an HTTP response from a GetDashboardsIDCellsIDViewWithResponse call
-func ParseGetDashboardsIDCellsIDViewResponse(rsp *http.Response) (*GetDashboardsIDCellsIDViewResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDashboardsIDCellsIDViewResponse(hresp *http.Response) (*GetDashboardsIDCellsIDViewResponse, error) {
+	var response GetDashboardsIDCellsIDViewResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDashboardsIDCellsIDViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest View
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchDashboardsIDCellsIDViewResponse parses an HTTP response from a PatchDashboardsIDCellsIDViewWithResponse call
-func ParsePatchDashboardsIDCellsIDViewResponse(rsp *http.Response) (*PatchDashboardsIDCellsIDViewResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchDashboardsIDCellsIDViewResponse(hresp *http.Response) (*PatchDashboardsIDCellsIDViewResponse, error) {
+	var response PatchDashboardsIDCellsIDViewResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchDashboardsIDCellsIDViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest View
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDashboardsIDLabelsResponse parses an HTTP response from a GetDashboardsIDLabelsWithResponse call
-func ParseGetDashboardsIDLabelsResponse(rsp *http.Response) (*GetDashboardsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDashboardsIDLabelsResponse(hresp *http.Response) (*GetDashboardsIDLabelsResponse, error) {
+	var response GetDashboardsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDashboardsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDashboardsIDLabelsResponse parses an HTTP response from a PostDashboardsIDLabelsWithResponse call
-func ParsePostDashboardsIDLabelsResponse(rsp *http.Response) (*PostDashboardsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDashboardsIDLabelsResponse(hresp *http.Response) (*PostDashboardsIDLabelsResponse, error) {
+	var response PostDashboardsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDashboardsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDashboardsIDLabelsIDResponse parses an HTTP response from a DeleteDashboardsIDLabelsIDWithResponse call
-func ParseDeleteDashboardsIDLabelsIDResponse(rsp *http.Response) (*DeleteDashboardsIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDashboardsIDLabelsIDResponse(hresp *http.Response) (*DeleteDashboardsIDLabelsIDResponse, error) {
+	var response DeleteDashboardsIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDashboardsIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDashboardsIDMembersResponse parses an HTTP response from a GetDashboardsIDMembersWithResponse call
-func ParseGetDashboardsIDMembersResponse(rsp *http.Response) (*GetDashboardsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDashboardsIDMembersResponse(hresp *http.Response) (*GetDashboardsIDMembersResponse, error) {
+	var response GetDashboardsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDashboardsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMembers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDashboardsIDMembersResponse parses an HTTP response from a PostDashboardsIDMembersWithResponse call
-func ParsePostDashboardsIDMembersResponse(rsp *http.Response) (*PostDashboardsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDashboardsIDMembersResponse(hresp *http.Response) (*PostDashboardsIDMembersResponse, error) {
+	var response PostDashboardsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDashboardsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceMember
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDashboardsIDMembersIDResponse parses an HTTP response from a DeleteDashboardsIDMembersIDWithResponse call
-func ParseDeleteDashboardsIDMembersIDResponse(rsp *http.Response) (*DeleteDashboardsIDMembersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDashboardsIDMembersIDResponse(hresp *http.Response) (*DeleteDashboardsIDMembersIDResponse, error) {
+	var response DeleteDashboardsIDMembersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDashboardsIDMembersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDashboardsIDOwnersResponse parses an HTTP response from a GetDashboardsIDOwnersWithResponse call
-func ParseGetDashboardsIDOwnersResponse(rsp *http.Response) (*GetDashboardsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDashboardsIDOwnersResponse(hresp *http.Response) (*GetDashboardsIDOwnersResponse, error) {
+	var response GetDashboardsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDashboardsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceOwners
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDashboardsIDOwnersResponse parses an HTTP response from a PostDashboardsIDOwnersWithResponse call
-func ParsePostDashboardsIDOwnersResponse(rsp *http.Response) (*PostDashboardsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDashboardsIDOwnersResponse(hresp *http.Response) (*PostDashboardsIDOwnersResponse, error) {
+	var response PostDashboardsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDashboardsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceOwner
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDashboardsIDOwnersIDResponse parses an HTTP response from a DeleteDashboardsIDOwnersIDWithResponse call
-func ParseDeleteDashboardsIDOwnersIDResponse(rsp *http.Response) (*DeleteDashboardsIDOwnersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDashboardsIDOwnersIDResponse(hresp *http.Response) (*DeleteDashboardsIDOwnersIDResponse, error) {
+	var response DeleteDashboardsIDOwnersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDashboardsIDOwnersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDBRPsResponse parses an HTTP response from a GetDBRPsWithResponse call
-func ParseGetDBRPsResponse(rsp *http.Response) (*GetDBRPsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDBRPsResponse(hresp *http.Response) (*GetDBRPsResponse, error) {
+	var response GetDBRPsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDBRPsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DBRPs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDBRPResponse parses an HTTP response from a PostDBRPWithResponse call
-func ParsePostDBRPResponse(rsp *http.Response) (*PostDBRPResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDBRPResponse(hresp *http.Response) (*PostDBRPResponse, error) {
+	var response PostDBRPResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDBRPResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest DBRP
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDBRPIDResponse parses an HTTP response from a DeleteDBRPIDWithResponse call
-func ParseDeleteDBRPIDResponse(rsp *http.Response) (*DeleteDBRPIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDBRPIDResponse(hresp *http.Response) (*DeleteDBRPIDResponse, error) {
+	var response DeleteDBRPIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDBRPIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDBRPsIDResponse parses an HTTP response from a GetDBRPsIDWithResponse call
-func ParseGetDBRPsIDResponse(rsp *http.Response) (*GetDBRPsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDBRPsIDResponse(hresp *http.Response) (*GetDBRPsIDResponse, error) {
+	var response GetDBRPsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDBRPsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DBRPGet
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchDBRPIDResponse parses an HTTP response from a PatchDBRPIDWithResponse call
-func ParsePatchDBRPIDResponse(rsp *http.Response) (*PatchDBRPIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchDBRPIDResponse(hresp *http.Response) (*PatchDBRPIDResponse, error) {
+	var response PatchDBRPIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchDBRPIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DBRPGet
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDeleteResponse parses an HTTP response from a PostDeleteWithResponse call
-func ParsePostDeleteResponse(rsp *http.Response) (*PostDeleteResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDeleteResponse(hresp *http.Response) (*PostDeleteResponse, error) {
+	var response PostDeleteResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDeleteResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
+	case 403:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON403)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDocumentsTemplatesResponse parses an HTTP response from a GetDocumentsTemplatesWithResponse call
-func ParseGetDocumentsTemplatesResponse(rsp *http.Response) (*GetDocumentsTemplatesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDocumentsTemplatesResponse(hresp *http.Response) (*GetDocumentsTemplatesResponse, error) {
+	var response GetDocumentsTemplatesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDocumentsTemplatesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Documents
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDocumentsTemplatesResponse parses an HTTP response from a PostDocumentsTemplatesWithResponse call
-func ParsePostDocumentsTemplatesResponse(rsp *http.Response) (*PostDocumentsTemplatesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDocumentsTemplatesResponse(hresp *http.Response) (*PostDocumentsTemplatesResponse, error) {
+	var response PostDocumentsTemplatesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDocumentsTemplatesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Document
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDocumentsTemplatesIDResponse parses an HTTP response from a DeleteDocumentsTemplatesIDWithResponse call
-func ParseDeleteDocumentsTemplatesIDResponse(rsp *http.Response) (*DeleteDocumentsTemplatesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDocumentsTemplatesIDResponse(hresp *http.Response) (*DeleteDocumentsTemplatesIDResponse, error) {
+	var response DeleteDocumentsTemplatesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDocumentsTemplatesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDocumentsTemplatesIDResponse parses an HTTP response from a GetDocumentsTemplatesIDWithResponse call
-func ParseGetDocumentsTemplatesIDResponse(rsp *http.Response) (*GetDocumentsTemplatesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDocumentsTemplatesIDResponse(hresp *http.Response) (*GetDocumentsTemplatesIDResponse, error) {
+	var response GetDocumentsTemplatesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDocumentsTemplatesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Document
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutDocumentsTemplatesIDResponse parses an HTTP response from a PutDocumentsTemplatesIDWithResponse call
-func ParsePutDocumentsTemplatesIDResponse(rsp *http.Response) (*PutDocumentsTemplatesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutDocumentsTemplatesIDResponse(hresp *http.Response) (*PutDocumentsTemplatesIDResponse, error) {
+	var response PutDocumentsTemplatesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutDocumentsTemplatesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Document
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetDocumentsTemplatesIDLabelsResponse parses an HTTP response from a GetDocumentsTemplatesIDLabelsWithResponse call
-func ParseGetDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*GetDocumentsTemplatesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetDocumentsTemplatesIDLabelsResponse(hresp *http.Response) (*GetDocumentsTemplatesIDLabelsResponse, error) {
+	var response GetDocumentsTemplatesIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetDocumentsTemplatesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostDocumentsTemplatesIDLabelsResponse parses an HTTP response from a PostDocumentsTemplatesIDLabelsWithResponse call
-func ParsePostDocumentsTemplatesIDLabelsResponse(rsp *http.Response) (*PostDocumentsTemplatesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostDocumentsTemplatesIDLabelsResponse(hresp *http.Response) (*PostDocumentsTemplatesIDLabelsResponse, error) {
+	var response PostDocumentsTemplatesIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostDocumentsTemplatesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteDocumentsTemplatesIDLabelsIDResponse parses an HTTP response from a DeleteDocumentsTemplatesIDLabelsIDWithResponse call
-func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(rsp *http.Response) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteDocumentsTemplatesIDLabelsIDResponse(hresp *http.Response) (*DeleteDocumentsTemplatesIDLabelsIDResponse, error) {
+	var response DeleteDocumentsTemplatesIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteDocumentsTemplatesIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetFlagsResponse parses an HTTP response from a GetFlagsWithResponse call
-func ParseGetFlagsResponse(rsp *http.Response) (*GetFlagsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetFlagsResponse(hresp *http.Response) (*GetFlagsResponse, error) {
+	var response GetFlagsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetFlagsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Flags
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetHealthResponse parses an HTTP response from a GetHealthWithResponse call
-func ParseGetHealthResponse(rsp *http.Response) (*GetHealthResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetHealthResponse(hresp *http.Response) (*GetHealthResponse, error) {
+	var response GetHealthResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetHealthResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest HealthCheck
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest HealthCheck
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
+	case 503:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON503)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetLabelsResponse parses an HTTP response from a GetLabelsWithResponse call
-func ParseGetLabelsResponse(rsp *http.Response) (*GetLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetLabelsResponse(hresp *http.Response) (*GetLabelsResponse, error) {
+	var response GetLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostLabelsResponse parses an HTTP response from a PostLabelsWithResponse call
-func ParsePostLabelsResponse(rsp *http.Response) (*PostLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostLabelsResponse(hresp *http.Response) (*PostLabelsResponse, error) {
+	var response PostLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteLabelsIDResponse parses an HTTP response from a DeleteLabelsIDWithResponse call
-func ParseDeleteLabelsIDResponse(rsp *http.Response) (*DeleteLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteLabelsIDResponse(hresp *http.Response) (*DeleteLabelsIDResponse, error) {
+	var response DeleteLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetLabelsIDResponse parses an HTTP response from a GetLabelsIDWithResponse call
-func ParseGetLabelsIDResponse(rsp *http.Response) (*GetLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetLabelsIDResponse(hresp *http.Response) (*GetLabelsIDResponse, error) {
+	var response GetLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchLabelsIDResponse parses an HTTP response from a PatchLabelsIDWithResponse call
-func ParsePatchLabelsIDResponse(rsp *http.Response) (*PatchLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchLabelsIDResponse(hresp *http.Response) (*PatchLabelsIDResponse, error) {
+	var response PatchLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetLegacyAuthorizationsResponse parses an HTTP response from a GetLegacyAuthorizationsWithResponse call
-func ParseGetLegacyAuthorizationsResponse(rsp *http.Response) (*GetLegacyAuthorizationsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetLegacyAuthorizationsResponse(hresp *http.Response) (*GetLegacyAuthorizationsResponse, error) {
+	var response GetLegacyAuthorizationsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetLegacyAuthorizationsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Authorizations
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostLegacyAuthorizationsResponse parses an HTTP response from a PostLegacyAuthorizationsWithResponse call
-func ParsePostLegacyAuthorizationsResponse(rsp *http.Response) (*PostLegacyAuthorizationsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostLegacyAuthorizationsResponse(hresp *http.Response) (*PostLegacyAuthorizationsResponse, error) {
+	var response PostLegacyAuthorizationsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostLegacyAuthorizationsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Authorization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteLegacyAuthorizationsIDResponse parses an HTTP response from a DeleteLegacyAuthorizationsIDWithResponse call
-func ParseDeleteLegacyAuthorizationsIDResponse(rsp *http.Response) (*DeleteLegacyAuthorizationsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteLegacyAuthorizationsIDResponse(hresp *http.Response) (*DeleteLegacyAuthorizationsIDResponse, error) {
+	var response DeleteLegacyAuthorizationsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteLegacyAuthorizationsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetLegacyAuthorizationsIDResponse parses an HTTP response from a GetLegacyAuthorizationsIDWithResponse call
-func ParseGetLegacyAuthorizationsIDResponse(rsp *http.Response) (*GetLegacyAuthorizationsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetLegacyAuthorizationsIDResponse(hresp *http.Response) (*GetLegacyAuthorizationsIDResponse, error) {
+	var response GetLegacyAuthorizationsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetLegacyAuthorizationsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Authorization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchLegacyAuthorizationsIDResponse parses an HTTP response from a PatchLegacyAuthorizationsIDWithResponse call
-func ParsePatchLegacyAuthorizationsIDResponse(rsp *http.Response) (*PatchLegacyAuthorizationsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchLegacyAuthorizationsIDResponse(hresp *http.Response) (*PatchLegacyAuthorizationsIDResponse, error) {
+	var response PatchLegacyAuthorizationsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchLegacyAuthorizationsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Authorization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostLegacyAuthorizationsIDPasswordResponse parses an HTTP response from a PostLegacyAuthorizationsIDPasswordWithResponse call
-func ParsePostLegacyAuthorizationsIDPasswordResponse(rsp *http.Response) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostLegacyAuthorizationsIDPasswordResponse(hresp *http.Response) (*PostLegacyAuthorizationsIDPasswordResponse, error) {
+	var response PostLegacyAuthorizationsIDPasswordResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostLegacyAuthorizationsIDPasswordResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetMeResponse parses an HTTP response from a GetMeWithResponse call
-func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetMeResponse(hresp *http.Response) (*GetMeResponse, error) {
+	var response GetMeResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetMeResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest UserResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutMePasswordResponse parses an HTTP response from a PutMePasswordWithResponse call
-func ParsePutMePasswordResponse(rsp *http.Response) (*PutMePasswordResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutMePasswordResponse(hresp *http.Response) (*PutMePasswordResponse, error) {
+	var response PutMePasswordResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutMePasswordResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationEndpointsResponse parses an HTTP response from a GetNotificationEndpointsWithResponse call
-func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*GetNotificationEndpointsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationEndpointsResponse(hresp *http.Response) (*GetNotificationEndpointsResponse, error) {
+	var response GetNotificationEndpointsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationEndpointsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationEndpoints
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseCreateNotificationEndpointResponse parses an HTTP response from a CreateNotificationEndpointWithResponse call
-func ParseCreateNotificationEndpointResponse(rsp *http.Response) (*CreateNotificationEndpointResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseCreateNotificationEndpointResponse(hresp *http.Response) (*CreateNotificationEndpointResponse, error) {
+	var response CreateNotificationEndpointResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &CreateNotificationEndpointResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest NotificationEndpoint
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteNotificationEndpointsIDResponse parses an HTTP response from a DeleteNotificationEndpointsIDWithResponse call
-func ParseDeleteNotificationEndpointsIDResponse(rsp *http.Response) (*DeleteNotificationEndpointsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteNotificationEndpointsIDResponse(hresp *http.Response) (*DeleteNotificationEndpointsIDResponse, error) {
+	var response DeleteNotificationEndpointsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteNotificationEndpointsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationEndpointsIDResponse parses an HTTP response from a GetNotificationEndpointsIDWithResponse call
-func ParseGetNotificationEndpointsIDResponse(rsp *http.Response) (*GetNotificationEndpointsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationEndpointsIDResponse(hresp *http.Response) (*GetNotificationEndpointsIDResponse, error) {
+	var response GetNotificationEndpointsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationEndpointsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationEndpoint
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchNotificationEndpointsIDResponse parses an HTTP response from a PatchNotificationEndpointsIDWithResponse call
-func ParsePatchNotificationEndpointsIDResponse(rsp *http.Response) (*PatchNotificationEndpointsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchNotificationEndpointsIDResponse(hresp *http.Response) (*PatchNotificationEndpointsIDResponse, error) {
+	var response PatchNotificationEndpointsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchNotificationEndpointsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationEndpoint
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutNotificationEndpointsIDResponse parses an HTTP response from a PutNotificationEndpointsIDWithResponse call
-func ParsePutNotificationEndpointsIDResponse(rsp *http.Response) (*PutNotificationEndpointsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutNotificationEndpointsIDResponse(hresp *http.Response) (*PutNotificationEndpointsIDResponse, error) {
+	var response PutNotificationEndpointsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutNotificationEndpointsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationEndpoint
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationEndpointsIDLabelsResponse parses an HTTP response from a GetNotificationEndpointsIDLabelsWithResponse call
-func ParseGetNotificationEndpointsIDLabelsResponse(rsp *http.Response) (*GetNotificationEndpointsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationEndpointsIDLabelsResponse(hresp *http.Response) (*GetNotificationEndpointsIDLabelsResponse, error) {
+	var response GetNotificationEndpointsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationEndpointsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostNotificationEndpointIDLabelsResponse parses an HTTP response from a PostNotificationEndpointIDLabelsWithResponse call
-func ParsePostNotificationEndpointIDLabelsResponse(rsp *http.Response) (*PostNotificationEndpointIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostNotificationEndpointIDLabelsResponse(hresp *http.Response) (*PostNotificationEndpointIDLabelsResponse, error) {
+	var response PostNotificationEndpointIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostNotificationEndpointIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteNotificationEndpointsIDLabelsIDResponse parses an HTTP response from a DeleteNotificationEndpointsIDLabelsIDWithResponse call
-func ParseDeleteNotificationEndpointsIDLabelsIDResponse(rsp *http.Response) (*DeleteNotificationEndpointsIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteNotificationEndpointsIDLabelsIDResponse(hresp *http.Response) (*DeleteNotificationEndpointsIDLabelsIDResponse, error) {
+	var response DeleteNotificationEndpointsIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteNotificationEndpointsIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationRulesResponse parses an HTTP response from a GetNotificationRulesWithResponse call
-func ParseGetNotificationRulesResponse(rsp *http.Response) (*GetNotificationRulesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationRulesResponse(hresp *http.Response) (*GetNotificationRulesResponse, error) {
+	var response GetNotificationRulesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationRulesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationRules
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseCreateNotificationRuleResponse parses an HTTP response from a CreateNotificationRuleWithResponse call
-func ParseCreateNotificationRuleResponse(rsp *http.Response) (*CreateNotificationRuleResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseCreateNotificationRuleResponse(hresp *http.Response) (*CreateNotificationRuleResponse, error) {
+	var response CreateNotificationRuleResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &CreateNotificationRuleResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest NotificationRule
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteNotificationRulesIDResponse parses an HTTP response from a DeleteNotificationRulesIDWithResponse call
-func ParseDeleteNotificationRulesIDResponse(rsp *http.Response) (*DeleteNotificationRulesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteNotificationRulesIDResponse(hresp *http.Response) (*DeleteNotificationRulesIDResponse, error) {
+	var response DeleteNotificationRulesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteNotificationRulesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationRulesIDResponse parses an HTTP response from a GetNotificationRulesIDWithResponse call
-func ParseGetNotificationRulesIDResponse(rsp *http.Response) (*GetNotificationRulesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationRulesIDResponse(hresp *http.Response) (*GetNotificationRulesIDResponse, error) {
+	var response GetNotificationRulesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationRulesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationRule
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchNotificationRulesIDResponse parses an HTTP response from a PatchNotificationRulesIDWithResponse call
-func ParsePatchNotificationRulesIDResponse(rsp *http.Response) (*PatchNotificationRulesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchNotificationRulesIDResponse(hresp *http.Response) (*PatchNotificationRulesIDResponse, error) {
+	var response PatchNotificationRulesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchNotificationRulesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationRule
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutNotificationRulesIDResponse parses an HTTP response from a PutNotificationRulesIDWithResponse call
-func ParsePutNotificationRulesIDResponse(rsp *http.Response) (*PutNotificationRulesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutNotificationRulesIDResponse(hresp *http.Response) (*PutNotificationRulesIDResponse, error) {
+	var response PutNotificationRulesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutNotificationRulesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest NotificationRule
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationRulesIDLabelsResponse parses an HTTP response from a GetNotificationRulesIDLabelsWithResponse call
-func ParseGetNotificationRulesIDLabelsResponse(rsp *http.Response) (*GetNotificationRulesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationRulesIDLabelsResponse(hresp *http.Response) (*GetNotificationRulesIDLabelsResponse, error) {
+	var response GetNotificationRulesIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationRulesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostNotificationRuleIDLabelsResponse parses an HTTP response from a PostNotificationRuleIDLabelsWithResponse call
-func ParsePostNotificationRuleIDLabelsResponse(rsp *http.Response) (*PostNotificationRuleIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostNotificationRuleIDLabelsResponse(hresp *http.Response) (*PostNotificationRuleIDLabelsResponse, error) {
+	var response PostNotificationRuleIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostNotificationRuleIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteNotificationRulesIDLabelsIDResponse parses an HTTP response from a DeleteNotificationRulesIDLabelsIDWithResponse call
-func ParseDeleteNotificationRulesIDLabelsIDResponse(rsp *http.Response) (*DeleteNotificationRulesIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteNotificationRulesIDLabelsIDResponse(hresp *http.Response) (*DeleteNotificationRulesIDLabelsIDResponse, error) {
+	var response DeleteNotificationRulesIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteNotificationRulesIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetNotificationRulesIDQueryResponse parses an HTTP response from a GetNotificationRulesIDQueryWithResponse call
-func ParseGetNotificationRulesIDQueryResponse(rsp *http.Response) (*GetNotificationRulesIDQueryResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetNotificationRulesIDQueryResponse(hresp *http.Response) (*GetNotificationRulesIDQueryResponse, error) {
+	var response GetNotificationRulesIDQueryResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetNotificationRulesIDQueryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest FluxResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetOrgsResponse parses an HTTP response from a GetOrgsWithResponse call
-func ParseGetOrgsResponse(rsp *http.Response) (*GetOrgsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetOrgsResponse(hresp *http.Response) (*GetOrgsResponse, error) {
+	var response GetOrgsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetOrgsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Organizations
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostOrgsResponse parses an HTTP response from a PostOrgsWithResponse call
-func ParsePostOrgsResponse(rsp *http.Response) (*PostOrgsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostOrgsResponse(hresp *http.Response) (*PostOrgsResponse, error) {
+	var response PostOrgsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostOrgsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Organization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteOrgsIDResponse parses an HTTP response from a DeleteOrgsIDWithResponse call
-func ParseDeleteOrgsIDResponse(rsp *http.Response) (*DeleteOrgsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteOrgsIDResponse(hresp *http.Response) (*DeleteOrgsIDResponse, error) {
+	var response DeleteOrgsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteOrgsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetOrgsIDResponse parses an HTTP response from a GetOrgsIDWithResponse call
-func ParseGetOrgsIDResponse(rsp *http.Response) (*GetOrgsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetOrgsIDResponse(hresp *http.Response) (*GetOrgsIDResponse, error) {
+	var response GetOrgsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetOrgsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Organization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchOrgsIDResponse parses an HTTP response from a PatchOrgsIDWithResponse call
-func ParsePatchOrgsIDResponse(rsp *http.Response) (*PatchOrgsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchOrgsIDResponse(hresp *http.Response) (*PatchOrgsIDResponse, error) {
+	var response PatchOrgsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchOrgsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Organization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetOrgsIDMembersResponse parses an HTTP response from a GetOrgsIDMembersWithResponse call
-func ParseGetOrgsIDMembersResponse(rsp *http.Response) (*GetOrgsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetOrgsIDMembersResponse(hresp *http.Response) (*GetOrgsIDMembersResponse, error) {
+	var response GetOrgsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetOrgsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMembers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostOrgsIDMembersResponse parses an HTTP response from a PostOrgsIDMembersWithResponse call
-func ParsePostOrgsIDMembersResponse(rsp *http.Response) (*PostOrgsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostOrgsIDMembersResponse(hresp *http.Response) (*PostOrgsIDMembersResponse, error) {
+	var response PostOrgsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostOrgsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceMember
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteOrgsIDMembersIDResponse parses an HTTP response from a DeleteOrgsIDMembersIDWithResponse call
-func ParseDeleteOrgsIDMembersIDResponse(rsp *http.Response) (*DeleteOrgsIDMembersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteOrgsIDMembersIDResponse(hresp *http.Response) (*DeleteOrgsIDMembersIDResponse, error) {
+	var response DeleteOrgsIDMembersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteOrgsIDMembersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetOrgsIDOwnersResponse parses an HTTP response from a GetOrgsIDOwnersWithResponse call
-func ParseGetOrgsIDOwnersResponse(rsp *http.Response) (*GetOrgsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetOrgsIDOwnersResponse(hresp *http.Response) (*GetOrgsIDOwnersResponse, error) {
+	var response GetOrgsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetOrgsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceOwners
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostOrgsIDOwnersResponse parses an HTTP response from a PostOrgsIDOwnersWithResponse call
-func ParsePostOrgsIDOwnersResponse(rsp *http.Response) (*PostOrgsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostOrgsIDOwnersResponse(hresp *http.Response) (*PostOrgsIDOwnersResponse, error) {
+	var response PostOrgsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostOrgsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceOwner
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteOrgsIDOwnersIDResponse parses an HTTP response from a DeleteOrgsIDOwnersIDWithResponse call
-func ParseDeleteOrgsIDOwnersIDResponse(rsp *http.Response) (*DeleteOrgsIDOwnersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteOrgsIDOwnersIDResponse(hresp *http.Response) (*DeleteOrgsIDOwnersIDResponse, error) {
+	var response DeleteOrgsIDOwnersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteOrgsIDOwnersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetOrgsIDSecretsResponse parses an HTTP response from a GetOrgsIDSecretsWithResponse call
-func ParseGetOrgsIDSecretsResponse(rsp *http.Response) (*GetOrgsIDSecretsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetOrgsIDSecretsResponse(hresp *http.Response) (*GetOrgsIDSecretsResponse, error) {
+	var response GetOrgsIDSecretsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetOrgsIDSecretsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest SecretKeysResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchOrgsIDSecretsResponse parses an HTTP response from a PatchOrgsIDSecretsWithResponse call
-func ParsePatchOrgsIDSecretsResponse(rsp *http.Response) (*PatchOrgsIDSecretsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchOrgsIDSecretsResponse(hresp *http.Response) (*PatchOrgsIDSecretsResponse, error) {
+	var response PatchOrgsIDSecretsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchOrgsIDSecretsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostOrgsIDSecretsResponse parses an HTTP response from a PostOrgsIDSecretsWithResponse call
-func ParsePostOrgsIDSecretsResponse(rsp *http.Response) (*PostOrgsIDSecretsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostOrgsIDSecretsResponse(hresp *http.Response) (*PostOrgsIDSecretsResponse, error) {
+	var response PostOrgsIDSecretsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostOrgsIDSecretsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetPingResponse parses an HTTP response from a GetPingWithResponse call
-func ParseGetPingResponse(rsp *http.Response) (*GetPingResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetPingResponse(hresp *http.Response) (*GetPingResponse, error) {
+	var response GetPingResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetPingResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+	switch resp.StatusCode {
 
 	}
-
-	return response, nil
 }
 
 // ParseHeadPingResponse parses an HTTP response from a HeadPingWithResponse call
-func ParseHeadPingResponse(rsp *http.Response) (*HeadPingResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseHeadPingResponse(hresp *http.Response) (*HeadPingResponse, error) {
+	var response HeadPingResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &HeadPingResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+	switch resp.StatusCode {
 
 	}
-
-	return response, nil
 }
 
 // ParsePostQueryResponse parses an HTTP response from a PostQueryWithResponse call
-func ParsePostQueryResponse(rsp *http.Response) (*PostQueryResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostQueryResponse(hresp *http.Response) (*PostQueryResponse, error) {
+	var response PostQueryResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostQueryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostQueryAnalyzeResponse parses an HTTP response from a PostQueryAnalyzeWithResponse call
-func ParsePostQueryAnalyzeResponse(rsp *http.Response) (*PostQueryAnalyzeResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostQueryAnalyzeResponse(hresp *http.Response) (*PostQueryAnalyzeResponse, error) {
+	var response PostQueryAnalyzeResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostQueryAnalyzeResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AnalyzeQueryResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostQueryAstResponse parses an HTTP response from a PostQueryAstWithResponse call
-func ParsePostQueryAstResponse(rsp *http.Response) (*PostQueryAstResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostQueryAstResponse(hresp *http.Response) (*PostQueryAstResponse, error) {
+	var response PostQueryAstResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostQueryAstResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ASTResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetQuerySuggestionsResponse parses an HTTP response from a GetQuerySuggestionsWithResponse call
-func ParseGetQuerySuggestionsResponse(rsp *http.Response) (*GetQuerySuggestionsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetQuerySuggestionsResponse(hresp *http.Response) (*GetQuerySuggestionsResponse, error) {
+	var response GetQuerySuggestionsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetQuerySuggestionsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest FluxSuggestions
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetQuerySuggestionsNameResponse parses an HTTP response from a GetQuerySuggestionsNameWithResponse call
-func ParseGetQuerySuggestionsNameResponse(rsp *http.Response) (*GetQuerySuggestionsNameResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetQuerySuggestionsNameResponse(hresp *http.Response) (*GetQuerySuggestionsNameResponse, error) {
+	var response GetQuerySuggestionsNameResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetQuerySuggestionsNameResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest FluxSuggestion
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetReadyResponse parses an HTTP response from a GetReadyWithResponse call
-func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetReadyResponse(hresp *http.Response) (*GetReadyResponse, error) {
+	var response GetReadyResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetReadyResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Ready
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostRestoreBucketMetadataResponse parses an HTTP response from a PostRestoreBucketMetadataWithResponse call
-func ParsePostRestoreBucketMetadataResponse(rsp *http.Response) (*PostRestoreBucketMetadataResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostRestoreBucketMetadataResponse(hresp *http.Response) (*PostRestoreBucketMetadataResponse, error) {
+	var response PostRestoreBucketMetadataResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostRestoreBucketMetadataResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest RestoredBucketMappings
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostRestoreBucketIDResponse parses an HTTP response from a PostRestoreBucketIDWithResponse call
-func ParsePostRestoreBucketIDResponse(rsp *http.Response) (*PostRestoreBucketIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostRestoreBucketIDResponse(hresp *http.Response) (*PostRestoreBucketIDResponse, error) {
+	var response PostRestoreBucketIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostRestoreBucketIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []byte
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostRestoreKVResponse parses an HTTP response from a PostRestoreKVWithResponse call
-func ParsePostRestoreKVResponse(rsp *http.Response) (*PostRestoreKVResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostRestoreKVResponse(hresp *http.Response) (*PostRestoreKVResponse, error) {
+	var response PostRestoreKVResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostRestoreKVResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostRestoreShardIdResponse parses an HTTP response from a PostRestoreShardIdWithResponse call
-func ParsePostRestoreShardIdResponse(rsp *http.Response) (*PostRestoreShardIdResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostRestoreShardIdResponse(hresp *http.Response) (*PostRestoreShardIdResponse, error) {
+	var response PostRestoreShardIdResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostRestoreShardIdResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostRestoreSQLResponse parses an HTTP response from a PostRestoreSQLWithResponse call
-func ParsePostRestoreSQLResponse(rsp *http.Response) (*PostRestoreSQLResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostRestoreSQLResponse(hresp *http.Response) (*PostRestoreSQLResponse, error) {
+	var response PostRestoreSQLResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostRestoreSQLResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetScrapersResponse parses an HTTP response from a GetScrapersWithResponse call
-func ParseGetScrapersResponse(rsp *http.Response) (*GetScrapersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetScrapersResponse(hresp *http.Response) (*GetScrapersResponse, error) {
+	var response GetScrapersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetScrapersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ScraperTargetResponses
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostScrapersResponse parses an HTTP response from a PostScrapersWithResponse call
-func ParsePostScrapersResponse(rsp *http.Response) (*PostScrapersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostScrapersResponse(hresp *http.Response) (*PostScrapersResponse, error) {
+	var response PostScrapersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostScrapersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ScraperTargetResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteScrapersIDResponse parses an HTTP response from a DeleteScrapersIDWithResponse call
-func ParseDeleteScrapersIDResponse(rsp *http.Response) (*DeleteScrapersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteScrapersIDResponse(hresp *http.Response) (*DeleteScrapersIDResponse, error) {
+	var response DeleteScrapersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteScrapersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetScrapersIDResponse parses an HTTP response from a GetScrapersIDWithResponse call
-func ParseGetScrapersIDResponse(rsp *http.Response) (*GetScrapersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetScrapersIDResponse(hresp *http.Response) (*GetScrapersIDResponse, error) {
+	var response GetScrapersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetScrapersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ScraperTargetResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchScrapersIDResponse parses an HTTP response from a PatchScrapersIDWithResponse call
-func ParsePatchScrapersIDResponse(rsp *http.Response) (*PatchScrapersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchScrapersIDResponse(hresp *http.Response) (*PatchScrapersIDResponse, error) {
+	var response PatchScrapersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchScrapersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ScraperTargetResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetScrapersIDLabelsResponse parses an HTTP response from a GetScrapersIDLabelsWithResponse call
-func ParseGetScrapersIDLabelsResponse(rsp *http.Response) (*GetScrapersIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetScrapersIDLabelsResponse(hresp *http.Response) (*GetScrapersIDLabelsResponse, error) {
+	var response GetScrapersIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetScrapersIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostScrapersIDLabelsResponse parses an HTTP response from a PostScrapersIDLabelsWithResponse call
-func ParsePostScrapersIDLabelsResponse(rsp *http.Response) (*PostScrapersIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostScrapersIDLabelsResponse(hresp *http.Response) (*PostScrapersIDLabelsResponse, error) {
+	var response PostScrapersIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostScrapersIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteScrapersIDLabelsIDResponse parses an HTTP response from a DeleteScrapersIDLabelsIDWithResponse call
-func ParseDeleteScrapersIDLabelsIDResponse(rsp *http.Response) (*DeleteScrapersIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteScrapersIDLabelsIDResponse(hresp *http.Response) (*DeleteScrapersIDLabelsIDResponse, error) {
+	var response DeleteScrapersIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteScrapersIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetScrapersIDMembersResponse parses an HTTP response from a GetScrapersIDMembersWithResponse call
-func ParseGetScrapersIDMembersResponse(rsp *http.Response) (*GetScrapersIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetScrapersIDMembersResponse(hresp *http.Response) (*GetScrapersIDMembersResponse, error) {
+	var response GetScrapersIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetScrapersIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMembers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostScrapersIDMembersResponse parses an HTTP response from a PostScrapersIDMembersWithResponse call
-func ParsePostScrapersIDMembersResponse(rsp *http.Response) (*PostScrapersIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostScrapersIDMembersResponse(hresp *http.Response) (*PostScrapersIDMembersResponse, error) {
+	var response PostScrapersIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostScrapersIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceMember
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteScrapersIDMembersIDResponse parses an HTTP response from a DeleteScrapersIDMembersIDWithResponse call
-func ParseDeleteScrapersIDMembersIDResponse(rsp *http.Response) (*DeleteScrapersIDMembersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteScrapersIDMembersIDResponse(hresp *http.Response) (*DeleteScrapersIDMembersIDResponse, error) {
+	var response DeleteScrapersIDMembersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteScrapersIDMembersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetScrapersIDOwnersResponse parses an HTTP response from a GetScrapersIDOwnersWithResponse call
-func ParseGetScrapersIDOwnersResponse(rsp *http.Response) (*GetScrapersIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetScrapersIDOwnersResponse(hresp *http.Response) (*GetScrapersIDOwnersResponse, error) {
+	var response GetScrapersIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetScrapersIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceOwners
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostScrapersIDOwnersResponse parses an HTTP response from a PostScrapersIDOwnersWithResponse call
-func ParsePostScrapersIDOwnersResponse(rsp *http.Response) (*PostScrapersIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostScrapersIDOwnersResponse(hresp *http.Response) (*PostScrapersIDOwnersResponse, error) {
+	var response PostScrapersIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostScrapersIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceOwner
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteScrapersIDOwnersIDResponse parses an HTTP response from a DeleteScrapersIDOwnersIDWithResponse call
-func ParseDeleteScrapersIDOwnersIDResponse(rsp *http.Response) (*DeleteScrapersIDOwnersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteScrapersIDOwnersIDResponse(hresp *http.Response) (*DeleteScrapersIDOwnersIDResponse, error) {
+	var response DeleteScrapersIDOwnersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteScrapersIDOwnersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetSetupResponse parses an HTTP response from a GetSetupWithResponse call
-func ParseGetSetupResponse(rsp *http.Response) (*GetSetupResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetSetupResponse(hresp *http.Response) (*GetSetupResponse, error) {
+	var response GetSetupResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetSetupResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest IsOnboarding
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	// Fallback for unexpected error
-	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostSetupResponse parses an HTTP response from a PostSetupWithResponse call
-func ParsePostSetupResponse(rsp *http.Response) (*PostSetupResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostSetupResponse(hresp *http.Response) (*PostSetupResponse, error) {
+	var response PostSetupResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostSetupResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest OnboardingResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostSigninResponse parses an HTTP response from a PostSigninWithResponse call
-func ParsePostSigninResponse(rsp *http.Response) (*PostSigninResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostSigninResponse(hresp *http.Response) (*PostSigninResponse, error) {
+	var response PostSigninResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostSigninResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON401 = &dest
+	case 401:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON401)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
+	case 403:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON403)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostSignoutResponse parses an HTTP response from a PostSignoutWithResponse call
-func ParsePostSignoutResponse(rsp *http.Response) (*PostSignoutResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostSignoutResponse(hresp *http.Response) (*PostSignoutResponse, error) {
+	var response PostSignoutResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostSignoutResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON401 = &dest
+	case 401:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON401)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetSourcesResponse parses an HTTP response from a GetSourcesWithResponse call
-func ParseGetSourcesResponse(rsp *http.Response) (*GetSourcesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetSourcesResponse(hresp *http.Response) (*GetSourcesResponse, error) {
+	var response GetSourcesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetSourcesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Sources
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostSourcesResponse parses an HTTP response from a PostSourcesWithResponse call
-func ParsePostSourcesResponse(rsp *http.Response) (*PostSourcesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostSourcesResponse(hresp *http.Response) (*PostSourcesResponse, error) {
+	var response PostSourcesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostSourcesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Source
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteSourcesIDResponse parses an HTTP response from a DeleteSourcesIDWithResponse call
-func ParseDeleteSourcesIDResponse(rsp *http.Response) (*DeleteSourcesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteSourcesIDResponse(hresp *http.Response) (*DeleteSourcesIDResponse, error) {
+	var response DeleteSourcesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteSourcesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetSourcesIDResponse parses an HTTP response from a GetSourcesIDWithResponse call
-func ParseGetSourcesIDResponse(rsp *http.Response) (*GetSourcesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetSourcesIDResponse(hresp *http.Response) (*GetSourcesIDResponse, error) {
+	var response GetSourcesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetSourcesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Source
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchSourcesIDResponse parses an HTTP response from a PatchSourcesIDWithResponse call
-func ParsePatchSourcesIDResponse(rsp *http.Response) (*PatchSourcesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchSourcesIDResponse(hresp *http.Response) (*PatchSourcesIDResponse, error) {
+	var response PatchSourcesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchSourcesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Source
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetSourcesIDBucketsResponse parses an HTTP response from a GetSourcesIDBucketsWithResponse call
-func ParseGetSourcesIDBucketsResponse(rsp *http.Response) (*GetSourcesIDBucketsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetSourcesIDBucketsResponse(hresp *http.Response) (*GetSourcesIDBucketsResponse, error) {
+	var response GetSourcesIDBucketsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetSourcesIDBucketsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Buckets
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetSourcesIDHealthResponse parses an HTTP response from a GetSourcesIDHealthWithResponse call
-func ParseGetSourcesIDHealthResponse(rsp *http.Response) (*GetSourcesIDHealthResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetSourcesIDHealthResponse(hresp *http.Response) (*GetSourcesIDHealthResponse, error) {
+	var response GetSourcesIDHealthResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetSourcesIDHealthResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest HealthCheck
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest HealthCheck
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
+	case 503:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON503)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseListStacksResponse parses an HTTP response from a ListStacksWithResponse call
-func ParseListStacksResponse(rsp *http.Response) (*ListStacksResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseListStacksResponse(hresp *http.Response) (*ListStacksResponse, error) {
+	var response ListStacksResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &ListStacksResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Stacks *[]Stack `json:"stacks,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseCreateStackResponse parses an HTTP response from a CreateStackWithResponse call
-func ParseCreateStackResponse(rsp *http.Response) (*CreateStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseCreateStackResponse(hresp *http.Response) (*CreateStackResponse, error) {
+	var response CreateStackResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &CreateStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteStackResponse parses an HTTP response from a DeleteStackWithResponse call
-func ParseDeleteStackResponse(rsp *http.Response) (*DeleteStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteStackResponse(hresp *http.Response) (*DeleteStackResponse, error) {
+	var response DeleteStackResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseReadStackResponse parses an HTTP response from a ReadStackWithResponse call
-func ParseReadStackResponse(rsp *http.Response) (*ReadStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseReadStackResponse(hresp *http.Response) (*ReadStackResponse, error) {
+	var response ReadStackResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &ReadStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseUpdateStackResponse parses an HTTP response from a UpdateStackWithResponse call
-func ParseUpdateStackResponse(rsp *http.Response) (*UpdateStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseUpdateStackResponse(hresp *http.Response) (*UpdateStackResponse, error) {
+	var response UpdateStackResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &UpdateStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseUninstallStackResponse parses an HTTP response from a UninstallStackWithResponse call
-func ParseUninstallStackResponse(rsp *http.Response) (*UninstallStackResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseUninstallStackResponse(hresp *http.Response) (*UninstallStackResponse, error) {
+	var response UninstallStackResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &UninstallStackResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Stack
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksResponse parses an HTTP response from a GetTasksWithResponse call
-func ParseGetTasksResponse(rsp *http.Response) (*GetTasksResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksResponse(hresp *http.Response) (*GetTasksResponse, error) {
+	var response GetTasksResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Tasks
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTasksResponse parses an HTTP response from a PostTasksWithResponse call
-func ParsePostTasksResponse(rsp *http.Response) (*PostTasksResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTasksResponse(hresp *http.Response) (*PostTasksResponse, error) {
+	var response PostTasksResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTasksResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Task
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTasksIDResponse parses an HTTP response from a DeleteTasksIDWithResponse call
-func ParseDeleteTasksIDResponse(rsp *http.Response) (*DeleteTasksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTasksIDResponse(hresp *http.Response) (*DeleteTasksIDResponse, error) {
+	var response DeleteTasksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTasksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDResponse parses an HTTP response from a GetTasksIDWithResponse call
-func ParseGetTasksIDResponse(rsp *http.Response) (*GetTasksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDResponse(hresp *http.Response) (*GetTasksIDResponse, error) {
+	var response GetTasksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Task
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchTasksIDResponse parses an HTTP response from a PatchTasksIDWithResponse call
-func ParsePatchTasksIDResponse(rsp *http.Response) (*PatchTasksIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchTasksIDResponse(hresp *http.Response) (*PatchTasksIDResponse, error) {
+	var response PatchTasksIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchTasksIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Task
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDLabelsResponse parses an HTTP response from a GetTasksIDLabelsWithResponse call
-func ParseGetTasksIDLabelsResponse(rsp *http.Response) (*GetTasksIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDLabelsResponse(hresp *http.Response) (*GetTasksIDLabelsResponse, error) {
+	var response GetTasksIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTasksIDLabelsResponse parses an HTTP response from a PostTasksIDLabelsWithResponse call
-func ParsePostTasksIDLabelsResponse(rsp *http.Response) (*PostTasksIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTasksIDLabelsResponse(hresp *http.Response) (*PostTasksIDLabelsResponse, error) {
+	var response PostTasksIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTasksIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTasksIDLabelsIDResponse parses an HTTP response from a DeleteTasksIDLabelsIDWithResponse call
-func ParseDeleteTasksIDLabelsIDResponse(rsp *http.Response) (*DeleteTasksIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTasksIDLabelsIDResponse(hresp *http.Response) (*DeleteTasksIDLabelsIDResponse, error) {
+	var response DeleteTasksIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTasksIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDLogsResponse parses an HTTP response from a GetTasksIDLogsWithResponse call
-func ParseGetTasksIDLogsResponse(rsp *http.Response) (*GetTasksIDLogsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDLogsResponse(hresp *http.Response) (*GetTasksIDLogsResponse, error) {
+	var response GetTasksIDLogsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Logs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDMembersResponse parses an HTTP response from a GetTasksIDMembersWithResponse call
-func ParseGetTasksIDMembersResponse(rsp *http.Response) (*GetTasksIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDMembersResponse(hresp *http.Response) (*GetTasksIDMembersResponse, error) {
+	var response GetTasksIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMembers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTasksIDMembersResponse parses an HTTP response from a PostTasksIDMembersWithResponse call
-func ParsePostTasksIDMembersResponse(rsp *http.Response) (*PostTasksIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTasksIDMembersResponse(hresp *http.Response) (*PostTasksIDMembersResponse, error) {
+	var response PostTasksIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTasksIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceMember
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTasksIDMembersIDResponse parses an HTTP response from a DeleteTasksIDMembersIDWithResponse call
-func ParseDeleteTasksIDMembersIDResponse(rsp *http.Response) (*DeleteTasksIDMembersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTasksIDMembersIDResponse(hresp *http.Response) (*DeleteTasksIDMembersIDResponse, error) {
+	var response DeleteTasksIDMembersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTasksIDMembersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDOwnersResponse parses an HTTP response from a GetTasksIDOwnersWithResponse call
-func ParseGetTasksIDOwnersResponse(rsp *http.Response) (*GetTasksIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDOwnersResponse(hresp *http.Response) (*GetTasksIDOwnersResponse, error) {
+	var response GetTasksIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceOwners
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTasksIDOwnersResponse parses an HTTP response from a PostTasksIDOwnersWithResponse call
-func ParsePostTasksIDOwnersResponse(rsp *http.Response) (*PostTasksIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTasksIDOwnersResponse(hresp *http.Response) (*PostTasksIDOwnersResponse, error) {
+	var response PostTasksIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTasksIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceOwner
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTasksIDOwnersIDResponse parses an HTTP response from a DeleteTasksIDOwnersIDWithResponse call
-func ParseDeleteTasksIDOwnersIDResponse(rsp *http.Response) (*DeleteTasksIDOwnersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTasksIDOwnersIDResponse(hresp *http.Response) (*DeleteTasksIDOwnersIDResponse, error) {
+	var response DeleteTasksIDOwnersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTasksIDOwnersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDRunsResponse parses an HTTP response from a GetTasksIDRunsWithResponse call
-func ParseGetTasksIDRunsResponse(rsp *http.Response) (*GetTasksIDRunsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDRunsResponse(hresp *http.Response) (*GetTasksIDRunsResponse, error) {
+	var response GetTasksIDRunsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDRunsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Runs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTasksIDRunsResponse parses an HTTP response from a PostTasksIDRunsWithResponse call
-func ParsePostTasksIDRunsResponse(rsp *http.Response) (*PostTasksIDRunsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTasksIDRunsResponse(hresp *http.Response) (*PostTasksIDRunsResponse, error) {
+	var response PostTasksIDRunsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTasksIDRunsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Run
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTasksIDRunsIDResponse parses an HTTP response from a DeleteTasksIDRunsIDWithResponse call
-func ParseDeleteTasksIDRunsIDResponse(rsp *http.Response) (*DeleteTasksIDRunsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTasksIDRunsIDResponse(hresp *http.Response) (*DeleteTasksIDRunsIDResponse, error) {
+	var response DeleteTasksIDRunsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTasksIDRunsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDRunsIDResponse parses an HTTP response from a GetTasksIDRunsIDWithResponse call
-func ParseGetTasksIDRunsIDResponse(rsp *http.Response) (*GetTasksIDRunsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDRunsIDResponse(hresp *http.Response) (*GetTasksIDRunsIDResponse, error) {
+	var response GetTasksIDRunsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDRunsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Run
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTasksIDRunsIDLogsResponse parses an HTTP response from a GetTasksIDRunsIDLogsWithResponse call
-func ParseGetTasksIDRunsIDLogsResponse(rsp *http.Response) (*GetTasksIDRunsIDLogsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTasksIDRunsIDLogsResponse(hresp *http.Response) (*GetTasksIDRunsIDLogsResponse, error) {
+	var response GetTasksIDRunsIDLogsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTasksIDRunsIDLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Logs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTasksIDRunsIDRetryResponse parses an HTTP response from a PostTasksIDRunsIDRetryWithResponse call
-func ParsePostTasksIDRunsIDRetryResponse(rsp *http.Response) (*PostTasksIDRunsIDRetryResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTasksIDRunsIDRetryResponse(hresp *http.Response) (*PostTasksIDRunsIDRetryResponse, error) {
+	var response PostTasksIDRunsIDRetryResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTasksIDRunsIDRetryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Run
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTelegrafPluginsResponse parses an HTTP response from a GetTelegrafPluginsWithResponse call
-func ParseGetTelegrafPluginsResponse(rsp *http.Response) (*GetTelegrafPluginsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTelegrafPluginsResponse(hresp *http.Response) (*GetTelegrafPluginsResponse, error) {
+	var response GetTelegrafPluginsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTelegrafPluginsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest TelegrafPlugins
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTelegrafsResponse parses an HTTP response from a GetTelegrafsWithResponse call
-func ParseGetTelegrafsResponse(rsp *http.Response) (*GetTelegrafsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTelegrafsResponse(hresp *http.Response) (*GetTelegrafsResponse, error) {
+	var response GetTelegrafsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTelegrafsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Telegrafs
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTelegrafsResponse parses an HTTP response from a PostTelegrafsWithResponse call
-func ParsePostTelegrafsResponse(rsp *http.Response) (*PostTelegrafsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTelegrafsResponse(hresp *http.Response) (*PostTelegrafsResponse, error) {
+	var response PostTelegrafsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTelegrafsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Telegraf
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTelegrafsIDResponse parses an HTTP response from a DeleteTelegrafsIDWithResponse call
-func ParseDeleteTelegrafsIDResponse(rsp *http.Response) (*DeleteTelegrafsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTelegrafsIDResponse(hresp *http.Response) (*DeleteTelegrafsIDResponse, error) {
+	var response DeleteTelegrafsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTelegrafsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTelegrafsIDResponse parses an HTTP response from a GetTelegrafsIDWithResponse call
-func ParseGetTelegrafsIDResponse(rsp *http.Response) (*GetTelegrafsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTelegrafsIDResponse(hresp *http.Response) (*GetTelegrafsIDResponse, error) {
+	var response GetTelegrafsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTelegrafsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Telegraf
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case rsp.StatusCode == 200:
-		// Content-type (application/toml) unsupported
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutTelegrafsIDResponse parses an HTTP response from a PutTelegrafsIDWithResponse call
-func ParsePutTelegrafsIDResponse(rsp *http.Response) (*PutTelegrafsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutTelegrafsIDResponse(hresp *http.Response) (*PutTelegrafsIDResponse, error) {
+	var response PutTelegrafsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutTelegrafsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Telegraf
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTelegrafsIDLabelsResponse parses an HTTP response from a GetTelegrafsIDLabelsWithResponse call
-func ParseGetTelegrafsIDLabelsResponse(rsp *http.Response) (*GetTelegrafsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTelegrafsIDLabelsResponse(hresp *http.Response) (*GetTelegrafsIDLabelsResponse, error) {
+	var response GetTelegrafsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTelegrafsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTelegrafsIDLabelsResponse parses an HTTP response from a PostTelegrafsIDLabelsWithResponse call
-func ParsePostTelegrafsIDLabelsResponse(rsp *http.Response) (*PostTelegrafsIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTelegrafsIDLabelsResponse(hresp *http.Response) (*PostTelegrafsIDLabelsResponse, error) {
+	var response PostTelegrafsIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTelegrafsIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTelegrafsIDLabelsIDResponse parses an HTTP response from a DeleteTelegrafsIDLabelsIDWithResponse call
-func ParseDeleteTelegrafsIDLabelsIDResponse(rsp *http.Response) (*DeleteTelegrafsIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTelegrafsIDLabelsIDResponse(hresp *http.Response) (*DeleteTelegrafsIDLabelsIDResponse, error) {
+	var response DeleteTelegrafsIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTelegrafsIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTelegrafsIDMembersResponse parses an HTTP response from a GetTelegrafsIDMembersWithResponse call
-func ParseGetTelegrafsIDMembersResponse(rsp *http.Response) (*GetTelegrafsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTelegrafsIDMembersResponse(hresp *http.Response) (*GetTelegrafsIDMembersResponse, error) {
+	var response GetTelegrafsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTelegrafsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMembers
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTelegrafsIDMembersResponse parses an HTTP response from a PostTelegrafsIDMembersWithResponse call
-func ParsePostTelegrafsIDMembersResponse(rsp *http.Response) (*PostTelegrafsIDMembersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTelegrafsIDMembersResponse(hresp *http.Response) (*PostTelegrafsIDMembersResponse, error) {
+	var response PostTelegrafsIDMembersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTelegrafsIDMembersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceMember
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTelegrafsIDMembersIDResponse parses an HTTP response from a DeleteTelegrafsIDMembersIDWithResponse call
-func ParseDeleteTelegrafsIDMembersIDResponse(rsp *http.Response) (*DeleteTelegrafsIDMembersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTelegrafsIDMembersIDResponse(hresp *http.Response) (*DeleteTelegrafsIDMembersIDResponse, error) {
+	var response DeleteTelegrafsIDMembersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTelegrafsIDMembersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetTelegrafsIDOwnersResponse parses an HTTP response from a GetTelegrafsIDOwnersWithResponse call
-func ParseGetTelegrafsIDOwnersResponse(rsp *http.Response) (*GetTelegrafsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetTelegrafsIDOwnersResponse(hresp *http.Response) (*GetTelegrafsIDOwnersResponse, error) {
+	var response GetTelegrafsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetTelegrafsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceOwners
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostTelegrafsIDOwnersResponse parses an HTTP response from a PostTelegrafsIDOwnersWithResponse call
-func ParsePostTelegrafsIDOwnersResponse(rsp *http.Response) (*PostTelegrafsIDOwnersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostTelegrafsIDOwnersResponse(hresp *http.Response) (*PostTelegrafsIDOwnersResponse, error) {
+	var response PostTelegrafsIDOwnersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostTelegrafsIDOwnersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest ResourceOwner
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteTelegrafsIDOwnersIDResponse parses an HTTP response from a DeleteTelegrafsIDOwnersIDWithResponse call
-func ParseDeleteTelegrafsIDOwnersIDResponse(rsp *http.Response) (*DeleteTelegrafsIDOwnersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteTelegrafsIDOwnersIDResponse(hresp *http.Response) (*DeleteTelegrafsIDOwnersIDResponse, error) {
+	var response DeleteTelegrafsIDOwnersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteTelegrafsIDOwnersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseApplyTemplateResponse parses an HTTP response from a ApplyTemplateWithResponse call
-func ParseApplyTemplateResponse(rsp *http.Response) (*ApplyTemplateResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseApplyTemplateResponse(hresp *http.Response) (*ApplyTemplateResponse, error) {
+	var response ApplyTemplateResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &ApplyTemplateResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest TemplateSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest TemplateSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseExportTemplateResponse parses an HTTP response from a ExportTemplateWithResponse call
-func ParseExportTemplateResponse(rsp *http.Response) (*ExportTemplateResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseExportTemplateResponse(hresp *http.Response) (*ExportTemplateResponse, error) {
+	var response ExportTemplateResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &ExportTemplateResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Template
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "yaml") && rsp.StatusCode == 200:
-		var dest Template
-		if err := yaml.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.YAML200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.YAML200)
 
-	// Fallback for unexpected error
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.YAML200)
+
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetUsersResponse parses an HTTP response from a GetUsersWithResponse call
-func ParseGetUsersResponse(rsp *http.Response) (*GetUsersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetUsersResponse(hresp *http.Response) (*GetUsersResponse, error) {
+	var response GetUsersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetUsersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Users
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostUsersResponse parses an HTTP response from a PostUsersWithResponse call
-func ParsePostUsersResponse(rsp *http.Response) (*PostUsersResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostUsersResponse(hresp *http.Response) (*PostUsersResponse, error) {
+	var response PostUsersResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostUsersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest UserResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteUsersIDResponse parses an HTTP response from a DeleteUsersIDWithResponse call
-func ParseDeleteUsersIDResponse(rsp *http.Response) (*DeleteUsersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteUsersIDResponse(hresp *http.Response) (*DeleteUsersIDResponse, error) {
+	var response DeleteUsersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteUsersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetUsersIDResponse parses an HTTP response from a GetUsersIDWithResponse call
-func ParseGetUsersIDResponse(rsp *http.Response) (*GetUsersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetUsersIDResponse(hresp *http.Response) (*GetUsersIDResponse, error) {
+	var response GetUsersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetUsersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest UserResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchUsersIDResponse parses an HTTP response from a PatchUsersIDWithResponse call
-func ParsePatchUsersIDResponse(rsp *http.Response) (*PatchUsersIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchUsersIDResponse(hresp *http.Response) (*PatchUsersIDResponse, error) {
+	var response PatchUsersIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchUsersIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest UserResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostUsersIDPasswordResponse parses an HTTP response from a PostUsersIDPasswordWithResponse call
-func ParsePostUsersIDPasswordResponse(rsp *http.Response) (*PostUsersIDPasswordResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostUsersIDPasswordResponse(hresp *http.Response) (*PostUsersIDPasswordResponse, error) {
+	var response PostUsersIDPasswordResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostUsersIDPasswordResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetVariablesResponse parses an HTTP response from a GetVariablesWithResponse call
-func ParseGetVariablesResponse(rsp *http.Response) (*GetVariablesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetVariablesResponse(hresp *http.Response) (*GetVariablesResponse, error) {
+	var response GetVariablesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetVariablesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Variables
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostVariablesResponse parses an HTTP response from a PostVariablesWithResponse call
-func ParsePostVariablesResponse(rsp *http.Response) (*PostVariablesResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostVariablesResponse(hresp *http.Response) (*PostVariablesResponse, error) {
+	var response PostVariablesResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostVariablesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Variable
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteVariablesIDResponse parses an HTTP response from a DeleteVariablesIDWithResponse call
-func ParseDeleteVariablesIDResponse(rsp *http.Response) (*DeleteVariablesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteVariablesIDResponse(hresp *http.Response) (*DeleteVariablesIDResponse, error) {
+	var response DeleteVariablesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteVariablesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetVariablesIDResponse parses an HTTP response from a GetVariablesIDWithResponse call
-func ParseGetVariablesIDResponse(rsp *http.Response) (*GetVariablesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetVariablesIDResponse(hresp *http.Response) (*GetVariablesIDResponse, error) {
+	var response GetVariablesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetVariablesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Variable
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePatchVariablesIDResponse parses an HTTP response from a PatchVariablesIDWithResponse call
-func ParsePatchVariablesIDResponse(rsp *http.Response) (*PatchVariablesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePatchVariablesIDResponse(hresp *http.Response) (*PatchVariablesIDResponse, error) {
+	var response PatchVariablesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PatchVariablesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Variable
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePutVariablesIDResponse parses an HTTP response from a PutVariablesIDWithResponse call
-func ParsePutVariablesIDResponse(rsp *http.Response) (*PutVariablesIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePutVariablesIDResponse(hresp *http.Response) (*PutVariablesIDResponse, error) {
+	var response PutVariablesIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PutVariablesIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Variable
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseGetVariablesIDLabelsResponse parses an HTTP response from a GetVariablesIDLabelsWithResponse call
-func ParseGetVariablesIDLabelsResponse(rsp *http.Response) (*GetVariablesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseGetVariablesIDLabelsResponse(hresp *http.Response) (*GetVariablesIDLabelsResponse, error) {
+	var response GetVariablesIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &GetVariablesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest LabelsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
+	case 200:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON200)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostVariablesIDLabelsResponse parses an HTTP response from a PostVariablesIDLabelsWithResponse call
-func ParsePostVariablesIDLabelsResponse(rsp *http.Response) (*PostVariablesIDLabelsResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostVariablesIDLabelsResponse(hresp *http.Response) (*PostVariablesIDLabelsResponse, error) {
+	var response PostVariablesIDLabelsResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostVariablesIDLabelsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest LabelResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
+	case 201:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON201)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParseDeleteVariablesIDLabelsIDResponse parses an HTTP response from a DeleteVariablesIDLabelsIDWithResponse call
-func ParseDeleteVariablesIDLabelsIDResponse(rsp *http.Response) (*DeleteVariablesIDLabelsIDResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParseDeleteVariablesIDLabelsIDResponse(hresp *http.Response) (*DeleteVariablesIDLabelsIDResponse, error) {
+	var response DeleteVariablesIDLabelsIDResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &DeleteVariablesIDLabelsIDResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+	case 404:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON404)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }
 
 // ParsePostWriteResponse parses an HTTP response from a PostWriteWithResponse call
-func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
-	bodyBytes, err := ioutil.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
-	if err != nil {
-		return nil, err
+func ParsePostWriteResponse(hresp *http.Response) (*PostWriteResponse, error) {
+	var response PostWriteResponse
+	if err := readResponseBody(hresp, &response); err != nil {
+		return &response, err
+	}
+	if !isJSON(hresp) {
+		return &response, newUnexpectedResponseError(hresp)
 	}
 
-	response := &PostWriteResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
+	switch resp.StatusCode {
 
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest LineProtocolError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
+	case 400:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON400)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON401 = &dest
+	case 401:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON401)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
+	case 403:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON403)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 413:
-		var dest LineProtocolLengthError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON413 = &dest
+	case 413:
+		return &response, unmarshalJSONResponse(hresp, &response.JSON413)
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
-		var dest Error
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSONDefault = &dest
-
-	// Fallback for unexpected error
 	default:
-		if rsp.StatusCode > 299 {
-			return nil, errors.New(rsp.Status)
-		}
+		return &response, unmarshalJSONResponse(hresp, &response.JSONDefault)
 
 	}
-
-	return response, nil
 }

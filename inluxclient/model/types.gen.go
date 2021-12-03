@@ -7,8 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -6516,7 +6514,7 @@ func (a *Flags) UnmarshalJSON(b []byte) error {
 			var fieldVal interface{}
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6532,7 +6530,7 @@ func (a Flags) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6569,7 +6567,7 @@ func (a *FluxSuggestion_Params) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6585,7 +6583,7 @@ func (a FluxSuggestion_Params) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6622,7 +6620,7 @@ func (a *HTTPNotificationEndpoint_Headers) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6638,7 +6636,7 @@ func (a HTTPNotificationEndpoint_Headers) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6675,7 +6673,7 @@ func (a *Label_Properties) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6691,7 +6689,7 @@ func (a Label_Properties) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6728,7 +6726,7 @@ func (a *LabelCreateRequest_Properties) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6744,7 +6742,7 @@ func (a LabelCreateRequest_Properties) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6781,7 +6779,7 @@ func (a *LabelUpdate_Properties) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6797,7 +6795,7 @@ func (a LabelUpdate_Properties) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6834,7 +6832,7 @@ func (a *MapVariableProperties_Values) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6850,7 +6848,7 @@ func (a MapVariableProperties_Values) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6887,7 +6885,7 @@ func (a *Query_Params) UnmarshalJSON(b []byte) error {
 			var fieldVal interface{}
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6903,7 +6901,7 @@ func (a Query_Params) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6940,7 +6938,7 @@ func (a *Secrets) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -6956,7 +6954,7 @@ func (a Secrets) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -6993,7 +6991,7 @@ func (a *TemplateApply_EnvRefs) UnmarshalJSON(b []byte) error {
 			var fieldVal interface{}
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -7009,7 +7007,7 @@ func (a TemplateApply_EnvRefs) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)
@@ -7046,7 +7044,7 @@ func (a *TemplateApply_Secrets) UnmarshalJSON(b []byte) error {
 			var fieldVal string
 			err := json.Unmarshal(fieldBuf, &fieldVal)
 			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
 			}
 			a.AdditionalProperties[fieldName] = fieldVal
 		}
@@ -7062,7 +7060,7 @@ func (a TemplateApply_Secrets) MarshalJSON() ([]byte, error) {
 	for fieldName, field := range a.AdditionalProperties {
 		object[fieldName], err = json.Marshal(field)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
 		}
 	}
 	return json.Marshal(object)

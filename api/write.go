@@ -61,9 +61,7 @@ type WriteAPIImpl struct {
 	writeOptions *write.Options
 }
 
-type writeBuffInfoReq struct {
-	writeBuffLen int
-}
+type writeBuffInfoReq struct{}
 
 // NewWriteAPI returns new non-blocking write client for writing data to  bucket belonging to org
 func NewWriteAPI(org string, bucket string, service http2.Service, writeOptions *write.Options) *WriteAPIImpl {
@@ -112,24 +110,10 @@ func (w *WriteAPIImpl) Flush() {
 }
 
 func (w *WriteAPIImpl) waitForFlushing() {
-	for {
-		w.bufferInfoCh <- writeBuffInfoReq{}
-		writeBuffInfo := <-w.bufferInfoCh
-		if writeBuffInfo.writeBuffLen == 0 {
-			break
-		}
-		log.Info("Waiting buffer is flushed")
-		<-time.After(time.Millisecond)
-	}
-	for {
-		w.writeInfoCh <- writeBuffInfoReq{}
-		writeBuffInfo := <-w.writeInfoCh
-		if writeBuffInfo.writeBuffLen == 0 {
-			break
-		}
-		log.Info("Waiting buffer is flushed")
-		<-time.After(time.Millisecond)
-	}
+	w.bufferInfoCh <- writeBuffInfoReq{}
+	<-w.bufferInfoCh
+	w.writeInfoCh <- writeBuffInfoReq{}
+	<-w.writeInfoCh
 }
 
 func (w *WriteAPIImpl) bufferProc() {
@@ -152,7 +136,6 @@ x:
 			w.flushBuffer()
 			break x
 		case buffInfo := <-w.bufferInfoCh:
-			buffInfo.writeBuffLen = len(w.bufferInfoCh)
 			w.bufferInfoCh <- buffInfo
 		}
 	}
@@ -183,7 +166,6 @@ x:
 			log.Info("Write proc: received stop")
 			break x
 		case buffInfo := <-w.writeInfoCh:
-			buffInfo.writeBuffLen = len(w.writeCh)
 			w.writeInfoCh <- buffInfo
 		}
 	}

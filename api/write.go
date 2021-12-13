@@ -114,6 +114,7 @@ func (w *WriteAPIImpl) waitForFlushing() {
 	<-w.bufferInfoCh
 	w.writeInfoCh <- writeBuffInfoReq{}
 	<-w.writeInfoCh
+	w.writeCh <- nil
 }
 
 func (w *WriteAPIImpl) bufferProc() {

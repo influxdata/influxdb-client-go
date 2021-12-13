@@ -110,8 +110,12 @@ func (w *Service) SetBatchErrorCallback(cb BatchErrorCallback) {
 // If writes continues failing and # of attempts reaches maximum or total retry time reaches maxRetryTime,
 // batch is discarded.
 func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
-	log.Debug("Write proc: received write request")
 	batchToWrite := batch
+	if batchToWrite == nil {
+		log.Debug("Write proc: received flush retry request")
+	} else {
+		log.Debug("Write proc: received write request")
+	}
 	retrying := false
 	for {
 		select {
@@ -125,12 +129,17 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 			if !retrying {
 				b := w.retryQueue.first()
 				// Can we write? In case of retryable error we must wait a bit
-				if w.lastWriteAttempt.IsZero() || time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(b.RetryDelay))) {
+				if batch == nil ||
+					w.lastWriteAttempt.IsZero() ||
+					time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(b.RetryDelay))) {
 					retrying = true
 				} else {
-					log.Warn("Write proc: cannot write yet, storing batch to queue")
-					if w.retryQueue.push(batch) {
-						log.Warn("Write proc: Retry buffer full, discarding oldest batch")
+					if batch != nil {
+						log.Warn("Write proc: cannot write yet, storing batch to queue")
+						if w.retryQueue.push(batch) {
+							log.Warn("Write proc: Retry buffer full, discarding oldest batch")
+						}
+						batch = nil
 					}
 					batchToWrite = nil
 				}

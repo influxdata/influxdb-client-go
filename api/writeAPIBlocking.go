@@ -58,6 +58,8 @@ type WriteAPIBlocking interface {
 	// WritePoint writes without implicit batching. Batch is created from given number of points
 	// Non-blocking alternative is available in the WriteAPI interface
 	WritePoint(ctx context.Context, point ...*write.Point) error
+	// WriteBatch writes line protocol record(s) that have already been aggregated into a string with newline separators into bucket.
+	WriteBatch(ctx context.Context, batch string) error
 }
 
 // writeAPIBlocking implements WriteAPIBlocking interface
@@ -75,6 +77,13 @@ func (w *writeAPIBlocking) write(ctx context.Context, line string) error {
 	err := w.service.WriteBatch(ctx, iwrite.NewBatch(line, w.writeOptions.RetryInterval(), w.writeOptions.MaxRetryTime()))
 	if err != nil {
 		return err.Unwrap()
+	}
+	return nil
+}
+
+func (w *writeAPIBlocking) WriteBatch(ctx context.Context, batch string) error {
+	if len(batch) > 0 {
+		return w.write(ctx, batch)
 	}
 	return nil
 }

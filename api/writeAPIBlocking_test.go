@@ -8,6 +8,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -55,6 +56,20 @@ func TestWriteRecord(t *testing.T) {
 	err = writeAPI.WriteRecord(context.Background(), lines...)
 	require.NotNil(t, err)
 	require.Equal(t, "invalid: data", err.Error())
+}
+
+func TestWriteRecordBatch(t *testing.T) {
+	service := test.NewTestService(t, "http://localhost:8888")
+	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	lines := test.GenRecords(10)
+	batch := strings.Join(lines, "\n")
+	err := writeAPI.WriteRecord(context.Background(), batch)
+	require.Nil(t, err)
+	require.Len(t, service.Lines(), 10)
+	for i, l := range lines {
+		assert.Equal(t, l, service.Lines()[i])
+	}
+	service.Close()
 }
 
 func TestWriteParallel(t *testing.T) {

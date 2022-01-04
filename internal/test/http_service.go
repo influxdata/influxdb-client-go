@@ -144,7 +144,9 @@ func (t *HTTPService) decodeLines(body io.Reader) error {
 		return err
 	}
 	lines := strings.Split(string(bytes), "\n")
-	lines = lines[:len(lines)-1]
+	if lines[len(lines)-1] == "" {
+		lines = lines[:len(lines)-1]
+	}
 	t.lock.Lock()
 	t.lines = append(t.lines, lines...)
 	t.lock.Unlock()

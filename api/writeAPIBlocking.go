@@ -84,22 +84,7 @@ func (w *writeAPIBlocking) WriteRecord(ctx context.Context, line ...string) erro
 	if len(line) == 0 {
 		return nil
 	}
-	if len(line) == 1 {
-		ln := line[0]
-		if ln[len(ln)-1] != '\n' {
-			ln += "\n"
-		}
-		return w.write(ctx, ln)
-	}
-	var sb strings.Builder
-	for _, line := range line {
-		b := []byte(line)
-		b = append(b, 0xa)
-		if _, err := sb.Write(b); err != nil {
-			return err
-		}
-	}
-	return w.write(ctx, sb.String())
+	return w.write(ctx, strings.Join(line, "\n"))
 }
 
 func (w *writeAPIBlocking) WritePoint(ctx context.Context, point ...*write.Point) error {

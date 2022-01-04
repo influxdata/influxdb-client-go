@@ -10,16 +10,19 @@ package influxdb2_test
 import (
 	"context"
 	"fmt"
-	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
-	"github.com/influxdata/influxdb-client-go/v2/domain"
-	"github.com/influxdata/influxdb-client-go/v2/log"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"testing"
 	"time"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2/domain"
+	"github.com/influxdata/influxdb-client-go/v2/internal/test"
+	"github.com/influxdata/influxdb-client-go/v2/log"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var authToken string
@@ -345,4 +348,20 @@ func TestLogsConcurrent(t *testing.T) {
 		<-time.After(time.Nanosecond)
 	}
 	wg.Wait()
+}
+
+func TestWriteCustomBatch(t *testing.T) {
+	client := influxdb2.NewClientWithOptions(serverURL, authToken, influxdb2.DefaultOptions().SetLogLevel(0))
+
+	now := time.Now()
+	lines := test.GenRecords(10)
+	err := client.WriteAPIBlocking("my-org", "my-bucket").WriteRecord(context.Background(), strings.Join(lines, "\n"))
+	assert.NoError(t, err)
+	result, err := client.QueryAPI("my-org").Query(context.Background(), fmt.Sprintf(`from(bucket:"my-bucket")|> range(start: %s) |> filter(fn: (r) => r._measurement == "test") |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")`, now.Format(time.RFC3339Nano)))
+	assert.NoError(t, err)
+	l := 0
+	for result.Next() {
+		l++
+	}
+	assert.Equal(t, 10, l)
 }

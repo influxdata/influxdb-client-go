@@ -1,3 +1,11 @@
+## unreleased
+### Features 
+- [#297](https://github.com/influxdata/influxdb-client-go/pull/297),[#298](https://github.com/influxdata/influxdb-client-go/pull/298) Optimized `WriteRecord` of [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking). 
+
+### Bug fixes
+- [#294](https://github.com/influxdata/influxdb-client-go/pull/294)  `WritePoint` and `WriteRecord` of [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking) returns always full error information.
+
+
 ## 2.6.0[2021-11-26]
 ### Features
 - [#285](https://github.com/influxdata/influxdb-client-go/pull/285) Added *Client.Ping()* function as the only validation method available in both OSS and Cloud.

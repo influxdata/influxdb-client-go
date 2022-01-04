@@ -47,7 +47,7 @@ func GenRecords(num int) []string {
 		lines[i] = fmt.Sprintf("test,id=rack_%v,vendor=AWS,hostname=host_%v temperature=%v,disk_free=%v,disk_total=%vi,mem_total=%vi,mem_free=%vu %v",
 			i%10, i%100, rand.Float64()*80.0, rand.Float64()*1000.0, (i/10+1)*1000000, (i/100+1)*10000000, rand.Uint64(), t.UnixNano())
 		if i%10 == 0 {
-			t = t.Add(time.Second)
+			t = t.Add(time.Nanosecond)
 		}
 	}
 	return lines

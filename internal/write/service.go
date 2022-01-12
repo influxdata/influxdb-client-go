@@ -246,7 +246,7 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 			req.Header.Set("Content-Encoding", "gzip")
 		}
 	}, func(r *http.Response) error {
-		return nil
+		return r.Body.Close()
 	})
 	return perror
 }

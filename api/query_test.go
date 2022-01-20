@@ -35,8 +35,8 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 #group,false,false,true,true,false,false,true,true,true,true
 #default,_result,,,,,,,,,
 ,result,table,_start,_stop,_time,_value,_field,_measurement,a,b
-,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
-,,0,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
+,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T10:34:08.135814545Z,1.4,f,test,1,adsfasdf
+,,1,2020-02-17T22:19:49.747562847Z,2020-02-18T22:19:49.747562847Z,2020-02-18T22:08:44.850214724Z,6.6,f,test,1,adsfasdf
 
 `
 	expectedTable := query.NewFluxTableMetadataFull(0,
@@ -56,7 +56,7 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 	expectedRecord1 := query.NewFluxRecord(0,
 		map[string]interface{}{
 			"result":       "_result",
-			"table":        int64(0),
+			"table":        int64(1),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
 			"_time":        mustParseTime("2020-02-18T10:34:08.135814545Z"),
@@ -71,7 +71,7 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 	expectedRecord2 := query.NewFluxRecord(0,
 		map[string]interface{}{
 			"result":       "_result",
-			"table":        int64(0),
+			"table":        int64(1),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
 			"_time":        mustParseTime("2020-02-18T22:08:44.850214724Z"),
@@ -100,6 +100,8 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 	assert.False(t, queryResult.tableChanged)
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord2)
+	assert.Equal(t, "_result", queryResult.Record().Result())
+	assert.Equal(t, 1, queryResult.Record().Table())
 
 	require.False(t, queryResult.Next())
 	require.Nil(t, queryResult.Err())
@@ -383,6 +385,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	require.NotNil(t, queryResult.Record())
 	require.Equal(t, queryResult.Record(), expectedRecord42)
 	assert.Equal(t, "_result4", queryResult.Record().Result())
+	assert.Equal(t, 3, queryResult.Record().Table())
 
 	require.False(t, queryResult.Next())
 	require.Nil(t, queryResult.Err())

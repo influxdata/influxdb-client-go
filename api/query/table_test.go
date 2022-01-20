@@ -70,7 +70,7 @@ func TestRecord(t *testing.T) {
 	record := &FluxRecord{table: 2,
 		values: map[string]interface{}{
 			"result":       "_result",
-			"_table":       int64(0),
+			"table":        int64(2),
 			"_start":       mustParseTime("2020-02-17T22:19:49.747562847Z"),
 			"_stop":        mustParseTime("2020-02-18T22:19:49.747562847Z"),
 			"_time":        mustParseTime("2020-02-18T10:34:08.135814545Z"),

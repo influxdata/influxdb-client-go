@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"reflect"
 	"strconv"
 	"strings"
 	"sync"
@@ -43,11 +44,35 @@ const (
 )
 
 // QueryAPI provides methods for performing synchronously flux query against InfluxDB server.
+//
+// Flux query can contain reference to parameters, which must be passed via queryParams.
+// it can be a struct or map. Param values can be only simple types or time.Time.
+// The name of a struct field or a map key (must be a string) will be a param name.
+// The name of the parameter represented by a struct field can be specified by JSON annotation:
+//
+// type Condition struct {
+//     Start  time.Time  `json:"start"`
+//     Field  string     `json:"field"`
+//     Value  float64    `json:"value"`
+//	}
+//
+//  Parameters are then accessed via the Flux params object:
+//
+//  query:= `from(bucket: "environment")
+// 		|> range(start: time(v: params.start))
+//		|> filter(fn: (r) => r._measurement == "air")
+//		|> filter(fn: (r) => r._field == params.field)
+//		|> filter(fn: (r) => r._value > params.value)`
+//
 type QueryAPI interface {
 	// QueryRaw executes flux query on the InfluxDB server and returns complete query result as a string with table annotations according to dialect
 	QueryRaw(ctx context.Context, query string, dialect *domain.Dialect) (string, error)
+	// QueryRawWithParams executes flux parametrized query on the InfluxDB server and returns complete query result as a string with table annotations according to dialect
+	QueryRawWithParams(ctx context.Context, query string, dialect *domain.Dialect, params interface{}) (string, error)
 	// Query executes flux query on the InfluxDB server and returns QueryTableResult which parses streamed response into structures representing flux table parts
 	Query(ctx context.Context, query string) (*QueryTableResult, error)
+	// QueryWithParams executes flux parametrized query  on the InfluxDB server and returns QueryTableResult which parses streamed response into structures representing flux table parts
+	QueryWithParams(ctx context.Context, query string, params interface{}) (*QueryTableResult, error)
 }
 
 // NewQueryAPI returns new query client for querying buckets belonging to org
@@ -58,6 +83,28 @@ func NewQueryAPI(org string, service http2.Service) QueryAPI {
 	}
 }
 
+// QueryTableResult parses streamed flux query response into structures representing flux table parts
+// Walking though the result is done by repeatedly calling Next() until returns false.
+// Actual flux table info (columns with names, data types, etc) is returned by TableMetadata() method.
+// Data are acquired by Record() method.
+// Preliminary end can be caused by an error, so when Next() return false, check Err() for an error
+type QueryTableResult struct {
+	io.Closer
+	csvReader     *csv.Reader
+	tablePosition int
+	tableChanged  bool
+	table         *query.FluxTableMetadata
+	record        *query.FluxRecord
+	err           error
+}
+
+// NewQueryTableResult returns new QueryTableResult
+func NewQueryTableResult(rawResponse io.ReadCloser) *QueryTableResult {
+	csvReader := csv.NewReader(rawResponse)
+	csvReader.FieldsPerRecord = -1
+	return &QueryTableResult{Closer: rawResponse, csvReader: csvReader}
+}
+
 // queryAPI implements QueryAPI interface
 type queryAPI struct {
 	org         string
@@ -66,13 +113,32 @@ type queryAPI struct {
 	lock        sync.Mutex
 }
 
+//  queryBody holds the body for an HTTP query request.
+type queryBody struct {
+	Dialect *domain.Dialect  `json:"dialect,omitempty"`
+	Query   string           `json:"query"`
+	Type    domain.QueryType `json:"type"`
+	Params  interface{}      `json:"params,omitempty"`
+}
+
 func (q *queryAPI) QueryRaw(ctx context.Context, query string, dialect *domain.Dialect) (string, error) {
+	return q.QueryRawWithParams(ctx, query, dialect, nil)
+}
+
+func (q *queryAPI) QueryRawWithParams(ctx context.Context, query string, dialect *domain.Dialect, params interface{}) (string, error) {
+	if err := checkParamsType(params); err != nil {
+		return "", err
+	}
 	queryURL, err := q.queryURL()
 	if err != nil {
 		return "", err
 	}
-	queryType := domain.QueryTypeFlux
-	qr := domain.Query{Query: query, Type: &queryType, Dialect: dialect}
+	qr := queryBody{
+		Query:   query,
+		Type:    domain.QueryTypeFlux,
+		Dialect: dialect,
+		Params:  params,
+	}
 	qrJSON, err := json.Marshal(qr)
 	if err != nil {
 		return "", err
@@ -118,13 +184,24 @@ func DefaultDialect() *domain.Dialect {
 }
 
 func (q *queryAPI) Query(ctx context.Context, query string) (*QueryTableResult, error) {
+	return q.QueryWithParams(ctx, query, nil)
+}
+
+func (q *queryAPI) QueryWithParams(ctx context.Context, query string, params interface{}) (*QueryTableResult, error) {
 	var queryResult *QueryTableResult
+	if err := checkParamsType(params); err != nil {
+		return nil, err
+	}
 	queryURL, err := q.queryURL()
 	if err != nil {
 		return nil, err
 	}
-	queryType := domain.QueryTypeFlux
-	qr := domain.Query{Query: query, Type: &queryType, Dialect: DefaultDialect()}
+	qr := queryBody{
+		Query:   query,
+		Type:    domain.QueryTypeFlux,
+		Dialect: DefaultDialect(),
+		Params:  params,
+	}
 	qrJSON, err := json.Marshal(qr)
 	if err != nil {
 		return nil, err
@@ -172,25 +249,69 @@ func (q *queryAPI) queryURL() (string, error) {
 	return q.url, nil
 }
 
-// QueryTableResult parses streamed flux query response into structures representing flux table parts
-// Walking though the result is done by repeatedly calling Next() until returns false.
-// Actual flux table info (columns with names, data types, etc) is returned by TableMetadata() method.
-// Data are acquired by Record() method.
-// Preliminary end can be caused by an error, so when Next() return false, check Err() for an error
-type QueryTableResult struct {
-	io.Closer
-	csvReader     *csv.Reader
-	tablePosition int
-	tableChanged  bool
-	table         *query.FluxTableMetadata
-	record        *query.FluxRecord
-	err           error
+// checkParamsType validates the value is struct with simple type fields
+// or a map with key as string and value as a simple type
+func checkParamsType(p interface{}) error {
+	if p == nil {
+		return nil
+	}
+	t := reflect.TypeOf(p)
+	v := reflect.ValueOf(p)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+		v = v.Elem()
+	}
+	if t.Kind() != reflect.Struct && t.Kind() != reflect.Map {
+		return fmt.Errorf("cannot use %v as query params", t)
+	}
+	switch t.Kind() {
+	case reflect.Struct:
+		fields := reflect.VisibleFields(t)
+		for _, f := range fields {
+			fv := v.FieldByIndex(f.Index)
+			t := getFieldType(fv)
+			if !validParamType(t) {
+				return fmt.Errorf("cannot use field '%s' of type '%v' as a query param", f.Name, t)
+			}
+
+		}
+	case reflect.Map:
+		key := t.Key()
+		if key.Kind() != reflect.String {
+			return fmt.Errorf("cannot use map key of type '%v' for query param name", key)
+		}
+		for _, k := range v.MapKeys() {
+			f := v.MapIndex(k)
+			t := getFieldType(f)
+			if !validParamType(t) {
+				return fmt.Errorf("cannot use map value type '%v' as a query param", t)
+			}
+		}
+	}
+	return nil
 }
 
-func NewQueryTableResult(rawResponse io.ReadCloser) *QueryTableResult {
-	csvReader := csv.NewReader(rawResponse)
-	csvReader.FieldsPerRecord = -1
-	return &QueryTableResult{Closer: rawResponse, csvReader: csvReader}
+// getFieldType extracts type of value
+func getFieldType(v reflect.Value) reflect.Type {
+	t := v.Type()
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+		v = v.Elem()
+	}
+	if t.Kind() == reflect.Interface && !v.IsNil() {
+		t = reflect.ValueOf(v.Interface()).Type()
+	}
+	return t
+}
+
+// timeType is the exact type for the Time
+var timeType = reflect.TypeOf(time.Time{})
+
+// validParamType validates that t is primitive type or string or interface
+func validParamType(t reflect.Type) bool {
+	return (t.Kind() > reflect.Invalid && t.Kind() < reflect.Complex64) ||
+		t.Kind() == reflect.String ||
+		t == timeType
 }
 
 // TablePosition returns actual flux table position in the result, or -1 if no table was found yet

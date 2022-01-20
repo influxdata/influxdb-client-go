@@ -175,6 +175,51 @@ func ExampleQueryAPI_query() {
 	client.Close()
 }
 
+func ExampleQueryAPI_queryWithParams() {
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Get query client
+	queryAPI := client.QueryAPI("my-org")
+	// Define parameters
+	parameters := struct {
+		Start string  `json:"start"`
+		Field string  `json:"field"`
+		Value float64 `json:"value"`
+	}{
+		"-1h",
+		"temperature",
+		25,
+	}
+	// Query with parameters
+	query := `from(bucket:"my-bucket")
+				|> range(start: duration(params.start)) 
+				|> filter(fn: (r) => r._measurement == "stat")
+				|> filter(fn: (r) => r._field == params.field)
+				|> filter(fn: (r) => r._value > params.value)`
+
+	// Get result
+	result, err := queryAPI.QueryWithParams(context.Background(), query, parameters)
+	if err == nil {
+		// Iterate over query response
+		for result.Next() {
+			// Notice when group key has changed
+			if result.TableChanged() {
+				fmt.Printf("table: %s\n", result.TableMetadata().String())
+			}
+			// Access data
+			fmt.Printf("value: %v\n", result.Record().Value())
+		}
+		// check for an error
+		if result.Err() != nil {
+			fmt.Printf("query parsing error: %s\n", result.Err().Error())
+		}
+	} else {
+		panic(err)
+	}
+	// Ensures background processes finishes
+	client.Close()
+}
+
 func ExampleQueryAPI_queryRaw() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client := influxdb2.NewClient("http://localhost:8086", "my-token")

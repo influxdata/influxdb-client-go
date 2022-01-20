@@ -885,6 +885,182 @@ func TestFluxError(t *testing.T) {
 
 }
 
+func TestQueryParamsTypes(t *testing.T) {
+	var i int8 = 1
+	var paramsTypeTests = []struct {
+		testName    string
+		params      interface{}
+		expectError string
+	}{
+		{
+			"structWillAllSupportedTypes",
+			struct {
+				B   bool
+				I   int
+				I8  int8
+				I16 int16
+				I32 int32
+				I64 int64
+				U   uint
+				U8  uint8
+				U16 uint16
+				U32 uint32
+				U64 uint64
+				F32 float32
+				F64 float64
+				D   time.Duration
+				T   time.Time
+			}{},
+			"",
+		},
+		{
+			"structWithInvalidFieldEmptyInterface",
+			struct {
+				F interface{}
+			}{},
+			"cannot use field 'F' of type 'interface {}' as a query param",
+		},
+		{
+			"structWithFieldAsValidInterfaceValue",
+			struct {
+				F interface{}
+			}{"string"},
+			"",
+		},
+		{
+			"structAsPointer",
+			&struct {
+				S string
+			}{"a"},
+			"",
+		},
+		{
+			"structWithInvalidFieldAsMap",
+			struct {
+				M map[string]string
+			}{},
+			"cannot use field 'M' of type 'map[string]string' as a query param",
+		},
+		{
+			"structWithFieldAsPointer",
+			struct {
+				P *int8
+			}{&i},
+			"",
+		},
+		{
+			"mapOfBool",
+			map[string]bool{},
+			"",
+		},
+		{
+			"mapOfFloat64",
+			map[string]float64{},
+			"",
+		},
+		{
+			"mapOfString",
+			map[string]string{},
+			"",
+		},
+		{
+			"mapOfTime",
+			map[string]time.Time{},
+			"",
+		},
+		{
+			"mapOfInterfaceEmpty",
+			map[string]interface{}{},
+			"",
+		},
+		{
+			"mapOfInterfaceWithValidValues",
+			map[string]interface{}{"s": "s", "t": time.Now()},
+			"",
+		},
+		{
+			"mapOfInterfaceWithStructInvalid",
+			map[string]interface{}{"s": struct {
+				a int
+			}{1}},
+			"cannot use map value type 'struct { a int }' as a query param",
+		},
+		{
+			"mapOfStructInvalid",
+			map[string]struct {
+				a int
+			}{"a": {1}},
+			"cannot use map value type 'struct { a int }' as a query param",
+		},
+		{
+			"mapWithInvalidKey",
+			map[int]string{},
+			"cannot use map key of type 'int' for query param name",
+		},
+		{
+			"invalidParamsType",
+			0,
+			"cannot use int as query params",
+		},
+	}
+	for _, test := range paramsTypeTests {
+		t.Run(test.testName, func(t *testing.T) {
+			err := checkParamsType(test.params)
+			if test.expectError != "" {
+				require.Error(t, err)
+				require.Equal(t, test.expectError, err.Error())
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestQueryParamsSerialized(t *testing.T) {
+	expectedBody := `{"dialect":{"annotations":["datatype","group","default"],"delimiter":",","header":true},"query":"from(bucket: \"environment\") |\u003e range(start: time(v: params.start)) |\u003e filter(fn: (r) =\u003e r._measurement == \"air\") |\u003e filter(fn: (r) =\u003e r._field == params.field) |\u003e filter(fn: (r) =\u003e r._value \u003e params.value)","type":"flux","params":{"start":"2022-02-17T11:27:23+01:00","field":"field","value":24.4}}`
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			body, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusBadRequest)
+				_, _ = w.Write([]byte(`{"code":"invalid","message":"` + err.Error() + `"}`))
+			}
+			if string(body) != expectedBody {
+				fmt.Println("Error: Different bodies. Recv vs exp")
+				fmt.Println(string(body))
+				fmt.Println(expectedBody)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusInternalServerError)
+				_, _ = w.Write(body)
+			} else {
+				w.Header().Set("Content-Type", "text/csv")
+				w.WriteHeader(http.StatusOK)
+			}
+		}
+	}))
+	defer server.Close()
+	condition := &struct {
+		Start time.Time `json:"start"`
+		Field string    `json:"field"`
+		Value float64   `json:"value"`
+	}{
+		mustParseTime("2022-02-17T11:27:23+01:00"),
+		"field",
+		24.4,
+	}
+	query := `from(bucket: "environment") |> range(start: time(v: params.start)) |> filter(fn: (r) => r._measurement == "air") |> filter(fn: (r) => r._field == params.field) |> filter(fn: (r) => r._value > params.value)`
+
+	queryAPI := NewQueryAPI("org", http2.NewService(server.URL, "a", http2.DefaultOptions()))
+
+	_, err := queryAPI.QueryRawWithParams(context.Background(), query, DefaultDialect(), condition)
+	require.NoError(t, err, err)
+
+	_, err = queryAPI.QueryWithParams(context.Background(), query, condition)
+	require.NoError(t, err, err)
+
+}
+
 func makeCSVstring(rows []string) string {
 	csvTable := strings.Join(rows, "\r\n")
 	return fmt.Sprintf("%s\r\n", csvTable)

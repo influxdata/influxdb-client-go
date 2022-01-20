@@ -16,6 +16,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - [Basic Example](#basic-example)
     - [Writes in Detail](#writes)
     - [Queries in Detail](#queries)
+    - [Parametrized Queries](#parametrized-queries) 
     - [Concurrency](#concurrency)
     - [Proxy and redirects](#proxy-and-redirects)
     - [Checking Server State](#checking-server-state)
@@ -412,6 +413,77 @@ func main() {
     client.Close()
 }    
 ```
+### Parametrized Queries
+InfluxDB Cloud supports [Parameterized Queries](https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/)
+that let you dynamically change values in a query using the InfluxDB API. Parameterized queries make Flux queries more
+reusable and can also be used to help prevent injection attacks.
+
+InfluxDB Cloud inserts the params object into the Flux query as a Flux record named `params`. Use dot or bracket
+notation to access parameters in the `params` record in your Flux query. Parameterized Flux queries support only `int`
+, `float`, and `string` data types. To convert the supported data types into
+other [Flux basic data types, use Flux type conversion functions](https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/#supported-parameter-data-types).
+
+Query parameters can be passed as a struct or map. Param values can be only simple types or `time.Time`.
+The name of the parameter represented by a struct field can be specified by JSON annotation.
+
+Parameterized query example:
+> :warning: Parameterized Queries are supported only in InfluxDB Cloud. There is no support in InfluxDB OSS currently.
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/influxdata/influxdb-client-go/v2"
+)
+
+func main() {
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Get query client
+	queryAPI := client.QueryAPI("my-org")
+	// Define parameters
+	parameters := struct {
+		Start string  `json:"start"`
+		Field string  `json:"field"`
+		Value float64 `json:"value"`
+	}{
+		"-1h",
+		"temperature",
+		25,
+	}
+	// Query with parameters
+	query := `from(bucket:"my-bucket")
+				|> range(start: duration(params.start)) 
+				|> filter(fn: (r) => r._measurement == "stat")
+				|> filter(fn: (r) => r._field == params.field)
+				|> filter(fn: (r) => r._value > params.value)`
+
+	// Get result
+	result, err := queryAPI.QueryWithParams(context.Background(), query, parameters)
+	if err == nil {
+		// Iterate over query response
+		for result.Next() {
+			// Notice when group key has changed
+			if result.TableChanged() {
+				fmt.Printf("table: %s\n", result.TableMetadata().String())
+			}
+			// Access data
+			fmt.Printf("value: %v\n", result.Record().Value())
+		}
+		// check for an error
+		if result.Err() != nil {
+			fmt.Printf("query parsing error: %s\n", result.Err().Error())
+		}
+	} else {
+		panic(err)
+	}
+	// Ensures background processes finishes
+	client.Close()
+}
+```
+
 ### Concurrency
 InfluxDB Go Client can be used in a concurrent environment. All its functions are thread-safe.
 

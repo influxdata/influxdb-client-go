@@ -1,4 +1,4 @@
-## unreleased
+## 2.7.0[2022-01-20]
 ### Features 
 - [#297](https://github.com/influxdata/influxdb-client-go/pull/297),[#298](https://github.com/influxdata/influxdb-client-go/pull/298) Optimized `WriteRecord` of [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking). Custom batch can be written by single argument. 
 

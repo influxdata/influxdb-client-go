@@ -187,6 +187,12 @@ type QueryTableResult struct {
 	err           error
 }
 
+func NewQueryTableResult(rawResponse io.ReadCloser) *QueryTableResult {
+	csvReader := csv.NewReader(rawResponse)
+	csvReader.FieldsPerRecord = -1
+	return &QueryTableResult{Closer: rawResponse, csvReader: csvReader}
+}
+
 // TablePosition returns actual flux table position in the result, or -1 if no table was found yet
 // Each new table is introduced by an annotation in csv
 func (q *QueryTableResult) TablePosition() int {

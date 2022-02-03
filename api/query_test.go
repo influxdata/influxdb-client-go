@@ -6,7 +6,6 @@ package api
 
 import (
 	"context"
-	"encoding/csv"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -84,9 +83,7 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 	)
 
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -310,9 +307,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	assert.Equal(t, -1, queryResult.TablePosition())
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
@@ -444,9 +439,7 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 	)
 
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -529,9 +522,7 @@ func TestErrorInRow(t *testing.T) {
 		`,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897`}
 	csvTable := makeCSVstring(csvRowsError)
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
@@ -545,9 +536,7 @@ func TestErrorInRow(t *testing.T) {
 		`,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,`}
 	csvTable = makeCSVstring(csvRowsErrorNoReference)
 	reader = strings.NewReader(csvTable)
-	csvReader = csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
 
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
@@ -561,9 +550,7 @@ func TestErrorInRow(t *testing.T) {
 		`,,`}
 	csvTable = makeCSVstring(csvRowsErrorNoMessage)
 	reader = strings.NewReader(csvTable)
-	csvReader = csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
 
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
@@ -580,9 +567,7 @@ func TestInvalidDataType(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "deviceId has unknown data type int", queryResult.Err().Error())
@@ -642,9 +627,7 @@ func TestReorderedAnnotations(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvTable1)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -671,9 +654,7 @@ func TestReorderedAnnotations(t *testing.T) {
 
 `
 	reader = strings.NewReader(csvTable2)
-	csvReader = csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -744,9 +725,7 @@ func TestDatatypeOnlyAnnotation(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvTable1)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -775,9 +754,7 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable1)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
@@ -791,9 +768,7 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 `
 
 	reader = strings.NewReader(csvTable2)
-	csvReader = csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
@@ -807,9 +782,7 @@ func TestMissingAnnotations(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvTable3)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, annotations not found", queryResult.Err().Error())
@@ -824,9 +797,7 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, row has different number of columns than the table: 11 vs 10", queryResult.Err().Error())
@@ -839,9 +810,7 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 `
 
 	reader = strings.NewReader(csvTable2)
-	csvReader = csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, row has different number of columns than the table: 8 vs 10", queryResult.Err().Error())
@@ -854,9 +823,7 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 `
 
 	reader = strings.NewReader(csvTable3)
-	csvReader = csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult = &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, row has different number of columns than the table: 10 vs 8", queryResult.Err().Error())
@@ -873,9 +840,7 @@ func TestEmptyValue(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable)
-	csvReader := csv.NewReader(reader)
-	csvReader.FieldsPerRecord = -1
-	queryResult := &QueryTableResult{Closer: ioutil.NopCloser(reader), csvReader: csvReader}
+	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
 
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())

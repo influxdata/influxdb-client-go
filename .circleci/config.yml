@@ -4,7 +4,8 @@
 version: 2.1
 jobs:
   build:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     environment:
       ENV: CI
       GO111MODULE: "on"

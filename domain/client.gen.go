@@ -157,6 +157,9 @@ type ClientInterface interface {
 	// GetChecksIDQuery request
 	GetChecksIDQuery(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*http.Response, error)
 
+	// GetConfig request
+	GetConfig(ctx context.Context, params *GetConfigParams) (*http.Response, error)
+
 	// GetDashboards request
 	GetDashboards(ctx context.Context, params *GetDashboardsParams) (*http.Response, error)
 
@@ -315,6 +318,9 @@ type ClientInterface interface {
 	PutMePasswordWithBody(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*http.Response, error)
 
 	PutMePassword(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*http.Response, error)
+
+	// GetMetrics request
+	GetMetrics(ctx context.Context, params *GetMetricsParams) (*http.Response, error)
 
 	// GetNotificationEndpoints request
 	GetNotificationEndpoints(ctx context.Context, params *GetNotificationEndpointsParams) (*http.Response, error)
@@ -475,6 +481,47 @@ type ClientInterface interface {
 
 	// GetReady request
 	GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error)
+
+	// GetRemoteConnections request
+	GetRemoteConnections(ctx context.Context, params *GetRemoteConnectionsParams) (*http.Response, error)
+
+	// PostRemoteConnection request  with any body
+	PostRemoteConnectionWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error)
+
+	PostRemoteConnection(ctx context.Context, body PostRemoteConnectionJSONRequestBody) (*http.Response, error)
+
+	// DeleteRemoteConnectionByID request
+	DeleteRemoteConnectionByID(ctx context.Context, remoteID string, params *DeleteRemoteConnectionByIDParams) (*http.Response, error)
+
+	// GetRemoteConnectionByID request
+	GetRemoteConnectionByID(ctx context.Context, remoteID string, params *GetRemoteConnectionByIDParams) (*http.Response, error)
+
+	// PatchRemoteConnectionByID request  with any body
+	PatchRemoteConnectionByIDWithBody(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PatchRemoteConnectionByID(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, body PatchRemoteConnectionByIDJSONRequestBody) (*http.Response, error)
+
+	// GetReplications request
+	GetReplications(ctx context.Context, params *GetReplicationsParams) (*http.Response, error)
+
+	// PostReplication request  with any body
+	PostReplicationWithBody(ctx context.Context, params *PostReplicationParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PostReplication(ctx context.Context, params *PostReplicationParams, body PostReplicationJSONRequestBody) (*http.Response, error)
+
+	// DeleteReplicationByID request
+	DeleteReplicationByID(ctx context.Context, replicationID string, params *DeleteReplicationByIDParams) (*http.Response, error)
+
+	// GetReplicationByID request
+	GetReplicationByID(ctx context.Context, replicationID string, params *GetReplicationByIDParams) (*http.Response, error)
+
+	// PatchReplicationByID request  with any body
+	PatchReplicationByIDWithBody(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, contentType string, body io.Reader) (*http.Response, error)
+
+	PatchReplicationByID(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, body PatchReplicationByIDJSONRequestBody) (*http.Response, error)
+
+	// PostValidateReplicationByID request
+	PostValidateReplicationByID(ctx context.Context, replicationID string, params *PostValidateReplicationByIDParams) (*http.Response, error)
 
 	// GetResources request
 	GetResources(ctx context.Context, params *GetResourcesParams) (*http.Response, error)
@@ -1208,6 +1255,15 @@ func (c *Client) GetChecksIDQuery(ctx context.Context, checkID string, params *G
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetConfig(ctx context.Context, params *GetConfigParams) (*http.Response, error) {
+	req, err := NewGetConfigRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
 func (c *Client) GetDashboards(ctx context.Context, params *GetDashboardsParams) (*http.Response, error) {
 	req, err := NewGetDashboardsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
@@ -1739,6 +1795,15 @@ func (c *Client) PutMePassword(ctx context.Context, params *PutMePasswordParams,
 	return c.service.DoHTTPRequestWithResponse(req, nil)
 }
 
+func (c *Client) GetMetrics(ctx context.Context, params *GetMetricsParams) (*http.Response, error) {
+	req, err := NewGetMetricsRequest(c.service.ServerURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
 func (c *Client) GetNotificationEndpoints(ctx context.Context, params *GetNotificationEndpointsParams) (*http.Response, error) {
 	req, err := NewGetNotificationEndpointsRequest(c.service.ServerAPIURL(), params)
 	if err != nil {
@@ -2263,6 +2328,141 @@ func (c *Client) GetQuerySuggestionsName(ctx context.Context, name string, param
 
 func (c *Client) GetReady(ctx context.Context, params *GetReadyParams) (*http.Response, error) {
 	req, err := NewGetReadyRequest(c.service.ServerURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetRemoteConnections(ctx context.Context, params *GetRemoteConnectionsParams) (*http.Response, error) {
+	req, err := NewGetRemoteConnectionsRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRemoteConnectionWithBody(ctx context.Context, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostRemoteConnectionRequestWithBody(c.service.ServerAPIURL(), contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostRemoteConnection(ctx context.Context, body PostRemoteConnectionJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostRemoteConnectionRequest(c.service.ServerAPIURL(), body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteRemoteConnectionByID(ctx context.Context, remoteID string, params *DeleteRemoteConnectionByIDParams) (*http.Response, error) {
+	req, err := NewDeleteRemoteConnectionByIDRequest(c.service.ServerAPIURL(), remoteID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetRemoteConnectionByID(ctx context.Context, remoteID string, params *GetRemoteConnectionByIDParams) (*http.Response, error) {
+	req, err := NewGetRemoteConnectionByIDRequest(c.service.ServerAPIURL(), remoteID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchRemoteConnectionByIDWithBody(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPatchRemoteConnectionByIDRequestWithBody(c.service.ServerAPIURL(), remoteID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchRemoteConnectionByID(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, body PatchRemoteConnectionByIDJSONRequestBody) (*http.Response, error) {
+	req, err := NewPatchRemoteConnectionByIDRequest(c.service.ServerAPIURL(), remoteID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetReplications(ctx context.Context, params *GetReplicationsParams) (*http.Response, error) {
+	req, err := NewGetReplicationsRequest(c.service.ServerAPIURL(), params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostReplicationWithBody(ctx context.Context, params *PostReplicationParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPostReplicationRequestWithBody(c.service.ServerAPIURL(), params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostReplication(ctx context.Context, params *PostReplicationParams, body PostReplicationJSONRequestBody) (*http.Response, error) {
+	req, err := NewPostReplicationRequest(c.service.ServerAPIURL(), params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) DeleteReplicationByID(ctx context.Context, replicationID string, params *DeleteReplicationByIDParams) (*http.Response, error) {
+	req, err := NewDeleteReplicationByIDRequest(c.service.ServerAPIURL(), replicationID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) GetReplicationByID(ctx context.Context, replicationID string, params *GetReplicationByIDParams) (*http.Response, error) {
+	req, err := NewGetReplicationByIDRequest(c.service.ServerAPIURL(), replicationID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchReplicationByIDWithBody(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := NewPatchReplicationByIDRequestWithBody(c.service.ServerAPIURL(), replicationID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PatchReplicationByID(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, body PatchReplicationByIDJSONRequestBody) (*http.Response, error) {
+	req, err := NewPatchReplicationByIDRequest(c.service.ServerAPIURL(), replicationID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	return c.service.DoHTTPRequestWithResponse(req, nil)
+}
+
+func (c *Client) PostValidateReplicationByID(ctx context.Context, replicationID string, params *PostValidateReplicationByIDParams) (*http.Response, error) {
+	req, err := NewPostValidateReplicationByIDRequest(c.service.ServerAPIURL(), replicationID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -5224,6 +5424,44 @@ func NewGetChecksIDQueryRequest(server string, checkID string, params *GetChecks
 	return req, nil
 }
 
+// NewGetConfigRequest generates requests for GetConfig
+func NewGetConfigRequest(server string, params *GetConfigParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/config")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
 // NewGetDashboardsRequest generates requests for GetDashboards
 func NewGetDashboardsRequest(server string, params *GetDashboardsParams) (*http.Request, error) {
 	var err error
@@ -7814,6 +8052,44 @@ func NewPutMePasswordRequestWithBody(server string, params *PutMePasswordParams,
 	return req, nil
 }
 
+// NewGetMetricsRequest generates requests for GetMetrics
+func NewGetMetricsRequest(server string, params *GetMetricsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/metrics")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
 // NewGetNotificationEndpointsRequest generates requests for GetNotificationEndpoints
 func NewGetNotificationEndpointsRequest(server string, params *GetNotificationEndpointsParams) (*http.Request, error) {
 	var err error
@@ -10115,6 +10391,666 @@ func NewGetReadyRequest(server string, params *GetReadyParams) (*http.Request, e
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetRemoteConnectionsRequest generates requests for GetRemoteConnections
+func NewGetRemoteConnectionsRequest(server string, params *GetRemoteConnectionsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/remotes")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if params.Name != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.RemoteURL != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "remoteURL", runtime.ParamLocationQuery, *params.RemoteURL); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPostRemoteConnectionRequest calls the generic PostRemoteConnection builder with application/json body
+func NewPostRemoteConnectionRequest(server string, body PostRemoteConnectionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostRemoteConnectionRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostRemoteConnectionRequestWithBody generates requests for PostRemoteConnection with any type of body
+func NewPostRemoteConnectionRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/remotes")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteRemoteConnectionByIDRequest generates requests for DeleteRemoteConnectionByID
+func NewDeleteRemoteConnectionByIDRequest(server string, remoteID string, params *DeleteRemoteConnectionByIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "remoteID", runtime.ParamLocationPath, remoteID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/remotes/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetRemoteConnectionByIDRequest generates requests for GetRemoteConnectionByID
+func NewGetRemoteConnectionByIDRequest(server string, remoteID string, params *GetRemoteConnectionByIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "remoteID", runtime.ParamLocationPath, remoteID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/remotes/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPatchRemoteConnectionByIDRequest calls the generic PatchRemoteConnectionByID builder with application/json body
+func NewPatchRemoteConnectionByIDRequest(server string, remoteID string, params *PatchRemoteConnectionByIDParams, body PatchRemoteConnectionByIDJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchRemoteConnectionByIDRequestWithBody(server, remoteID, params, "application/json", bodyReader)
+}
+
+// NewPatchRemoteConnectionByIDRequestWithBody generates requests for PatchRemoteConnectionByID with any type of body
+func NewPatchRemoteConnectionByIDRequestWithBody(server string, remoteID string, params *PatchRemoteConnectionByIDParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "remoteID", runtime.ParamLocationPath, remoteID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/remotes/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetReplicationsRequest generates requests for GetReplications
+func NewGetReplicationsRequest(server string, params *GetReplicationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replications")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "orgID", runtime.ParamLocationQuery, params.OrgID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if params.Name != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.RemoteID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "remoteID", runtime.ParamLocationQuery, *params.RemoteID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.LocalBucketID != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "localBucketID", runtime.ParamLocationQuery, *params.LocalBucketID); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPostReplicationRequest calls the generic PostReplication builder with application/json body
+func NewPostReplicationRequest(server string, params *PostReplicationParams, body PostReplicationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostReplicationRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostReplicationRequestWithBody generates requests for PostReplication with any type of body
+func NewPostReplicationRequestWithBody(server string, params *PostReplicationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replications")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if params.Validate != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "validate", runtime.ParamLocationQuery, *params.Validate); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewDeleteReplicationByIDRequest generates requests for DeleteReplicationByID
+func NewDeleteReplicationByIDRequest(server string, replicationID string, params *DeleteReplicationByIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "replicationID", runtime.ParamLocationPath, replicationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replications/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewGetReplicationByIDRequest generates requests for GetReplicationByID
+func NewGetReplicationByIDRequest(server string, replicationID string, params *GetReplicationByIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "replicationID", runtime.ParamLocationPath, replicationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replications/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPatchReplicationByIDRequest calls the generic PatchReplicationByID builder with application/json body
+func NewPatchReplicationByIDRequest(server string, replicationID string, params *PatchReplicationByIDParams, body PatchReplicationByIDJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchReplicationByIDRequestWithBody(server, replicationID, params, "application/json", bodyReader)
+}
+
+// NewPatchReplicationByIDRequestWithBody generates requests for PatchReplicationByID with any type of body
+func NewPatchReplicationByIDRequestWithBody(server string, replicationID string, params *PatchReplicationByIDParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "replicationID", runtime.ParamLocationPath, replicationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replications/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if params.Validate != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "validate", runtime.ParamLocationQuery, *params.Validate); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params.ZapTraceSpan != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Zap-Trace-Span", runtime.ParamLocationHeader, *params.ZapTraceSpan)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Zap-Trace-Span", headerParam0)
+	}
+
+	return req, nil
+}
+
+// NewPostValidateReplicationByIDRequest generates requests for PostValidateReplicationByID
+func NewPostValidateReplicationByIDRequest(server string, replicationID string, params *PostValidateReplicationByIDParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "replicationID", runtime.ParamLocationPath, replicationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replications/%s/validate", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -15330,6 +16266,9 @@ type ClientWithResponsesInterface interface {
 	// GetChecksIDQuery request
 	GetChecksIDQueryWithResponse(ctx context.Context, checkID string, params *GetChecksIDQueryParams) (*GetChecksIDQueryResponse, error)
 
+	// GetConfig request
+	GetConfigWithResponse(ctx context.Context, params *GetConfigParams) (*GetConfigResponse, error)
+
 	// GetDashboards request
 	GetDashboardsWithResponse(ctx context.Context, params *GetDashboardsParams) (*GetDashboardsResponse, error)
 
@@ -15488,6 +16427,9 @@ type ClientWithResponsesInterface interface {
 	PutMePasswordWithBodyWithResponse(ctx context.Context, params *PutMePasswordParams, contentType string, body io.Reader) (*PutMePasswordResponse, error)
 
 	PutMePasswordWithResponse(ctx context.Context, params *PutMePasswordParams, body PutMePasswordJSONRequestBody) (*PutMePasswordResponse, error)
+
+	// GetMetrics request
+	GetMetricsWithResponse(ctx context.Context, params *GetMetricsParams) (*GetMetricsResponse, error)
 
 	// GetNotificationEndpoints request
 	GetNotificationEndpointsWithResponse(ctx context.Context, params *GetNotificationEndpointsParams) (*GetNotificationEndpointsResponse, error)
@@ -15648,6 +16590,47 @@ type ClientWithResponsesInterface interface {
 
 	// GetReady request
 	GetReadyWithResponse(ctx context.Context, params *GetReadyParams) (*GetReadyResponse, error)
+
+	// GetRemoteConnections request
+	GetRemoteConnectionsWithResponse(ctx context.Context, params *GetRemoteConnectionsParams) (*GetRemoteConnectionsResponse, error)
+
+	// PostRemoteConnection request  with any body
+	PostRemoteConnectionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*PostRemoteConnectionResponse, error)
+
+	PostRemoteConnectionWithResponse(ctx context.Context, body PostRemoteConnectionJSONRequestBody) (*PostRemoteConnectionResponse, error)
+
+	// DeleteRemoteConnectionByID request
+	DeleteRemoteConnectionByIDWithResponse(ctx context.Context, remoteID string, params *DeleteRemoteConnectionByIDParams) (*DeleteRemoteConnectionByIDResponse, error)
+
+	// GetRemoteConnectionByID request
+	GetRemoteConnectionByIDWithResponse(ctx context.Context, remoteID string, params *GetRemoteConnectionByIDParams) (*GetRemoteConnectionByIDResponse, error)
+
+	// PatchRemoteConnectionByID request  with any body
+	PatchRemoteConnectionByIDWithBodyWithResponse(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, contentType string, body io.Reader) (*PatchRemoteConnectionByIDResponse, error)
+
+	PatchRemoteConnectionByIDWithResponse(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, body PatchRemoteConnectionByIDJSONRequestBody) (*PatchRemoteConnectionByIDResponse, error)
+
+	// GetReplications request
+	GetReplicationsWithResponse(ctx context.Context, params *GetReplicationsParams) (*GetReplicationsResponse, error)
+
+	// PostReplication request  with any body
+	PostReplicationWithBodyWithResponse(ctx context.Context, params *PostReplicationParams, contentType string, body io.Reader) (*PostReplicationResponse, error)
+
+	PostReplicationWithResponse(ctx context.Context, params *PostReplicationParams, body PostReplicationJSONRequestBody) (*PostReplicationResponse, error)
+
+	// DeleteReplicationByID request
+	DeleteReplicationByIDWithResponse(ctx context.Context, replicationID string, params *DeleteReplicationByIDParams) (*DeleteReplicationByIDResponse, error)
+
+	// GetReplicationByID request
+	GetReplicationByIDWithResponse(ctx context.Context, replicationID string, params *GetReplicationByIDParams) (*GetReplicationByIDResponse, error)
+
+	// PatchReplicationByID request  with any body
+	PatchReplicationByIDWithBodyWithResponse(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, contentType string, body io.Reader) (*PatchReplicationByIDResponse, error)
+
+	PatchReplicationByIDWithResponse(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, body PatchReplicationByIDJSONRequestBody) (*PatchReplicationByIDResponse, error)
+
+	// PostValidateReplicationByID request
+	PostValidateReplicationByIDWithResponse(ctx context.Context, replicationID string, params *PostValidateReplicationByIDParams) (*PostValidateReplicationByIDResponse, error)
 
 	// GetResources request
 	GetResourcesWithResponse(ctx context.Context, params *GetResourcesParams) (*GetResourcesResponse, error)
@@ -16744,6 +17727,30 @@ func (r GetChecksIDQueryResponse) StatusCode() int {
 	return 0
 }
 
+type GetConfigResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Config
+	JSON401      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetConfigResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetConfigResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetDashboardsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17693,6 +18700,28 @@ func (r PutMePasswordResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PutMePasswordResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetMetricsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetMetricsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetMetricsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18657,6 +19686,269 @@ func (r GetReadyResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetReadyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetRemoteConnectionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *RemoteConnections
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetRemoteConnectionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetRemoteConnectionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostRemoteConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *RemoteConnection
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostRemoteConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostRemoteConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteRemoteConnectionByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteRemoteConnectionByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteRemoteConnectionByIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetRemoteConnectionByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *RemoteConnection
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetRemoteConnectionByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetRemoteConnectionByIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchRemoteConnectionByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *RemoteConnection
+	JSON400      *Error
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchRemoteConnectionByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchRemoteConnectionByIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetReplicationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Replications
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetReplicationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetReplicationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostReplicationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Replication
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostReplicationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostReplicationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteReplicationByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteReplicationByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteReplicationByIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetReplicationByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Replication
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r GetReplicationByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetReplicationByIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchReplicationByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Replication
+	JSON400      *Error
+	JSON404      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchReplicationByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchReplicationByIDResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostValidateReplicationByIDResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *Error
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r PostValidateReplicationByIDResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostValidateReplicationByIDResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -21141,6 +22433,15 @@ func (c *ClientWithResponses) GetChecksIDQueryWithResponse(ctx context.Context, 
 	return ParseGetChecksIDQueryResponse(rsp)
 }
 
+// GetConfigWithResponse request returning *GetConfigResponse
+func (c *ClientWithResponses) GetConfigWithResponse(ctx context.Context, params *GetConfigParams) (*GetConfigResponse, error) {
+	rsp, err := c.GetConfig(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetConfigResponse(rsp)
+}
+
 // GetDashboardsWithResponse request returning *GetDashboardsResponse
 func (c *ClientWithResponses) GetDashboardsWithResponse(ctx context.Context, params *GetDashboardsParams) (*GetDashboardsResponse, error) {
 	rsp, err := c.GetDashboards(ctx, params)
@@ -21652,6 +22953,15 @@ func (c *ClientWithResponses) PutMePasswordWithResponse(ctx context.Context, par
 		return nil, err
 	}
 	return ParsePutMePasswordResponse(rsp)
+}
+
+// GetMetricsWithResponse request returning *GetMetricsResponse
+func (c *ClientWithResponses) GetMetricsWithResponse(ctx context.Context, params *GetMetricsParams) (*GetMetricsResponse, error) {
+	rsp, err := c.GetMetrics(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMetricsResponse(rsp)
 }
 
 // GetNotificationEndpointsWithResponse request returning *GetNotificationEndpointsResponse
@@ -22166,6 +23476,137 @@ func (c *ClientWithResponses) GetReadyWithResponse(ctx context.Context, params *
 		return nil, err
 	}
 	return ParseGetReadyResponse(rsp)
+}
+
+// GetRemoteConnectionsWithResponse request returning *GetRemoteConnectionsResponse
+func (c *ClientWithResponses) GetRemoteConnectionsWithResponse(ctx context.Context, params *GetRemoteConnectionsParams) (*GetRemoteConnectionsResponse, error) {
+	rsp, err := c.GetRemoteConnections(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetRemoteConnectionsResponse(rsp)
+}
+
+// PostRemoteConnectionWithBodyWithResponse request with arbitrary body returning *PostRemoteConnectionResponse
+func (c *ClientWithResponses) PostRemoteConnectionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*PostRemoteConnectionResponse, error) {
+	rsp, err := c.PostRemoteConnectionWithBody(ctx, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRemoteConnectionResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostRemoteConnectionWithResponse(ctx context.Context, body PostRemoteConnectionJSONRequestBody) (*PostRemoteConnectionResponse, error) {
+	rsp, err := c.PostRemoteConnection(ctx, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostRemoteConnectionResponse(rsp)
+}
+
+// DeleteRemoteConnectionByIDWithResponse request returning *DeleteRemoteConnectionByIDResponse
+func (c *ClientWithResponses) DeleteRemoteConnectionByIDWithResponse(ctx context.Context, remoteID string, params *DeleteRemoteConnectionByIDParams) (*DeleteRemoteConnectionByIDResponse, error) {
+	rsp, err := c.DeleteRemoteConnectionByID(ctx, remoteID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteRemoteConnectionByIDResponse(rsp)
+}
+
+// GetRemoteConnectionByIDWithResponse request returning *GetRemoteConnectionByIDResponse
+func (c *ClientWithResponses) GetRemoteConnectionByIDWithResponse(ctx context.Context, remoteID string, params *GetRemoteConnectionByIDParams) (*GetRemoteConnectionByIDResponse, error) {
+	rsp, err := c.GetRemoteConnectionByID(ctx, remoteID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetRemoteConnectionByIDResponse(rsp)
+}
+
+// PatchRemoteConnectionByIDWithBodyWithResponse request with arbitrary body returning *PatchRemoteConnectionByIDResponse
+func (c *ClientWithResponses) PatchRemoteConnectionByIDWithBodyWithResponse(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, contentType string, body io.Reader) (*PatchRemoteConnectionByIDResponse, error) {
+	rsp, err := c.PatchRemoteConnectionByIDWithBody(ctx, remoteID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchRemoteConnectionByIDResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchRemoteConnectionByIDWithResponse(ctx context.Context, remoteID string, params *PatchRemoteConnectionByIDParams, body PatchRemoteConnectionByIDJSONRequestBody) (*PatchRemoteConnectionByIDResponse, error) {
+	rsp, err := c.PatchRemoteConnectionByID(ctx, remoteID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchRemoteConnectionByIDResponse(rsp)
+}
+
+// GetReplicationsWithResponse request returning *GetReplicationsResponse
+func (c *ClientWithResponses) GetReplicationsWithResponse(ctx context.Context, params *GetReplicationsParams) (*GetReplicationsResponse, error) {
+	rsp, err := c.GetReplications(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetReplicationsResponse(rsp)
+}
+
+// PostReplicationWithBodyWithResponse request with arbitrary body returning *PostReplicationResponse
+func (c *ClientWithResponses) PostReplicationWithBodyWithResponse(ctx context.Context, params *PostReplicationParams, contentType string, body io.Reader) (*PostReplicationResponse, error) {
+	rsp, err := c.PostReplicationWithBody(ctx, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostReplicationResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostReplicationWithResponse(ctx context.Context, params *PostReplicationParams, body PostReplicationJSONRequestBody) (*PostReplicationResponse, error) {
+	rsp, err := c.PostReplication(ctx, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostReplicationResponse(rsp)
+}
+
+// DeleteReplicationByIDWithResponse request returning *DeleteReplicationByIDResponse
+func (c *ClientWithResponses) DeleteReplicationByIDWithResponse(ctx context.Context, replicationID string, params *DeleteReplicationByIDParams) (*DeleteReplicationByIDResponse, error) {
+	rsp, err := c.DeleteReplicationByID(ctx, replicationID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteReplicationByIDResponse(rsp)
+}
+
+// GetReplicationByIDWithResponse request returning *GetReplicationByIDResponse
+func (c *ClientWithResponses) GetReplicationByIDWithResponse(ctx context.Context, replicationID string, params *GetReplicationByIDParams) (*GetReplicationByIDResponse, error) {
+	rsp, err := c.GetReplicationByID(ctx, replicationID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetReplicationByIDResponse(rsp)
+}
+
+// PatchReplicationByIDWithBodyWithResponse request with arbitrary body returning *PatchReplicationByIDResponse
+func (c *ClientWithResponses) PatchReplicationByIDWithBodyWithResponse(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, contentType string, body io.Reader) (*PatchReplicationByIDResponse, error) {
+	rsp, err := c.PatchReplicationByIDWithBody(ctx, replicationID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchReplicationByIDResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchReplicationByIDWithResponse(ctx context.Context, replicationID string, params *PatchReplicationByIDParams, body PatchReplicationByIDJSONRequestBody) (*PatchReplicationByIDResponse, error) {
+	rsp, err := c.PatchReplicationByID(ctx, replicationID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchReplicationByIDResponse(rsp)
+}
+
+// PostValidateReplicationByIDWithResponse request returning *PostValidateReplicationByIDResponse
+func (c *ClientWithResponses) PostValidateReplicationByIDWithResponse(ctx context.Context, replicationID string, params *PostValidateReplicationByIDParams) (*PostValidateReplicationByIDResponse, error) {
+	rsp, err := c.PostValidateReplicationByID(ctx, replicationID, params)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostValidateReplicationByIDResponse(rsp)
 }
 
 // GetResourcesWithResponse request returning *GetResourcesResponse
@@ -24489,6 +25930,51 @@ func ParseGetChecksIDQueryResponse(rsp *http.Response) (*GetChecksIDQueryRespons
 	return response, nil
 }
 
+// ParseGetConfigResponse parses an HTTP response from a GetConfigWithResponse call
+func ParseGetConfigResponse(rsp *http.Response) (*GetConfigResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetConfigResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Config
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
 // ParseGetDashboardsResponse parses an HTTP response from a GetDashboardsWithResponse call
 func ParseGetDashboardsResponse(rsp *http.Response) (*GetDashboardsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -26131,6 +27617,37 @@ func ParsePutMePasswordResponse(rsp *http.Response) (*PutMePasswordResponse, err
 	return response, nil
 }
 
+// ParseGetMetricsResponse parses an HTTP response from a GetMetricsWithResponse call
+func ParseGetMetricsResponse(rsp *http.Response) (*GetMetricsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMetricsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
 // ParseGetNotificationEndpointsResponse parses an HTTP response from a GetNotificationEndpointsWithResponse call
 func ParseGetNotificationEndpointsResponse(rsp *http.Response) (*GetNotificationEndpointsResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -27697,6 +29214,494 @@ func ParseGetReadyResponse(rsp *http.Response) (*GetReadyResponse, error) {
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetRemoteConnectionsResponse parses an HTTP response from a GetRemoteConnectionsWithResponse call
+func ParseGetRemoteConnectionsResponse(rsp *http.Response) (*GetRemoteConnectionsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetRemoteConnectionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoteConnections
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostRemoteConnectionResponse parses an HTTP response from a PostRemoteConnectionWithResponse call
+func ParsePostRemoteConnectionResponse(rsp *http.Response) (*PostRemoteConnectionResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostRemoteConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest RemoteConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseDeleteRemoteConnectionByIDResponse parses an HTTP response from a DeleteRemoteConnectionByIDWithResponse call
+func ParseDeleteRemoteConnectionByIDResponse(rsp *http.Response) (*DeleteRemoteConnectionByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteRemoteConnectionByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetRemoteConnectionByIDResponse parses an HTTP response from a GetRemoteConnectionByIDWithResponse call
+func ParseGetRemoteConnectionByIDResponse(rsp *http.Response) (*GetRemoteConnectionByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetRemoteConnectionByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoteConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePatchRemoteConnectionByIDResponse parses an HTTP response from a PatchRemoteConnectionByIDWithResponse call
+func ParsePatchRemoteConnectionByIDResponse(rsp *http.Response) (*PatchRemoteConnectionByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchRemoteConnectionByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoteConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetReplicationsResponse parses an HTTP response from a GetReplicationsWithResponse call
+func ParseGetReplicationsResponse(rsp *http.Response) (*GetReplicationsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetReplicationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Replications
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostReplicationResponse parses an HTTP response from a PostReplicationWithResponse call
+func ParsePostReplicationResponse(rsp *http.Response) (*PostReplicationResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostReplicationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Replication
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseDeleteReplicationByIDResponse parses an HTTP response from a DeleteReplicationByIDWithResponse call
+func ParseDeleteReplicationByIDResponse(rsp *http.Response) (*DeleteReplicationByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteReplicationByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParseGetReplicationByIDResponse parses an HTTP response from a GetReplicationByIDWithResponse call
+func ParseGetReplicationByIDResponse(rsp *http.Response) (*GetReplicationByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetReplicationByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Replication
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePatchReplicationByIDResponse parses an HTTP response from a PatchReplicationByIDWithResponse call
+func ParsePatchReplicationByIDResponse(rsp *http.Response) (*PatchReplicationByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchReplicationByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Replication
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	// Fallback for unexpected error
+	default:
+		if rsp.StatusCode > 299 {
+			return nil, &ihttp.Error{StatusCode: rsp.StatusCode, Message: rsp.Status}
+		}
+	}
+
+	return response, nil
+}
+
+// ParsePostValidateReplicationByIDResponse parses an HTTP response from a PostValidateReplicationByIDWithResponse call
+func ParsePostValidateReplicationByIDResponse(rsp *http.Response) (*PostValidateReplicationByIDResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostValidateReplicationByIDResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -31135,6 +33140,9 @@ func ParsePostWriteResponse(rsp *http.Response) (*PostWriteResponse, error) {
 			return nil, err
 		}
 		response.JSONDefault = &dest
+
+	case rsp.StatusCode == 413:
+		// Content-type (text/html) unsupported
 
 	// Fallback for unexpected error
 	default:

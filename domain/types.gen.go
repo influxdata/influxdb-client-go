@@ -12,9 +12,8 @@ import (
 )
 
 const (
-	BasicAuthenticationScopes       = "BasicAuthentication.Scopes"
-	QuerystringAuthenticationScopes = "QuerystringAuthentication.Scopes"
-	TokenAuthenticationScopes       = "TokenAuthentication.Scopes"
+	BasicAuthenticationScopes = "BasicAuthentication.Scopes"
+	TokenAuthenticationScopes = "TokenAuthentication.Scopes"
 )
 
 // Defines values for AuthorizationUpdateRequestStatus.
@@ -844,23 +843,23 @@ type Authorization struct {
 		User *Link `json:"user,omitempty"`
 	} `json:"links,omitempty"`
 
-	// Name of the org token is scoped to.
+	// Name of the organization that the token is scoped to.
 	Org *string `json:"org,omitempty"`
 
-	// ID of org that authorization is scoped to.
+	// ID of the organization that the authorization is scoped to.
 	OrgID *string `json:"orgID,omitempty"`
 
-	// List of permissions for an auth.  An auth must have at least one Permission.
+	// List of permissions for an authorization.  An authorization must have at least one permission.
 	Permissions *[]Permission `json:"permissions,omitempty"`
 
-	// Passed via the Authorization Header and Token Authentication type.
+	// Token used to authenticate API requests.
 	Token     *string    `json:"token,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 
-	// Name of user that created and owns the token.
+	// Name of the user that created and owns the token.
 	User *string `json:"user,omitempty"`
 
-	// ID of user that created and owns the token.
+	// ID of the user that created and owns the token.
 	UserID *string `json:"userID,omitempty"`
 }
 
@@ -884,11 +883,11 @@ type AuthorizationUpdateRequest struct {
 	// A description of the token.
 	Description *string `json:"description,omitempty"`
 
-	// If inactive the token is inactive and requests using the token will be rejected.
+	// Status of the token. If `inactive`, requests using the token will be rejected.
 	Status *AuthorizationUpdateRequestStatus `json:"status,omitempty"`
 }
 
-// If inactive the token is inactive and requests using the token will be rejected.
+// Status of the token. If `inactive`, requests using the token will be rejected.
 type AuthorizationUpdateRequestStatus string
 
 // Authorizations defines model for Authorizations.
@@ -899,35 +898,35 @@ type Authorizations struct {
 
 // The viewport for a View's visualizations
 type Axes struct {
-	// The description of a particular axis for a visualization.
+	// Axis used in a visualization.
 	X Axis `json:"x"`
 
-	// The description of a particular axis for a visualization.
+	// Axis used in a visualization.
 	Y Axis `json:"y"`
 }
 
-// The description of a particular axis for a visualization.
+// Axis used in a visualization.
 type Axis struct {
-	// Base represents the radix for formatting axis values.
+	// Radix for formatting axis values.
 	Base *AxisBase `json:"base,omitempty"`
 
-	// The extents of an axis in the form [lower, upper]. Clients determine whether bounds are to be inclusive or exclusive of their limits
+	// The extents of the axis in the form [lower, upper]. Clients determine whether bounds are inclusive or exclusive of their limits.
 	Bounds *[]string `json:"bounds,omitempty"`
 
-	// Label is a description of this Axis
+	// Description of the axis.
 	Label *string `json:"label,omitempty"`
 
-	// Prefix represents a label prefix for formatting axis values.
+	// Label prefix for formatting axis values.
 	Prefix *string `json:"prefix,omitempty"`
 
 	// Scale is the axis formatting scale. Supported: "log", "linear"
 	Scale *AxisScale `json:"scale,omitempty"`
 
-	// Suffix represents a label suffix for formatting axis values.
+	// Label suffix for formatting axis values.
 	Suffix *string `json:"suffix,omitempty"`
 }
 
-// Base represents the radix for formatting axis values.
+// Radix for formatting axis values.
 type AxisBase string
 
 // Scale is the axis formatting scale. Supported: "log", "linear"
@@ -1185,8 +1184,8 @@ type CheckBase struct {
 	LastRunError  *string                 `json:"lastRunError,omitempty"`
 	LastRunStatus *CheckBaseLastRunStatus `json:"lastRunStatus,omitempty"`
 
-	// Timestamp of latest scheduled, completed run, RFC3339.
-	LatestCompleted *time.Time `json:"latestCompleted,omitempty"`
+	// Timestamp (in RFC3339 date/time format](https://datatracker.ietf.org/doc/html/rfc3339)) of the latest scheduled and completed run.
+	LatestCompleted *interface{} `json:"latestCompleted,omitempty"`
 	Links           *struct {
 		// URI of resource.
 		Labels *Link `json:"labels,omitempty"`
@@ -1265,6 +1264,11 @@ type Checks struct {
 	Links  *Links   `json:"links,omitempty"`
 }
 
+// A color mapping is an object that maps time series data to a UI color scheme to allow the UI to render graphs consistent colors across reloads.
+type ColorMapping struct {
+	AdditionalProperties map[string]string `json:"-"`
+}
+
 // Selects one of two expressions, `Alternate` or `Consequent`, depending on a third boolean expression, `Test`
 type ConditionalExpression struct {
 	Alternate  *Expression `json:"alternate,omitempty"`
@@ -1273,6 +1277,11 @@ type ConditionalExpression struct {
 
 	// Type of AST node
 	Type *NodeType `json:"type,omitempty"`
+}
+
+// Config defines model for Config.
+type Config struct {
+	Config *map[string]interface{} `json:"config,omitempty"`
 }
 
 // ConstantVariableProperties defines model for ConstantVariableProperties.
@@ -1321,20 +1330,20 @@ type CustomCheckType string
 
 // DBRP defines model for DBRP.
 type DBRP struct {
-	// the bucket ID used as target for the translation.
+	// ID of the bucket used as the target for the translation.
 	BucketID string `json:"bucketID"`
 
 	// InfluxDB v1 database
 	Database string `json:"database"`
 
-	// Specify if this mapping represents the default retention policy for the database specificed.
+	// Mapping represents the default retention policy for the database specified.
 	Default bool `json:"default"`
 
-	// the mapping identifier
+	// ID of the DBRP mapping.
 	Id    string `json:"id"`
 	Links *Links `json:"links,omitempty"`
 
-	// the organization ID that owns this mapping.
+	// ID of the organization that owns this mapping.
 	OrgID string `json:"orgID"`
 
 	// InfluxDB v1 retention policy
@@ -1343,19 +1352,19 @@ type DBRP struct {
 
 // DBRPCreate defines model for DBRPCreate.
 type DBRPCreate struct {
-	// the bucket ID used as target for the translation.
+	// ID of the bucket used as the target for the translation.
 	BucketID string `json:"bucketID"`
 
 	// InfluxDB v1 database
 	Database string `json:"database"`
 
-	// Specify if this mapping represents the default retention policy for the database specificed.
+	// Mapping represents the default retention policy for the database specified.
 	Default *bool `json:"default,omitempty"`
 
-	// the organization that owns this mapping.
+	// Name of the organization that owns this mapping.
 	Org *string `json:"org,omitempty"`
 
-	// the organization ID that owns this mapping.
+	// ID of the organization that owns this mapping.
 	OrgID *string `json:"orgID,omitempty"`
 
 	// InfluxDB v1 retention policy
@@ -1613,13 +1622,13 @@ type Error struct {
 	// code is the machine-readable error code.
 	Code ErrorCode `json:"code"`
 
-	// err is a stack of errors that occurred during processing of the request. Useful for debugging.
+	// Stack of errors that occurred during processing of the request. Useful for debugging.
 	Err *string `json:"err,omitempty"`
 
-	// message is a human-readable message.
-	Message string `json:"message"`
+	// Human-readable message.
+	Message *string `json:"message,omitempty"`
 
-	// op describes the logical code operation during error. Useful for debugging.
+	// Describes the logical code operation when the error occurred. Useful for debugging.
 	Op *string `json:"op,omitempty"`
 }
 
@@ -1748,7 +1757,7 @@ type GeoCircleViewLayer struct {
 	// Embedded struct due to allOf(#/components/schemas/GeoViewLayerProperties)
 	GeoViewLayerProperties `yaml:",inline"`
 	// Embedded fields due to inline allOf schema
-	// The description of a particular axis for a visualization.
+	// Axis used in a visualization.
 	ColorDimension Axis `json:"colorDimension"`
 
 	// Circle color field
@@ -1763,7 +1772,7 @@ type GeoCircleViewLayer struct {
 	// Maximum radius size in pixels
 	Radius *int `json:"radius,omitempty"`
 
-	// The description of a particular axis for a visualization.
+	// Axis used in a visualization.
 	RadiusDimension Axis `json:"radiusDimension"`
 
 	// Radius field
@@ -1781,7 +1790,7 @@ type GeoHeatMapViewLayer struct {
 	// Colors define color encoding of data into a visualization
 	Colors []DashboardColor `json:"colors"`
 
-	// The description of a particular axis for a visualization.
+	// Axis used in a visualization.
 	IntensityDimension Axis `json:"intensityDimension"`
 
 	// Intensity field
@@ -1796,7 +1805,7 @@ type GeoPointMapViewLayer struct {
 	// Embedded struct due to allOf(#/components/schemas/GeoViewLayerProperties)
 	GeoViewLayerProperties `yaml:",inline"`
 	// Embedded fields due to inline allOf schema
-	// The description of a particular axis for a visualization.
+	// Axis used in a visualization.
 	ColorDimension Axis `json:"colorDimension"`
 
 	// Marker color field
@@ -2246,17 +2255,17 @@ type LineProtocolError struct {
 	// Code is the machine-readable error code.
 	Code LineProtocolErrorCode `json:"code"`
 
-	// Err is a stack of errors that occurred during processing of the request. Useful for debugging.
-	Err string `json:"err"`
+	// Stack of errors that occurred during processing of the request. Useful for debugging.
+	Err *string `json:"err,omitempty"`
 
-	// First line within sent body containing malformed data
+	// First line in the request body that contains malformed data.
 	Line *int32 `json:"line,omitempty"`
 
-	// Message is a human-readable message.
-	Message string `json:"message"`
+	// Human-readable message.
+	Message *string `json:"message,omitempty"`
 
-	// Op describes the logical code operation during error. Useful for debugging.
-	Op string `json:"op"`
+	// Describes the logical code operation when the error occurred. Useful for debugging.
+	Op *string `json:"op,omitempty"`
 }
 
 // Code is the machine-readable error code.
@@ -2267,10 +2276,7 @@ type LineProtocolLengthError struct {
 	// Code is the machine-readable error code.
 	Code LineProtocolLengthErrorCode `json:"code"`
 
-	// Max length in bytes for a body of line-protocol.
-	MaxLength int32 `json:"maxLength"`
-
-	// Message is a human-readable message.
+	// Human-readable message.
 	Message string `json:"message"`
 }
 
@@ -2507,7 +2513,7 @@ type NotificationRuleBase struct {
 	LastRunError  *string                            `json:"lastRunError,omitempty"`
 	LastRunStatus *NotificationRuleBaseLastRunStatus `json:"lastRunStatus,omitempty"`
 
-	// Timestamp of latest scheduled, completed run, RFC3339.
+	// Timestamp (in RFC3339 date/time format](https://datatracker.ietf.org/doc/html/rfc3339)) of the latest scheduled and completed run.
 	LatestCompleted *time.Time `json:"latestCompleted,omitempty"`
 
 	// Don't notify me more than <limit> times every <limitEvery> seconds. If set, limitEvery cannot be empty.
@@ -2912,6 +2918,43 @@ type RegexpLiteral struct {
 	Value *string   `json:"value,omitempty"`
 }
 
+// RemoteConnection defines model for RemoteConnection.
+type RemoteConnection struct {
+	AllowInsecureTLS bool    `json:"allowInsecureTLS"`
+	Description      *string `json:"description,omitempty"`
+	Id               string  `json:"id"`
+	Name             string  `json:"name"`
+	OrgID            string  `json:"orgID"`
+	RemoteOrgID      string  `json:"remoteOrgID"`
+	RemoteURL        string  `json:"remoteURL"`
+}
+
+// RemoteConnectionCreationRequest defines model for RemoteConnectionCreationRequest.
+type RemoteConnectionCreationRequest struct {
+	AllowInsecureTLS bool    `json:"allowInsecureTLS"`
+	Description      *string `json:"description,omitempty"`
+	Name             string  `json:"name"`
+	OrgID            string  `json:"orgID"`
+	RemoteAPIToken   string  `json:"remoteAPIToken"`
+	RemoteOrgID      string  `json:"remoteOrgID"`
+	RemoteURL        string  `json:"remoteURL"`
+}
+
+// RemoteConnectionUpdateRequest defines model for RemoteConnectionUpdateRequest.
+type RemoteConnectionUpdateRequest struct {
+	AllowInsecureTLS *bool   `json:"allowInsecureTLS,omitempty"`
+	Description      *string `json:"description,omitempty"`
+	Name             *string `json:"name,omitempty"`
+	RemoteAPIToken   *string `json:"remoteAPIToken,omitempty"`
+	RemoteOrgID      *string `json:"remoteOrgID,omitempty"`
+	RemoteURL        *string `json:"remoteURL,omitempty"`
+}
+
+// RemoteConnections defines model for RemoteConnections.
+type RemoteConnections struct {
+	Remotes *[]RemoteConnection `json:"remotes,omitempty"`
+}
+
 // Describes a field that can be renamed and made visible or invisible.
 type RenamableField struct {
 	// The name that a field is renamed to by the user.
@@ -2922,6 +2965,49 @@ type RenamableField struct {
 
 	// Indicates whether this field should be visible on the table.
 	Visible *bool `json:"visible,omitempty"`
+}
+
+// Replication defines model for Replication.
+type Replication struct {
+	CurrentQueueSizeBytes int64   `json:"currentQueueSizeBytes"`
+	Description           *string `json:"description,omitempty"`
+	DropNonRetryableData  *bool   `json:"dropNonRetryableData,omitempty"`
+	Id                    string  `json:"id"`
+	LatestErrorMessage    *string `json:"latestErrorMessage,omitempty"`
+	LatestResponseCode    *int    `json:"latestResponseCode,omitempty"`
+	LocalBucketID         string  `json:"localBucketID"`
+	MaxQueueSizeBytes     int64   `json:"maxQueueSizeBytes"`
+	Name                  string  `json:"name"`
+	OrgID                 string  `json:"orgID"`
+	RemoteBucketID        string  `json:"remoteBucketID"`
+	RemoteID              string  `json:"remoteID"`
+}
+
+// ReplicationCreationRequest defines model for ReplicationCreationRequest.
+type ReplicationCreationRequest struct {
+	Description          *string `json:"description,omitempty"`
+	DropNonRetryableData *bool   `json:"dropNonRetryableData,omitempty"`
+	LocalBucketID        string  `json:"localBucketID"`
+	MaxQueueSizeBytes    int64   `json:"maxQueueSizeBytes"`
+	Name                 string  `json:"name"`
+	OrgID                string  `json:"orgID"`
+	RemoteBucketID       string  `json:"remoteBucketID"`
+	RemoteID             string  `json:"remoteID"`
+}
+
+// ReplicationUpdateRequest defines model for ReplicationUpdateRequest.
+type ReplicationUpdateRequest struct {
+	Description          *string `json:"description,omitempty"`
+	DropNonRetryableData *bool   `json:"dropNonRetryableData,omitempty"`
+	MaxQueueSizeBytes    *int64  `json:"maxQueueSizeBytes,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	RemoteBucketID       *string `json:"remoteBucketID,omitempty"`
+	RemoteID             *string `json:"remoteID,omitempty"`
+}
+
+// Replications defines model for Replications.
+type Replications struct {
+	Replications *[]Replication `json:"replications,omitempty"`
 }
 
 // Resource defines model for Resource.
@@ -3522,27 +3608,30 @@ type TagRuleOperator string
 
 // Task defines model for Task.
 type Task struct {
-	// The ID of the authorization used when this task communicates with the query engine.
+	// ID of the authorization used when the task communicates with the query engine.
 	AuthorizationID *string    `json:"authorizationID,omitempty"`
 	CreatedAt       *time.Time `json:"createdAt,omitempty"`
 
-	// A task repetition schedule in the form '* * * * * *'; parsed from Flux.
+	// [Cron expression](https://en.wikipedia.org/wiki/Cron#Overview) that defines the schedule on which the task runs. Cron scheduling is based on system time.
+	// Value is a [Cron expression](https://en.wikipedia.org/wiki/Cron#Overview).
 	Cron *string `json:"cron,omitempty"`
 
-	// An optional description of the task.
+	// Description of the task.
 	Description *string `json:"description,omitempty"`
 
-	// A simple task repetition schedule; parsed from Flux.
+	// Interval at which the task runs. `every` also determines when the task first runs, depending on the specified time.
+	// Value is a [duration literal](https://docs.influxdata.com/flux/v0.x/spec/lexical-elements/#duration-literals)).
 	Every *string `json:"every,omitempty"`
 
-	// The Flux script to run for this task.
+	// Flux script to run for this task.
 	Flux          string             `json:"flux"`
 	Id            string             `json:"id"`
 	Labels        *Labels            `json:"labels,omitempty"`
 	LastRunError  *string            `json:"lastRunError,omitempty"`
 	LastRunStatus *TaskLastRunStatus `json:"lastRunStatus,omitempty"`
 
-	// Timestamp of latest scheduled, completed run, RFC3339.
+	// Timestamp of the latest scheduled and completed run.
+	// Value is a timestamp in [RFC3339 date/time format](https://docs.influxdata.com/flux/v0.x/data-types/basic/time/#time-syntax).
 	LatestCompleted *time.Time `json:"latestCompleted,omitempty"`
 	Links           *struct {
 		// URI of resource.
@@ -3564,23 +3653,24 @@ type Task struct {
 		Self *Link `json:"self,omitempty"`
 	} `json:"links,omitempty"`
 
-	// The name of the task.
+	// Name of the task.
 	Name string `json:"name"`
 
-	// Duration to delay after the schedule, before executing the task; parsed from flux, if set to zero it will remove this option and use 0 as the default.
+	// [Duration](https://docs.influxdata.com/flux/v0.x/spec/lexical-elements/#duration-literals) to delay execution of the task after the scheduled time has elapsed. `0` removes the offset.
+	// The value is a [duration literal](https://docs.influxdata.com/flux/v0.x/spec/lexical-elements/#duration-literals).
 	Offset *string `json:"offset,omitempty"`
 
-	// The name of the organization that owns this Task.
+	// Name of the organization that owns the task.
 	Org *string `json:"org,omitempty"`
 
-	// The ID of the organization that owns this Task.
+	// ID of the organization that owns the task.
 	OrgID string `json:"orgID"`
 
-	// The ID of the user who owns this Task.
+	// ID of the user who owns this Task.
 	OwnerID *string         `json:"ownerID,omitempty"`
 	Status  *TaskStatusType `json:"status,omitempty"`
 
-	// The type of task, this can be used for filtering tasks on list actions.
+	// Type of the task, useful for filtering a task list.
 	Type      *string    `json:"type,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
@@ -3663,6 +3753,24 @@ type TelegrafPlugin struct {
 	Description *string `json:"description,omitempty"`
 	Name        *string `json:"name,omitempty"`
 	Type        *string `json:"type,omitempty"`
+}
+
+// TelegrafPluginRequest defines model for TelegrafPluginRequest.
+type TelegrafPluginRequest struct {
+	Config      *string `json:"config,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Metadata    *struct {
+		Buckets *[]string `json:"buckets,omitempty"`
+	} `json:"metadata,omitempty"`
+	Name    *string `json:"name,omitempty"`
+	OrgID   *string `json:"orgID,omitempty"`
+	Plugins *[]struct {
+		Alias       *string `json:"alias,omitempty"`
+		Config      *string `json:"config,omitempty"`
+		Description *string `json:"description,omitempty"`
+		Name        *string `json:"name,omitempty"`
+		Type        *string `json:"type,omitempty"`
+	} `json:"plugins,omitempty"`
 }
 
 // TelegrafPlugins defines model for TelegrafPlugins.
@@ -4307,6 +4415,9 @@ type XYViewProperties struct {
 	// The viewport for a View's visualizations
 	Axes Axes `json:"axes"`
 
+	// A color mapping is an object that maps time series data to a UI color scheme to allow the UI to render graphs consistent colors across reloads.
+	ColorMapping *ColorMapping `json:"colorMapping,omitempty"`
+
 	// Colors define color encoding of data into a visualization
 	Colors                     []DashboardColor                `json:"colors"`
 	GenerateXAxisTicks         *[]string                       `json:"generateXAxisTicks,omitempty"`
@@ -4462,7 +4573,7 @@ type GetBucketsParams struct {
 	Offset *Offset `json:"offset,omitempty"`
 	Limit  *Limit  `json:"limit,omitempty"`
 
-	// The last resource ID from which to seek from (but not including). This is to be used instead of `offset`.
+	// Resource ID to seek from. Results are not inclusive of this ID. Use `after` instead of `offset`.
 	After *After `json:"after,omitempty"`
 
 	// The name of the organization.
@@ -4642,6 +4753,12 @@ type DeleteChecksIDLabelsIDParams struct {
 
 // GetChecksIDQueryParams defines parameters for GetChecksIDQuery.
 type GetChecksIDQueryParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetConfigParams defines parameters for GetConfig.
+type GetConfigParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
@@ -5048,6 +5165,12 @@ type PutMePasswordParams struct {
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
 
+// GetMetricsParams defines parameters for GetMetrics.
+type GetMetricsParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
 // GetNotificationEndpointsParams defines parameters for GetNotificationEndpoints.
 type GetNotificationEndpointsParams struct {
 	Offset *Offset `json:"offset,omitempty"`
@@ -5378,6 +5501,95 @@ type GetQuerySuggestionsNameParams struct {
 
 // GetReadyParams defines parameters for GetReady.
 type GetReadyParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetRemoteConnectionsParams defines parameters for GetRemoteConnections.
+type GetRemoteConnectionsParams struct {
+	// The organization ID.
+	OrgID     string  `json:"orgID"`
+	Name      *string `json:"name,omitempty"`
+	RemoteURL *string `json:"remoteURL,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostRemoteConnectionJSONBody defines parameters for PostRemoteConnection.
+type PostRemoteConnectionJSONBody RemoteConnectionCreationRequest
+
+// DeleteRemoteConnectionByIDParams defines parameters for DeleteRemoteConnectionByID.
+type DeleteRemoteConnectionByIDParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetRemoteConnectionByIDParams defines parameters for GetRemoteConnectionByID.
+type GetRemoteConnectionByIDParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PatchRemoteConnectionByIDJSONBody defines parameters for PatchRemoteConnectionByID.
+type PatchRemoteConnectionByIDJSONBody RemoteConnectionUpdateRequest
+
+// PatchRemoteConnectionByIDParams defines parameters for PatchRemoteConnectionByID.
+type PatchRemoteConnectionByIDParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetReplicationsParams defines parameters for GetReplications.
+type GetReplicationsParams struct {
+	// The organization ID.
+	OrgID         string  `json:"orgID"`
+	Name          *string `json:"name,omitempty"`
+	RemoteID      *string `json:"remoteID,omitempty"`
+	LocalBucketID *string `json:"localBucketID,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostReplicationJSONBody defines parameters for PostReplication.
+type PostReplicationJSONBody ReplicationCreationRequest
+
+// PostReplicationParams defines parameters for PostReplication.
+type PostReplicationParams struct {
+	// If true, validate the replication, but don't save it.
+	Validate *bool `json:"validate,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// DeleteReplicationByIDParams defines parameters for DeleteReplicationByID.
+type DeleteReplicationByIDParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// GetReplicationByIDParams defines parameters for GetReplicationByID.
+type GetReplicationByIDParams struct {
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PatchReplicationByIDJSONBody defines parameters for PatchReplicationByID.
+type PatchReplicationByIDJSONBody ReplicationUpdateRequest
+
+// PatchReplicationByIDParams defines parameters for PatchReplicationByID.
+type PatchReplicationByIDParams struct {
+	// If true, validate the updated information, but don't save it.
+	Validate *bool `json:"validate,omitempty"`
+
+	// OpenTracing span context
+	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
+}
+
+// PostValidateReplicationByIDParams defines parameters for PostValidateReplicationByID.
+type PostValidateReplicationByIDParams struct {
 	// OpenTracing span context
 	ZapTraceSpan *TraceSpan `json:"Zap-Trace-Span,omitempty"`
 }
@@ -5893,7 +6105,7 @@ type GetTelegrafsParams struct {
 }
 
 // PostTelegrafsJSONBody defines parameters for PostTelegrafs.
-type PostTelegrafsJSONBody TelegrafRequest
+type PostTelegrafsJSONBody TelegrafPluginRequest
 
 // PostTelegrafsParams defines parameters for PostTelegrafs.
 type PostTelegrafsParams struct {
@@ -5918,7 +6130,7 @@ type GetTelegrafsIDParams struct {
 type GetTelegrafsIDParamsAccept string
 
 // PutTelegrafsIDJSONBody defines parameters for PutTelegrafsID.
-type PutTelegrafsIDJSONBody TelegrafRequest
+type PutTelegrafsIDJSONBody TelegrafPluginRequest
 
 // PutTelegrafsIDParams defines parameters for PutTelegrafsID.
 type PutTelegrafsIDParams struct {
@@ -6000,7 +6212,7 @@ type GetUsersParams struct {
 	Offset *Offset `json:"offset,omitempty"`
 	Limit  *Limit  `json:"limit,omitempty"`
 
-	// The last resource ID from which to seek from (but not including). This is to be used instead of `offset`.
+	// Resource ID to seek from. Results are not inclusive of this ID. Use `after` instead of `offset`.
 	After *After  `json:"after,omitempty"`
 	Name  *string `json:"name,omitempty"`
 	Id    *string `json:"id,omitempty"`
@@ -6298,6 +6510,18 @@ type PostQueryAnalyzeJSONRequestBody PostQueryAnalyzeJSONBody
 // PostQueryAstJSONRequestBody defines body for PostQueryAst for application/json ContentType.
 type PostQueryAstJSONRequestBody PostQueryAstJSONBody
 
+// PostRemoteConnectionJSONRequestBody defines body for PostRemoteConnection for application/json ContentType.
+type PostRemoteConnectionJSONRequestBody PostRemoteConnectionJSONBody
+
+// PatchRemoteConnectionByIDJSONRequestBody defines body for PatchRemoteConnectionByID for application/json ContentType.
+type PatchRemoteConnectionByIDJSONRequestBody PatchRemoteConnectionByIDJSONBody
+
+// PostReplicationJSONRequestBody defines body for PostReplication for application/json ContentType.
+type PostReplicationJSONRequestBody PostReplicationJSONBody
+
+// PatchReplicationByIDJSONRequestBody defines body for PatchReplicationByID for application/json ContentType.
+type PatchReplicationByIDJSONRequestBody PatchReplicationByIDJSONBody
+
 // PostRestoreBucketMetadataJSONRequestBody defines body for PostRestoreBucketMetadata for application/json ContentType.
 type PostRestoreBucketMetadataJSONRequestBody PostRestoreBucketMetadataJSONBody
 
@@ -6390,6 +6614,59 @@ type PutVariablesIDJSONRequestBody PutVariablesIDJSONBody
 
 // PostVariablesIDLabelsJSONRequestBody defines body for PostVariablesIDLabels for application/json ContentType.
 type PostVariablesIDLabelsJSONRequestBody PostVariablesIDLabelsJSONBody
+
+// Getter for additional properties for ColorMapping. Returns the specified
+// element and whether it was found
+func (a ColorMapping) Get(fieldName string) (value string, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for ColorMapping
+func (a *ColorMapping) Set(fieldName string, value string) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]string)
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for ColorMapping to handle AdditionalProperties
+func (a *ColorMapping) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]string)
+		for fieldName, fieldBuf := range object {
+			var fieldVal string
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("error unmarshaling field %s", fieldName))
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for ColorMapping to handle AdditionalProperties
+func (a ColorMapping) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error marshaling '%s'", fieldName))
+		}
+	}
+	return json.Marshal(object)
+}
 
 // Getter for additional properties for Flags. Returns the specified
 // element and whether it was found

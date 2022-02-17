@@ -62,7 +62,7 @@ There are also other examples in the API docs:
 ## How To Use
 
 ### Installation
-**Go 1.13** or later is required.
+**Go 1.17** or later is required.
 
 1.  Add the client package your to your project dependencies (go.mod).
     ```sh

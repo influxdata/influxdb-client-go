@@ -1,4 +1,4 @@
-## 2.8.0 [2022-01-18]
+## 2.8.0 [2022-02-18]
 ### Features
 - [#304](https://github.com/influxdata/influxdb-client-go/pull/304) Added public constructor for `QueryTableResult`
 - [#307](https://github.com/influxdata/influxdb-client-go/pull/307) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 

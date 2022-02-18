@@ -1,6 +1,6 @@
 module github.com/influxdata/influxdb-client-go/v2
 
-go 1.13
+go 1.17
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.2
@@ -9,4 +9,9 @@ require (
 	github.com/stretchr/testify v1.5.1 // test dependency
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 	gopkg.in/yaml.v2 v2.3.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 )

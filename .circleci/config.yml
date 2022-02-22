@@ -47,9 +47,12 @@ jobs:
           name: "Start InfluxDB service"
           command: ./scripts/influxdb-restart.sh
       - run:
-          name: Collecting coverage reports
           command: |
             go get gotest.tools/gotestsum && gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -coverprofile=coverage.txt -covermode=atomic -coverpkg '.,./api/...,./internal/.../,./log/...' -tags e2e ./...
+            go tool cover -html=coverage.txt -o /tmp/artifacts/coverage.html
+      - run:
+          name: Collecting coverage reports
+          command: |
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
             curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
@@ -58,7 +61,6 @@ jobs:
             shasum -a 256 -c codecov.SHA256SUM
             chmod +x ./codecov
             ./codecov
-            go tool cover -html=coverage.txt -o /tmp/artifacts/coverage.html
       - store_artifacts:
           path: /tmp/artifacts
       - store_artifacts:

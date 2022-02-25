@@ -5,7 +5,6 @@
 package http
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 )
@@ -32,7 +31,10 @@ func (e *Error) Error() string {
 }
 
 func (e *Error) Unwrap() error {
-	return errors.New(e.Error())
+	if e.Err != nil {
+		return e.Err
+	}
+	return nil
 }
 
 // NewError returns newly created Error initialised with nested error and default values

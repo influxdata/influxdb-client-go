@@ -44,6 +44,10 @@ type Service interface {
 	SetAuthorization(authorization string)
 	// Authorization returns current authorization header value
 	Authorization() string
+	// SetUserAgent sets the User-Agent header value
+	SetUserAgent(authorization string)
+	// UserAgent returns current User-Agent header value
+	UserAgent() string
 	// ServerAPIURL returns URL to InfluxDB2 server API space
 	ServerAPIURL() string
 	// ServerURL returns URL to InfluxDB2 server
@@ -55,6 +59,7 @@ type service struct {
 	serverAPIURL  string
 	serverURL     string
 	authorization string
+	userAgent     string
 	client        Doer
 }
 
@@ -90,6 +95,14 @@ func (s *service) SetAuthorization(authorization string) {
 
 func (s *service) Authorization() string {
 	return s.authorization
+}
+
+func (s *service) SetUserAgent(userAgent string) {
+	s.userAgent = userAgent
+}
+
+func (s *service) UserAgent() string {
+	return s.userAgent
 }
 
 func (s *service) DoPostRequest(ctx context.Context, url string, body io.Reader, requestCallback RequestCallback, responseCallback ResponseCallback) *Error {

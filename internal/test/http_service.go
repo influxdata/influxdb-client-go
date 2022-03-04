@@ -24,6 +24,7 @@ import (
 type HTTPService struct {
 	serverURL      string
 	authorization  string
+	userAgent      string
 	lines          []string
 	t              *testing.T
 	wasGzip        bool
@@ -55,6 +56,11 @@ func (t *HTTPService) ServerAPIURL() string {
 // Authorization returns current authorization header value
 func (t *HTTPService) Authorization() string {
 	return t.authorization
+}
+
+// UserAgent returns current User-Agent header value
+func (t *HTTPService) UserAgent() string {
+	return t.userAgent
 }
 
 // HTTPClient returns nil for this service
@@ -90,6 +96,11 @@ func (t *HTTPService) ReplyError() *http2.Error {
 
 // SetAuthorization sets authorization string
 func (t *HTTPService) SetAuthorization(_ string) {
+
+}
+
+// SetUserAgent sets userAgent string
+func (t *HTTPService) SetUserAgent(_ string) {
 
 }
 

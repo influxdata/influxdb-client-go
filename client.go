@@ -123,7 +123,13 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 	if log.Log != nil {
 		log.Log.SetLogLevel(options.LogLevel())
 	}
-	ilog.Infof("Using URL '%s', token '%s'", serverURL, authToken)
+	if ilog.Level() >= log.InfoLevel {
+		tokenStr := ""
+		if len(authToken) > 0 {
+			tokenStr = ", token '******'"
+		}
+		ilog.Infof("Using URL '%s'%s", serverURL, tokenStr)
+	}
 	return client
 }
 func (c *clientImpl) Options() *Options {

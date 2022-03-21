@@ -1,7 +1,7 @@
-## unreleased
+## 2.8.1
 ### Bug fixes
 - [#315](https://github.com/influxdata/influxdb-client-go/pull/315) Masking authorization token in log
-- 
+
 ## 2.8.0 [2022-02-18]
 ### Features
 - [#304](https://github.com/influxdata/influxdb-client-go/pull/304) Added public constructor for `QueryTableResult`

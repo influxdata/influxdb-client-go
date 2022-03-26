@@ -7,6 +7,7 @@ package api
 import (
 	"context"
 	"strings"
+	"sync"
 	"time"
 
 	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
@@ -59,6 +60,7 @@ type WriteAPIImpl struct {
 	bufferInfoCh chan writeBuffInfoReq
 	writeInfoCh  chan writeBuffInfoReq
 	writeOptions *write.Options
+	closingMu    *sync.Mutex
 }
 
 type writeBuffInfoReq struct {
@@ -79,6 +81,7 @@ func NewWriteAPI(org string, bucket string, service http2.Service, writeOptions 
 		bufferInfoCh: make(chan writeBuffInfoReq),
 		writeInfoCh:  make(chan writeBuffInfoReq),
 		writeOptions: writeOptions,
+		closingMu:    &sync.Mutex{},
 	}
 
 	go w.bufferProc()
@@ -194,6 +197,8 @@ x:
 // Close finishes outstanding write operations,
 // stop background routines and closes all channels
 func (w *WriteAPIImpl) Close() {
+	w.closingMu.Lock()
+	defer w.closingMu.Unlock()
 	if w.writeCh != nil {
 		// Flush outstanding metrics
 		w.Flush()

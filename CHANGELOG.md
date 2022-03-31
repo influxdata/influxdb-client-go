@@ -1,3 +1,7 @@
+## 2.8.2 [2022-03-26]
+### Bug fixes
+- [#317](https://github.com/influxdata/influxdb-client-go/issues/317) Prevent panic if multiple goroutines close influxdb2 client
+
 ## 2.8.1 [2022-03-21]
 ### Bug fixes
 - [#311](https://github.com/influxdata/influxdb-client-go/pull/311) Correctly unwrapping http.Error from Server API calls

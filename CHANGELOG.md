@@ -1,6 +1,6 @@
-## 2.8.2 [2022-03-26]
+## 2.8.2 [2022-04-19]
 ### Bug fixes
-- [#317](https://github.com/influxdata/influxdb-client-go/issues/317) Prevent panic if multiple goroutines close influxdb2 client
+- [#319](https://github.com/influxdata/influxdb-client-go/issues/319) Synchronize `WriteAPIImpl.Close` to prevent panic when closing client by multiple go-routines.
 
 ## 2.8.1 [2022-03-21]
 ### Bug fixes

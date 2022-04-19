@@ -1,6 +1,9 @@
-## 2.9.0 unreleased
+## Unreleased
 ### Features
 - [#323](https://github.com/influxdata/influxdb-client-go/pull/323) Added `TasksAPI.CreateTaskByFlux` to allow full control of task script.
+
+### Bug fixes
+- [#324](https://github.com/influxdata/influxdb-client-go/issues/324) Non-empty error channel will not block writes 
 
 ## 2.8.2 [2022-04-19]
 ### Bug fixes

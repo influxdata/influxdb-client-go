@@ -8,6 +8,7 @@ import (
 	"context"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
@@ -50,17 +51,18 @@ type WriteAPIImpl struct {
 	service     *iwrite.Service
 	writeBuffer []string
 
-	errCh        chan error
-	writeCh      chan *iwrite.Batch
-	bufferCh     chan string
-	writeStop    chan struct{}
-	bufferStop   chan struct{}
-	bufferFlush  chan struct{}
-	doneCh       chan struct{}
-	bufferInfoCh chan writeBuffInfoReq
-	writeInfoCh  chan writeBuffInfoReq
-	writeOptions *write.Options
-	closingMu    *sync.Mutex
+	errCh         chan error
+	writeCh       chan *iwrite.Batch
+	bufferCh      chan string
+	writeStop     chan struct{}
+	bufferStop    chan struct{}
+	bufferFlush   chan struct{}
+	doneCh        chan struct{}
+	bufferInfoCh  chan writeBuffInfoReq
+	writeInfoCh   chan writeBuffInfoReq
+	writeOptions  *write.Options
+	closingMu     *sync.Mutex
+	isErrChReader int32
 }
 
 type writeBuffInfoReq struct {
@@ -71,6 +73,7 @@ type writeBuffInfoReq struct {
 func NewWriteAPI(org string, bucket string, service http2.Service, writeOptions *write.Options) *WriteAPIImpl {
 	w := &WriteAPIImpl{
 		service:      iwrite.NewService(org, bucket, service, writeOptions),
+		errCh:        make(chan error, 1),
 		writeBuffer:  make([]string, 0, writeOptions.BatchSize()+1),
 		writeCh:      make(chan *iwrite.Batch),
 		bufferCh:     make(chan string),
@@ -100,11 +103,9 @@ func (w *WriteAPIImpl) SetWriteFailedCallback(cb WriteFailedCallback) {
 
 // Errors returns a channel for reading errors which occurs during async writes.
 // Must be called before performing any writes for errors to be collected.
-// The chan is unbuffered and must be drained or the writer will block.
+// New error is skipped when channel is not read.
 func (w *WriteAPIImpl) Errors() <-chan error {
-	if w.errCh == nil {
-		w.errCh = make(chan error)
-	}
+	w.setErrChanRead()
 	return w.errCh
 }
 
@@ -171,6 +172,13 @@ func (w *WriteAPIImpl) flushBuffer() {
 		w.writeBuffer = w.writeBuffer[:0]
 	}
 }
+func (w *WriteAPIImpl) isErrChanRead() bool {
+	return atomic.LoadInt32(&w.isErrChReader) > 0
+}
+
+func (w *WriteAPIImpl) setErrChanRead() {
+	atomic.StoreInt32(&w.isErrChReader, 1)
+}
 
 func (w *WriteAPIImpl) writeProc() {
 	log.Info("Write proc started")
@@ -179,8 +187,12 @@ x:
 		select {
 		case batch := <-w.writeCh:
 			err := w.service.HandleWrite(context.Background(), batch)
-			if err != nil && w.errCh != nil {
-				w.errCh <- err
+			if err != nil && w.isErrChanRead() {
+				select {
+				case w.errCh <- err:
+				default:
+					log.Warn("Cannot write error to error channel, it is not read")
+				}
 			}
 		case <-w.writeStop:
 			log.Info("Write proc: received stop")
@@ -219,11 +231,8 @@ func (w *WriteAPIImpl) Close() {
 		close(w.bufferInfoCh)
 		w.writeCh = nil
 
-		// close errors if open
-		if w.errCh != nil {
-			close(w.errCh)
-			w.errCh = nil
-		}
+		close(w.errCh)
+		w.errCh = nil
 	}
 }
 

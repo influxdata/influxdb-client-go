@@ -1,6 +1,10 @@
+## 2.9.0 unreleased
+### Features
+- [#323](https://github.com/influxdata/influxdb-client-go/pull/323) Added `TasksAPI.CreateTaskByFlux` to allow full control of task script.
+
 ## 2.8.2 [2022-04-19]
 ### Bug fixes
-- [#319](https://github.com/influxdata/influxdb-client-go/issues/319) Synchronize `WriteAPIImpl.Close` to prevent panic when closing client by multiple go-routines.
+- [#319](https://github.com/influxdata/influxdb-client-go/pull/319) Synchronize `WriteAPIImpl.Close` to prevent panic when closing client by multiple go-routines.
 
 ## 2.8.1 [2022-03-21]
 ### Bug fixes

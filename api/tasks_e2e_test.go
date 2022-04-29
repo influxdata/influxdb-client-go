@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
@@ -112,7 +113,29 @@ func TestTasksAPI_CRUDTask(t *testing.T) {
 	if assert.NotNil(t, task3.Status) {
 		assert.Equal(t, taskStatus, *task3.Status, *task3.Status)
 	}
-	assert.Equal(t, *org.Id, task3.OrgID, task3.OrgID)
+
+	flux := `import "types"
+option task = { 
+  name: "task 04",
+  every: 1h,
+}
+
+from(bucket: "my-bucket")
+    |> range(start: -task.every)
+    |> filter(fn: (r) => r._measurement == "mem" and r.host == "myHost")`
+	task4, err := tasksAPI.CreateTaskByFlux(ctx, flux, *org.Id)
+	require.Nil(t, err)
+	require.NotNil(t, task4)
+
+	assert.Equal(t, "task 04", task4.Name, task4.Name)
+	assert.Nil(t, task4.Description)
+	if assert.NotNil(t, task4.Every) {
+		assert.Equal(t, "1h", *task4.Every, *task4.Every)
+	}
+	if assert.NotNil(t, task4.Status) {
+		assert.Equal(t, domain.TaskStatusTypeActive, *task4.Status, *task4.Status)
+	}
+	assert.Equal(t, *org.Id, task4.OrgID, task4.OrgID)
 
 	err = tasksAPI.DeleteTask(ctx, task1)
 	assert.Nil(t, err)
@@ -121,6 +144,9 @@ func TestTasksAPI_CRUDTask(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = tasksAPI.DeleteTask(ctx, task3)
+	assert.Nil(t, err)
+
+	err = tasksAPI.DeleteTask(ctx, task4)
 	assert.Nil(t, err)
 
 	tasks, err = tasksAPI.FindTasks(ctx, nil)

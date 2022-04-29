@@ -53,16 +53,18 @@ type TasksAPI interface {
 	GetTask(ctx context.Context, task *domain.Task) (*domain.Task, error)
 	// GetTaskByID retrieves a task found using taskID.
 	GetTaskByID(ctx context.Context, taskID string) (*domain.Task, error)
-	// CreateTask creates a new task according the the task object.
+	// CreateTask creates a new task according the task object.
 	// It copies OrgId, Name, Description, Flux, Status and Every or Cron properties. Every and Cron are mutually exclusive.
 	// Every has higher priority.
 	CreateTask(ctx context.Context, task *domain.Task) (*domain.Task, error)
-	// CreateTaskWithEvery creates a new task with with the name, flux script and every repetition setting, in the org orgID.
+	// CreateTaskWithEvery creates a new task with the name, flux script and every repetition setting, in the org orgID.
 	// Every holds duration values.
 	CreateTaskWithEvery(ctx context.Context, name, flux, every, orgID string) (*domain.Task, error)
-	// CreateTaskWithCron creates a new task with with the name, flux script and cron repetition setting, in the org orgID
+	// CreateTaskWithCron creates a new task with the name, flux script and cron repetition setting, in the org orgID
 	// Cron holds cron-like setting, e.g. once an hour at beginning of the hour "0 * * * *".
 	CreateTaskWithCron(ctx context.Context, name, flux, cron, orgID string) (*domain.Task, error)
+	// CreateTaskByFlux creates a new task with complete definition in flux script, in the org orgID
+	CreateTaskByFlux(ctx context.Context, flux, orgID string) (*domain.Task, error)
 	// UpdateTask updates a task.
 	// It copies Description, Flux, Status, Offset and Every or Cron properties. Every and Cron are mutually exclusive.
 	// Every has higher priority.
@@ -217,17 +219,21 @@ func (t *tasksAPI) createTask(ctx context.Context, taskReq *domain.TaskCreateReq
 	return response.JSON201, nil
 }
 
-func createTaskReq(name, flux string, every, cron *string, orgID string) *domain.TaskCreateRequest {
+func createTaskReqDetailed(name, flux string, every, cron *string, orgID string) *domain.TaskCreateRequest {
 	repetition := ""
 	if every != nil {
 		repetition = fmt.Sprintf("every: %s", *every)
 	} else if cron != nil {
 		repetition = fmt.Sprintf(`cron: "%s"`, *cron)
 	}
+	fullFlux := fmt.Sprintf(`option task = { name: "%s", %s } %s`, name, repetition, flux)
+	return createTaskReq(fullFlux, orgID)
+}
+func createTaskReq(flux string, orgID string) *domain.TaskCreateRequest {
+
 	status := domain.TaskStatusTypeActive
 	taskReq := &domain.TaskCreateRequest{
-		Flux: fmt.Sprintf(`option task = { name: "%s", %s } 
-%s`, name, repetition, flux),
+		Flux:   flux,
 		Status: &status,
 		OrgID:  &orgID,
 	}
@@ -235,19 +241,24 @@ func createTaskReq(name, flux string, every, cron *string, orgID string) *domain
 }
 
 func (t *tasksAPI) CreateTask(ctx context.Context, task *domain.Task) (*domain.Task, error) {
-	taskReq := createTaskReq(task.Name, task.Flux, task.Every, task.Cron, task.OrgID)
+	taskReq := createTaskReqDetailed(task.Name, task.Flux, task.Every, task.Cron, task.OrgID)
 	taskReq.Description = task.Description
 	taskReq.Status = task.Status
 	return t.createTask(ctx, taskReq)
 }
 
 func (t *tasksAPI) CreateTaskWithEvery(ctx context.Context, name, flux, every, orgID string) (*domain.Task, error) {
-	taskReq := createTaskReq(name, flux, &every, nil, orgID)
+	taskReq := createTaskReqDetailed(name, flux, &every, nil, orgID)
 	return t.createTask(ctx, taskReq)
 }
 
 func (t *tasksAPI) CreateTaskWithCron(ctx context.Context, name, flux, cron, orgID string) (*domain.Task, error) {
-	taskReq := createTaskReq(name, flux, nil, &cron, orgID)
+	taskReq := createTaskReqDetailed(name, flux, nil, &cron, orgID)
+	return t.createTask(ctx, taskReq)
+}
+
+func (t *tasksAPI) CreateTaskByFlux(ctx context.Context, flux, orgID string) (*domain.Task, error) {
+	taskReq := createTaskReq(flux, orgID)
 	return t.createTask(ctx, taskReq)
 }
 

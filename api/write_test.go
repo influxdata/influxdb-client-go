@@ -198,3 +198,31 @@ func TestWriteErrorCallback(t *testing.T) {
 
 	writeAPI.Close()
 }
+
+func TestClosing(t *testing.T) {
+	service := test.NewTestService(t, "http://localhost:8888")
+	log.Log.SetLogLevel(log.DebugLevel)
+	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetRetryInterval(10000))
+	points := test.GenPoints(15)
+	for i := 0; i < 5; i++ {
+		writeAPI.WritePoint(points[i])
+	}
+	writeAPI.Close()
+	require.Len(t, service.Lines(), 5)
+
+	writeAPI = NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5).SetRetryInterval(10000))
+	service.Close()
+	service.SetReplyError(&http.Error{
+		StatusCode: 425,
+	})
+	_ = writeAPI.Errors()
+	for i := 0; i < 15; i++ {
+		writeAPI.WritePoint(points[i])
+	}
+	start := time.Now()
+	writeAPI.Close()
+	diff := time.Since(start)
+	fmt.Println("Diff", diff)
+	assert.Len(t, service.Lines(), 0)
+
+}

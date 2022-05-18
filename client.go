@@ -29,6 +29,10 @@ type Client interface {
 	// and returns details about newly created entities along with the authorization object.
 	// Retention period of zero will result to infinite retention.
 	Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error)
+	// SetupWithToken sends request to initialise new InfluxDB server with user, org and bucket, data retention period and token
+	// and returns details about newly created entities along with the authorization object.
+	// Retention period of zero will result to infinite retention.
+	SetupWithToken(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int, token string) (*domain.OnboardingResponse, error)
 	// Ready returns InfluxDB uptime info of server. It doesn't validate authentication params.
 	Ready(ctx context.Context) (*domain.Ready, error)
 	// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
@@ -161,6 +165,10 @@ func (c *clientImpl) Ready(ctx context.Context) (*domain.Ready, error) {
 }
 
 func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int) (*domain.OnboardingResponse, error) {
+	return c.SetupWithToken(ctx, username, password, org, bucket, retentionPeriodHours, "")
+}
+
+func (c *clientImpl) SetupWithToken(ctx context.Context, username, password, org, bucket string, retentionPeriodHours int, token string) (*domain.OnboardingResponse, error) {
 	if username == "" || password == "" {
 		return nil, errors.New("a username and a password is required for a setup")
 	}
@@ -176,6 +184,7 @@ func (c *clientImpl) Setup(ctx context.Context, username, password, org, bucket 
 		RetentionPeriodSeconds: &retentionPeriodSeconds,
 		RetentionPeriodHrs:     &retentionPeriodHrs,
 		Username:               username,
+		Token:                  &token,
 	}
 	response, err := c.apiClient.PostSetupWithResponse(ctx, params, *body)
 	if err != nil {

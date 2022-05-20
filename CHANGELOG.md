@@ -1,6 +1,7 @@
-## Unreleased
+## 2.9.0 [2022-05-20]
 ### Features
 - [#323](https://github.com/influxdata/influxdb-client-go/pull/323) Added `TasksAPI.CreateTaskByFlux` to allow full control of task script.
+- [#328](https://github.com/influxdata/influxdb-client-go/pull/328) Added `Client.SetupWithToken` allowing to specify a custom token.
 
 ### Bug fixes
 - [#324](https://github.com/influxdata/influxdb-client-go/issues/324) Non-empty error channel will not block writes 

@@ -184,7 +184,9 @@ func (c *clientImpl) SetupWithToken(ctx context.Context, username, password, org
 		RetentionPeriodSeconds: &retentionPeriodSeconds,
 		RetentionPeriodHrs:     &retentionPeriodHrs,
 		Username:               username,
-		Token:                  &token,
+	}
+	if token != "" {
+		body.Token = &token
 	}
 	response, err := c.apiClient.PostSetupWithResponse(ctx, params, *body)
 	if err != nil {

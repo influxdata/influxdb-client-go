@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	ilog "log"
+	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -313,14 +314,23 @@ func TestMaxRetryTime(t *testing.T) {
 
 	// Wait for batch expiration
 	<-time.After(5 * time.Millisecond)
-	b := NewBatch("2\n", opts.RetryInterval(), opts.MaxRetryTime())
-	// First batch will be tried to write again and it will be checked agains maxRetryTime. New batch will added to retry queue
+
+	exp := opts.MaxRetryTime()
+	// sleep takes at least more than 10ms (sometimes 15ms) on Windows https://github.com/golang/go/issues/44343
+	if runtime.GOOS == "windows" {
+		exp = 20
+	}
+	// create new batch for sending
+	b := NewBatch("2\n", opts.RetryInterval(), exp)
+	// First batch will  be checked against maxRetryTime and it will expire. New batch will fail and it will added to retry queue
 	err = srv.HandleWrite(ctx, b)
 	require.NotNil(t, err)
-	// Error about batch expiration
-	assert.Equal(t, "write failed (attempts 1): max retry time exceeded", err.Error())
+	// 1st Batch expires and writing 2nd trows error
+	assert.Equal(t, "write failed (attempts 1): Unexpected status code 429", err.Error())
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
+	//wait minimum retry time
+	<-time.After(time.Millisecond)
 	// Clear error and let write pass
 	hs.SetReplyError(nil)
 	// A batch from retry queue will be sent first

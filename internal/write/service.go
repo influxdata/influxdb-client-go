@@ -124,6 +124,17 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 			log.Debug("Write proc: taking batch from retry queue")
 			if !retrying {
 				b := w.retryQueue.first()
+
+				// Discard batches at beginning of retryQueue that have already expired
+				if time.Now().After(b.Expires) {
+					log.Warn("Write proc: oldest batch in retry queue expired, discarding")
+					if !b.Evicted {
+						w.retryQueue.pop()
+					}
+
+					continue
+				}
+
 				// Can we write? In case of retryable error we must wait a bit
 				if w.lastWriteAttempt.IsZero() || time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(b.RetryDelay))) {
 					retrying = true
@@ -147,12 +158,6 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 		}
 		// write batch
 		if batchToWrite != nil {
-			if time.Now().After(batchToWrite.Expires) {
-				if !batchToWrite.Evicted {
-					w.retryQueue.pop()
-				}
-				return fmt.Errorf("write failed (attempts %d): max retry time exceeded", batchToWrite.RetryAttempts)
-			}
 			perror := w.WriteBatch(ctx, batchToWrite)
 			if perror != nil {
 				if w.writeOptions.MaxRetries() != 0 && (perror.StatusCode == 0 || perror.StatusCode >= http.StatusTooManyRequests) {

@@ -174,7 +174,7 @@ func TestWriteErrorCallback(t *testing.T) {
 		return retryAttempts < 2
 	})
 	points := test.GenPoints(10)
-	// first two batches will be discarded by callback after 3 write attempts for each
+	// first batch will be discarded by callback after 3 write attempts, second batch should survive with only one failed attempt
 	for i, j := 0, 0; i < 6; i++ {
 		writeAPI.WritePoint(points[i])
 		writeAPI.waitForFlushing()
@@ -194,7 +194,7 @@ func TestWriteErrorCallback(t *testing.T) {
 		writeAPI.WritePoint(points[i])
 	}
 	writeAPI.waitForFlushing()
-	assert.Len(t, service.Lines(), 8)
+	assert.Len(t, service.Lines(), 9)
 
 	writeAPI.Close()
 }

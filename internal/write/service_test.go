@@ -84,44 +84,44 @@ func TestRetryStrategy(t *testing.T) {
 		StatusCode: 429,
 	})
 	// This batch will fail and it be added to retry queue
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
-	assert.EqualValues(t, 1, b1.RetryDelay)
+	assert.EqualValues(t, 1, srv.RetryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
 	//wait retry delay + little more
-	<-time.After(time.Millisecond*time.Duration(b1.RetryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(srv.RetryDelay) + time.Microsecond*5)
 	// First batch will be tried to write again and this one will added to retry queue
-	b2 := NewBatch("2\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b2 := NewBatch("2\n", opts.MaxRetryTime())
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 2, 4)
+	assertBetween(t, srv.RetryDelay, 2, 4)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
 	//wait retry delay + little more
-	<-time.After(time.Millisecond*time.Duration(b1.RetryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(srv.RetryDelay) + time.Microsecond*5)
 	// First batch will be tried to write again and this one will added to retry queue
-	b3 := NewBatch("3\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b3 := NewBatch("3\n", opts.MaxRetryTime())
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 4, 8)
+	assertBetween(t, srv.RetryDelay, 4, 8)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	//wait retry delay + little more
-	<-time.After(time.Millisecond*time.Duration(b1.RetryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(srv.RetryDelay) + time.Microsecond*5)
 	// First batch will be tried to write again and this one will added to retry queue
-	b4 := NewBatch("4\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b4 := NewBatch("4\n", opts.MaxRetryTime())
 	err = srv.HandleWrite(ctx, b4)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 8, 16)
+	assertBetween(t, srv.RetryDelay, 8, 16)
 	assert.Equal(t, 4, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond*time.Duration(b1.RetryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(srv.RetryDelay) + time.Microsecond*5)
 	// Clear error and let write pass
 	hs.SetReplyError(nil)
 	// Batches from retry queue will be sent first
-	err = srv.HandleWrite(ctx, NewBatch("5\n", opts.RetryInterval(), opts.MaxRetryTime()))
+	err = srv.HandleWrite(ctx, NewBatch("5\n", opts.MaxRetryTime()))
 	assert.Nil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 	require.Len(t, hs.Lines(), 5)
@@ -145,56 +145,56 @@ func TestBufferOverwrite(t *testing.T) {
 		StatusCode: 429,
 	})
 	// This batch will fail and it be added to retry queue
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
-	assert.Equal(t, uint(1), b1.RetryDelay)
+	assert.Equal(t, uint(1), srv.RetryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b2 := NewBatch("2\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b2 := NewBatch("2\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 2, 4)
+	assertBetween(t, srv.RetryDelay, 2, 4)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b3 := NewBatch("3\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b3 := NewBatch("3\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 4, 8)
+	assertBetween(t, srv.RetryDelay, 4, 8)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// Write early and overwrite
-	b4 := NewBatch("4\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b4 := NewBatch("4\n", opts.MaxRetryTime())
 	// No write will occur, because retry delay has not passed yet
 	// However new bach will be added to retry queue. Retry queue has limit 3,
 	// so first batch will be discarded
+	priorRetryDelay := srv.RetryDelay
 	err = srv.HandleWrite(ctx, b4)
 	assert.NoError(t, err)
-	assert.Equal(t, uint(1), b2.RetryDelay)
+	assert.Equal(t, priorRetryDelay, srv.RetryDelay) // Accumulated retry delay should be retained despite batch discard
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
 	// Overwrite
-	// TODO check time.Duration(b2.RetryDelay))
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay) / 2)
-	b5 := NewBatch("5\n", opts.RetryInterval(), opts.MaxRetryTime())
+	// TODO check time.Duration(srv.RetryDelay))
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay) / 2)
+	b5 := NewBatch("5\n", opts.MaxRetryTime())
 	// Second batch will be tried to write again
 	// However, write will fail and as new batch is added to retry queue
 	// the second batch will be discarded
 	err = srv.HandleWrite(ctx, b5)
-	assert.Error(t, err)
-	assert.Equal(t, uint(1), b2.RetryDelay)
-	//TODO assertBetween(t, b2.retryDelay, 2, 4)
+	assert.Nil(t, err) // No error should be returned, because no write was attempted (still waiting for retryDelay to expire)
+	//TODO assertBetween(t, srv.RetryDelay, 2, 4)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
 	// Clear error and let write pass
 	hs.SetReplyError(nil)
 	// Batches from retry queue will be sent first
-	err = srv.HandleWrite(ctx, NewBatch("6\n", opts.RetryInterval(), opts.MaxRetryTime()))
+	err = srv.HandleWrite(ctx, NewBatch("6\n", opts.MaxRetryTime()))
 	assert.Nil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 	require.Len(t, hs.Lines(), 4)
@@ -216,36 +216,36 @@ func TestMaxRetryInterval(t *testing.T) {
 		StatusCode: 503,
 	})
 	// This batch will fail and it be added to retry queue
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
-	assert.Equal(t, uint(1), b1.RetryDelay)
+	assert.Equal(t, uint(1), srv.RetryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b2 := NewBatch("2\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b2 := NewBatch("2\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 2, 4)
+	assertBetween(t, srv.RetryDelay, 2, 4)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b3 := NewBatch("3\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b3 := NewBatch("3\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
 	// New computed delay of first batch should be 4-8, is limited to 4
-	assert.EqualValues(t, 4, b1.RetryDelay)
+	assert.EqualValues(t, 4, srv.RetryDelay)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b4 := NewBatch("4\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b4 := NewBatch("4\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b4)
 	assert.NotNil(t, err)
 	// New computed delay of first batch should be 8-116, is limited to 4
-	assert.EqualValues(t, 4, b1.RetryDelay)
+	assert.EqualValues(t, 4, srv.RetryDelay)
 	assert.Equal(t, 4, srv.retryQueue.list.Len())
 }
 
@@ -260,20 +260,20 @@ func TestMaxRetries(t *testing.T) {
 		StatusCode: 429,
 	})
 	// This batch will fail and it be added to retry queue
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
-	assert.EqualValues(t, 1, b1.RetryDelay)
+	assert.EqualValues(t, 1, srv.RetryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 	// Write so many batches as it is maxRetries (5)
 	// First batch will be written and it will reach max retry limit
 	for i, e := uint(1), uint(2); i <= opts.MaxRetries(); i++ {
 		//wait retry delay + little more
-		<-time.After(time.Millisecond*time.Duration(b1.RetryDelay) + time.Microsecond*5)
-		b := NewBatch(fmt.Sprintf("%d\n", i+1), opts.RetryInterval(), opts.MaxRetryTime())
+		<-time.After(time.Millisecond*time.Duration(srv.RetryDelay) + time.Microsecond*5)
+		b := NewBatch(fmt.Sprintf("%d\n", i+1), opts.MaxRetryTime())
 		err = srv.HandleWrite(ctx, b)
 		assert.NotNil(t, err)
-		assertBetween(t, b1.RetryDelay, e, e*2)
+		assertBetween(t, srv.RetryDelay, e, e*2)
 		exp := min(i+1, opts.MaxRetries())
 		assert.EqualValues(t, exp, srv.retryQueue.list.Len())
 		e *= 2
@@ -281,11 +281,11 @@ func TestMaxRetries(t *testing.T) {
 	//Test if was removed from retry queue
 	assert.True(t, b1.Evicted)
 
-	<-time.After(time.Millisecond*time.Duration(b1.RetryDelay) + time.Microsecond*5)
+	<-time.After(time.Millisecond*time.Duration(srv.RetryDelay) + time.Microsecond*5)
 	// Clear error and let write pass
 	hs.SetReplyError(nil)
 	// Batches from retry queue will be sent first
-	err = srv.HandleWrite(ctx, NewBatch(fmt.Sprintf("%d\n", opts.MaxRetries()+2), opts.RetryInterval(), opts.MaxRetryTime()))
+	err = srv.HandleWrite(ctx, NewBatch(fmt.Sprintf("%d\n", opts.MaxRetries()+2), opts.MaxRetryTime()))
 	assert.Nil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 	require.Len(t, hs.Lines(), int(opts.MaxRetries()+1))
@@ -306,10 +306,10 @@ func TestMaxRetryTime(t *testing.T) {
 		StatusCode: 429,
 	})
 	// This batch will fail and it be added to retry queue and it will expire 5ms after
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
-	assert.EqualValues(t, 1, b1.RetryDelay)
+	assert.EqualValues(t, 1, srv.RetryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
 	// Wait for batch expiration
@@ -321,7 +321,7 @@ func TestMaxRetryTime(t *testing.T) {
 		exp = 20
 	}
 	// create new batch for sending
-	b := NewBatch("2\n", opts.RetryInterval(), exp)
+	b := NewBatch("2\n", exp)
 	// First batch will  be checked against maxRetryTime and it will expire. New batch will fail and it will added to retry queue
 	err = srv.HandleWrite(ctx, b)
 	require.NotNil(t, err)
@@ -329,12 +329,12 @@ func TestMaxRetryTime(t *testing.T) {
 	assert.Equal(t, "write failed (attempts 1): Unexpected status code 429", err.Error())
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	//wait minimum retry time
-	<-time.After(time.Millisecond)
+	//wait until remaining accumulated retryDelay has passed, because there hasn't been a successful write yet
+	<-time.After(time.Until(srv.lastWriteAttempt.Add(time.Millisecond * time.Duration(srv.RetryDelay))))
 	// Clear error and let write pass
 	hs.SetReplyError(nil)
 	// A batch from retry queue will be sent first
-	err = srv.HandleWrite(ctx, NewBatch("3\n", opts.RetryInterval(), opts.MaxRetryTime()))
+	err = srv.HandleWrite(ctx, NewBatch("3\n", opts.MaxRetryTime()))
 	assert.Nil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 	require.Len(t, hs.Lines(), 2)
@@ -356,35 +356,35 @@ func TestRetryOnConnectionError(t *testing.T) {
 	})
 
 	// This batch will fail and it be added to retry queue
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
-	assert.EqualValues(t, 1, b1.RetryDelay)
+	assert.EqualValues(t, 1, srv.RetryDelay)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
 
-	b2 := NewBatch("2\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b2 := NewBatch("2\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b2)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 2, 4)
+	assertBetween(t, srv.RetryDelay, 2, 4)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
 
-	b3 := NewBatch("3\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b3 := NewBatch("3\n", opts.MaxRetryTime())
 	// First batch will be tried to write again and this one will added to retry queue
 	err = srv.HandleWrite(ctx, b3)
 	assert.NotNil(t, err)
-	assertBetween(t, b1.RetryDelay, 4, 8)
+	assertBetween(t, srv.RetryDelay, 4, 8)
 	assert.Equal(t, 3, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
 	// Clear error and let write pass
 	hs.SetReplyError(nil)
 	// Batches from retry queue will be sent first
-	err = srv.HandleWrite(ctx, NewBatch("4\n", opts.RetryInterval(), opts.MaxRetryTime()))
+	err = srv.HandleWrite(ctx, NewBatch("4\n", opts.MaxRetryTime()))
 	assert.Nil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 	require.Len(t, hs.Lines(), 4)
@@ -406,7 +406,7 @@ func TestNoRetryIfMaxRetriesIsZero(t *testing.T) {
 		Err: errors.New("connection refused"),
 	})
 
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
@@ -423,7 +423,7 @@ func TestWriteContextCancel(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		<-time.After(10 * time.Millisecond)
-		err = srv.HandleWrite(ctx, NewBatch(strings.Join(lines, "\n"), opts.RetryInterval(), opts.MaxRetryTime()))
+		err = srv.HandleWrite(ctx, NewBatch(strings.Join(lines, "\n"), opts.MaxRetryTime()))
 		wg.Done()
 	}()
 	cancel()
@@ -472,19 +472,19 @@ func TestErrorCallback(t *testing.T) {
 	srv.SetBatchErrorCallback(func(batch *Batch, error2 http.Error) bool {
 		return batch.RetryAttempts < 2
 	})
-	b1 := NewBatch("1\n", opts.RetryInterval(), opts.MaxRetryTime())
+	b1 := NewBatch("1\n", opts.MaxRetryTime())
 	err := srv.HandleWrite(ctx, b1)
 	assert.NotNil(t, err)
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b := NewBatch("2\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b := NewBatch("2\n", opts.MaxRetryTime())
 	err = srv.HandleWrite(ctx, b)
 	assert.NotNil(t, err)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())
 
-	<-time.After(time.Millisecond * time.Duration(b1.RetryDelay))
-	b = NewBatch("3\n", opts.RetryInterval(), opts.MaxRetryTime())
+	<-time.After(time.Millisecond * time.Duration(srv.RetryDelay))
+	b = NewBatch("3\n", opts.MaxRetryTime())
 	err = srv.HandleWrite(ctx, b)
 	assert.NotNil(t, err)
 	assert.Equal(t, 2, srv.retryQueue.list.Len())

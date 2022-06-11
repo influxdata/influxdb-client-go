@@ -249,6 +249,13 @@ func TestMaxRetryInterval(t *testing.T) {
 	assert.Equal(t, 4, srv.retryQueue.list.Len())
 }
 
+func min(a, b uint) uint {
+	if a > b {
+		return b
+	}
+	return a
+}
+
 func TestMaxRetries(t *testing.T) {
 	log.Log.SetLogLevel(log.DebugLevel)
 	hs := test.NewTestService(t, "http://localhost:8086")

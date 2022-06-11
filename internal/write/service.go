@@ -356,10 +356,3 @@ func precisionToString(precision time.Duration) string {
 	}
 	return prec
 }
-
-func min(a, b uint) uint {
-	if a > b {
-		return b
-	}
-	return a
-}

@@ -15,7 +15,7 @@ func TestQueue(t *testing.T) {
 	assert.True(t, que.isEmpty())
 	assert.Nil(t, que.first())
 	assert.Nil(t, que.pop())
-	b := &Batch{Batch: "batch", RetryDelay: 3, RetryAttempts: 3}
+	b := &Batch{Batch: "batch", RetryAttempts: 3}
 	que.push(b)
 	assert.False(t, que.isEmpty())
 	b2 := que.pop()

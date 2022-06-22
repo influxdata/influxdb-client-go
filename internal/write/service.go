@@ -62,8 +62,8 @@ type Service struct {
 	writeOptions         *write.Options
 	retryExponentialBase uint
 	errorCb              BatchErrorCallback
-	RetryDelay           uint
-	RetryAttempts        uint
+	retryDelay           uint
+	retryAttempts        uint
 }
 
 // NewService creates new write service
@@ -89,8 +89,8 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 		writeOptions:         options,
 		retryQueue:           newQueue(int(retryBufferLimit)),
 		retryExponentialBase: 2,
-		RetryDelay:           0,
-		RetryAttempts:        0,
+		retryDelay:           0,
+		retryAttempts:        0,
 	}
 }
 
@@ -137,7 +137,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 				}
 
 				// Can we write? In case of retryable error we must wait a bit
-				if w.lastWriteAttempt.IsZero() || time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(w.RetryDelay))) {
+				if w.lastWriteAttempt.IsZero() || time.Now().After(w.lastWriteAttempt.Add(time.Millisecond*time.Duration(w.retryDelay))) {
 					retrying = true
 				} else {
 					log.Warn("Write proc: cannot write yet, storing batch to queue")
@@ -164,9 +164,9 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 				if w.writeOptions.MaxRetries() != 0 && (perror.StatusCode == 0 || perror.StatusCode >= http.StatusTooManyRequests) {
 					log.Errorf("Write error: %s, batch kept for retrying\n", perror.Error())
 					if perror.RetryAfter > 0 {
-						w.RetryDelay = perror.RetryAfter * 1000
+						w.retryDelay = perror.RetryAfter * 1000
 					} else {
-						w.RetryDelay = w.computeRetryDelay(w.RetryAttempts)
+						w.retryDelay = w.computeRetryDelay(w.retryAttempts)
 					}
 					if w.errorCb != nil && !w.errorCb(batchToWrite, *perror) {
 						log.Warn("Callback rejected batch, discarding")
@@ -187,16 +187,16 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 						}
 					}
 					batchToWrite.RetryAttempts++
-					w.RetryAttempts++
-					log.Debugf("Write proc: next wait for write is %dms\n", w.RetryDelay)
+					w.retryAttempts++
+					log.Debugf("Write proc: next wait for write is %dms\n", w.retryDelay)
 				} else {
 					log.Errorf("Write error: %s\n", perror.Error())
 				}
 				return fmt.Errorf("write failed (attempts %d): %w", batchToWrite.RetryAttempts, perror)
 			}
 
-			w.RetryDelay = w.writeOptions.RetryInterval()
-			w.RetryDelay = 0
+			w.retryDelay = w.writeOptions.RetryInterval()
+			w.retryDelay = 0
 			if retrying && !batchToWrite.Evicted {
 				w.retryQueue.pop()
 			}

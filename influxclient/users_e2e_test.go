@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2021 InfluxData, Inc. All rights reserved.
@@ -123,7 +124,7 @@ func TestUsersAPI_failing(t *testing.T) {
 	assert.Nil(t, user)
 
 	user, err = usersAPI.Update(ctx, &model.User{
-		Id: nil,
+		Id:   nil,
 		Name: "john doe",
 	})
 	require.Error(t, err)
@@ -134,14 +135,14 @@ func TestUsersAPI_failing(t *testing.T) {
 	assert.Nil(t, user)
 
 	user, err = usersAPI.Update(ctx, &model.User{
-		Id: &notExistingID,
+		Id:   &notExistingID,
 		Name: "",
 	})
 	require.Error(t, err)
 	assert.Nil(t, user)
 
 	user, err = usersAPI.Update(ctx, &model.User{
-		Id: &notExistingID,
+		Id:   &notExistingID,
 		Name: "john doe",
 	})
 	require.Error(t, err)

@@ -25,27 +25,29 @@ func newTasksAPI(client *model.Client) *TasksAPI {
 
 // Find returns all tasks matching the given filter.
 // Supported filters:
-//   After
-//   Name
-//   OrgName
-//	 OrgID
-//	 UserName
-//   Status
-//   Limit
+//
+//	  After
+//	  Name
+//	  OrgName
+//		 OrgID
+//		 UserName
+//	  Status
+//	  Limit
 func (a *TasksAPI) Find(ctx context.Context, filter *Filter) ([]model.Task, error) {
 	return a.getTasks(ctx, filter)
 }
 
 // FindOne returns one task matching the given filter.
 // Supported filters:
-//   After
-//   Name
-//   OrgName
-//	 OrgID
-//	 UserName
-//   Status
-//   Limit
-func (a *TasksAPI) FindOne(ctx context.Context, filter *Filter) (*model.Task, error){
+//
+//	  After
+//	  Name
+//	  OrgName
+//		 OrgID
+//		 UserName
+//	  Status
+//	  Limit
+func (a *TasksAPI) FindOne(ctx context.Context, filter *Filter) (*model.Task, error) {
 	tasks, err := a.getTasks(ctx, filter)
 	if err != nil {
 		return nil, err
@@ -84,8 +86,8 @@ func (a *TasksAPI) Create(ctx context.Context, task *model.Task) (*model.Task, e
 	params := &model.PostTasksAllParams{
 		Body: model.PostTasksJSONRequestBody{
 			Description: task.Description,
-			Flux: flux,
-			Status: task.Status,
+			Flux:        flux,
+			Status:      task.Status,
 		},
 	}
 	if task.OrgID != "" {
@@ -108,11 +110,11 @@ func (a *TasksAPI) Update(ctx context.Context, task *model.Task) (*model.Task, e
 	params := &model.PatchTasksIDAllParams{
 		TaskID: task.Id,
 		Body: model.PatchTasksIDJSONRequestBody{
-			Name: &task.Name,
+			Name:        &task.Name,
 			Description: task.Description,
-			Offset: task.Offset,
-			Flux: &task.Flux,
-			Status: task.Status,
+			Offset:      task.Offset,
+			Flux:        &task.Flux,
+			Status:      task.Status,
 		},
 	}
 	if task.Every != nil {
@@ -136,11 +138,12 @@ func (a *TasksAPI) Delete(ctx context.Context, taskID string) error {
 
 // FindRuns returns a task runs according the filter.
 // Supported filters:
-//   After
-//   AfterTime
-//   BeforeTime
-//   Limit
-func (a *TasksAPI) FindRuns(ctx context.Context, taskID string, filter *Filter) ([]model.Run, error){
+//
+//	After
+//	AfterTime
+//	BeforeTime
+//	Limit
+func (a *TasksAPI) FindRuns(ctx context.Context, taskID string, filter *Filter) ([]model.Run, error) {
 	if taskID == "" {
 		return nil, fmt.Errorf("taskID is required")
 	}
@@ -171,7 +174,9 @@ func (a *TasksAPI) FindRuns(ctx context.Context, taskID string, filter *Filter) 
 
 // FindOneRun returns one task run that matches the given filter.
 // Supported filters:
-//   ID
+//
+//	ID
+//
 // TODO or just pass runID instead of a filter?
 func (a *TasksAPI) FindOneRun(ctx context.Context, taskID string, filter *Filter) (*model.Run, error) {
 	if taskID == "" {
@@ -185,7 +190,7 @@ func (a *TasksAPI) FindOneRun(ctx context.Context, taskID string, filter *Filter
 	}
 	params := &model.GetTasksIDRunsIDAllParams{
 		TaskID: taskID,
-		RunID: filter.ID,
+		RunID:  filter.ID,
 	}
 	return a.client.GetTasksIDRunsID(ctx, params)
 }
@@ -200,7 +205,7 @@ func (a *TasksAPI) FindRunLogs(ctx context.Context, taskID, runID string) ([]mod
 	}
 	params := &model.GetTasksIDRunsIDLogsAllParams{
 		TaskID: taskID,
-		RunID: runID,
+		RunID:  runID,
 	}
 	response, err := a.client.GetTasksIDRunsIDLogs(ctx, params)
 	if err != nil {
@@ -216,7 +221,7 @@ func (a *TasksAPI) RunManually(ctx context.Context, taskID string) (*model.Run, 
 	}
 	params := &model.PostTasksIDRunsAllParams{
 		TaskID: taskID,
-		Body: model.PostTasksIDRunsJSONRequestBody{
+		Body:   model.PostTasksIDRunsJSONRequestBody{
 			// ScheduledFor not set for immediate execution
 		},
 	}
@@ -233,7 +238,7 @@ func (a *TasksAPI) CancelRun(ctx context.Context, taskID, runID string) error {
 	}
 	params := &model.DeleteTasksIDRunsIDAllParams{
 		TaskID: taskID,
-		RunID: runID,
+		RunID:  runID,
 	}
 	return a.client.DeleteTasksIDRunsID(ctx, params)
 }
@@ -248,7 +253,7 @@ func (a *TasksAPI) RetryRun(ctx context.Context, taskID, runID string) (*model.R
 	}
 	params := &model.PostTasksIDRunsIDRetryAllParams{
 		TaskID: taskID,
-		RunID: runID,
+		RunID:  runID,
 	}
 	return a.client.PostTasksIDRunsIDRetry(ctx, params)
 }
@@ -276,7 +281,7 @@ func (a *TasksAPI) FindLabels(ctx context.Context, taskID string) ([]model.Label
 	params := &model.GetTasksIDLabelsAllParams{
 		TaskID: taskID,
 	}
-	response, err :=  a.client.GetTasksIDLabels(ctx, params)
+	response, err := a.client.GetTasksIDLabels(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -313,7 +318,7 @@ func (a *TasksAPI) RemoveLabel(ctx context.Context, taskID, labelID string) erro
 		return fmt.Errorf("labelID is required")
 	}
 	params := &model.DeleteTasksIDLabelsIDAllParams{
-		TaskID: taskID,
+		TaskID:  taskID,
 		LabelID: labelID,
 	}
 	return a.client.DeleteTasksIDLabelsID(ctx, params)

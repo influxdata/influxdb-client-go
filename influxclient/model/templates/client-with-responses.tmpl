@@ -153,7 +153,7 @@ func (c *Client) {{$opid}}(ctx context.Context, {{if $hasBodyOrPathParams}}param
         return {{if $hasResponse}}nil, {{end}}err
     }
 {{if $hasResponse -}}
-    bodyBytes, err := ioutil.ReadAll(rsp.Body)
+    bodyBytes, err := io.ReadAll(rsp.Body)
 {{end}}
     defer func() { _ = rsp.Body.Close() }()
 {{if $hasResponse -}}
@@ -174,7 +174,7 @@ func (c *Client) {{$opid}}(ctx context.Context, {{if $hasBodyOrPathParams}}param
     return response, nil
 {{else}}
     if rsp.StatusCode > 299 {
-        bodyBytes, err := ioutil.ReadAll(rsp.Body)
+        bodyBytes, err := io.ReadAll(rsp.Body)
          if err != nil {
             return err
         }

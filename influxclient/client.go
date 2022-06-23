@@ -11,19 +11,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/influxclient/model"
-)
-
-const (
-	// DefaultBatchSize default batch size used if not set otherwise.
-	DefaultBatchSize = 5000
 )
 
 // Params holds the parameters for creating a new client.
@@ -39,12 +34,8 @@ type Params struct {
 	AuthToken string
 
 	// Organization is name or ID of organization where data (buckets, users, tasks, etc.) belongs to
+	// Optional for InfluxDB Cloud
 	Organization string
-
-	// BatchSize holds the default batch size used by PointWriter.
-	// If it's zero, DefaultBatchSize will be used.
-	// Note that this can be overridden with PointWriter.SetBatchSize.
-	BatchSize int
 
 	// HTTPClient is used to make API requests.
 	//
@@ -54,6 +45,8 @@ type Params struct {
 	//
 	// It HTTPClient is nil, http.DefaultClient will be used.
 	HTTPClient *http.Client
+	// Write Params
+	WriteParams WriteParams
 }
 
 // Client implements an InfluxDB client.
@@ -112,6 +105,9 @@ func New(params Params) (*Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error parsing server URL: %w", err)
 	}
+	if params.WriteParams.MaxBatchBytes == 0 {
+		c.params.WriteParams = DefaultWriteParams
+	}
 	// Create API client
 	c.apiClient, err = model.NewClient(c.apiURL.String(), &apiCallDelegate{c})
 	if err != nil {
@@ -133,19 +129,19 @@ func (c *Client) APIClient() *model.Client {
 // DeleteParams holds options for DeletePoints.
 type DeleteParams struct {
 	// Bucket holds bucket name.
-	Bucket    string
+	Bucket string
 	// BucketID holds bucket ID.
-	BucketID  string
+	BucketID string
 	// Org holds organization name.
-	Org       string
+	Org string
 	// OrgID holds organization ID.
-	OrgID     string
+	OrgID string
 	// Predicate is an expression in delete predicate syntax.
 	Predicate string
 	// Start is the earliest time to delete from.
-	Start     time.Time
+	Start time.Time
 	// Stop is the latest time to delete from.
-	Stop      time.Time
+	Stop time.Time
 }
 
 // DeletePoints deletes data from a bucket.
@@ -168,8 +164,8 @@ func (c *Client) DeletePoints(ctx context.Context, params *DeleteParams) error {
 	postParams := model.PostDeleteAllParams{
 		Body: model.PostDeleteJSONRequestBody{
 			Predicate: &params.Predicate,
-			Start: params.Start,
-			Stop: params.Stop,
+			Start:     params.Start,
+			Stop:      params.Stop,
 		},
 	}
 	if params.Bucket != "" {
@@ -273,8 +269,14 @@ func (c *Client) resolveHTTPError(r *http.Response) error {
 	}
 
 	httpError.StatusCode = r.StatusCode
+	if v := r.Header.Get("Retry-After"); v != "" {
+		r, err := strconv.ParseInt(v, 10, 32)
+		if err == nil {
+			httpError.RetryAfter = int(r)
+		}
+	}
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		httpError.Message = fmt.Sprintf("cannot read error response:: %v", err)
 	}
@@ -306,9 +308,9 @@ func (d *apiCallDelegate) Do(req *http.Request) (*http.Response, error) {
 	req.URL.RawQuery = ""
 	return d.c.makeAPICall(req.Context(), httpParams{
 		endpointURL: req.URL,
-		headers: req.Header,
-		httpMethod: req.Method,
-		body: req.Body,
+		headers:     req.Header,
+		httpMethod:  req.Method,
+		body:        req.Body,
 		queryParams: queryParams,
 	})
 }
@@ -347,4 +349,11 @@ func (c *Client) TasksAPI() *TasksAPI {
 // user-related parts of the InfluxDB API.
 func (c *Client) UsersAPI() *UsersAPI {
 	return newUsersAPI(c.apiClient)
+}
+
+// Close closes all idle connections.
+func (c *Client) Close() error {
+	c.params.HTTPClient.CloseIdleConnections()
+	// Support closer interface
+	return nil
 }

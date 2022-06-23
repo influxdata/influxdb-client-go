@@ -1,5 +1,3 @@
-// +build e2e
-
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
 // Use of this source code is governed by MIT
 // license that can be found in the LICENSE file.
@@ -9,6 +7,7 @@ package influxclient_test
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"os"
 	"text/tabwriter"
 	"time"
@@ -17,92 +16,162 @@ import (
 	"github.com/influxdata/influxdb-client-go/influxclient/model"
 )
 
-func ExampleClient_newClient() {
+func ExampleClient_new() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 
-	_ = err
-	_ = client
+	if err != nil {
+		panic(err)
+	}
 
-	// Output:
+	//
+
+	client.Close()
 }
 
-func ExampleClient_newClientWithOptions() {
-	// Create a new client using an InfluxDB server base URL and an authentication token
-	// Create client and set batch size to 20
+func ExampleClient_Write() {
+	// Create client
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken,
-		BatchSize: 20})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
+	if err != nil {
+		panic(err)
+	}
+	// Close client at the end
+	defer client.Close()
+	// Custom data record
+	sensorData := struct {
+		ID          string
+		Temperature float64
+		Humidity    int
+	}{"1012", 22.3, 55}
 
-	_ = err
-	_ = client
+	// Create a line protocol from record
+	line := fmt.Sprintf("air,device_id=%v,sensor=SHT31 humidity=%di,temperature=%f %d\n", sensorData.ID, sensorData.Humidity, sensorData.Temperature, time.Now().UnixNano())
+	// Write data
+	err = client.Write(context.Background(), "my-bucket", []byte(line))
+	if err != nil {
+		panic(err)
+	}
 
-	// Output:
 }
 
-func ExampleClient_customServerAPICall() {
-	// This example shows how to perform custom server API invocation for any endpoint
-	// Here we will create a DBRP mapping which allows using buckets in legacy write and query (InfluxQL) endpoints
-
-	// Create client. You need an admin token for creating DBRP mapping
+func ExampleClient_WritePoints() {
+	// Create client
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
-
-	// Get generated client for server API calls
-	apiClient := client.APIClient()
-	ctx := context.Background()
-
-	// Get a bucket we would like to query using InfluxQL
-	bucket, err := client.BucketsAPI().FindOne(ctx, &influxclient.Filter{Name: bucketName})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 	if err != nil {
 		panic(err)
 	}
+	// Close client at the end
+	defer client.Close()
 
-	// Get an organization that will own the mapping
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
+	// Create a point
+	sensorData := influxclient.NewPointWithMeasurement("air").SetTimestamp(time.Now())
+	// Add tag
+	sensorData.AddTag("sensor", "1012")
+	// Add fields
+	sensorData.AddField("temperature", 22.3).AddField("humidity", 55)
+
+	// Write point
+	err = client.WritePoints(context.Background(), "my-bucket", sensorData)
 	if err != nil {
 		panic(err)
 	}
+}
 
-	yes := true
-	// Fill required fields of the DBRP struct
-	dbrp := model.DBRPCreate{
-		BucketID:        *bucket.Id,
-		Database:        bucket.Name,
-		Default:         &yes,
-		OrgID:           org.Id,
-		RetentionPolicy: "autogen",
-	}
-
-	params := &model.PostDBRPAllParams{
-		Body: model.PostDBRPJSONRequestBody(dbrp),
-	}
-	// Call server API
-	newDbrp, err := apiClient.PostDBRP(ctx, params)
+func ExampleClient_WriteData() {
+	// Create client
+	client, err := influxclient.New(influxclient.Params{
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 	if err != nil {
 		panic(err)
 	}
-	defer apiClient.DeleteDBRPID(ctx, &model.DeleteDBRPIDAllParams{
-		DeleteDBRPIDParams: model.DeleteDBRPIDParams{OrgID: org.Id}, DbrpID: safeId(newDbrp.Id),
-	}) // only for E2E tests
+	// Close client at the end
+	defer client.Close()
 
-	// Check generated response
-	fmt.Fprintf(os.Stderr, "\tCreated DBRP: %#v\n", newDbrp)
+	sensorData := struct {
+		Table       string    `lp:"measurement"`
+		Sensor      string    `lp:"tag,sensor"`
+		ID          string    `lp:"tag,device_id"`
+		Temperature float64   `lp:"field,temperature"`
+		Humidity    int       `lp:"field,humidity"`
+		Time        time.Time `lp:"timestamp"`
+	}{"air", "SHT31", "1012", 22.3, 55, time.Now()}
 
-	// Output:
+	// Write point
+	err = client.WriteData(context.Background(), "my-bucket", sensorData)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExampleClient_PointsWriter() {
+	wp := influxclient.DefaultWriteParams
+	// Set batch size to write 100 points in 2 batches
+	wp.BatchSize = 50
+	// Set callback for failed writes
+	wp.WriteFailed = func(err error, lines []byte, attempt int, expires time.Time) bool {
+		fmt.Println("Write failed", err)
+		return true
+	}
+	// Create client with custom WriteParams
+	client, err := influxclient.New(influxclient.Params{
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+		WriteParams: wp,
+	})
+	if err != nil {
+		panic(err)
+	}
+	// client.Close() have to be called to clean http connections
+	defer client.Close()
+	// Get async writer
+	writer := client.PointsWriter("my-bucket")
+	// writer.Close() MUST be called at the end to ensure completing background operations and cleaning resources
+	defer writer.Close()
+	// write some points
+	for i := 0; i < 100; i++ {
+		// create point
+		p := influxclient.NewPointWithMeasurement("stat").
+			AddTag("id", fmt.Sprintf("rack_%v", i%10)).
+			AddTag("vendor", "AWS").
+			AddTag("hostname", fmt.Sprintf("host_%v", i%100)).
+			AddField("temperature", rand.Float64()*80.0).
+			AddField("disk_free", rand.Float64()*1000.0).
+			AddField("disk_total", (i/10+1)*1000000).
+			AddField("mem_total", (i/100+1)*10000000).
+			AddField("mem_free", rand.Uint64()).
+			SetTimestamp(time.Now())
+		// write asynchronously
+		writer.WritePoints(p)
+	}
 }
 
 func ExampleClient_Query() {
 	// Create client
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL:    "https://eu-central-1-1.aws.cloud2.influxdata.com/",
-		AuthToken:    "my-token",
-		Organization: "my-org",
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
 	})
+	if err != nil {
+		panic(err)
+	}
+	defer client.Close()
 
 	// Define query parameters
 	params := struct {
@@ -155,18 +224,73 @@ func ExampleClient_Query() {
 	}
 }
 
+func ExampleClient_customServerAPICall() {
+	// This example shows how to perform custom server API invocation for any endpoint
+	// Here we will create a DBRP mapping which allows using buckets in legacy write and query (InfluxQL) endpoints
+
+	// Create client. You need an admin token for creating DBRP mapping
+	client, err := influxclient.New(influxclient.Params{
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
+
+	// Get generated client for server API calls
+	apiClient := client.APIClient()
+	ctx := context.Background()
+
+	// Get a bucket we would like to query using InfluxQL
+	bucket, err := client.BucketsAPI().FindOne(ctx, &influxclient.Filter{Name: "bucket-name"})
+	if err != nil {
+		panic(err)
+	}
+
+	// Get an organization that will own the mapping
+	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
+	if err != nil {
+		panic(err)
+	}
+
+	yes := true
+	// Fill required fields of the DBRP struct
+	dbrp := model.DBRPCreate{
+		BucketID:        *bucket.Id,
+		Database:        bucket.Name,
+		Default:         &yes,
+		OrgID:           org.Id,
+		RetentionPolicy: "autogen",
+	}
+
+	params := &model.PostDBRPAllParams{
+		Body: model.PostDBRPJSONRequestBody(dbrp),
+	}
+	// Call server API
+	newDbrp, err := apiClient.PostDBRP(ctx, params)
+	if err != nil {
+		panic(err)
+	}
+	defer apiClient.DeleteDBRPID(ctx, &model.DeleteDBRPIDAllParams{
+		DeleteDBRPIDParams: model.DeleteDBRPIDParams{OrgID: org.Id}, DbrpID: newDbrp.Id,
+	}) // only for E2E tests
+
+	// Check generated response
+	fmt.Fprintf(os.Stderr, "\tCreated DBRP: %#v\n", newDbrp)
+}
+
 func ExampleBucketsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 
 	// Get Buckets API client
 	bucketsAPI := client.BucketsAPI()
 	ctx := context.Background()
 
 	// Get organization that will own new bucket
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
+	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -174,7 +298,7 @@ func ExampleBucketsAPI() {
 	// Create bucket with 1 day retention policy
 	bucket, err := bucketsAPI.Create(ctx, &model.Bucket{
 		OrgID: org.Id,
-		Name: "bucket-sensors",
+		Name:  "bucket-sensors",
 		RetentionRules: []model.RetentionRule{
 			{
 				EverySeconds: 3600 * 24,
@@ -184,7 +308,7 @@ func ExampleBucketsAPI() {
 	if err != nil {
 		panic(err)
 	}
-	defer bucketsAPI.Delete(ctx, safeId(bucket.Id)) // only for E2E tests
+	defer bucketsAPI.Delete(ctx, *bucket.Id) // only for E2E tests
 
 	// Update description of the bucket
 	desc := "Bucket for sensor data"
@@ -194,25 +318,26 @@ func ExampleBucketsAPI() {
 		panic(err)
 	}
 
-	// Output:
 }
 
-func ExampleOrganizationsAPI() {
+func ExampleOrganizationAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 
 	// Get Organizations API client
 	orgAPI := client.OrganizationAPI()
 	ctx := context.Background()
 
 	// Create new organization
-	org, err := orgAPI.Create(ctx, &model.Organization{Name: orgName+"-2"})
+	org, err := orgAPI.Create(ctx, &model.Organization{Name: "org-name-2"})
 	if err != nil {
 		panic(err)
 	}
-	defer orgAPI.Delete(ctx, safeId(org.Id)) // only for E2E tests
+	defer orgAPI.Delete(ctx, *org.Id) // only for E2E tests
 
 	orgDescription := "My second org"
 	org.Description = &orgDescription
@@ -222,11 +347,11 @@ func ExampleOrganizationsAPI() {
 	}
 
 	// Create new user to add to org
-	newUser, err := client.UsersAPI().Create(ctx, &model.User{Name: userName+"-2"})
+	newUser, err := client.UsersAPI().Create(ctx, &model.User{Name: "user-name-2"})
 	if err != nil {
 		panic(err)
 	}
-	defer client.UsersAPI().Delete(ctx, safeId(newUser.Id)) // only for E2E tests
+	defer client.UsersAPI().Delete(ctx, *newUser.Id) // only for E2E tests
 
 	// Add new user to organization
 	err = orgAPI.AddMember(ctx, *org.Id, *newUser.Id)
@@ -234,18 +359,20 @@ func ExampleOrganizationsAPI() {
 		panic(err)
 	}
 
-	// Output:
 }
 
 func ExampleAuthorizationsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
+
 	ctx := context.Background()
 
 	// Find user to grant permission
-	user, err := client.UsersAPI().FindOne(ctx, &influxclient.Filter{Name: userName})
+	user, err := client.UsersAPI().FindOne(ctx, &influxclient.Filter{Name: "user-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -284,23 +411,24 @@ func ExampleAuthorizationsAPI() {
 	if err != nil {
 		panic(err)
 	}
-	defer client.AuthorizationsAPI().Delete(ctx, safeId(authCreated.Id)) // only for E2E tests
+	defer client.AuthorizationsAPI().Delete(ctx, *authCreated.Id) // only for E2E tests
 
 	// Use token
 	fmt.Fprintf(os.Stderr, "\tToken: %v\n", *authCreated.Token)
-
-	// Output:
 }
 
 func ExampleUsersAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
+
 	ctx := context.Background()
 
 	// Find organization
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
+	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -313,7 +441,7 @@ func ExampleUsersAPI() {
 	if err != nil {
 		panic(err)
 	}
-	defer usersAPI.Delete(ctx, safeId(user.Id)) // only for E2E tests
+	defer usersAPI.Delete(ctx, *user.Id) // only for E2E tests
 
 	// Set user password
 	err = usersAPI.SetPassword(ctx, *user.Id, "pass-at-least-8-chars")
@@ -326,22 +454,22 @@ func ExampleUsersAPI() {
 	if err != nil {
 		panic(err)
 	}
-
-	// Output:
 }
 
 func ExampleLabelsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 
 	// Get Labels API client
 	labelsAPI := client.LabelsAPI()
 	ctx := context.Background()
 
 	// Get organization that will own label
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
+	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -358,7 +486,7 @@ func ExampleLabelsAPI() {
 	if err != nil {
 		panic(err)
 	}
-	defer labelsAPI.Delete(ctx, safeId(label.Id)) // only for E2E tests
+	defer labelsAPI.Delete(ctx, *label.Id) // only for E2E tests
 
 	// Change color property
 	label.Properties.AdditionalProperties = map[string]string{"color": "ff1122"}
@@ -366,22 +494,22 @@ func ExampleLabelsAPI() {
 	if err != nil {
 		panic(err)
 	}
-
-	// Output:
 }
 
 func ExampleTasksAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
-		ServerURL: serverURL,
-		AuthToken: authToken})
+		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
+		AuthToken: "my-token",
+		//		Organization: "my-org", // Organization is optional for InfluxDB Cloud
+	})
 
 	// Get Delete API client
 	tasksAPI := client.TasksAPI()
 	ctx := context.Background()
 
 	// Get organization that will own task
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
+	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -410,7 +538,7 @@ fruitCollected
 	if err != nil {
 		panic(err)
 	}
-	defer tasksAPI.Delete(ctx, safeId(task.Id)) // only for E2E tests
+	defer tasksAPI.Delete(ctx, task.Id) // only for E2E tests
 
 	// Force running a task
 	run, err := tasksAPI.RunManually(ctx, task.Id)
@@ -432,8 +560,6 @@ fruitCollected
 	// Print logs
 	fmt.Fprintln(os.Stderr, "\tLogs:")
 	for _, logEvent := range logs {
-		fmt.Fprint(os.Stderr,"\t Time:", *logEvent.Time, ", Message: ", *logEvent.Message, "\n")
+		fmt.Fprint(os.Stderr, "\t Time:", *logEvent.Time, ", Message: ", *logEvent.Message, "\n")
 	}
-
-	// Output:
 }

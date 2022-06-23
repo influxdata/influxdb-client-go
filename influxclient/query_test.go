@@ -6,7 +6,7 @@ package influxclient_test
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"strings"
 	"testing"
 	"time"
@@ -211,7 +211,7 @@ func TestMultiSections(t *testing.T) {
 
 	// test advancing
 	reader := strings.NewReader(csvTableMultiStructure)
-	res := influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res := influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	//test skip first table header
 	require.True(t, res.NextRow())
@@ -222,7 +222,7 @@ func TestMultiSections(t *testing.T) {
 	require.Nil(t, res.Close())
 
 	reader = strings.NewReader(csvTableMultiStructure)
-	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res = influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	//test skip tables
 	require.True(t, res.NextSection())
@@ -255,7 +255,7 @@ func TestMultiSections(t *testing.T) {
 
 `
 	reader = strings.NewReader(csvTableMultiTables)
-	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res = influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	//test skip first table header
 	require.True(t, res.NextRow())
@@ -268,7 +268,7 @@ func TestMultiSections(t *testing.T) {
 
 	// skip sections
 	reader = strings.NewReader(csvTableMultiTables)
-	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res = influxclient.NewQueryResultReader(io.NopCloser(reader))
 	require.True(t, res.NextSection())
 	require.NoError(t, res.Err())
 	require.False(t, res.NextSection())
@@ -351,14 +351,14 @@ func TestCSVError(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvErrInHeader)
-	res := influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res := influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	require.False(t, res.NextSection())
 	require.Error(t, res.Err())
 	require.Nil(t, res.Close())
 
 	reader = strings.NewReader(csvErrInHeader)
-	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res = influxclient.NewQueryResultReader(io.NopCloser(reader))
 	//straight to error
 	require.False(t, res.NextRow())
 	require.Error(t, res.Err())
@@ -371,7 +371,7 @@ func TestCSVError(t *testing.T) {
 
 `
 	reader = strings.NewReader(csvErrInRow)
-	res = influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res = influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	require.True(t, res.NextSection())
 	require.False(t, res.NextRow())
@@ -380,7 +380,7 @@ func TestCSVError(t *testing.T) {
 }
 func verifyParsingError(t *testing.T, csvTable, error string, inHeader bool) {
 	reader := strings.NewReader(csvTable)
-	res := influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res := influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	if inHeader {
 		require.False(t, res.NextSection())
@@ -407,7 +407,7 @@ func verifyParsingError(t *testing.T, csvTable, error string, inHeader bool) {
 
 func verifyTables(t *testing.T, csvTable string, expectedTables []expectedTable) {
 	reader := strings.NewReader(csvTable)
-	res := influxclient.NewQueryResultReader(ioutil.NopCloser(reader))
+	res := influxclient.NewQueryResultReader(io.NopCloser(reader))
 
 	for _, table := range expectedTables {
 		require.True(t, res.NextSection(), res.Err())

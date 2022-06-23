@@ -14,7 +14,7 @@ import "time"
 // associated with the organization "example.com" starting 40 entries into
 // the results:
 //
-// 	client.BucketsAPI().Find(ctx context.Context, &influxapi.Filter{
+//	client.BucketsAPI().Find(ctx context.Context, &influxapi.Filter{
 //		OrgName: "example.com",
 //		Limit: 10,
 //		Offset: 40,

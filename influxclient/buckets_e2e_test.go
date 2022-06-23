@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
@@ -49,7 +50,7 @@ func TestBucketsAPI(t *testing.T) {
 	// test find existing bucket by name
 	bucket, err := bucketsAPI.FindOne(ctx, &Filter{
 		OrgName: orgName,
-		Name: bucketName,
+		Name:    bucketName,
 	})
 	require.Nil(t, err, err)
 	require.NotNil(t, bucket)
@@ -91,7 +92,7 @@ func TestBucketsAPI(t *testing.T) {
 	name := "bucket-x"
 	b, err := bucketsAPI.Create(ctx, &model.Bucket{
 		OrgID: org.Id,
-		Name: name,
+		Name:  name,
 		RetentionRules: model.RetentionRules{
 			{
 				EverySeconds: 3600 * 12,
@@ -103,7 +104,7 @@ func TestBucketsAPI(t *testing.T) {
 	defer bucketsAPI.Delete(ctx, safeId(b.Id))
 	assert.Equal(t, name, b.Name)
 	assert.Len(t, b.RetentionRules, 1)
-	assert.Equal(t, b.RetentionRules[0].EverySeconds, int64(3600 * 12))
+	assert.Equal(t, b.RetentionRules[0].EverySeconds, int64(3600*12))
 
 	// Test update
 	desc := "bucket description"
@@ -123,15 +124,15 @@ func TestBucketsAPI(t *testing.T) {
 	rpx := "0"
 	schemaType := model.SchemaTypeImplicit
 	bx, err := bucketsAPI.Create(ctx, &model.Bucket{
-		OrgID: org.Id,
-		Name: namex,
+		OrgID:       org.Id,
+		Name:        namex,
 		Description: &descx,
 		RetentionRules: model.RetentionRules{
 			{
 				EverySeconds: 3600 * 12,
 			},
 		},
-		Rp: &rpx,
+		Rp:         &rpx,
 		SchemaType: &schemaType,
 	})
 	require.Nil(t, err, err)
@@ -140,7 +141,7 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Equal(t, namex, bx.Name)
 	assert.Equal(t, descx, *bx.Description)
 	assert.Len(t, bx.RetentionRules, 1)
-	assert.Equal(t, int64(3600 * 12), bx.RetentionRules[0].EverySeconds)
+	assert.Equal(t, int64(3600*12), bx.RetentionRules[0].EverySeconds)
 	//assert.NotNil(t, bx.SchemaType, "%v", bx.SchemaType)
 	assert.Equal(t, rpx, *bx.Rp)
 
@@ -151,7 +152,7 @@ func TestBucketsAPI(t *testing.T) {
 	require.Nil(t, err, err)
 	require.NotNil(t, b)
 
-/* TODO UsersAPI does not support these in v3
+	/* TODO UsersAPI does not support these in v3
 	// Test owners
 	userOwner, err := client.UsersAPI().CreateUserWithName(ctx, "bucket-owner")
 	require.Nil(t, err, err)
@@ -216,12 +217,12 @@ func TestBucketsAPI(t *testing.T) {
 
 	err = client.UsersAPI().DeleteUser(ctx, userMember)
 	assert.Nil(t, err, err)
-*/
+	*/
 
 	// attempt to create bucket with existing name should fail
 	bucket, err = bucketsAPI.Create(ctx, &model.Bucket{
 		OrgID: org.Id,
-		Name: b.Name,
+		Name:  b.Name,
 	})
 	assert.Error(t, err)
 	assert.Nil(t, bucket)
@@ -258,7 +259,7 @@ func TestBucketsAPI_paging(t *testing.T) {
 		name := fmt.Sprintf("bucket-%03d", i)
 		b, err := bucketsAPI.Create(ctx, &model.Bucket{
 			OrgID: org.Id,
-			Name: name,
+			Name:  name,
 		})
 		require.Nil(t, err, err)
 		require.NotNil(t, b)
@@ -306,7 +307,7 @@ func TestBucketsAPI_paging(t *testing.T) {
 	// test filtering buckets by org name
 	buckets, err = bucketsAPI.Find(ctx, &Filter{
 		OrgName: org.Name,
-		Limit: 100,
+		Limit:   100,
 	})
 	require.Nil(t, err, err)
 	require.NotNil(t, buckets)

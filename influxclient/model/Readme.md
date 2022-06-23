@@ -3,6 +3,7 @@
 `oss.yml`must be periodically synced with latest changes and types and client must be re-generated 
 to maintain full compatibility with the latest InfluxDB release
 
+`cd influxclient/model`
 
 ## Install oapi generator
 `git clone git@github.com:bonitoo-io/oapi-codegen.git`
@@ -12,7 +13,7 @@ to maintain full compatibility with the latest InfluxDB release
 
 ## Download latest swagger
 `wget https://raw.githubusercontent.com/influxdata/openapi/master/contracts/oss.yml`
-`cd domain`
+
 
 ## Generate
 ### Generate types

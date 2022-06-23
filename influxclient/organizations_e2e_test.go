@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
@@ -74,7 +75,7 @@ func TestOrganizationsAPI(t *testing.T) {
 		},
 	}
 	auth2, err := client.AuthorizationsAPI().Create(ctx, &model.Authorization{
-		OrgID: org2.Id,
+		OrgID:       org2.Id,
 		Permissions: &permissions,
 	})
 	require.NoError(t, err)
@@ -82,7 +83,7 @@ func TestOrganizationsAPI(t *testing.T) {
 	defer client.AuthorizationsAPI().Delete(ctx, safeId(auth2.Id))
 
 	// create client with new auth token without permission
-	clientOrg2, err := New(Params{ ServerURL: serverURL, AuthToken: *auth2.Token})
+	clientOrg2, err := New(Params{ServerURL: serverURL, AuthToken: *auth2.Token})
 	require.NoError(t, err)
 
 	orgs2, err := clientOrg2.OrganizationAPI().Find(ctx, nil)
@@ -321,21 +322,21 @@ func TestOrganizationAPI_failing(t *testing.T) {
 
 	// update with nil org ID
 	_, err = orgsAPI.Update(ctx, &model.Organization{
-		Id: nil,
+		Id:   nil,
 		Name: org.Name,
 	})
 	assert.Error(t, err)
 
 	// update with empty name
 	_, err = orgsAPI.Update(ctx, &model.Organization{
-		Id: org.Id,
+		Id:   org.Id,
 		Name: "",
 	})
 	assert.Error(t, err)
 
 	// update with not existing id
 	_, err = orgsAPI.Update(ctx, &model.Organization{
-		Id: &notExistingID,
+		Id:   &notExistingID,
 		Name: org.Name,
 	})
 	assert.Error(t, err)

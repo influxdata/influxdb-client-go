@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2021 InfluxData, Inc. All rights reserved.
@@ -50,7 +51,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	}
 
 	auth, err := authAPI.Create(ctx, &model.Authorization{
-		OrgID: org.Id,
+		OrgID:       org.Id,
 		Permissions: &permissions,
 	})
 	require.NoError(t, err)
@@ -183,7 +184,7 @@ func TestAuthorizationsAPI_failing(t *testing.T) {
 	}
 
 	auth, err = authAPI.Create(ctx, &model.Authorization{
-		OrgID: &notExistingID,
+		OrgID:       &notExistingID,
 		Permissions: &permissions,
 	})
 	assert.Error(t, err)

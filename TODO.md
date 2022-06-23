@@ -1,4 +1,18 @@
-# API Skeleton
+# TODO
+## Items
+ - Write
+  - Async examples
+  - default tags
+  - E2E tests
+  - support for enterpise
+     - write consistency
+     - ignore some errors
+ - Readme
+ - Examples
+ - Copyright
+
+
+## API Skeleton
 
 Bellow is the skeleton for the new client V3 API with parts that are not implemented yet.
  

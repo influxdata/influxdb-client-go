@@ -23,19 +23,18 @@ func newUsersAPI(client *model.Client) *UsersAPI {
 	return &UsersAPI{client: client}
 }
 
-
 // Find returns all users matching the given filter.
 // Supported filters:
-//	- ID
-//	- Name
+//   - ID
+//   - Name
 func (a *UsersAPI) Find(ctx context.Context, filter *Filter) ([]model.User, error) {
 	return a.getUsers(ctx, filter)
 }
 
 // FindOne returns one user matching the given filter.
 // Supported filters:
-//	- ID
-//	- Name
+//   - ID
+//   - Name
 func (a *UsersAPI) FindOne(ctx context.Context, filter *Filter) (*model.User, error) {
 	users, err := a.getUsers(ctx, filter)
 	if err != nil {
@@ -82,7 +81,7 @@ func (a *UsersAPI) Update(ctx context.Context, user *model.User) (*model.User, e
 	if user.Name == "" {
 		return nil, fmt.Errorf("name is required")
 	}
-	params := &model.PatchUsersIDAllParams {
+	params := &model.PatchUsersIDAllParams{
 		UserID: *user.Id,
 		Body: model.PatchUsersIDJSONRequestBody{
 			Name: user.Name,

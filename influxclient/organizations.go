@@ -25,9 +25,9 @@ func newOrganizationAPI(client *model.Client) *OrganizationAPI {
 
 // Find returns all organizations matching the given filter.
 // Supported filters:
-//	- OrgName
-//	- OrgID
-//	- UserID
+//   - OrgName
+//   - OrgID
+//   - UserID
 func (o *OrganizationAPI) Find(ctx context.Context, filter *Filter) ([]model.Organization, error) {
 	return o.getOrganizations(ctx, filter)
 }
@@ -63,9 +63,9 @@ func (o *OrganizationAPI) getOrganizations(ctx context.Context, filter *Filter) 
 
 // FindOne returns one organization matching the given filter.
 // Supported filters:
-//	- OrgName
-//	- OrgID
-//	- UserID
+//   - OrgName
+//   - OrgID
+//   - UserID
 func (o *OrganizationAPI) FindOne(ctx context.Context, filter *Filter) (*model.Organization, error) {
 	organizations, err := o.getOrganizations(ctx, filter)
 	if err != nil {
@@ -109,7 +109,7 @@ func (o *OrganizationAPI) Update(ctx context.Context, org *model.Organization) (
 	params := &model.PatchOrgsIDAllParams{
 		OrgID: *org.Id,
 		Body: model.PatchOrgsIDJSONRequestBody{
-			Name: &org.Name,
+			Name:        &org.Name,
 			Description: org.Description,
 		},
 	}
@@ -135,7 +135,7 @@ func (o *OrganizationAPI) Members(ctx context.Context, orgID string) ([]model.Re
 	params := &model.GetOrgsIDMembersAllParams{
 		OrgID: orgID,
 	}
-	response,err := o.client.GetOrgsIDMembers(ctx, params)
+	response, err := o.client.GetOrgsIDMembers(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func (o *OrganizationAPI) RemoveMember(ctx context.Context, orgID, userID string
 		return fmt.Errorf("userID is required")
 	}
 	params := &model.DeleteOrgsIDMembersIDAllParams{
-		OrgID: orgID,
+		OrgID:  orgID,
 		UserID: userID,
 	}
 	return o.client.DeleteOrgsIDMembersID(ctx, params)
@@ -217,7 +217,7 @@ func (o *OrganizationAPI) RemoveOwner(ctx context.Context, orgID, userID string)
 		return fmt.Errorf("userID is required")
 	}
 	params := &model.DeleteOrgsIDOwnersIDAllParams{
-		OrgID: orgID,
+		OrgID:  orgID,
 		UserID: userID,
 	}
 	return o.client.DeleteOrgsIDOwnersID(ctx, params)

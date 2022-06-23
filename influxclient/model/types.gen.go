@@ -3007,16 +3007,20 @@ type QueryType string
 // To use parameters in your query, pass a _`query`_ with `params` references (in dot notation)--for example:
 //
 // ```json
-//   query: "from(bucket: params.mybucket) |> range(start: params.rangeStart) |> limit(n:1)"
+//
+//	query: "from(bucket: params.mybucket) |> range(start: params.rangeStart) |> limit(n:1)"
+//
 // ```
 //
 // and pass _`params`_ with the key-value pairs--for example:
 //
 // ```json
-//   params: {
-//     "mybucket": "environment",
-//     "rangeStart": "-30d"
-//   }
+//
+//	params: {
+//	  "mybucket": "environment",
+//	  "rangeStart": "-30d"
+//	}
+//
 // ```
 //
 // During query execution, InfluxDB passes _`params`_ to your script and substitutes the values.
@@ -4242,33 +4246,33 @@ type TemplateApply_EnvRefs struct {
 // the following Flux script retrieves `POSTGRES_USERNAME` and `POSTGRES_PASSWORD`
 // secrets and then uses them to connect to a PostgreSQL database:
 //
-//   ```js
-//   import "sql"
-//   import "influxdata/influxdb/secrets"
+//	```js
+//	import "sql"
+//	import "influxdata/influxdb/secrets"
 //
-//   username = secrets.get(key: "POSTGRES_USERNAME")
-//   password = secrets.get(key: "POSTGRES_PASSWORD")
+//	username = secrets.get(key: "POSTGRES_USERNAME")
+//	password = secrets.get(key: "POSTGRES_PASSWORD")
 //
-//   sql.from(
-//     driverName: "postgres",
-//     dataSourceName: "postgresql://${username}:${password}@localhost:5432",
-//     query: "SELECT * FROM example_table",
-//   )
-//   ```
+//	sql.from(
+//	  driverName: "postgres",
+//	  dataSourceName: "postgresql://${username}:${password}@localhost:5432",
+//	  query: "SELECT * FROM example_table",
+//	)
+//	```
 //
 // To define secret values in your `/api/v2/templates/apply` request,
 // pass the `secrets` parameter with key-value pairs--for example:
 //
-//   ```json
-//   {
-//     ...
-//     "secrets": {
-//       "POSTGRES_USERNAME": "pguser",
-//       "POSTGRES_PASSWORD": "foo"
-//     }
-//     ...
-//   }
-//   ```
+//	```json
+//	{
+//	  ...
+//	  "secrets": {
+//	    "POSTGRES_USERNAME": "pguser",
+//	    "POSTGRES_PASSWORD": "foo"
+//	  }
+//	  ...
+//	}
+//	```
 //
 // InfluxDB stores the key-value pairs as secrets that you can access with `secrets.get()`.
 // Once stored, you can't view secret values in InfluxDB.

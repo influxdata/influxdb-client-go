@@ -89,7 +89,7 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 		writeOptions:         options,
 		retryQueue:           newQueue(int(retryBufferLimit)),
 		retryExponentialBase: 2,
-		retryDelay:           0,
+		retryDelay:           options.RetryInterval(),
 		retryAttempts:        0,
 	}
 }
@@ -196,7 +196,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 			}
 
 			w.retryDelay = w.writeOptions.RetryInterval()
-			w.retryDelay = 0
+			w.retryAttempts = 0
 			if retrying && !batchToWrite.Evicted {
 				w.retryQueue.pop()
 			}

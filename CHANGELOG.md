@@ -1,3 +1,8 @@
+## 2.9.1 [2022-06-24]
+### Bug fixes
+- [#332](https://github.com/influxdata/influxdb-client-go/issues/332) Retry strategy drops expired batches as soon as they expire.
+- [#335](https://github.com/influxdata/influxdb-client-go/issues/335) Retry strategy keeps max retry delay for new batches.
+ 
 ## 2.9.0 [2022-05-20]
 ### Features
 - [#323](https://github.com/influxdata/influxdb-client-go/pull/323) Added `TasksAPI.CreateTaskByFlux` to allow full control of task script.

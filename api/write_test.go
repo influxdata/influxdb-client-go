@@ -7,6 +7,7 @@ package api
 import (
 	"fmt"
 	"math"
+	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -169,7 +170,12 @@ func TestWriteErrorCallback(t *testing.T) {
 		Code:       "write",
 		Message:    "error",
 	})
-	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(1).SetRetryInterval(1))
+	// sleep takes at least more than 10ms (sometimes 15ms) on Windows https://github.com/golang/go/issues/44343
+	retryInterval := uint(1)
+	if runtime.GOOS == "windows" {
+		retryInterval = 20
+	}
+	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(1).SetRetryInterval(retryInterval))
 	writeAPI.SetWriteFailedCallback(func(batch string, error http.Error, retryAttempts uint) bool {
 		return retryAttempts < 2
 	})
@@ -178,7 +184,7 @@ func TestWriteErrorCallback(t *testing.T) {
 	for i, j := 0, 0; i < 6; i++ {
 		writeAPI.WritePoint(points[i])
 		writeAPI.waitForFlushing()
-		w := int(math.Pow(5, float64(j)))
+		w := int(math.Pow(5, float64(j)) * float64(retryInterval))
 		fmt.Printf("Waiting %dms\n", w)
 		<-time.After(time.Duration(w) * time.Millisecond)
 		j++

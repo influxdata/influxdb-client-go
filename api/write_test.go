@@ -6,6 +6,7 @@ package api
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"runtime"
 	"strings"
@@ -230,5 +231,31 @@ func TestClosing(t *testing.T) {
 	diff := time.Since(start)
 	fmt.Println("Diff", diff)
 	assert.Len(t, service.Lines(), 0)
+}
 
+func TestRetries(t *testing.T) {
+	service := test.NewTestService(t, "http://localhost:8888")
+	log.Log.SetLogLevel(log.DebugLevel)
+	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions())
+	points := test.GenPoints(1)
+	fails := 0
+
+	var mu sync.Mutex
+
+	service.SetRequestHandler(func(url string, body io.Reader) error {
+		mu.Lock()
+		defer mu.Unlock()
+		// fail 4 times, then succeed on the 5th try - maxRetries default is 5
+		if fails >= 4 {
+			return nil
+		}
+		fails++
+		return fmt.Errorf("spurious failure")
+	})
+	for i := 0; i < len(points); i++ {
+		writeAPI.WritePoint(points[i])
+	}
+	writeAPI.Flush()
+	writeAPI.Close()
+	assert.Equal(t, 1, len(service.Lines()))
 }

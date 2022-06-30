@@ -1,3 +1,7 @@
+## [unreleased]
+### Bug fixes
+- [#341](https://github.com/influxdata/influxdb-client-go/issues/341) Changing logging level of messages about discarding batch to Error. 
+
 ## 2.9.1 [2022-06-24]
 ### Bug fixes
 - [#332](https://github.com/influxdata/influxdb-client-go/issues/332) Retry strategy drops expired batches as soon as they expire.

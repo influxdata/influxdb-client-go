@@ -128,7 +128,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 
 				// Discard batches at beginning of retryQueue that have already expired
 				if time.Now().After(b.Expires) {
-					log.Warn("Write proc: oldest batch in retry queue expired, discarding")
+					log.Error("Write proc: oldest batch in retry queue expired, discarding")
 					if !b.Evicted {
 						w.retryQueue.pop()
 					}
@@ -142,7 +142,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 				} else {
 					log.Warn("Write proc: cannot write yet, storing batch to queue")
 					if w.retryQueue.push(batch) {
-						log.Warn("Write proc: Retry buffer full, discarding oldest batch")
+						log.Error("Write proc: Retry buffer full, discarding oldest batch")
 					}
 					batchToWrite = nil
 				}
@@ -151,7 +151,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 				batchToWrite = w.retryQueue.first()
 				if batch != nil { //store actual batch to retry queue
 					if w.retryQueue.push(batch) {
-						log.Warn("Write proc: Retry buffer full, discarding oldest batch")
+						log.Error("Write proc: Retry buffer full, discarding oldest batch")
 					}
 					batch = nil
 				}
@@ -169,7 +169,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 						w.retryDelay = w.computeRetryDelay(w.retryAttempts)
 					}
 					if w.errorCb != nil && !w.errorCb(batchToWrite, *perror) {
-						log.Warn("Callback rejected batch, discarding")
+						log.Error("Callback rejected batch, discarding")
 						if !batchToWrite.Evicted {
 							w.retryQueue.pop()
 						}
@@ -178,10 +178,10 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 					// store new batch (not taken from queue)
 					if !batchToWrite.Evicted && batchToWrite != w.retryQueue.first() {
 						if w.retryQueue.push(batch) {
-							log.Warn("Retry buffer full, discarding oldest batch")
+							log.Error("Retry buffer full, discarding oldest batch")
 						}
 					} else if batchToWrite.RetryAttempts == w.writeOptions.MaxRetries() {
-						log.Warn("Reached maximum number of retries, discarding batch")
+						log.Error("Reached maximum number of retries, discarding batch")
 						if !batchToWrite.Evicted {
 							w.retryQueue.pop()
 						}

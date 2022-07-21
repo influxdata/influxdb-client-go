@@ -236,8 +236,7 @@ It is synchronously notified in case async write fails.
 It controls further batch handling by its return value. If it returns `true`, WriteAPI continues with retrying of writes of this batch. Returned `false` means the batch should be discarded. 
 
 ### Reading async errors
-[Errors()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI.Errors) method returns a channel for reading errors which occurs during async writes. This channel is unbuffered and it 
-must be read asynchronously otherwise will block write procedure:
+WriteAPI automatically logs write errors. Use [Errors()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPI.Errors) method, which returns the channel for reading errors occuring during async writes, for writing write error to a custom target:
 
 ```go
 package main

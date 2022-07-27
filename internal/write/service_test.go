@@ -593,3 +593,57 @@ func TestRetryIntervalAccumulation(t *testing.T) {
 	// Debug line to capture output of successful test
 	// assert.True(t, false)
 }
+
+func TestFlush(t *testing.T) {
+	log.Log.SetLogLevel(log.DebugLevel)
+	hs := test.NewTestService(t, "http://localhost:8086")
+	//
+	opts := write.DefaultOptions().SetRetryInterval(1)
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", hs, opts)
+
+	hs.SetReplyError(&http.Error{
+		Err: errors.New("connection refused"),
+	})
+
+	lines := test.GenRecords(5)
+	// Test flush will fail all batches
+	for _, line := range lines {
+		b := NewBatch(line, 20)
+		_ = srv.HandleWrite(ctx, b)
+	}
+	assert.Equal(t, 5, srv.retryQueue.list.Len())
+	srv.Flush()
+	assert.Len(t, hs.Lines(), 0)
+
+	// Test flush will find all batches expired
+	for _, line := range lines {
+		b := NewBatch(line, 5)
+		_ = srv.HandleWrite(ctx, b)
+	}
+
+	assert.Equal(t, 5, srv.retryQueue.list.Len())
+	<-time.After(5 * time.Millisecond)
+
+	hs.SetReplyError(nil)
+	// all batches should expire
+	srv.Flush()
+	assert.Len(t, hs.Lines(), 0)
+	assert.Equal(t, 0, srv.retryQueue.list.Len())
+
+	// Test flush will succeed
+	hs.SetReplyError(&http.Error{
+		Err: errors.New("connection refused"),
+	})
+	for _, line := range lines {
+		b := NewBatch(line, 5)
+		_ = srv.HandleWrite(ctx, b)
+	}
+
+	assert.Equal(t, 5, srv.retryQueue.list.Len())
+	hs.SetReplyError(nil)
+	// all batches should expire
+	srv.Flush()
+	assert.Len(t, hs.Lines(), 5)
+	assert.Equal(t, 0, srv.retryQueue.list.Len())
+}

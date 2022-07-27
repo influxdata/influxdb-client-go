@@ -109,10 +109,12 @@ func (w *WriteAPIImpl) Errors() <-chan error {
 	return w.errCh
 }
 
-// Flush forces all pending writes from the buffer to be sent
+// Flush forces all pending writes from the buffer to be sent.
+// Flush also tries sending batches from retry queue without additional retrying.
 func (w *WriteAPIImpl) Flush() {
 	w.bufferFlush <- struct{}{}
 	w.waitForFlushing()
+	w.service.Flush()
 }
 
 func (w *WriteAPIImpl) waitForFlushing() {

@@ -6,6 +6,7 @@ package api
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"runtime"
 	"strings"
@@ -231,4 +232,36 @@ func TestClosing(t *testing.T) {
 	fmt.Println("Diff", diff)
 	assert.Len(t, service.Lines(), 0)
 
+}
+
+func TestFlushWithRetries(t *testing.T) {
+	service := test.NewTestService(t, "http://localhost:8888")
+	log.Log.SetLogLevel(log.DebugLevel)
+	writeAPI := NewWriteAPI("my-org", "my-bucket", service, write.DefaultOptions().SetRetryInterval(200).SetBatchSize(1))
+	points := test.GenPoints(5)
+	fails := 0
+
+	var mu sync.Mutex
+
+	service.SetRequestHandler(func(url string, body io.Reader) error {
+		mu.Lock()
+		defer mu.Unlock()
+		// fail 4 times, then succeed on the 5th try - maxRetries default is 5
+		if fails >= 4 {
+			_ = service.DecodeLines(body)
+			return nil
+		}
+		fails++
+		return fmt.Errorf("spurious failure")
+	})
+	// write will try first batch and others will be put to the retry queue of retry delay caused by first write error
+	for i := 0; i < len(points); i++ {
+		writeAPI.WritePoint(points[i])
+	}
+	// Flush will try sending first batch again and then others
+	// 1st, 2nd and 3rd will fail, because test service rejects 4 writes
+	writeAPI.Flush()
+	writeAPI.Close()
+	// two remained
+	assert.Equal(t, 2, len(service.Lines()))
 }

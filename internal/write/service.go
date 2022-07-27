@@ -261,6 +261,20 @@ func (w *Service) WriteBatch(ctx context.Context, batch *Batch) *http2.Error {
 	return perror
 }
 
+// Flush sends batches from retry queue immediately, without retrying
+func (w *Service) Flush() {
+	for !w.retryQueue.isEmpty() {
+		b := w.retryQueue.pop()
+		if time.Now().After(b.Expires) {
+			log.Error("Oldest batch in retry queue expired, discarding")
+			continue
+		}
+		if err := w.WriteBatch(context.Background(), b); err != nil {
+			log.Errorf("Error flushing batch from retry queue: %w", err.Unwrap())
+		}
+	}
+}
+
 // pointWithDefaultTags encapsulates Point with default tags
 type pointWithDefaultTags struct {
 	point       *write.Point

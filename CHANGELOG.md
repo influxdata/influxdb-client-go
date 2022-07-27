@@ -1,6 +1,7 @@
 ## [unreleased]
 ### Bug fixes
 - [#341](https://github.com/influxdata/influxdb-client-go/issues/341) Changing logging level of messages about discarding batch to Error. 
+- [#344](https://github.com/influxdata/influxdb-client-go/issues/344) `WriteAPI.Flush()` writes also batches from the retry queue.
 
 ## 2.9.1 [2022-06-24]
 ### Bug fixes

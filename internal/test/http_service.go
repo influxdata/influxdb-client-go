@@ -27,7 +27,7 @@ type HTTPService struct {
 	lines          []string
 	t              *testing.T
 	wasGzip        bool
-	requestHandler func(c *HTTPService, url string, body io.Reader) error
+	requestHandler func(url string, body io.Reader) error
 	replyError     *http2.Error
 	lock           sync.Mutex
 }
@@ -40,6 +40,10 @@ func (t *HTTPService) WasGzip() bool {
 // SetWasGzip sets wasGzip flag
 func (t *HTTPService) SetWasGzip(wasGzip bool) {
 	t.wasGzip = wasGzip
+}
+
+func (t *HTTPService) SetRequestHandler(fn func(url string, body io.Reader) error) {
+	t.requestHandler = fn
 }
 
 // ServerURL returns testing URL
@@ -127,9 +131,9 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 		return t.ReplyError()
 	}
 	if t.requestHandler != nil {
-		err = t.requestHandler(t, url, body)
+		err = t.requestHandler(url, body)
 	} else {
-		err = t.decodeLines(body)
+		err = t.DecodeLines(body)
 	}
 
 	if err != nil {
@@ -138,7 +142,7 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 	return nil
 }
 
-func (t *HTTPService) decodeLines(body io.Reader) error {
+func (t *HTTPService) DecodeLines(body io.Reader) error {
 	bytes, err := ioutil.ReadAll(body)
 	if err != nil {
 		return err

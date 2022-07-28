@@ -42,6 +42,7 @@ func (t *HTTPService) SetWasGzip(wasGzip bool) {
 	t.wasGzip = wasGzip
 }
 
+// SetRequestHandler sets custom handler for requests
 func (t *HTTPService) SetRequestHandler(fn func(url string, body io.Reader) error) {
 	t.requestHandler = fn
 }
@@ -142,6 +143,7 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 	return nil
 }
 
+// DecodeLines parses request body for lines
 func (t *HTTPService) DecodeLines(body io.Reader) error {
 	bytes, err := ioutil.ReadAll(body)
 	if err != nil {

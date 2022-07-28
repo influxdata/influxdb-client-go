@@ -1,12 +1,15 @@
 ## [unreleased]
 ### Bug fixes
-- [#341](https://github.com/influxdata/influxdb-client-go/issues/341) Changing logging level of messages about discarding batch to Error. 
-- [#344](https://github.com/influxdata/influxdb-client-go/issues/344) `WriteAPI.Flush()` writes also batches from the retry queue.
+- [#341](https://github.com/influxdata/influxdb-client-go/pull/341) Changing logging level of messages about discarding batch to Error. 
+- [#344](https://github.com/influxdata/influxdb-client-go/pull/344) `WriteAPI.Flush()` writes also batches from the retry queue.
+
+### Test
+- [#345](https://github.com/influxdata/influxdb-client-go/pul/345) Added makefile for simplifing testing from command line.
 
 ## 2.9.1 [2022-06-24]
 ### Bug fixes
-- [#332](https://github.com/influxdata/influxdb-client-go/issues/332) Retry strategy drops expired batches as soon as they expire.
-- [#335](https://github.com/influxdata/influxdb-client-go/issues/335) Retry strategy keeps max retry delay for new batches.
+- [#332](https://github.com/influxdata/influxdb-client-go/pull/332) Retry strategy drops expired batches as soon as they expire.
+- [#335](https://github.com/influxdata/influxdb-client-go/pull/335) Retry strategy keeps max retry delay for new batches.
  
 ## 2.9.0 [2022-05-20]
 ### Features
@@ -14,7 +17,7 @@
 - [#328](https://github.com/influxdata/influxdb-client-go/pull/328) Added `Client.SetupWithToken` allowing to specify a custom token.
 
 ### Bug fixes
-- [#324](https://github.com/influxdata/influxdb-client-go/issues/324) Non-empty error channel will not block writes 
+- [#324](https://github.com/influxdata/influxdb-client-go/pull/324) Non-empty error channel will not block writes 
 
 ## 2.8.2 [2022-04-19]
 ### Bug fixes
@@ -97,7 +100,7 @@
 ### Bug fixes
 1. [#252](https://github.com/influxdata/influxdb-client-go/pull/252) Fixed panic when getting not present standard Flux columns  
 1. [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Conditional debug logging of buffers 
-1. [#254](https://github.com/influxdata/influxdb-client-go/pull/254) Fixed golint issues
+1. [#254](https://github.com/influxdata/influxdb-client-go/pull/254) Fixed golint pull
 
 ## 2.2.3 [2021-04-01]
 ### Bug fixes
@@ -193,8 +196,8 @@
 1. [#124](https://github.com/influxdata/influxdb-client-go/pull/124) Buckets API
 
 ### Bug fixes 
-1. [#108](https://github.com/influxdata/influxdb-client-go/issues/108) Fix default retry interval doc
-1. [#110](https://github.com/influxdata/influxdb-client-go/issues/110) Allowing empty (nil) values in query result
+1. [#108](https://github.com/influxdata/influxdb-client-go/pull/108) Fix default retry interval doc
+1. [#110](https://github.com/influxdata/influxdb-client-go/pull/110) Allowing empty (nil) values in query result
 
 ### Documentation
  - [#112](https://github.com/influxdata/influxdb-client-go/pull/112) Clarify how to use client with InfluxDB 1.8+

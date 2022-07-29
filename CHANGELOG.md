@@ -1,3 +1,5 @@
+## [unreleased]
+
 ## 2.9.2 [2022-07-29]
 ### Bug fixes
 - [#341](https://github.com/influxdata/influxdb-client-go/pull/341) Changing logging level of messages about discarding batch to Error. 

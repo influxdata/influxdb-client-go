@@ -1,6 +1,6 @@
-## [unreleased]
+## 2.10.0 [2022-08-25]
 ### Features
-- [#348](https://github.com/influxdata/influxdb-client-go/pull/348) Added `write.Options.Consitency` parameter to support InfluxDB Enterprise.  
+- [#348](https://github.com/influxdata/influxdb-client-go/pull/348) Added `write.Options.Consitency` parameter to support InfluxDB Enterprise.
 - [#350](https://github.com/influxdata/influxdb-client-go/pull/350) Added support for implicit batching to `WriteAPIBlocking`. It's off by default, enabled by `EnableBatching()`.
 
 ### Bug fixes
@@ -11,7 +11,7 @@
 
 ## 2.9.2 [2022-07-29]
 ### Bug fixes
-- [#341](https://github.com/influxdata/influxdb-client-go/pull/341) Changing logging level of messages about discarding batch to Error. 
+- [#341](https://github.com/influxdata/influxdb-client-go/pull/341) Changing logging level of messages about discarding batch to Error.
 - [#344](https://github.com/influxdata/influxdb-client-go/pull/344) `WriteAPI.Flush()` writes also batches from the retry queue.
 
 ### Test
@@ -21,14 +21,14 @@
 ### Bug fixes
 - [#332](https://github.com/influxdata/influxdb-client-go/pull/332) Retry strategy drops expired batches as soon as they expire.
 - [#335](https://github.com/influxdata/influxdb-client-go/pull/335) Retry strategy keeps max retry delay for new batches.
- 
+
 ## 2.9.0 [2022-05-20]
 ### Features
 - [#323](https://github.com/influxdata/influxdb-client-go/pull/323) Added `TasksAPI.CreateTaskByFlux` to allow full control of task script.
 - [#328](https://github.com/influxdata/influxdb-client-go/pull/328) Added `Client.SetupWithToken` allowing to specify a custom token.
 
 ### Bug fixes
-- [#324](https://github.com/influxdata/influxdb-client-go/pull/324) Non-empty error channel will not block writes 
+- [#324](https://github.com/influxdata/influxdb-client-go/pull/324) Non-empty error channel will not block writes
 
 ## 2.8.2 [2022-04-19]
 ### Bug fixes
@@ -42,13 +42,13 @@
 ## 2.8.0 [2022-02-18]
 ### Features
 - [#304](https://github.com/influxdata/influxdb-client-go/pull/304) Added public constructor for `QueryTableResult`
-- [#307](https://github.com/influxdata/influxdb-client-go/pull/307) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 
+- [#307](https://github.com/influxdata/influxdb-client-go/pull/307) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml).
 - [#308](https://github.com/influxdata/influxdb-client-go/pull/308) Added Flux query parameters. Supported by InfluxDB Cloud only now.
 - [#308](https://github.com/influxdata/influxdb-client-go/pull/308) Go 1.17 is required
 
 ## 2.7.0[2022-01-20]
-### Features 
-- [#297](https://github.com/influxdata/influxdb-client-go/pull/297),[#298](https://github.com/influxdata/influxdb-client-go/pull/298) Optimized `WriteRecord` of [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking). Custom batch can be written by single argument. 
+### Features
+- [#297](https://github.com/influxdata/influxdb-client-go/pull/297),[#298](https://github.com/influxdata/influxdb-client-go/pull/298) Optimized `WriteRecord` of [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking). Custom batch can be written by single argument.
 
 ### Bug fixes
 - [#294](https://github.com/influxdata/influxdb-client-go/pull/294)  `WritePoint` and `WriteRecord` of [WriteAPIBlocking](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2/api#WriteAPIBlocking) returns always full error information.
@@ -70,16 +70,16 @@
 ## 2.5.1[2021-09-17]
 ### Bug fixes
  - [#276](https://github.com/influxdata/influxdb-client-go/pull/276) Synchronized logging methods of _log.Logger_.
- 
+
 ## 2.5.0 [2021-08-20]
 ### Features
- - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). 
- - [#271](https://github.com/influxdata/influxdb-client-go/pull/271) Use exponential _random_ retry strategy 
- - [#273](https://github.com/influxdata/influxdb-client-go/pull/273) Added `WriteFailedCallback` for `WriteAPI` allowing to be _synchronously_ notified about failed writes and decide on further batch processing. 
+ - [#264](https://github.com/influxdata/influxdb-client-go/pull/264) Synced generated server API with the latest [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml).
+ - [#271](https://github.com/influxdata/influxdb-client-go/pull/271) Use exponential _random_ retry strategy
+ - [#273](https://github.com/influxdata/influxdb-client-go/pull/273) Added `WriteFailedCallback` for `WriteAPI` allowing to be _synchronously_ notified about failed writes and decide on further batch processing.
 
 ### Bug fixes
- - [#269](https://github.com/influxdata/influxdb-client-go/pull/269) Synchronized setters of _log.Logger_ to allow concurrent usage  
- - [#270](https://github.com/influxdata/influxdb-client-go/pull/270) Fixed duplicate `Content-Type` header in requests to managemet API  
+ - [#269](https://github.com/influxdata/influxdb-client-go/pull/269) Synchronized setters of _log.Logger_ to allow concurrent usage
+ - [#270](https://github.com/influxdata/influxdb-client-go/pull/270) Fixed duplicate `Content-Type` header in requests to managemet API
 
 ### Documentation
  - [#261](https://github.com/influxdata/influxdb-client-go/pull/261) Update Line Protocol document link to v2.0
@@ -90,7 +90,7 @@
  - [#256](https://github.com/influxdata/influxdb-client-go/pull/256) Allowing 'Doer' interface for HTTP requests
 
 ### Bug fixes
- - [#259](https://github.com/influxdata/influxdb-client-go/pull/259) Fixed leaking connection in case of not reading whole query result on TLS connection  
+ - [#259](https://github.com/influxdata/influxdb-client-go/pull/259) Fixed leaking connection in case of not reading whole query result on TLS connection
 
 
 ## 2.3.0 [2021-04-30]
@@ -99,7 +99,7 @@
 
 ### Features
  - [#241](https://github.com/influxdata/influxdb-client-go/pull/241),[#248](https://github.com/influxdata/influxdb-client-go/pull/248) Synced with InfluxDB 2.0.5 swagger:
-    - Setup (onboarding) now sends correctly retentionDuration if specified  
+    - Setup (onboarding) now sends correctly retentionDuration if specified
     - `RetentionRule` used in `Bucket` now contains `ShardGroupDurationSeconds` to specify the shard group duration.
 
 ### Documentation
@@ -107,16 +107,16 @@
  - [Custom server API example](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2#example-Client-CustomServerAPICall) now shows how to create DBRP mapping
  - Improved documentation about concurrency
 1. [#251](https://github.com/influxdata/influxdb-client-go/pull/251) Fixed Readme.md formatting
- 
+
 ### Bug fixes
-1. [#252](https://github.com/influxdata/influxdb-client-go/pull/252) Fixed panic when getting not present standard Flux columns  
-1. [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Conditional debug logging of buffers 
+1. [#252](https://github.com/influxdata/influxdb-client-go/pull/252) Fixed panic when getting not present standard Flux columns
+1. [#253](https://github.com/influxdata/influxdb-client-go/pull/253) Conditional debug logging of buffers
 1. [#254](https://github.com/influxdata/influxdb-client-go/pull/254) Fixed golint pull
 
 ## 2.2.3 [2021-04-01]
 ### Bug fixes
 1. [#236](https://github.com/influxdata/influxdb-client-go/pull/236) Setting MaxRetries to zero value disables retry strategy.
-1. [#239](https://github.com/influxdata/influxdb-client-go/pull/239) Blocking write client doesn't use retry handling.  
+1. [#239](https://github.com/influxdata/influxdb-client-go/pull/239) Blocking write client doesn't use retry handling.
 
 ## 2.2.2 [2021-01-29]
 ### Bug fixes
@@ -139,19 +139,19 @@
 ## 2.1.0 [2020-10-02]
 ### Features
 1. [#193](https://github.com/influxdata/influxdb-client-go/pull/193) Added authentication using username and password. See `UsersAPI.SignIn()` and `UsersAPI.SignOut()`
-1. [#204](https://github.com/influxdata/influxdb-client-go/pull/204) Synced with InfluxDB 2 RC0 swagger. Added pagination to Organizations API and `After` paging param to Buckets API. 
+1. [#204](https://github.com/influxdata/influxdb-client-go/pull/204) Synced with InfluxDB 2 RC0 swagger. Added pagination to Organizations API and `After` paging param to Buckets API.
 
 ### Bug fixes
 1. [#191](https://github.com/influxdata/influxdb-client-go/pull/191) Fixed QueryTableResult.Next() failed to parse boolean datatype.
 1. [#192](https://github.com/influxdata/influxdb-client-go/pull/192) Client.Close() closes idle connections of internally created HTTP client
 
 ### Documentation
-1. [#189](https://github.com/influxdata/influxdb-client-go/pull/189) Added clarification that server URL has to be the InfluxDB server base URL to API docs and all examples.   
-1. [#196](https://github.com/influxdata/influxdb-client-go/pull/196) Changed default server port 9999 to 8086 in docs and examples  
+1. [#189](https://github.com/influxdata/influxdb-client-go/pull/189) Added clarification that server URL has to be the InfluxDB server base URL to API docs and all examples.
+1. [#196](https://github.com/influxdata/influxdb-client-go/pull/196) Changed default server port 9999 to 8086 in docs and examples
 1. [#200](https://github.com/influxdata/influxdb-client-go/pull/200) Fix example code in the Readme
 
 ## 2.0.1 [2020-08-14]
-### Bug fixes 
+### Bug fixes
 1. [#187](https://github.com/influxdata/influxdb-client-go/pull/187) Properly updated library for new major version.
 
 ## 2.0.0 [2020-08-14]
@@ -163,23 +163,23 @@
 ### Features
 1. [#165](https://github.com/influxdata/influxdb-client-go/pull/165) Allow overriding the http.Client for the http service.
 1. [#179](https://github.com/influxdata/influxdb-client-go/pull/179) Unifying retry strategy among InfluxDB 2 clients: added exponential backoff.
-1. [#180](https://github.com/influxdata/influxdb-client-go/pull/180) Provided public logger API to enable overriding logging. It is also possible to disable logging. 
-1. [#181](https://github.com/influxdata/influxdb-client-go/pull/181) Exposed HTTP service to allow custom server API calls. Added example. 
+1. [#180](https://github.com/influxdata/influxdb-client-go/pull/180) Provided public logger API to enable overriding logging. It is also possible to disable logging.
+1. [#181](https://github.com/influxdata/influxdb-client-go/pull/181) Exposed HTTP service to allow custom server API calls. Added example.
 
-### Bug fixes 
+### Bug fixes
 1. [#175](https://github.com/influxdata/influxdb-client-go/pull/175) Fixed WriteAPIs management. Keeping single instance for each org and bucket pair.
 
 ### Documentation
-1. [#185](https://github.com/influxdata/influxdb-client-go/pull/185) DeleteAPI and sample WriteAPIBlocking wrapper for implicit batching 
+1. [#185](https://github.com/influxdata/influxdb-client-go/pull/185) DeleteAPI and sample WriteAPIBlocking wrapper for implicit batching
 
 ## 1.4.0 [2020-07-17]
 ### Breaking changes
-1. [#156](https://github.com/influxdata/influxdb-client-go/pull/156) Fixing Go naming and code style violations: 
-- Introducing new *API interfaces with proper name of types, methods and arguments. 
-- This also affects the `Client` interface and the `Options` type. 
-- Affected types and methods have been deprecated and they will be removed in the next release. 
+1. [#156](https://github.com/influxdata/influxdb-client-go/pull/156) Fixing Go naming and code style violations:
+- Introducing new *API interfaces with proper name of types, methods and arguments.
+- This also affects the `Client` interface and the `Options` type.
+- Affected types and methods have been deprecated and they will be removed in the next release.
 
-### Bug fixes 
+### Bug fixes
 1. [#152](https://github.com/influxdata/influxdb-client-go/pull/152) Allow connecting to server on a URL path
 1. [#154](https://github.com/influxdata/influxdb-client-go/pull/154) Use idiomatic go style for write channels (internal)
 1. [#155](https://github.com/influxdata/influxdb-client-go/pull/155) Fix panic in FindOrganizationByName in case of no permissions
@@ -191,7 +191,7 @@
 1. [#136](https://github.com/influxdata/influxdb-client-go/pull/136) Possibility to specify default tags
 1. [#138](https://github.com/influxdata/influxdb-client-go/pull/138) Fix errors from InfluxDB 1.8 being empty
 
-### Bug fixes 
+### Bug fixes
 1. [#132](https://github.com/influxdata/influxdb-client-go/pull/132) Handle unsupported write type as string instead of generating panic
 1. [#134](https://github.com/influxdata/influxdb-client-go/pull/134) FluxQueryResult: support reordering of annotations
 
@@ -199,20 +199,20 @@
 ### Breaking Changes
  - [#107](https://github.com/influxdata/influxdb-client-go/pull/107) Renamed `InfluxDBClient` interface to `Client`, so the full name `influxdb2.Client` suits better to Go naming conventions
  - [#125](https://github.com/influxdata/influxdb-client-go/pull/125) `WriteApi`,`WriteApiBlocking`,`QueryApi` interfaces and related objects like `Point`, `FluxTableMetadata`, `FluxTableColumn`, `FluxRecord`, moved to the `api` ( and `api/write`, `api/query`) packages
- to provide consistent interface 
- 
+ to provide consistent interface
+
 ### Features
-1. [#120](https://github.com/influxdata/influxdb-client-go/pull/120) Health check API   
+1. [#120](https://github.com/influxdata/influxdb-client-go/pull/120) Health check API
 1. [#122](https://github.com/influxdata/influxdb-client-go/pull/122) Delete API
 1. [#124](https://github.com/influxdata/influxdb-client-go/pull/124) Buckets API
 
-### Bug fixes 
+### Bug fixes
 1. [#108](https://github.com/influxdata/influxdb-client-go/pull/108) Fix default retry interval doc
 1. [#110](https://github.com/influxdata/influxdb-client-go/pull/110) Allowing empty (nil) values in query result
 
 ### Documentation
  - [#112](https://github.com/influxdata/influxdb-client-go/pull/112) Clarify how to use client with InfluxDB 1.8+
- - [#115](https://github.com/influxdata/influxdb-client-go/pull/115) Doc and examples for reading write api errors 
+ - [#115](https://github.com/influxdata/influxdb-client-go/pull/115) Doc and examples for reading write api errors
 
 ## 1.1.0 [2020-04-24]
 ### Features

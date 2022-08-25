@@ -79,6 +79,9 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 	params.Set("org", org)
 	params.Set("bucket", bucket)
 	params.Set("precision", precisionToString(options.Precision()))
+	if options.Consistency() != "" {
+		params.Set("consistency", string(options.Consistency()))
+	}
 	u.RawQuery = params.Encode()
 	writeURL := u.String()
 	return &Service{

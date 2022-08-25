@@ -24,6 +24,7 @@ func TestDefaultOptions(t *testing.T) {
 	assert.EqualValues(t, 125_000, opts.MaxRetryInterval())
 	assert.EqualValues(t, 180_000, opts.MaxRetryTime())
 	assert.EqualValues(t, 2, opts.ExponentialBase())
+	assert.EqualValues(t, "", opts.Consistency())
 	assert.Len(t, opts.DefaultTags(), 0)
 }
 
@@ -40,7 +41,8 @@ func TestSettingsOptions(t *testing.T) {
 		SetExponentialBase(3).
 		SetMaxRetryTime(200_000).
 		AddDefaultTag("a", "1").
-		AddDefaultTag("b", "2")
+		AddDefaultTag("b", "2").
+		SetConsistency(write.ConsistencyOne)
 	assert.EqualValues(t, 5, opts.BatchSize())
 	assert.EqualValues(t, true, opts.UseGZip())
 	assert.EqualValues(t, 5000, opts.FlushInterval())
@@ -51,5 +53,6 @@ func TestSettingsOptions(t *testing.T) {
 	assert.EqualValues(t, 150_000, opts.MaxRetryInterval())
 	assert.EqualValues(t, 200_000, opts.MaxRetryTime())
 	assert.EqualValues(t, 3, opts.ExponentialBase())
+	assert.EqualValues(t, "one", opts.Consistency())
 	assert.Len(t, opts.DefaultTags(), 2)
 }

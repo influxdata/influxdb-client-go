@@ -1,4 +1,6 @@
 ## [unreleased]
+### Features
+- [#348](https://github.com/influxdata/influxdb-client-go/pull/348) Added `write.Options.Consitency` parameter to support InfluxDB Enterprise.  
 
 ## 2.9.2 [2022-07-29]
 ### Bug fixes

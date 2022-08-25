@@ -647,3 +647,15 @@ func TestFlush(t *testing.T) {
 	assert.Len(t, hs.Lines(), 5)
 	assert.Equal(t, 0, srv.retryQueue.list.Len())
 }
+
+func TestConsistencyParam(t *testing.T) {
+	hs := test.NewTestService(t, "http://localhost:8888")
+	opts := write.DefaultOptions().SetConsistency(write.ConsistencyQuorum)
+	srv := NewService("org", "buc", hs, opts)
+
+	require.Equal(t, "http://localhost:8888/api/v2/write?bucket=buc&consistency=quorum&org=org&precision=ns", srv.WriteURL())
+	opts = write.DefaultOptions()
+	srv = NewService("org", "buc", hs, opts)
+
+	require.Equal(t, "http://localhost:8888/api/v2/write?bucket=buc&org=org&precision=ns", srv.WriteURL())
+}

@@ -21,6 +21,7 @@ import (
 // to internal buffer. If length ot the buffer is equal to the batch-size (set in write.Options), the buffer is sent to the server
 // and the result of the operation is returned.
 // When a point is written to the buffer, nil error is always returned.
+// Flush() can be used to trigger sending of batch when it doesn't have the batch-size.
 //
 // Synchronous writing is intended to use for writing less frequent data, such as a weather sensing, or if there is a need to have explicit control of failed batches.
 
@@ -42,6 +43,8 @@ type WriteAPIBlocking interface {
 	// EnableBatching turns on implicit batching
 	// Batch size is controlled via write.Options
 	EnableBatching()
+	// Flush forces write of buffer if batching is enabled, even buffer doesn't have the batch-size.
+	Flush(ctx context.Context) error
 }
 
 // writeAPIBlocking implements WriteAPIBlocking interface
@@ -107,4 +110,15 @@ func (w *writeAPIBlocking) WritePoint(ctx context.Context, point ...*write.Point
 		return err
 	}
 	return w.write(ctx, line)
+}
+
+func (w *writeAPIBlocking) Flush(ctx context.Context) error {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	if w.batching && len(w.batch) > 0 {
+		body := strings.Join(w.batch, "\n")
+		w.batch = w.batch[:0]
+		return w.service.WriteBatch(ctx, iwrite.NewBatch(body, w.writeOptions.MaxRetryTime()))
+	}
+	return nil
 }

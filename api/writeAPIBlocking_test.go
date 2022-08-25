@@ -146,4 +146,15 @@ func TestWriteBatchIng(t *testing.T) {
 			service.Close()
 		}
 	}
+
+	for i := 0; i < 4; i++ {
+		err := writeAPI.WriteRecord(context.Background(), lines[i])
+		require.Nil(t, err)
+	}
+	assert.Equal(t, 0, service.Requests())
+	require.Len(t, service.Lines(), 0)
+	err := writeAPI.Flush(context.Background())
+	require.Nil(t, err)
+	assert.Equal(t, 1, service.Requests())
+	require.Len(t, service.Lines(), 4)
 }

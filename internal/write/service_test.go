@@ -9,6 +9,8 @@ import (
 	"errors"
 	"fmt"
 	ilog "log"
+	ihttp "net/http"
+	"net/http/httptest"
 	"runtime"
 	"strings"
 	"sync"
@@ -658,4 +660,42 @@ func TestConsistencyParam(t *testing.T) {
 	srv = NewService("org", "buc", hs, opts)
 
 	require.Equal(t, "http://localhost:8888/api/v2/write?bucket=buc&org=org&precision=ns", srv.WriteURL())
+}
+
+func TestIgnoreErrors(t *testing.T) {
+	log.Log.SetLogLevel(log.DebugLevel)
+	i := 0
+	server := httptest.NewServer(ihttp.HandlerFunc(func(w ihttp.ResponseWriter, r *ihttp.Request) {
+		i++
+		w.WriteHeader(ihttp.StatusInternalServerError)
+		switch i {
+		case 1:
+			_, _ = w.Write([]byte(`{"error":" "write failed: hinted handoff queue not empty"`))
+		case 2:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"partial write: field type conflict"}`))
+		case 3:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"partial write: points beyond retention policy"}`))
+		case 4:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"unable to parse 'cpu value': invalid field format"}`))
+		case 5:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"gateway error"}`))
+		}
+	}))
+	defer server.Close()
+	//
+	opts := write.DefaultOptions()
+	ctx := context.Background()
+	srv := NewService("my-org", "my-bucket", http.NewService(server.URL, "", http.DefaultOptions()), opts)
+
+	b := NewBatch("1", 20)
+	err := srv.HandleWrite(ctx, b)
+	assert.NoError(t, err)
+	err = srv.HandleWrite(ctx, b)
+	assert.NoError(t, err)
+	err = srv.HandleWrite(ctx, b)
+	assert.NoError(t, err)
+	err = srv.HandleWrite(ctx, b)
+	assert.NoError(t, err)
+	err = srv.HandleWrite(ctx, b)
+	assert.Error(t, err)
 }

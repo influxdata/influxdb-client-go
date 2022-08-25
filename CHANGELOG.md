@@ -2,6 +2,10 @@
 ### Features
 - [#348](https://github.com/influxdata/influxdb-client-go/pull/348) Added `write.Options.Consitency` parameter to support InfluxDB Enterprise.  
 
+### Bug fixes
+- [#349](https://github.com/influxdata/influxdb-client-go/pull/349) Skip retrying on specific write errors (mostly partial write error).
+
+
 ## 2.9.2 [2022-07-29]
 ### Bug fixes
 - [#341](https://github.com/influxdata/influxdb-client-go/pull/341) Changing logging level of messages about discarding batch to Error. 

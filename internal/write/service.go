@@ -164,38 +164,42 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 		if batchToWrite != nil {
 			perror := w.WriteBatch(ctx, batchToWrite)
 			if perror != nil {
-				if w.writeOptions.MaxRetries() != 0 && (perror.StatusCode == 0 || perror.StatusCode >= http.StatusTooManyRequests) {
-					log.Errorf("Write error: %s, batch kept for retrying\n", perror.Error())
-					if perror.RetryAfter > 0 {
-						w.retryDelay = perror.RetryAfter * 1000
-					} else {
-						w.retryDelay = w.computeRetryDelay(w.retryAttempts)
-					}
-					if w.errorCb != nil && !w.errorCb(batchToWrite, *perror) {
-						log.Error("Callback rejected batch, discarding")
-						if !batchToWrite.Evicted {
-							w.retryQueue.pop()
-						}
-						return perror
-					}
-					// store new batch (not taken from queue)
-					if !batchToWrite.Evicted && batchToWrite != w.retryQueue.first() {
-						if w.retryQueue.push(batch) {
-							log.Error("Retry buffer full, discarding oldest batch")
-						}
-					} else if batchToWrite.RetryAttempts == w.writeOptions.MaxRetries() {
-						log.Error("Reached maximum number of retries, discarding batch")
-						if !batchToWrite.Evicted {
-							w.retryQueue.pop()
-						}
-					}
-					batchToWrite.RetryAttempts++
-					w.retryAttempts++
-					log.Debugf("Write proc: next wait for write is %dms\n", w.retryDelay)
+				if isIgnorableError(perror) {
+					log.Warnf("Write error: %s", perror.Error())
 				} else {
-					log.Errorf("Write error: %s\n", perror.Error())
+					if w.writeOptions.MaxRetries() != 0 && (perror.StatusCode == 0 || perror.StatusCode >= http.StatusTooManyRequests) {
+						log.Errorf("Write error: %s, batch kept for retrying\n", perror.Error())
+						if perror.RetryAfter > 0 {
+							w.retryDelay = perror.RetryAfter * 1000
+						} else {
+							w.retryDelay = w.computeRetryDelay(w.retryAttempts)
+						}
+						if w.errorCb != nil && !w.errorCb(batchToWrite, *perror) {
+							log.Error("Callback rejected batch, discarding")
+							if !batchToWrite.Evicted {
+								w.retryQueue.pop()
+							}
+							return perror
+						}
+						// store new batch (not taken from queue)
+						if !batchToWrite.Evicted && batchToWrite != w.retryQueue.first() {
+							if w.retryQueue.push(batch) {
+								log.Error("Retry buffer full, discarding oldest batch")
+							}
+						} else if batchToWrite.RetryAttempts == w.writeOptions.MaxRetries() {
+							log.Error("Reached maximum number of retries, discarding batch")
+							if !batchToWrite.Evicted {
+								w.retryQueue.pop()
+							}
+						}
+						batchToWrite.RetryAttempts++
+						w.retryAttempts++
+						log.Debugf("Write proc: next wait for write is %dms\n", w.retryDelay)
+					} else {
+						log.Errorf("Write error: %s\n", perror.Error())
+					}
+					return fmt.Errorf("write failed (attempts %d): %w", batchToWrite.RetryAttempts, perror)
 				}
-				return fmt.Errorf("write failed (attempts %d): %w", batchToWrite.RetryAttempts, perror)
 			}
 
 			w.retryDelay = w.writeOptions.RetryInterval()
@@ -209,6 +213,40 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 		}
 	}
 	return nil
+}
+
+// Non-retryable errors
+const (
+	errStringHintedHandoffNotEmpty = "hinted handoff queue not empty"
+	errStringPartialWrite          = "partial write"
+	errStringPointsBeyondRP        = "points beyond retention policy"
+	errStringUnableToParse         = "unable to parse"
+)
+
+func isIgnorableError(error *http2.Error) bool {
+	// This "error" is an informational message about the state of the
+	// InfluxDB cluster.
+	if strings.Contains(error.Message, errStringHintedHandoffNotEmpty) {
+		return true
+	}
+	// Points beyond retention policy is returned when points are immediately
+	// discarded for being older than the retention policy.  Usually this not
+	// a cause for concern, and we don't want to retry.
+	if strings.Contains(error.Message, errStringPointsBeyondRP) {
+		return true
+	}
+	// Other partial write errors, such as "field type conflict", are not
+	// correctable at this point and so the point is dropped instead of
+	// retrying.
+	if strings.Contains(error.Message, errStringPartialWrite) {
+		return true
+	}
+	// This error indicates an error in line protocol
+	// serialization, retries would not be successful.
+	if strings.Contains(error.Message, errStringUnableToParse) {
+		return true
+	}
+	return false
 }
 
 // computeRetryDelay calculates retry delay

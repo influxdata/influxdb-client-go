@@ -40,9 +40,20 @@ func TestWriteRecord(t *testing.T) {
 	service := test.NewTestService(t, "http://localhost:8888")
 	writeAPI := NewWriteAPIBlocking("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
 	lines := test.GenRecords(10)
+	for _, line := range lines {
+		err := writeAPI.WriteRecord(context.Background(), line)
+		require.Nil(t, err)
+	}
+	require.Len(t, service.Lines(), 10)
+	require.Equal(t, 10, service.Requests())
+	for i, l := range lines {
+		assert.Equal(t, l, service.Lines()[i])
+	}
+	service.Close()
+
 	err := writeAPI.WriteRecord(context.Background(), lines...)
 	require.Nil(t, err)
-	require.Len(t, service.Lines(), 10)
+	require.Equal(t, 1, service.Requests())
 	for i, l := range lines {
 		assert.Equal(t, l, service.Lines()[i])
 	}
@@ -119,4 +130,20 @@ func TestWriteErrors(t *testing.T) {
 	}
 	require.Equal(t, 10, errors)
 
+}
+
+func TestWriteBatchIng(t *testing.T) {
+	service := test.NewTestService(t, "http://localhost:8888")
+	writeAPI := NewWriteAPIBlockingWithBatching("my-org", "my-bucket", service, write.DefaultOptions().SetBatchSize(5))
+	lines := test.GenRecords(10)
+	for i, line := range lines {
+		err := writeAPI.WriteRecord(context.Background(), line)
+		require.Nil(t, err)
+		if i == 4 || i == 9 {
+			assert.Equal(t, 1, service.Requests())
+			require.Len(t, service.Lines(), 5)
+
+			service.Close()
+		}
+	}
 }

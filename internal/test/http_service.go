@@ -30,6 +30,7 @@ type HTTPService struct {
 	requestHandler func(url string, body io.Reader) error
 	replyError     *http2.Error
 	lock           sync.Mutex
+	requests       int
 }
 
 // WasGzip returns true of request was in GZip format
@@ -67,6 +68,11 @@ func (t *HTTPService) HTTPClient() *http.Client {
 	return nil
 }
 
+// Requests returns number of requests
+func (t *HTTPService) Requests() int {
+	return t.requests
+}
+
 // Close clears instance
 func (t *HTTPService) Close() {
 	t.lock.Lock()
@@ -76,6 +82,7 @@ func (t *HTTPService) Close() {
 	t.wasGzip = false
 	t.replyError = nil
 	t.requestHandler = nil
+	t.requests = 0
 	t.lock.Unlock()
 }
 
@@ -116,6 +123,7 @@ func (t *HTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ http2.Request
 // DoPostRequest reads http request, validates URL and stores data in the request
 func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reader, requestCallback http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	req, err := http.NewRequest("POST", url, nil)
+	t.requests++
 	if err != nil {
 		return http2.NewError(err)
 	}

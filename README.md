@@ -286,7 +286,8 @@ func main() {
 ```
 
 ### Blocking write client 
-Blocking write client writes given point(s) synchronously. It doesn't have implicit batching. Batch is created from given set of points.
+Blocking write client writes given point(s) synchronously. It doesn't do implicit batching. Batch is created from given set of points.
+Implicit batching can be enabled with `WriteAPIBlocking.EnableBatching()`.
 
 ```go
 package main

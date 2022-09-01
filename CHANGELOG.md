@@ -17,7 +17,7 @@
 - [#344](https://github.com/influxdata/influxdb-client-go/pull/344) `WriteAPI.Flush()` writes also batches from the retry queue.
 
 ### Test
-- [#345](https://github.com/influxdata/influxdb-client-go/pul/345) Added makefile for simplifing testing from command line.
+- [#345](https://github.com/influxdata/influxdb-client-go/pul/345) Added makefile for simplifying testing from command line.
 
 ## 2.9.1 [2022-06-24]
 ### Bug fixes

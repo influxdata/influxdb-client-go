@@ -293,7 +293,7 @@ func TestV2APIAgainstV1Server(t *testing.T) {
 
 func TestHTTPService(t *testing.T) {
 	client := influxdb2.NewClient(serverURL, authToken)
-	apiClient := domain.NewClientWithResponses(client.HTTPService())
+	apiClient := client.APIClient()
 	org, err := client.OrganizationsAPI().FindOrganizationByName(context.Background(), "my-org")
 	if err != nil {
 		//return err
@@ -314,17 +314,20 @@ from(bucket:"my-bucket") |> range(start: -1m) |> last()`
 		Flux:        taskFlux,
 		Status:      &taskStatus,
 	}
-	resp, err := apiClient.PostTasksWithResponse(context.Background(), &domain.PostTasksParams{}, domain.PostTasksJSONRequestBody(taskRequest))
+	params := &domain.PostTasksAllParams{
+		Body: domain.PostTasksJSONRequestBody(taskRequest),
+	}
+	resp, err := apiClient.PostTasks(context.Background(), params)
 	if err != nil {
 		//return err
 		t.Error(err)
 	}
-	if resp.JSONDefault != nil {
-		t.Error(resp.JSONDefault.Message)
-	}
-	if assert.NotNil(t, resp.JSON201) {
-		assert.Equal(t, "My task", resp.JSON201.Name)
-		_, err := apiClient.DeleteTasksID(context.Background(), resp.JSON201.Id, &domain.DeleteTasksIDParams{})
+	if assert.NotNil(t, resp) {
+		assert.Equal(t, "My task", resp.Name)
+		deleteParams := &domain.DeleteTasksIDAllParams{
+			TaskID: resp.Id,
+		}
+		err := apiClient.DeleteTasksID(context.Background(), deleteParams)
 		if err != nil {
 			//return err
 			t.Error(err)

@@ -41,7 +41,7 @@ func ExampleClient_customServerAPICall() {
 	defer client.Close()
 
 	// Get generated client for server API calls
-	apiClient := domain.NewClientWithResponses(client.HTTPService())
+	apiClient := client.APIClient()
 	ctx := context.Background()
 
 	// Get a bucket we would like to query using InfluxQL
@@ -65,22 +65,15 @@ func ExampleClient_customServerAPICall() {
 		RetentionPolicy: "autogen",
 	}
 
-	params := &domain.PostDBRPParams{}
+	params := &domain.PostDBRPAllParams{
+		Body: domain.PostDBRPJSONRequestBody(dbrp),
+	}
 	// Call server API
-	resp, err := apiClient.PostDBRPWithResponse(ctx, params, domain.PostDBRPJSONRequestBody(dbrp))
+	newDbrp, err := apiClient.PostDBRP(ctx, params)
 	if err != nil {
 		panic(err)
 	}
 	// Check generated response errors
-	if resp.JSONDefault != nil {
-		panic(resp.JSONDefault.Message)
-	}
-	// Check generated response errors
-	if resp.JSON400 != nil {
-		panic(resp.JSON400.Message)
-	}
 
-	// Use API call result
-	newDbrp := resp.JSON201
 	fmt.Printf("Created DBRP: %#v\n", newDbrp)
 }

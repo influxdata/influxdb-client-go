@@ -1,0 +1,22 @@
+{{range .}}{{$opid := .OperationId}}
+{{if (hasValidRequestAndResponse .) -}}{{/* skip non-JSON bodies*/}}
+{{range .TypeDefinitions}}
+// {{.TypeName}} defines parameters for {{$opid}}.
+type {{.TypeName}} {{if and (opts.AliasTypes) (.CanAlias)}}={{end}} {{.Schema.TypeDecl}}
+{{end}}
+{{if or .HasBody  (gt (len .PathParams) 0) -}}
+// {{$opid}}AllParams defines type for all parameters for {{$opid}}.
+type {{$opid}}AllParams struct {
+{{if .RequiresParamObject -}}
+  {{$opid}}Params
+{{end}}
+{{range .PathParams}}
+{{.GoVariableName|ucFirst}} {{.TypeDef}}
+{{end}}
+{{if (and .HasBody (len .Bodies))}}
+    Body {{$opid}}{{(index .Bodies 0).NameTag}}RequestBody
+{{end}}
+}
+{{end}}{{/* if */}}
+{{end}}{{/* if */}}
+{{end}}{{/* Range */}}

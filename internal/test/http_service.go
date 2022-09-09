@@ -134,7 +134,9 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 		body, _ = gzip.NewReader(body)
 		t.wasGzip = true
 	}
-	assert.Equal(t.t, fmt.Sprintf("%swrite?bucket=my-bucket&org=my-org&precision=ns", t.serverURL), url)
+	if t.t != nil {
+		assert.Equal(t.t, fmt.Sprintf("%swrite?bucket=my-bucket&org=my-org&precision=ns", t.serverURL), url)
+	}
 
 	if t.ReplyError() != nil {
 		return t.ReplyError()

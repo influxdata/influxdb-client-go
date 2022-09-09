@@ -51,17 +51,18 @@ type WriteAPIImpl struct {
 	service     *iwrite.Service
 	writeBuffer []string
 
-	errCh         chan error
-	writeCh       chan *iwrite.Batch
-	bufferCh      chan string
-	writeStop     chan struct{}
-	bufferStop    chan struct{}
-	bufferFlush   chan struct{}
-	doneCh        chan struct{}
-	bufferInfoCh  chan writeBuffInfoReq
-	writeInfoCh   chan writeBuffInfoReq
-	writeOptions  *write.Options
-	closingMu     *sync.Mutex
+	errCh        chan error
+	writeCh      chan *iwrite.Batch
+	bufferCh     chan string
+	writeStop    chan struct{}
+	bufferStop   chan struct{}
+	bufferFlush  chan struct{}
+	doneCh       chan struct{}
+	bufferInfoCh chan writeBuffInfoReq
+	writeInfoCh  chan writeBuffInfoReq
+	writeOptions *write.Options
+	closingMu    *sync.Mutex
+	// more appropriate Bool type from sync/atomic cannot be used because it is available since go 1.19
 	isErrChReader int32
 }
 

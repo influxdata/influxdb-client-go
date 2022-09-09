@@ -123,7 +123,9 @@ func (t *HTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ http2.Request
 // DoPostRequest reads http request, validates URL and stores data in the request
 func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reader, requestCallback http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	req, err := http.NewRequest("POST", url, nil)
+	t.lock.Lock()
 	t.requests++
+	t.lock.Unlock()
 	if err != nil {
 		return http2.NewError(err)
 	}

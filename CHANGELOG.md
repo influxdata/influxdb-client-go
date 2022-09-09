@@ -1,4 +1,7 @@
 ## [unreleased]
+### Bug fixes
+- [#354](https://github.com/influxdata/influxdb-client-go/pull/354) More efficient synchronization in WriteAPIBlocking. 
+
 
 ## 2.10.0 [2022-08-25]
 ### Features

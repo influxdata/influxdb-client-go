@@ -8,6 +8,7 @@ import (
 	"context"
 	"strings"
 	"sync"
+	"sync/atomic"
 
 	http2 "github.com/influxdata/influxdb-client-go/v2/api/http"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
@@ -51,9 +52,10 @@ type WriteAPIBlocking interface {
 type writeAPIBlocking struct {
 	service      *iwrite.Service
 	writeOptions *write.Options
-	batching     bool
-	batch        []string
-	mu           sync.Mutex
+	// more appropriate Bool type from sync/atomic cannot be used because it is available since go 1.19
+	batching int32
+	batch    []string
+	mu       sync.Mutex
 }
 
 // NewWriteAPIBlocking creates new instance of blocking write client for writing data to bucket belonging to org
@@ -69,28 +71,26 @@ func NewWriteAPIBlockingWithBatching(org string, bucket string, service http2.Se
 }
 
 func (w *writeAPIBlocking) EnableBatching() {
-	w.mu.Lock()
-	defer w.mu.Unlock()
-	if !w.batching {
-		w.batching = true
+	if atomic.LoadInt32(&w.batching) == 0 {
+		w.mu.Lock()
+		w.batching = 1
 		w.batch = make([]string, 0, w.writeOptions.BatchSize())
+		w.mu.Unlock()
 	}
 }
 
 func (w *writeAPIBlocking) write(ctx context.Context, line string) error {
-	w.mu.Lock()
-	defer w.mu.Unlock()
-	body := line
-	if w.batching {
+	if atomic.LoadInt32(&w.batching) > 0 {
+		w.mu.Lock()
+		defer w.mu.Unlock()
 		w.batch = append(w.batch, line)
 		if len(w.batch) == int(w.writeOptions.BatchSize()) {
-			body = strings.Join(w.batch, "\n")
-			w.batch = w.batch[:0]
+			return w.flush(ctx)
 		} else {
 			return nil
 		}
 	}
-	err := w.service.WriteBatch(ctx, iwrite.NewBatch(body, w.writeOptions.MaxRetryTime()))
+	err := w.service.WriteBatch(ctx, iwrite.NewBatch(line, w.writeOptions.MaxRetryTime()))
 	if err != nil {
 		return err
 	}
@@ -112,13 +112,23 @@ func (w *writeAPIBlocking) WritePoint(ctx context.Context, point ...*write.Point
 	return w.write(ctx, line)
 }
 
-func (w *writeAPIBlocking) Flush(ctx context.Context) error {
-	w.mu.Lock()
-	defer w.mu.Unlock()
-	if w.batching && len(w.batch) > 0 {
+// flush is unsychronized helper for creating and sending batch
+// Must be called from synchronized block
+func (w *writeAPIBlocking) flush(ctx context.Context) error {
+	if len(w.batch) > 0 {
 		body := strings.Join(w.batch, "\n")
 		w.batch = w.batch[:0]
-		return w.service.WriteBatch(ctx, iwrite.NewBatch(body, w.writeOptions.MaxRetryTime()))
+		b := iwrite.NewBatch(body, w.writeOptions.MaxRetryTime())
+		return w.service.WriteBatch(ctx, b)
+	}
+	return nil
+}
+
+func (w *writeAPIBlocking) Flush(ctx context.Context) error {
+	if atomic.LoadInt32(&w.batching) > 0 {
+		w.mu.Lock()
+		defer w.mu.Unlock()
+		return w.flush(ctx)
 	}
 	return nil
 }

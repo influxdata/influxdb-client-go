@@ -123,7 +123,9 @@ func (t *HTTPService) DoHTTPRequestWithResponse(_ *http.Request, _ http2.Request
 // DoPostRequest reads http request, validates URL and stores data in the request
 func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reader, requestCallback http2.RequestCallback, _ http2.ResponseCallback) *http2.Error {
 	req, err := http.NewRequest("POST", url, nil)
+	t.lock.Lock()
 	t.requests++
+	t.lock.Unlock()
 	if err != nil {
 		return http2.NewError(err)
 	}
@@ -134,7 +136,9 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 		body, _ = gzip.NewReader(body)
 		t.wasGzip = true
 	}
-	assert.Equal(t.t, fmt.Sprintf("%swrite?bucket=my-bucket&org=my-org&precision=ns", t.serverURL), url)
+	if t.t != nil {
+		assert.Equal(t.t, fmt.Sprintf("%swrite?bucket=my-bucket&org=my-org&precision=ns", t.serverURL), url)
+	}
 
 	if t.ReplyError() != nil {
 		return t.ReplyError()

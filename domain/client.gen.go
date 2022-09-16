@@ -14,7 +14,7 @@ import (
 	"net/url"
 	"strings"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	ihttp "github.com/influxdata/influxdb-client-go/v2/api/http"

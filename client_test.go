@@ -12,6 +12,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/influxdata/influxdb-client-go/v2/domain"
 	http2 "github.com/influxdata/influxdb-client-go/v2/internal/http"
 	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
 	"github.com/stretchr/testify/assert"
@@ -136,9 +137,18 @@ func TestServerErrorNonJSON(t *testing.T) {
 
 	defer server.Close()
 	c := NewClient(server.URL, "x")
+	//Test non JSON error in custom code
 	err := c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	require.Error(t, err)
 	assert.Equal(t, "500 Internal Server Error: internal server error", err.Error())
+
+	// Test non JSON error from generated code
+	params := &domain.GetBucketsParams{}
+	b, err := c.APIClient().GetBuckets(context.Background(), params)
+	assert.Nil(t, b)
+	require.Error(t, err)
+	assert.Equal(t, "500 Internal Server Error: internal server error", err.Error())
+
 }
 
 func TestServerErrorInflux1_8(t *testing.T) {

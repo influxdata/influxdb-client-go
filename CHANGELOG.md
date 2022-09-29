@@ -1,17 +1,17 @@
-## [unreleased]
+## 2.11.0 [2022-09-29]
 ### Features
 - [#353](https://github.com/influxdata/influxdb-client-go/pull/353) Simplify generated code.
 - [#353](https://github.com/influxdata/influxdb-client-go/pull/353) Regenerate code from swagger.
 - [#355](https://github.com/influxdata/influxdb-client-go/pull/355) Upgrade of lib gopkg.in/yaml from v2 to v3
 
 ### Bug fixes
-- [#354](https://github.com/influxdata/influxdb-client-go/pull/354) More efficient synchronization in WriteAPIBlocking. 
+- [#354](https://github.com/influxdata/influxdb-client-go/pull/354) More efficient synchronization in WriteAPIBlocking.
 
 ### Breaking change
 - [#353](https://github.com/influxdata/influxdb-client-go/pull/353):
   - Interface `Client` has been extended with `APIClient()` function.
   - The generated client API changed:
-    - Function names are simplified (was `PostDBRPWithResponse`, now `PostDBRP`) 
+    - Function names are simplified (was `PostDBRPWithResponse`, now `PostDBRP`)
     - All functions now accept a context and a single wrapper structure with request body and HTTP parameters
     - The functions return deserialized response body or an error (it was a response wrapper with a status code that had to be then validated)
 

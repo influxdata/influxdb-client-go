@@ -1,3 +1,5 @@
+## [unreleased]
+
 ## 2.11.0 [2022-09-29]
 ### Features
 - [#353](https://github.com/influxdata/influxdb-client-go/pull/353) Simplify generated code.

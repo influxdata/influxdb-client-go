@@ -33,6 +33,7 @@ func TestDefaultOptions(t *testing.T) {
 	assert.EqualValues(t, (*tls.Config)(nil), opts.TLSConfig())
 	assert.EqualValues(t, 20, opts.HTTPRequestTimeout())
 	assert.EqualValues(t, 0, opts.LogLevel())
+	assert.EqualValues(t, "", opts.ApplicationName())
 }
 
 func TestSettingsOptions(t *testing.T) {
@@ -53,7 +54,8 @@ func TestSettingsOptions(t *testing.T) {
 		SetTLSConfig(tlsConfig).
 		SetHTTPRequestTimeout(50).
 		SetLogLevel(3).
-		AddDefaultTag("t", "a")
+		AddDefaultTag("t", "a").
+		SetApplicationName("Monitor/1.1")
 	assert.EqualValues(t, 5, opts.BatchSize())
 	assert.EqualValues(t, true, opts.UseGZip())
 	assert.EqualValues(t, 5_000, opts.FlushInterval())
@@ -66,6 +68,7 @@ func TestSettingsOptions(t *testing.T) {
 	assert.EqualValues(t, 5, opts.ExponentialBase())
 	assert.EqualValues(t, tlsConfig, opts.TLSConfig())
 	assert.EqualValues(t, 50, opts.HTTPRequestTimeout())
+	assert.EqualValues(t, "Monitor/1.1", opts.ApplicationName())
 	if client := opts.HTTPClient(); assert.NotNil(t, client) {
 		assert.EqualValues(t, 50*time.Second, client.Timeout)
 		assert.Equal(t, tlsConfig, client.Transport.(*http.Transport).TLSClientConfig)

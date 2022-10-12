@@ -23,6 +23,8 @@ type Options struct {
 	tlsConfig *tls.Config
 	// HTTP request timeout in sec. Default 20
 	httpRequestTimeout uint
+	// Application name in the User-Agent HTTP header string
+	appName string
 }
 
 // HTTPClient returns the http.Client that is configured to be used
@@ -116,6 +118,17 @@ func (o *Options) HTTPRequestTimeout() uint {
 // SetHTTPRequestTimeout sets HTTP request timeout in sec
 func (o *Options) SetHTTPRequestTimeout(httpRequestTimeout uint) *Options {
 	o.httpRequestTimeout = httpRequestTimeout
+	return o
+}
+
+// ApplicationName returns application name used in the User-Agent HTTP header
+func (o *Options) ApplicationName() string {
+	return o.appName
+}
+
+// SetApplicationName sets an application name to the User-Agent HTTP header
+func (o *Options) SetApplicationName(appName string) *Options {
+	o.appName = appName
 	return o
 }
 

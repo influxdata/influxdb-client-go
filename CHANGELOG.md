@@ -1,4 +1,6 @@
 ## [unreleased]
+### Bug fixes
+- [#359](https://github.com/influxdata/influxdb-client-go/pull/359) `WriteAPIBlocking.Flush()` correctly returns nil error. 
 
 ## 2.11.0 [2022-09-29]
 ### Features

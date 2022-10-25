@@ -119,7 +119,9 @@ func (w *writeAPIBlocking) flush(ctx context.Context) error {
 		body := strings.Join(w.batch, "\n")
 		w.batch = w.batch[:0]
 		b := iwrite.NewBatch(body, w.writeOptions.MaxRetryTime())
-		return w.service.WriteBatch(ctx, b)
+		if err:= w.service.WriteBatch(ctx, b); err != nil {
+			return err
+		}
 	}
 	return nil
 }

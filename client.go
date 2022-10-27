@@ -146,7 +146,7 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		ilog.Infof("Using URL '%s'%s", serverURL, tokenStr)
 	}
 	if options.ApplicationName() == "" {
-		ilog.Error("Application name is not set")
+		ilog.Warn("Application name is not set")
 	}
 	return client
 }

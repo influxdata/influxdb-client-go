@@ -7,6 +7,7 @@ package influxdb2
 import (
 	"context"
 	"fmt"
+	ilog "github.com/influxdata/influxdb-client-go/v2/log"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -111,7 +112,7 @@ func TestUserAgent(t *testing.T) {
 	var sb strings.Builder
 	log.SetOutput(&sb)
 	log.SetFlags(0)
-	c := NewClient(server.URL, "x")
+	c := NewClientWithOptions(server.URL, "x", DefaultOptions().SetLogLevel(ilog.WarningLevel))
 	assert.True(t, strings.Contains(sb.String(), "Application name is not set"))
 	up, err := c.Ping(context.Background())
 	require.NoError(t, err)

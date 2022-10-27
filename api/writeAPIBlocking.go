@@ -86,9 +86,8 @@ func (w *writeAPIBlocking) write(ctx context.Context, line string) error {
 		w.batch = append(w.batch, line)
 		if len(w.batch) == int(w.writeOptions.BatchSize()) {
 			return w.flush(ctx)
-		} else {
-			return nil
 		}
+		return nil
 	}
 	err := w.service.WriteBatch(ctx, iwrite.NewBatch(line, w.writeOptions.MaxRetryTime()))
 	if err != nil {

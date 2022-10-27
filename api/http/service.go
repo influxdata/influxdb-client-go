@@ -56,6 +56,7 @@ type service struct {
 	serverURL     string
 	authorization string
 	client        Doer
+	userAgent     string
 }
 
 // NewService creates instance of http Service with given parameters
@@ -73,6 +74,7 @@ func NewService(serverURL, authorization string, httpOptions *Options) Service {
 		serverURL:     serverURL,
 		authorization: authorization,
 		client:        httpOptions.HTTPDoer(),
+		userAgent:     http2.FormatUserAgent(httpOptions.ApplicationName()),
 	}
 }
 
@@ -128,7 +130,7 @@ func (s *service) DoHTTPRequestWithResponse(req *http.Request, requestCallback R
 		req.Header.Set("Authorization", s.authorization)
 	}
 	if req.Header.Get("User-Agent") == "" {
-		req.Header.Set("User-Agent", http2.UserAgent)
+		req.Header.Set("User-Agent", s.userAgent)
 	}
 	if requestCallback != nil {
 		requestCallback(req)

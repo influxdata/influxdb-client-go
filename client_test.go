@@ -7,11 +7,16 @@ package influxdb2
 import (
 	"context"
 	"fmt"
+	ilog "github.com/influxdata/influxdb-client-go/v2/log"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
+	"strings"
 	"testing"
 	"time"
 
+	ihttp "github.com/influxdata/influxdb-client-go/v2/api/http"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	http2 "github.com/influxdata/influxdb-client-go/v2/internal/http"
 	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
@@ -76,10 +81,27 @@ func TestWriteAPIManagement(t *testing.T) {
 	assert.Len(t, c.syncWriteAPIs, 0)
 }
 
+func TestUserAgentBase(t *testing.T) {
+	ua := fmt.Sprintf("influxdb-client-go/%s (%s; %s)", Version, runtime.GOOS, runtime.GOARCH)
+	assert.Equal(t, ua, http2.UserAgentBase)
+
+}
+
+type doer struct {
+	userAgent string
+	doer      ihttp.Doer
+}
+
+func (d *doer) Do(req *http.Request) (*http.Response, error) {
+	req.Header.Set("User-Agent", d.userAgent)
+	return d.doer.Do(req)
+}
+
 func TestUserAgent(t *testing.T) {
+	ua := http2.UserAgentBase
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-time.After(100 * time.Millisecond)
-		if r.Header.Get("User-Agent") == http2.UserAgent {
+		if r.Header.Get("User-Agent") == ua {
 			w.WriteHeader(http.StatusNoContent)
 		} else {
 			w.WriteHeader(http.StatusNotFound)
@@ -87,13 +109,48 @@ func TestUserAgent(t *testing.T) {
 	}))
 
 	defer server.Close()
-	c := NewClient(server.URL, "x")
+	var sb strings.Builder
+	log.SetOutput(&sb)
+	log.SetFlags(0)
+	c := NewClientWithOptions(server.URL, "x", DefaultOptions().SetLogLevel(ilog.WarningLevel))
+	assert.True(t, strings.Contains(sb.String(), "Application name is not set"))
 	up, err := c.Ping(context.Background())
 	require.NoError(t, err)
 	assert.True(t, up)
 
 	err = c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
 	assert.NoError(t, err)
+
+	c.Close()
+	sb.Reset()
+	// Test setting application  name
+	c = NewClientWithOptions(server.URL, "x", DefaultOptions().SetApplicationName("Monitor/1.1"))
+	ua = fmt.Sprintf("influxdb-client-go/%s (%s; %s) Monitor/1.1", Version, runtime.GOOS, runtime.GOARCH)
+	assert.False(t, strings.Contains(sb.String(), "Application name is not set"))
+	up, err = c.Ping(context.Background())
+	require.NoError(t, err)
+	assert.True(t, up)
+
+	err = c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	assert.NoError(t, err)
+	c.Close()
+
+	ua = "Monitor/1.1"
+	opts := DefaultOptions()
+	opts.HTTPOptions().SetHTTPDoer(&doer{
+		userAgent: ua,
+		doer:      http.DefaultClient,
+	})
+
+	//Create client with custom user agent setter
+	c = NewClientWithOptions(server.URL, "x", opts)
+	up, err = c.Ping(context.Background())
+	require.NoError(t, err)
+	assert.True(t, up)
+
+	err = c.WriteAPIBlocking("o", "b").WriteRecord(context.Background(), "a,a=a a=1i")
+	assert.NoError(t, err)
+	c.Close()
 }
 
 func TestServerError429(t *testing.T) {

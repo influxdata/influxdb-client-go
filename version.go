@@ -17,5 +17,5 @@ const (
 )
 
 func init() {
-	http.UserAgent = fmt.Sprintf("influxdb-client-go/%s  (%s; %s)", Version, runtime.GOOS, runtime.GOARCH)
+	http.UserAgentBase = fmt.Sprintf("influxdb-client-go/%s (%s; %s)", Version, runtime.GOOS, runtime.GOARCH)
 }

@@ -1,4 +1,4 @@
-## [unreleased]
+## 2.12.0 [2022-10-27]
 ### Features
 - [#358](https://github.com/influxdata/influxdb-client-go/pull/358):
     - Added possibility to set an application name, which will be part of the User-Agent HTTP header:

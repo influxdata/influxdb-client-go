@@ -467,7 +467,10 @@ func TestComputeRetryDelay(t *testing.T) {
 	assertBetween(t, srv.computeRetryDelay(2), 20_000, 40_000)
 	assertBetween(t, srv.computeRetryDelay(3), 40_000, 80_000)
 	assertBetween(t, srv.computeRetryDelay(4), 80_000, 125_000)
-	assert.EqualValues(t, 125_000, srv.computeRetryDelay(5))
+
+	for i := uint(5); i < 200; i++ { //test also limiting higher values
+		assert.EqualValues(t, 125_000, srv.computeRetryDelay(i))
+	}
 }
 
 func TestErrorCallback(t *testing.T) {

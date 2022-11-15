@@ -255,7 +255,11 @@ func isIgnorableError(error *http2.Error) bool {
 func (w *Service) computeRetryDelay(attempts uint) uint {
 	minDelay := int(w.writeOptions.RetryInterval() * pow(w.writeOptions.ExponentialBase(), attempts))
 	maxDelay := int(w.writeOptions.RetryInterval() * pow(w.writeOptions.ExponentialBase(), attempts+1))
-	retryDelay := uint(rand.Intn(maxDelay-minDelay) + minDelay)
+	diff := maxDelay - minDelay
+	if diff <= 0 { //check overflows
+		return w.writeOptions.MaxRetryInterval()
+	}
+	retryDelay := uint(rand.Intn(diff) + minDelay)
 	if retryDelay > w.writeOptions.MaxRetryInterval() {
 		retryDelay = w.writeOptions.MaxRetryInterval()
 	}

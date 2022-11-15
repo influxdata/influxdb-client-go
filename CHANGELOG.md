@@ -1,6 +1,7 @@
 ## [unreleased]
 ### Bug fixes
 - [#363](https://github.com/influxdata/influxdb-client-go/pull/363) Generated server stubs return also error message from InfluxDB 1.x forward compatible API.  
+- [#364](https://github.com/influxdata/influxdb-client-go/pull/364) Fixed panic when retrying over a long period without a server connection.
 
 ## 2.12.0 [2022-10-27]
 ### Features

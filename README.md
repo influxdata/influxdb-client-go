@@ -66,7 +66,7 @@ There are also other examples in the API docs:
 
 1.  Add the client package your to your project dependencies (go.mod).
     ```sh
-    go get github.com/influxdata/influxdb-client-go/v2
+    go install github.com/influxdata/influxdb-client-go/v2@latest
     ```
 1. Add import `github.com/influxdata/influxdb-client-go/v2` to your source code.
 

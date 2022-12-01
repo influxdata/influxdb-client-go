@@ -1,3 +1,6 @@
+## [unreleased]
+### Bug fixes
+
 ## 2.12.1 [2022-12-01]
 ### Bug fixes
 - [#363](https://github.com/influxdata/influxdb-client-go/pull/363) Generated server stubs return also error message from InfluxDB 1.x forward compatible API.

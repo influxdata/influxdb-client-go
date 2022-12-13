@@ -1,5 +1,6 @@
 ## [unreleased]
 ### Bug fixes
+- [#368](https://github.com/influxdata/influxdb-client-go/pull/368) Allowing proxy from environment variable
 
 ## 2.12.1 [2022-12-01]
 ### Bug fixes

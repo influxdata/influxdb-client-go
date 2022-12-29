@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/url"
 	"reflect"
 	"time"
@@ -103,7 +104,7 @@ func (c *Client) Query(ctx context.Context, query string, queryParams interface{
 	resp, err := c.makeAPICall(ctx, httpParams{
 		endpointURL: queryURL,
 		httpMethod:  "POST",
-		headers:     map[string]string{"Content-Type": "application/json"},
+		headers:     http.Header{"Content-Type": {"application/json"}},
 		queryParams: url.Values{"org": []string{c.params.Organization}},
 		body:        bytes.NewReader(qrJSON),
 	})

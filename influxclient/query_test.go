@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/annotatedcsv"
-	influxclient "github.com/influxdata/influxdb-client-go/influxclient"
+	"github.com/influxdata/influxdb-client-go/influxclient"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

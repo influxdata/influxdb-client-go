@@ -16,6 +16,12 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/influxdata/influxdb-client-go/influxclient/model"
+)
+
+const (
+	DefaultBatchSize = 5000
 )
 
 // Params holds the parameters for creating a new client.
@@ -32,6 +38,11 @@ type Params struct {
 
 	// Organization is name or ID of organization where data (buckets, users, tasks, etc.) belongs to
 	Organization string
+
+	// BatchSize holds the default batch size used by PointWriter.
+	// If it's zero, DefaultBatchSize will be used.
+	// Note that this can be overridden with PointWriter.SetBatchSize.
+	BatchSize int
 
 	// HTTPClient is used to make API requests.
 	//
@@ -51,6 +62,8 @@ type Client struct {
 	authorization string
 	// Cached base server API URL.
 	apiURL *url.URL
+	// generated server client
+	apiClient *model.Client
 }
 
 // httpParams holds parameters for creating an HTTP request
@@ -62,9 +75,15 @@ type httpParams struct {
 	// HTTP request method, eg. POST
 	httpMethod string
 	// HTTP request headers
-	headers map[string]string
+	headers http.Header
 	// HTTP POST/PUT body
 	body io.Reader
+}
+
+// apiCallDelegate delegates generated API client calls to client
+type apiCallDelegate struct {
+	// Client
+	c *Client
 }
 
 // New creates new Client with given Params, where ServerURL and AuthToken are mandatory.
@@ -87,11 +106,26 @@ func New(params Params) (*Client, error) {
 	}
 	var err error
 	// Prepare server API URL
-	c.apiURL, err = url.Parse(serverAddress + "api/v2/")
+	c.apiURL, err = url.Parse(serverAddress)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing server URL: %w", err)
 	}
+	// Create API client
+	c.apiClient, err = model.NewClient(c.apiURL.String(), &apiCallDelegate{c})
+	if err != nil {
+		return nil, fmt.Errorf("error creating server API client: %w", err)
+	}
+	// Update server API URL
+	c.apiURL, err = url.Parse(c.apiClient.APIEndpoint)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing API endpoint URL: %w", err)
+	}
 	return c, nil
+}
+
+// APIClient returns generates API client
+func (c *Client) APIClient() *model.Client {
+	return c.apiClient
 }
 
 // makeAPICall issues an HTTP request to InfluxDB server API url according to parameters.
@@ -109,7 +143,9 @@ func (c *Client) makeAPICall(ctx context.Context, params httpParams) (*http.Resp
 		return nil, fmt.Errorf("error calling %s: %v", fullURL, err)
 	}
 	for k, v := range params.headers {
-		req.Header.Set(k, v)
+		for _, i := range v {
+			req.Header.Add(k, i)
+		}
 	}
 	req.Header.Set("User-Agent", userAgent)
 	if c.authorization != "" {
@@ -166,4 +202,53 @@ func (c *Client) resolveHTTPError(r *http.Response) error {
 	}
 
 	return &httpError.ServerError
+}
+
+// Do makes API call for generated client
+func (d *apiCallDelegate) Do(req *http.Request) (*http.Response, error) {
+	queryParams := req.URL.Query()
+	req.URL.RawQuery = ""
+	return d.c.makeAPICall(req.Context(), httpParams{
+		endpointURL: req.URL,
+		headers: req.Header,
+		httpMethod: req.Method,
+		body: req.Body,
+		queryParams: queryParams,
+	})
+}
+
+// AuthorizationsAPI returns a value that can be used to interact with the
+// authorization-related parts of the InfluxDB API.
+func (c *Client) AuthorizationsAPI() *AuthorizationsAPI {
+	return newAuthorizationsAPI(c.apiClient)
+}
+
+// BucketsAPI returns a value that can be used to interact with the
+// bucket-related parts of the InfluxDB API.
+func (c *Client) BucketsAPI() *BucketsAPI {
+	return newBucketsAPI(c.apiClient)
+}
+
+// LabelsAPI returns a value that can be used to interact with the
+// label-related parts of the InfluxDB API.
+func (c *Client) LabelsAPI() *LabelsAPI {
+	return newLabelsAPI(c.apiClient)
+}
+
+// OrganizationAPI returns a value that can be used to interact with the
+// organization-related parts of the InfluxDB API.
+func (c *Client) OrganizationAPI() *OrganizationAPI {
+	return newOrganizationAPI(c.apiClient)
+}
+
+// TasksAPI returns a value that can be used to interact with the
+// task-related parts of the InfluxDB API.
+func (c *Client) TasksAPI() *TasksAPI {
+	return newTasksAPI(c.apiClient)
+}
+
+// UsersAPI returns a value that can be used to interact with the
+// user-related parts of the InfluxDB API.
+func (c *Client) UsersAPI() *UsersAPI {
+	return newUsersAPI(c.apiClient)
 }

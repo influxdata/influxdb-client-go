@@ -271,6 +271,9 @@ func TestOrganizationAPI_failing(t *testing.T) {
 	err = orgsAPI.AddMember(ctx, *org.Id, notExistingID)
 	assert.Error(t, err)
 
+	err = orgsAPI.AddMember(ctx, notInitializedID, notExistingID)
+	assert.Error(t, err)
+
 	err = orgsAPI.AddMember(ctx, *org.Id, notInitializedID)
 	assert.Error(t, err)
 

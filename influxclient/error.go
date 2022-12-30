@@ -22,7 +22,6 @@ func NewServerError(message string) *ServerError {
 func (e *ServerError) Error() string {
 	if e.Code != "" {
 		return fmt.Sprintf("%s: %s", e.Code, e.Message)
-	} else {
-		return e.Message
 	}
+	return e.Message
 }

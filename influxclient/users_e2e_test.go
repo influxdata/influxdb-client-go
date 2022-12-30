@@ -7,7 +7,6 @@
 package influxclient_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/influxdata/influxdb-client-go/influxclient"
@@ -31,7 +30,7 @@ func TestUsersAPI(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, user)
-	defer usersAPI.Delete(ctx, fmt.Sprintf("%s", *user.Id))
+	defer usersAPI.Delete(ctx, safeId(user.Id))
 
 	// try to create duplicate user
 	user2, err := usersAPI.Create(ctx, &model.User{
@@ -77,6 +76,15 @@ func TestUsersAPI(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, user)
+
+	// find multiple
+	users, err = usersAPI.Find(ctx, &Filter{
+		Offset: 1,
+		Limit: 100,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, users)
+	require.Equal(t, 1, len(users))
 
 	// update password
 	err = usersAPI.SetPassword(ctx, *user.Id, "my-password2")

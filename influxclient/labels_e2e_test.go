@@ -123,7 +123,13 @@ func TestLabelsAPI_failing(t *testing.T) {
 	client, ctx := newClient(t)
 	labelsAPI := client.LabelsAPI()
 
-	label, err := labelsAPI.Create(ctx, nil)
+	label, err := labelsAPI.FindOne(ctx, &Filter{
+		OrgID: invalidID,
+	})
+	assert.Error(t, err)
+	assert.Nil(t, label)
+
+	label, err = labelsAPI.Create(ctx, nil)
 	assert.Error(t, err)
 	assert.Nil(t, label)
 
@@ -139,6 +145,13 @@ func TestLabelsAPI_failing(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, label)
 
+	label, err = labelsAPI.Create(ctx, &model.Label{
+		Name: &name,
+		OrgID: &invalidID,
+	})
+	assert.Error(t, err)
+	assert.Nil(t, label)
+
 	label, err = labelsAPI.Update(ctx, nil)
 	assert.Error(t, err)
 	assert.Nil(t, label)
@@ -147,14 +160,14 @@ func TestLabelsAPI_failing(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, label)
 
-	err = labelsAPI.Delete(ctx, notExistingID)
-	require.Error(t, err)
-
-	label, err = labelsAPI.FindOne(ctx, &Filter{
-		ID: invalidID,
+	label, err = labelsAPI.Update(ctx, &model.Label{
+		Id: &invalidID,
 	})
 	assert.Error(t, err)
 	assert.Nil(t, label)
+
+	err = labelsAPI.Delete(ctx, notExistingID)
+	require.Error(t, err)
 
 	err = labelsAPI.Delete(ctx, invalidID)
 	assert.Error(t, err)

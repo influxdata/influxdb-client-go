@@ -7,7 +7,6 @@
 package influxclient_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/influxdata/influxdb-client-go/influxclient"
@@ -56,7 +55,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, auth)
-	defer authAPI.Delete(ctx, fmt.Sprintf("%s", *auth.Id))
+	defer authAPI.Delete(ctx, safeId(auth.Id))
 	assert.Equal(t, model.AuthorizationUpdateRequestStatusActive, *auth.Status)
 
 	auths, err = authAPI.Find(ctx, nil)

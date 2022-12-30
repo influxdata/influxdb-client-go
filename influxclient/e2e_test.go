@@ -56,12 +56,15 @@ func newClient(t *testing.T) (*Client, context.Context) {
 	return c, context.Background()
 }
 
+//lint:ignore ST1003 compatible with generated code syntax
 func safeId(ID interface{}) string {
 	switch v := ID.(type) {
 	case string:
-		return fmt.Sprintf("%s", v)
+		return v
 	case *string:
-		return fmt.Sprintf("%s", *v)
+		b := make([]byte, len(*v))
+		copy(b, *v)
+		return string(b)
 	default: panic("unsupported type")
 	}
 }

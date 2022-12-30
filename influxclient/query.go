@@ -93,9 +93,8 @@ func (r *QueryResultReader) errorSection() error {
 		if !r.NextRow() {
 			if r.err != nil {
 				return r.err
-			} else {
-				return errors.New("no row found in error section")
 			}
+			return errors.New("no row found in error section")
 		}
 		row := r.Row()
 		if row[0] == "" {

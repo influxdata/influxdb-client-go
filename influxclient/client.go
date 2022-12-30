@@ -16,11 +16,13 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/influxdata/influxdb-client-go/influxclient/model"
 )
 
 const (
+	// DefaultBatchSize default batch size used if not set otherwise.
 	DefaultBatchSize = 5000
 )
 
@@ -126,6 +128,100 @@ func New(params Params) (*Client, error) {
 // APIClient returns generates API client
 func (c *Client) APIClient() *model.Client {
 	return c.apiClient
+}
+
+// DeleteParams holds options for DeletePoints.
+type DeleteParams struct {
+	// Bucket holds bucket name.
+	Bucket    string
+	// BucketID holds bucket ID.
+	BucketID  string
+	// Org holds organization name.
+	Org       string
+	// OrgID holds organization ID.
+	OrgID     string
+	// Predicate is an expression in delete predicate syntax.
+	Predicate string
+	// Start is the earliest time to delete from.
+	Start     time.Time
+	// Stop is the latest time to delete from.
+	Stop      time.Time
+}
+
+// DeletePoints deletes data from a bucket.
+func (c *Client) DeletePoints(ctx context.Context, params *DeleteParams) error {
+	if params == nil {
+		return fmt.Errorf("error calling DeletePoints: params cannot be nil")
+	}
+	if params.Bucket == "" && params.BucketID == "" {
+		return fmt.Errorf("error calling DeletePoints: either bucket or bucketID is required")
+	}
+	if params.Org == "" && params.OrgID == "" {
+		return fmt.Errorf("error calling DeletePoints: either org or orgID is required")
+	}
+	if params.Start.IsZero() {
+		return fmt.Errorf("error calling DeletePoints: invalid start time")
+	}
+	if params.Stop.IsZero() {
+		return fmt.Errorf("error calling DeletePoints: invalid stop time")
+	}
+	postParams := model.PostDeleteAllParams{
+		Body: model.PostDeleteJSONRequestBody{
+			Predicate: &params.Predicate,
+			Start: params.Start,
+			Stop: params.Stop,
+		},
+	}
+	if params.Bucket != "" {
+		postParams.Bucket = &params.Bucket
+	} else {
+		postParams.BucketID = &params.BucketID
+	}
+	if params.Org != "" {
+		postParams.Org = &params.Org
+	} else {
+		postParams.OrgID = &params.OrgID
+	}
+
+	err := c.apiClient.PostDelete(ctx, &postParams)
+	if err != nil {
+		return fmt.Errorf("error calling DeletePoints: %v", err)
+	}
+	return nil
+}
+
+// Ready checks that the server is ready, and reports the duration the instance
+// has been up if so. It does not validate authentication parameters.
+// See https://docs.influxdata.com/influxdb/v2.0/api/#operation/GetReady.
+func (c *Client) Ready(ctx context.Context) (time.Duration, error) {
+	resp, err := c.apiClient.GetReady(ctx, &model.GetReadyParams{})
+	if err != nil {
+		return 0, fmt.Errorf("error calling Ready: %v", err)
+	}
+	up, err := time.ParseDuration(*resp.Up)
+	if err != nil {
+		return 0, fmt.Errorf("error calling Ready: %v", err)
+	}
+	return up, nil
+}
+
+// Health returns an InfluxDB server health check result. Read the HealthCheck.Status field to get server status.
+// Health doesn't validate authentication params.
+func (c *Client) Health(ctx context.Context) (*model.HealthCheck, error) {
+	resp, err := c.apiClient.GetHealth(ctx, &model.GetHealthParams{})
+	if err != nil {
+		return nil, fmt.Errorf("error calling Health: %v", err)
+	}
+	return resp, nil
+}
+
+// Ping checks the status and InfluxDB version of the instance. Returns an error if it is not available.
+func (c *Client) Ping(ctx context.Context) error {
+	err := c.apiClient.GetPing(ctx)
+	if err != nil {
+		return fmt.Errorf("error calling Ping: %v", err)
+	}
+	return nil
 }
 
 // makeAPICall issues an HTTP request to InfluxDB server API url according to parameters.

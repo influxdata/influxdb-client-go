@@ -358,6 +358,12 @@ func TestBucketsAPI_failing(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, bucket)
 
+	bucket, err = bucketsAPI.Update(ctx, &model.Bucket{
+		Id: &notExistingID,
+	})
+	assert.Error(t, err)
+	assert.Nil(t, bucket)
+
 	bucket, err = bucketsAPI.Create(ctx, &model.Bucket{
 		OrgID: &invalidID,
 		Name:  "bucket-y",

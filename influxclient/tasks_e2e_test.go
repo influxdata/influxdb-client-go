@@ -711,6 +711,12 @@ func TestTasksAPI_Failures(t *testing.T) {
 	err = tasksAPI.RemoveMember(ctx, notExistingID, invalidID)
 	assert.Error(t, err)
 
+	err = tasksAPI.RemoveMember(ctx, notInitializedID, notExistingID)
+	assert.Error(t, err)
+
+	err = tasksAPI.RemoveMember(ctx, notExistingID, notInitializedID)
+	assert.Error(t, err)
+
 	_, err = tasksAPI.Owners(ctx, invalidID)
 	assert.Error(t, err)
 

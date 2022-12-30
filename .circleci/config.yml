@@ -1,4 +1,4 @@
-# Golang CircleCI 2.0 configuration file
+# Golang CircleCI 2.1 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2.1
@@ -8,22 +8,34 @@ commands:
     - run:
         name: "Post onBoarding request to InfluxDB 2"
         command: ./scripts/influxdb-onboarding.sh
+  collect-coverage-reports:
+    steps:
+    - run:
+        name: Collecting coverage reports
+        command: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+          curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          curl -s https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+          gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+          shasum -a 256 -c codecov.SHA256SUM
+          chmod +x ./codecov
+          ./codecov
 jobs:
-  build:
+  lint:
     docker:
       # specify the version
-      - image: cimg/go:1.17.2
+      - image: cimg/go:1.17
         environment:
           ENV: CI
           GO111MODULE: "on"
     steps:
       - checkout
       - run: go get -v -t -d ./...
-      - run: go vet ./...
-      - run: go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck --checks="all" ./...
+      - run: make lint
   tests:
     docker:
-      - image: cimg/go:1.17.2
+      - image: cimg/go:1.17
         environment:
           ENV: CI
           GO111MODULE: "on"
@@ -40,16 +52,8 @@ jobs:
     steps:
       - checkout
       - influxdb-onboarding
-      - run:
-          name: "Create a temp directory for artifacts"
-          command: |
-            mkdir -p /tmp/artifacts
-            mkdir -p /tmp/test-results
-      - run:
-          command: |
-            gotestsum --junitfile /tmp/test-results/unit-tests.xml -- -race -tags=e2e -coverprofile=coverage.txt -covermode=atomic ./...
-            bash <(curl -s https://codecov.io/bash)
-            go tool cover -html=coverage.txt -o /tmp/artifacts/coverage.html
+      - run: make coverage
+      - collect-coverage-reports
       - store_artifacts:
           path: /tmp/artifacts
       - store_artifacts:
@@ -61,7 +65,7 @@ workflows:
   version: 2
   build-test:
     jobs:
-      - build
+      - lint
       - tests:
           requires:
-            - build
+            - lint

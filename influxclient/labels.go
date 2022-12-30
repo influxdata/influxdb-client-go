@@ -116,7 +116,9 @@ func (a *LabelsAPI) Delete(ctx context.Context, labelID string) error {
 func (a *LabelsAPI) getLabels(ctx context.Context, filter *Filter) ([]model.Label, error) {
 	params := &model.GetLabelsParams{}
 	if filter != nil {
-		params.OrgID = &filter.OrgID
+		if filter.OrgID != "" {
+			params.OrgID = &filter.OrgID
+		}
 	}
 	response, err := a.client.GetLabels(ctx, params)
 	if err != nil {

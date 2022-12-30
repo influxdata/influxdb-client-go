@@ -40,6 +40,7 @@ func TestNew(t *testing.T) {
 	c, err = New(Params{ServerURL: "http://localhost:8086", AuthToken: "my-token"})
 	require.NoError(t, err)
 	assert.Equal(t, "Token my-token", c.authorization)
+	assert.EqualValues(t, DefaultWriteParams, c.params.WriteParams)
 }
 
 func TestURLs(t *testing.T) {

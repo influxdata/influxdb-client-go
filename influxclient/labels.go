@@ -24,14 +24,14 @@ func newLabelsAPI(client *model.Client) *LabelsAPI {
 
 // Find returns labels matching the given filter.
 // Supported filters:
-//	- OrgID
+//   - OrgID
 func (a *LabelsAPI) Find(ctx context.Context, filter *Filter) ([]model.Label, error) {
 	return a.getLabels(ctx, filter)
 }
 
 // FindOne returns one label matching the given filter.
 // Supported filters:
-//	- OrgID
+//   - OrgID
 func (a *LabelsAPI) FindOne(ctx context.Context, filter *Filter) (*model.Label, error) {
 	labels, err := a.getLabels(ctx, filter)
 	if err != nil {
@@ -58,8 +58,8 @@ func (a *LabelsAPI) Create(ctx context.Context, label *model.Label) (*model.Labe
 	}
 	params := &model.PostLabelsAllParams{
 		Body: model.PostLabelsJSONRequestBody{
-			Name:        *(label.Name),
-			OrgID:       *(label.OrgID),
+			Name:  *(label.Name),
+			OrgID: *(label.OrgID),
 		},
 	}
 	if label.Properties != nil {

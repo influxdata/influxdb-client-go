@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2021 InfluxData, Inc. All rights reserved.
@@ -66,9 +67,9 @@ func TestTasksAPI_CRUDTask(t *testing.T) {
 
 	task2Every := "1h"
 	task2, err := tasksAPI.Create(ctx, &model.Task{
-		Name: "task 02",
+		Name:  "task 02",
 		Every: &task2Every,
-		Flux: taskFlux,
+		Flux:  taskFlux,
 		OrgID: *org.Id,
 	})
 	require.NoError(t, err)
@@ -87,9 +88,9 @@ func TestTasksAPI_CRUDTask(t *testing.T) {
 
 	task3Cron := "*/1 * * * *"
 	task3, err := tasksAPI.Create(ctx, &model.Task{
-		Name: "task 03",
-		Cron: &task3Cron,
-		Flux: taskFlux,
+		Name:  "task 03",
+		Cron:  &task3Cron,
+		Flux:  taskFlux,
 		OrgID: *org.Id,
 	})
 	require.NoError(t, err)
@@ -145,7 +146,7 @@ from(bucket: "%s")
 	//task4, err := tasksAPI.CreateTaskByFlux(ctx, flux, *org.Id)
 	task4, err := tasksAPI.Create(ctx, &model.Task{
 		OrgID: *org.Id,
-		Flux: flux,
+		Flux:  flux,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, task4)
@@ -198,9 +199,9 @@ func TestTasksAPI_GetTasks(t *testing.T) {
 	newtasks := make([]*model.Task, 30)
 	for i := 0; i < 30; i++ {
 		newtasks[i], err = tasksAPI.Create(ctx, &model.Task{
-			Name: fmt.Sprintf("task %02d", i+1),
+			Name:  fmt.Sprintf("task %02d", i+1),
 			Every: &taskEvery,
-			Flux: taskFlux,
+			Flux:  taskFlux,
 			OrgID: *taskOrg.Id,
 		})
 		require.NoError(t, err)
@@ -260,8 +261,8 @@ func TestTasksAPI_FindTasks(t *testing.T) {
 	taskEvery := "1h"
 	taskFlux := fmt.Sprintf(taskFluxTemplate, bucketName)
 	task1, err := tasksAPI.Create(ctx, &model.Task{
-		Name:"task 01",
-		Flux: taskFlux,
+		Name:  "task 01",
+		Flux:  taskFlux,
 		Every: &taskEvery,
 		OrgID: *taskOrg.Id,
 	})
@@ -277,8 +278,8 @@ func TestTasksAPI_FindTasks(t *testing.T) {
 
 	task2Every := "1m"
 	task2, err := tasksAPI.Create(ctx, &model.Task{
-		Name:"task 01",
-		Flux:taskFlux,
+		Name:  "task 01",
+		Flux:  taskFlux,
 		Every: &task2Every,
 		OrgID: *taskOrg.Id,
 	})
@@ -363,8 +364,8 @@ func TestTasksAPI_MembersOwners(t *testing.T) {
 	taskEvery := "1h"
 	taskFlux := fmt.Sprintf(taskFluxTemplate, bucketName)
 	task, err := tasksAPI.Create(ctx, &model.Task{
-		Name: "task 01",
-		Flux: taskFlux,
+		Name:  "task 01",
+		Flux:  taskFlux,
 		Every: &taskEvery,
 		OrgID: *org.Id,
 	})
@@ -377,7 +378,8 @@ func TestTasksAPI_MembersOwners(t *testing.T) {
 	require.NotNil(t, owners)
 	assert.Len(t, owners, 0)
 
-	/*owner, */err = tasksAPI.AddOwner(ctx, task.Id, *userOwner.Id)
+	/*owner, */
+	err = tasksAPI.AddOwner(ctx, task.Id, *userOwner.Id)
 	require.Nil(t, err, err)
 	/*require.NotNil(t, owner)
 	assert.Equal(t, *userOwner.Id, *owner.Id)*/
@@ -408,7 +410,8 @@ func TestTasksAPI_MembersOwners(t *testing.T) {
 	require.NotNil(t, members)
 	assert.Len(t, members, 0)
 
-	/*member, */err = tasksAPI.AddMember(ctx, task.Id, *userMember.Id)
+	/*member, */
+	err = tasksAPI.AddMember(ctx, task.Id, *userMember.Id)
 	require.Nil(t, err, err)
 	/*require.NotNil(t, member)
 	assert.Equal(t, *userMember.Id, *member.Id)*/
@@ -454,8 +457,8 @@ func TestTasksAPI_Labels(t *testing.T) {
 	taskEvery := "1h"
 	taskFlux := fmt.Sprintf(taskFluxTemplate, bucketName)
 	task, err := tasksAPI.Create(ctx, &model.Task{
-		Name:"task 01",
-		Flux: taskFlux,
+		Name:  "task 01",
+		Flux:  taskFlux,
 		Every: &taskEvery,
 		OrgID: *org.Id,
 	})
@@ -471,7 +474,7 @@ func TestTasksAPI_Labels(t *testing.T) {
 	labelName := "red-label"
 	label, err := labelsAPI.Create(ctx, &model.Label{
 		OrgID: org.Id,
-		Name: &labelName,
+		Name:  &labelName,
 	})
 	assert.NoError(t, err)
 	assert.NotNil(t, label)
@@ -519,8 +522,8 @@ func TestTasksAPI_Runs(t *testing.T) {
 	taskEvery := "1s"
 	taskFlux := fmt.Sprintf(taskFluxTemplate, bucketName)
 	task, err := tasksAPI.Create(ctx, &model.Task{
-		Name: "rapid task",
-		Flux: taskFlux,
+		Name:  "rapid task",
+		Flux:  taskFlux,
 		Every: &taskEvery,
 		OrgID: *org.Id,
 	})
@@ -528,7 +531,7 @@ func TestTasksAPI_Runs(t *testing.T) {
 	require.NotNil(t, task)
 	defer tasksAPI.Delete(ctx, safeId(task.Id))
 	// wait for task to run 10x
-	<-time.After(time.Second * 10 + time.Second * 1/*give it a little more time to finish at least 10 runs*/)
+	<-time.After(time.Second*10 + time.Second*1 /*give it a little more time to finish at least 10 runs*/)
 
 	logs, err := tasksAPI.FindLogs(ctx, task.Id)
 	require.NoError(t, err)
@@ -554,7 +557,7 @@ func TestTasksAPI_Runs(t *testing.T) {
 	//assert.Len(t, runs, 5) // https://github.com/influxdata/influxdb/issues/13577
 
 	runs, err = tasksAPI.FindRuns(ctx, task.Id, &Filter{
-		AfterTime: start,
+		AfterTime:  start,
 		BeforeTime: start.Add(5 * time.Second),
 	})
 	require.NoError(t, err)
@@ -576,8 +579,8 @@ func TestTasksAPI_Runs(t *testing.T) {
 	assert.NoError(t, err)
 
 	task, err = tasksAPI.Create(ctx, &model.Task{
-		Name:"task",
-		Flux: taskFlux,
+		Name:  "task",
+		Flux:  taskFlux,
 		Every: &taskEvery,
 		OrgID: *org.Id,
 	})
@@ -647,26 +650,26 @@ func TestTasksAPI_Failures(t *testing.T) {
 	assert.Error(t, err)
 
 	// invalid flux
-	_, err = tasksAPI.Create(ctx,&model.Task{Name: "Task", Flux: "x := null", Every: &every, OrgID: *org.Id})
+	_, err = tasksAPI.Create(ctx, &model.Task{Name: "Task", Flux: "x := null", Every: &every, OrgID: *org.Id})
 	assert.Error(t, err)
 
 	// empty flux
-	_, err = tasksAPI.Create(ctx,&model.Task{Name: "Task", Flux: "", Every: &every, OrgID: *org.Id})
+	_, err = tasksAPI.Create(ctx, &model.Task{Name: "Task", Flux: "", Every: &every, OrgID: *org.Id})
 	assert.Error(t, err)
 
 	// invalid every
 	every = "4g"
-	_, err = tasksAPI.Create(ctx,&model.Task{Name: "Task", Flux: taskFlux, Every: &every, OrgID: *org.Id})
+	_, err = tasksAPI.Create(ctx, &model.Task{Name: "Task", Flux: taskFlux, Every: &every, OrgID: *org.Id})
 	assert.Error(t, err)
 
 	// invalid org
 	every = "4s"
-	_, err = tasksAPI.Create(ctx,&model.Task{Name: "Task" , Flux: taskFlux, Every: &every, OrgID: invalidID})
+	_, err = tasksAPI.Create(ctx, &model.Task{Name: "Task", Flux: taskFlux, Every: &every, OrgID: invalidID})
 	assert.Error(t, err)
 
 	// invalid cron
 	cron := "0 * *"
-	_, err = tasksAPI.Create(ctx,&model.Task{Name: "Task", Flux: taskFlux, Cron: &cron, OrgID: *org.Id})
+	_, err = tasksAPI.Create(ctx, &model.Task{Name: "Task", Flux: taskFlux, Cron: &cron, OrgID: *org.Id})
 	assert.Error(t, err)
 
 	_, err = tasksAPI.Update(ctx, nil)
@@ -699,13 +702,16 @@ func TestTasksAPI_Failures(t *testing.T) {
 	_, err = tasksAPI.Members(ctx, notInitializedID)
 	assert.Error(t, err)
 
-	/*_,*/ err = tasksAPI.AddMember(ctx, notExistingID, invalidID)
+	/*_,*/
+	err = tasksAPI.AddMember(ctx, notExistingID, invalidID)
 	assert.Error(t, err)
 
-	/*_,*/ err = tasksAPI.AddMember(ctx, notExistingID, notInitializedID)
+	/*_,*/
+	err = tasksAPI.AddMember(ctx, notExistingID, notInitializedID)
 	assert.Error(t, err)
 
-	/*_,*/ err = tasksAPI.AddMember(ctx, notInitializedID, notExistingID)
+	/*_,*/
+	err = tasksAPI.AddMember(ctx, notInitializedID, notExistingID)
 	assert.Error(t, err)
 
 	err = tasksAPI.RemoveMember(ctx, notExistingID, invalidID)
@@ -723,13 +729,16 @@ func TestTasksAPI_Failures(t *testing.T) {
 	_, err = tasksAPI.Owners(ctx, notInitializedID)
 	assert.Error(t, err)
 
-	/*_,*/ err = tasksAPI.AddOwner(ctx, notExistingID, invalidID)
+	/*_,*/
+	err = tasksAPI.AddOwner(ctx, notExistingID, invalidID)
 	assert.Error(t, err)
 
-	/*_,*/ err = tasksAPI.AddOwner(ctx, notExistingID, notInitializedID)
+	/*_,*/
+	err = tasksAPI.AddOwner(ctx, notExistingID, notInitializedID)
 	assert.Error(t, err)
 
-	/*_,*/ err = tasksAPI.AddOwner(ctx, notInitializedID, notExistingID)
+	/*_,*/
+	err = tasksAPI.AddOwner(ctx, notInitializedID, notExistingID)
 	assert.Error(t, err)
 
 	err = tasksAPI.RemoveOwner(ctx, notExistingID, invalidID)

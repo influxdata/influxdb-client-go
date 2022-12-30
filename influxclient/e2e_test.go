@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2021 InfluxData, Inc. All rights reserved.
@@ -37,11 +38,11 @@ var invalidID = "#1"
 var notExistingID = "100000000000000"
 
 func init() {
-	authToken = getEnvValue(envPrefix + "_TOKEN", "my-token")
-	serverURL = getEnvValue(envPrefix + "_URL", "http://localhost:9999")
-	orgName = getEnvValue(envPrefix + "_ORG", "my-org")
-	bucketName = getEnvValue(envPrefix + "_BUCKET", "my-bucket")
-	userName = getEnvValue(envPrefix + "_USER", "my-user")
+	authToken = getEnvValue(envPrefix+"_TOKEN", "my-token")
+	serverURL = getEnvValue(envPrefix+"_URL", "http://localhost:9999")
+	orgName = getEnvValue(envPrefix+"_ORG", "my-org")
+	bucketName = getEnvValue(envPrefix+"_BUCKET", "my-bucket")
+	userName = getEnvValue(envPrefix+"_USER", "my-user")
 	fmt.Printf("E2E testing values:\n  server:  %s\n  token :  %s\n  org   :  %s\n  user  :  %s\n  bucket:  %s\n",
 		serverURL, authToken, orgName, userName, bucketName)
 }
@@ -65,6 +66,7 @@ func safeId(ID interface{}) string {
 		b := make([]byte, len(*v))
 		copy(b, *v)
 		return string(b)
-	default: panic("unsupported type")
+	default:
+		panic("unsupported type")
 	}
 }

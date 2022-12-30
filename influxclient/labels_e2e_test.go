@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
@@ -44,7 +45,7 @@ func TestLabelsAPI(t *testing.T) {
 	// create label 1 without properties
 	label1Name := "Basic State"
 	label1, err := labelsAPI.Create(ctx, &model.Label{
-		Name: &label1Name,
+		Name:  &label1Name,
 		OrgID: org.Id,
 	})
 	require.Nil(t, err, err)
@@ -57,8 +58,8 @@ func TestLabelsAPI(t *testing.T) {
 	label2Name := "Active State"
 	props2 := map[string]string{"color": "#33ffddd", "description": "Marks state active"}
 	label2, err := labelsAPI.Create(ctx, &model.Label{
-		Name: &label2Name,
-		OrgID: org.Id,
+		Name:       &label2Name,
+		OrgID:      org.Id,
 		Properties: &model.Label_Properties{AdditionalProperties: props2},
 	})
 	require.Nil(t, err, err)
@@ -102,7 +103,7 @@ func TestLabelsAPI(t *testing.T) {
 
 	// try to create label with existing name
 	label3, err := labelsAPI.Create(ctx, &model.Label{
-		Name: label1.Name,
+		Name:  label1.Name,
 		OrgID: org.Id,
 	})
 	assert.Error(t, err)
@@ -139,7 +140,7 @@ func TestLabelsAPI_failing(t *testing.T) {
 
 	name := "a label"
 	label, err = labelsAPI.Create(ctx, &model.Label{
-		Name: &name,
+		Name:  &name,
 		OrgID: nil,
 	})
 	assert.Error(t, err)

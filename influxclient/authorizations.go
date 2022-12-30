@@ -25,20 +25,20 @@ func newAuthorizationsAPI(client *model.Client) *AuthorizationsAPI {
 
 // Find returns all authorizations matching the given filter.
 // Supported filters:
-//	- OrgName
-//	- OrgID
-//	- UserName
-//	- UserID
+//   - OrgName
+//   - OrgID
+//   - UserName
+//   - UserID
 func (a *AuthorizationsAPI) Find(ctx context.Context, filter *Filter) ([]model.Authorization, error) {
 	return a.getAuthorizations(ctx, filter)
 }
 
 // FindOne returns one authorizationsmatching the given filter.
 // Supported filters:
-//	- OrgName
-//	- OrgID
-//	- UserName
-//	- UserID
+//   - OrgName
+//   - OrgID
+//   - UserName
+//   - UserID
 func (a *AuthorizationsAPI) FindOne(ctx context.Context, filter *Filter) (*model.Authorization, error) {
 	authorizations, err := a.getAuthorizations(ctx, filter)
 	if err != nil {
@@ -60,8 +60,8 @@ func (a *AuthorizationsAPI) Create(ctx context.Context, auth *model.Authorizatio
 	}
 	params := &model.PostAuthorizationsAllParams{
 		Body: model.PostAuthorizationsJSONRequestBody{
-			OrgID: auth.OrgID,
-			UserID: auth.UserID,
+			OrgID:       auth.OrgID,
+			UserID:      auth.UserID,
 			Permissions: auth.Permissions,
 		},
 	}

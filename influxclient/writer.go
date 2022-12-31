@@ -55,6 +55,7 @@ func (w *WriteBuffer) Reset() []byte {
 
 // PointsWriter is asynchronous writer with automated batching and retrying capabilities.
 // It is parametrized by the WriteParams.
+// It is obtained using the Client.PointsWriter()
 // Use Write, WriteData or WritePoints for sending data
 // Any error encountered during asynchronous processing is reported by WriteParams.WriteFailed callback.
 // It must be created using NewPointsWriter

@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 )
 
 // Params holds the parameters for creating a new client.
@@ -333,9 +333,9 @@ func (c *Client) LabelsAPI() *LabelsAPI {
 	return newLabelsAPI(c.apiClient)
 }
 
-// OrganizationAPI returns a value that can be used to interact with the
+// OrganizationsAPI returns a value that can be used to interact with the
 // organization-related parts of the InfluxDB API.
-func (c *Client) OrganizationAPI() *OrganizationAPI {
+func (c *Client) OrganizationsAPI() *OrganizationsAPI {
 	return newOrganizationAPI(c.apiClient)
 }
 

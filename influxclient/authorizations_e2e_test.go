@@ -10,8 +10,8 @@ package influxclient_test
 import (
 	"testing"
 
-	. "github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -34,7 +34,7 @@ func TestAuthorizationsAPI(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, authone) // oboarded should exist
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: orgName,
 	})
 	require.NoError(t, err)
@@ -158,7 +158,7 @@ func TestAuthorizationsAPI_failing(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, authone)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: orgName,
 	})
 	require.NoError(t, err)

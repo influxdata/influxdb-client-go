@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	. "github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -20,7 +20,7 @@ import (
 func TestLabelsAPI(t *testing.T) {
 	client, ctx := newClient(t)
 	labelsAPI := client.LabelsAPI()
-	orgAPI := client.OrganizationAPI()
+	orgAPI := client.OrganizationsAPI()
 
 	org, err := orgAPI.FindOne(ctx, &Filter{
 		OrgName: orgName,
@@ -147,7 +147,7 @@ func TestLabelsAPI_failing(t *testing.T) {
 	assert.Nil(t, label)
 
 	label, err = labelsAPI.Create(ctx, &model.Label{
-		Name: &name,
+		Name:  &name,
 		OrgID: &invalidID,
 	})
 	assert.Error(t, err)

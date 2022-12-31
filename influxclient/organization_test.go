@@ -92,7 +92,7 @@ func TestOrganizationAPI_Find(t *testing.T) {
 				ServerURL: server.URL,
 			})
 			require.NoError(t, err)
-			orgsAPI := c.OrganizationAPI()
+			orgsAPI := c.OrganizationsAPI()
 
 			orgList, err := orgsAPI.Find(ctx, test.filter)
 			if test.errorMessage != "" {

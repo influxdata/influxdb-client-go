@@ -12,8 +12,8 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 )
 
 func ExampleClient_new() {
@@ -246,7 +246,7 @@ func ExampleClient_customServerAPICall() {
 	}
 
 	// Get an organization that will own the mapping
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -290,7 +290,7 @@ func ExampleBucketsAPI() {
 	ctx := context.Background()
 
 	// Get organization that will own new bucket
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -320,7 +320,7 @@ func ExampleBucketsAPI() {
 
 }
 
-func ExampleOrganizationAPI() {
+func ExampleOrganizationsAPI() {
 	// Create a new client using an InfluxDB server base URL and an authentication token
 	client, err := influxclient.New(influxclient.Params{
 		ServerURL: "https://eu-central-1-1.aws.cloud2.influxdata.com/",
@@ -329,7 +329,7 @@ func ExampleOrganizationAPI() {
 	})
 
 	// Get Organizations API client
-	orgAPI := client.OrganizationAPI()
+	orgAPI := client.OrganizationsAPI()
 	ctx := context.Background()
 
 	// Create new organization
@@ -378,7 +378,7 @@ func ExampleAuthorizationsAPI() {
 	}
 
 	// Find organization
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "my-org"})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: "my-org"})
 	if err != nil {
 		panic(err)
 	}
@@ -428,7 +428,7 @@ func ExampleUsersAPI() {
 	ctx := context.Background()
 
 	// Find organization
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -450,7 +450,7 @@ func ExampleUsersAPI() {
 	}
 
 	// Add user to organization
-	err = client.OrganizationAPI().AddMember(ctx, *org.Id, *user.Id)
+	err = client.OrganizationsAPI().AddMember(ctx, *org.Id, *user.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -469,7 +469,7 @@ func ExampleLabelsAPI() {
 	ctx := context.Background()
 
 	// Get organization that will own label
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}
@@ -509,7 +509,7 @@ func ExampleTasksAPI() {
 	ctx := context.Background()
 
 	// Get organization that will own task
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: "org-name"})
 	if err != nil {
 		panic(err)
 	}

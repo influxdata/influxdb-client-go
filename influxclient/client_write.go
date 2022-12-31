@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go/influxclient/gzip"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/gzip"
 	"github.com/influxdata/line-protocol/v2/lineprotocol"
 )
 

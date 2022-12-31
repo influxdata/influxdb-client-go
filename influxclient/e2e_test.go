@@ -13,7 +13,7 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/influxdata/influxdb-client-go/influxclient"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
 	"github.com/stretchr/testify/require"
 )
 

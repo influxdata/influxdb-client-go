@@ -9,7 +9,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 )
 
 // AuthorizationsAPI holds methods related to authorization, as found under

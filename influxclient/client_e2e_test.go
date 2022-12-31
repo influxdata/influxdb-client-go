@@ -1,3 +1,4 @@
+//go:build e2e
 // +build e2e
 
 // Copyright 2020-2021 InfluxData, Inc. All rights reserved.
@@ -7,7 +8,7 @@
 package influxclient_test
 
 import (
-	"github.com/influxdata/influxdb-client-go/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient"
 	"testing"
 	"time"
 
@@ -64,35 +65,35 @@ func TestDeletePoints(t *testing.T) {
 	assert.Error(t, err)
 
 	err = client.DeletePoints(ctx, &influxclient.DeleteParams{
-		Org: orgName,
+		Org:    orgName,
 		Bucket: bucketName,
 	})
 	assert.Error(t, err)
 
 	err = client.DeletePoints(ctx, &influxclient.DeleteParams{
-		Org: orgName,
+		Org:    orgName,
 		Bucket: bucketName,
-		Start: time.Now(),
+		Start:  time.Now(),
 	})
 	assert.Error(t, err)
 
 	err = client.DeletePoints(ctx, &influxclient.DeleteParams{
-		Org: orgName,
+		Org:    orgName,
 		Bucket: bucketName,
-		Stop: time.Now(),
+		Stop:   time.Now(),
 	})
 	assert.Error(t, err)
 
 	err = client.DeletePoints(ctx, &influxclient.DeleteParams{
-		Org: orgName,
+		Org:    orgName,
 		Bucket: bucketName,
 		// without predicate
 		Start: time.Now().AddDate(0, 0, -1),
-		Stop: time.Now(),
+		Stop:  time.Now(),
 	})
 	assert.NoError(t, err)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
+	org, err := client.OrganizationsAPI().FindOne(ctx, &influxclient.Filter{Name: orgName})
 	require.NoError(t, err)
 	require.NotNil(t, org)
 	bucket, err := client.BucketsAPI().FindOne(ctx, &influxclient.Filter{Name: bucketName})
@@ -100,11 +101,11 @@ func TestDeletePoints(t *testing.T) {
 	require.NotNil(t, bucket)
 
 	err = client.DeletePoints(ctx, &influxclient.DeleteParams{
-		OrgID: *org.Id,
-		BucketID: *bucket.Id,
+		OrgID:     *org.Id,
+		BucketID:  *bucket.Id,
 		Predicate: `_measurement="sensorData"`,
-		Start: time.Now().AddDate(0, 0, -1),
-		Stop: time.Now(),
+		Start:     time.Now().AddDate(0, 0, -1),
+		Stop:      time.Now(),
 	})
 	assert.NoError(t, err)
 }

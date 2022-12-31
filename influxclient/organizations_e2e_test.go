@@ -11,15 +11,15 @@ import (
 	"fmt"
 	"testing"
 
-	. "github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestOrganizationsAPI(t *testing.T) {
 	client, ctx := newClient(t)
-	orgsAPI := client.OrganizationAPI()
+	orgsAPI := client.OrganizationsAPI()
 	usersAPI := client.UsersAPI()
 
 	// find onboarded orgs
@@ -86,13 +86,13 @@ func TestOrganizationsAPI(t *testing.T) {
 	clientOrg2, err := New(Params{ServerURL: serverURL, AuthToken: *auth2.Token})
 	require.NoError(t, err)
 
-	orgs2, err := clientOrg2.OrganizationAPI().Find(ctx, nil)
+	orgs2, err := clientOrg2.OrganizationsAPI().Find(ctx, nil)
 	require.NoError(t, err)
 	require.NotNil(t, orgs2)
 	assert.Len(t, orgs2, 0)
 
 	// find org using token without org permission
-	orgx, err := clientOrg2.OrganizationAPI().FindOne(ctx, &Filter{
+	orgx, err := clientOrg2.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: org.Name,
 	})
 	assert.Error(t, err)
@@ -210,7 +210,7 @@ func TestOrganizationsAPI(t *testing.T) {
 
 func TestOrganizationAPI_pagination(t *testing.T) {
 	client, ctx := newClient(t)
-	orgsAPI := client.OrganizationAPI()
+	orgsAPI := client.OrganizationsAPI()
 
 	for i := 0; i < 50; i++ {
 		org, err := orgsAPI.Create(ctx, &model.Organization{
@@ -250,7 +250,7 @@ func TestOrganizationAPI_pagination(t *testing.T) {
 
 func TestOrganizationAPI_failing(t *testing.T) {
 	client, ctx := newClient(t)
-	orgsAPI := client.OrganizationAPI()
+	orgsAPI := client.OrganizationsAPI()
 
 	// try nil input
 	org, err := orgsAPI.Create(ctx, nil)
@@ -380,7 +380,7 @@ func TestOrganizationAPI_skip(t *testing.T) {
 	// https://github.com/influxdata/influxdb/issues/19110
 
 	client, ctx := newClient(t)
-	orgsAPI := client.OrganizationAPI()
+	orgsAPI := client.OrganizationsAPI()
 
 	// find by not existing org ID
 	o, err := orgsAPI.FindOne(ctx, &Filter{

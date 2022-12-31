@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -29,7 +29,7 @@ func TestTasksAPI_CRUDTask(t *testing.T) {
 	require.NotNil(t, tasks)
 	require.Len(t, tasks, 0)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		OrgName: orgName,
 	})
 	require.NoError(t, err)
@@ -187,12 +187,12 @@ func TestTasksAPI_GetTasks(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, tasks, 0)
 
-	taskOrg, err := client.OrganizationAPI().Create(ctx, &model.Organization{
+	taskOrg, err := client.OrganizationsAPI().Create(ctx, &model.Organization{
 		Name: "task-org",
 	})
 	require.NoError(t, err)
 	require.NotNil(t, taskOrg)
-	defer client.OrganizationAPI().Delete(ctx, safeId(taskOrg.Id))
+	defer client.OrganizationsAPI().Delete(ctx, safeId(taskOrg.Id))
 
 	taskEvery := "1h"
 	taskFlux := fmt.Sprintf(taskFluxTemplate, bucketName)
@@ -232,7 +232,7 @@ func TestTasksAPI_GetTasks(t *testing.T) {
 		assert.NoError(t, err)
 	}
 
-	err = client.OrganizationAPI().Delete(ctx, *taskOrg.Id)
+	err = client.OrganizationsAPI().Delete(ctx, *taskOrg.Id)
 	assert.NoError(t, err)
 
 }
@@ -245,12 +245,12 @@ func TestTasksAPI_FindTasks(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, tasks, 0)
 
-	taskOrg, err := client.OrganizationAPI().Create(ctx, &model.Organization{
+	taskOrg, err := client.OrganizationsAPI().Create(ctx, &model.Organization{
 		Name: "task-org",
 	})
 	require.NoError(t, err)
 	require.NotNil(t, taskOrg)
-	defer client.OrganizationAPI().Delete(ctx, safeId(taskOrg.Id))
+	defer client.OrganizationsAPI().Delete(ctx, safeId(taskOrg.Id))
 
 	user, err := client.UsersAPI().FindOne(ctx, &Filter{
 		Name: userName,
@@ -335,7 +335,7 @@ func TestTasksAPI_FindTasks(t *testing.T) {
 	err = tasksAPI.Delete(ctx, task2.Id)
 	assert.NoError(t, err)
 
-	err = client.OrganizationAPI().Delete(ctx, *taskOrg.Id)
+	err = client.OrganizationsAPI().Delete(ctx, *taskOrg.Id)
 	assert.NoError(t, err)
 }
 
@@ -347,7 +347,7 @@ func TestTasksAPI_MembersOwners(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, tasks, 0)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: orgName,
 	})
 	require.NoError(t, err)
@@ -448,7 +448,7 @@ func TestTasksAPI_Labels(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, tasks, 0)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: orgName,
 	})
 	require.NoError(t, err)
@@ -512,7 +512,7 @@ func TestTasksAPI_Runs(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, tasks, 0)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: orgName,
 	})
 	require.NoError(t, err)
@@ -628,7 +628,7 @@ func TestTasksAPI_Failures(t *testing.T) {
 	_, err = tasksAPI.Find(ctx, &Filter{OrgID: invalidID})
 	assert.Error(t, err)
 
-	org, err := client.OrganizationAPI().FindOne(ctx, &Filter{
+	org, err := client.OrganizationsAPI().FindOne(ctx, &Filter{
 		Name: orgName,
 	})
 	require.NoError(t, err)

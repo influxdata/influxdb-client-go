@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/influxdata/influxdb-client-go/annotatedcsv"
-	"github.com/influxdata/influxdb-client-go/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/annotatedcsv"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

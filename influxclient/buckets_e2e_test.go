@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -72,12 +72,12 @@ func TestBucketsAPI(t *testing.T) {
 	assert.Len(t, buckets, 0)
 
 	// create organization for bucket
-	org, err := client.OrganizationAPI().Create(ctx, &model.Organization{
+	org, err := client.OrganizationsAPI().Create(ctx, &model.Organization{
 		Name: "bucket-org",
 	})
 	require.NoError(t, err)
 	require.NotNil(t, org)
-	defer client.OrganizationAPI().Delete(ctx, safeId(org.Id))
+	defer client.OrganizationsAPI().Delete(ctx, safeId(org.Id))
 
 	// test org buckets
 	buckets, err = bucketsAPI.Find(ctx, &Filter{
@@ -241,12 +241,12 @@ func TestBucketsAPI_paging(t *testing.T) {
 	bucketsAPI := client.BucketsAPI()
 
 	// create organization for buckets
-	org, err := client.OrganizationAPI().Create(ctx, &model.Organization{
+	org, err := client.OrganizationsAPI().Create(ctx, &model.Organization{
 		Name: "bucket-paging-org",
 	})
 	require.NoError(t, err)
 	require.NotNil(t, org)
-	defer client.OrganizationAPI().Delete(ctx, safeId(org.Id))
+	defer client.OrganizationsAPI().Delete(ctx, safeId(org.Id))
 
 	// collect all buckets including system ones created for new organization
 	buckets, err := bucketsAPI.Find(ctx, nil)

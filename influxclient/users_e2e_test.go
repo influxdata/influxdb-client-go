@@ -10,8 +10,8 @@ package influxclient_test
 import (
 	"testing"
 
-	. "github.com/influxdata/influxdb-client-go/influxclient"
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	. "github.com/influxdata/influxdb-client-go/v3/influxclient"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -81,7 +81,7 @@ func TestUsersAPI(t *testing.T) {
 	// find multiple
 	users, err = usersAPI.Find(ctx, &Filter{
 		Offset: 1,
-		Limit: 100,
+		Limit:  100,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, users)

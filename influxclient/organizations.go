@@ -9,18 +9,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/influxdata/influxdb-client-go/influxclient/model"
+	"github.com/influxdata/influxdb-client-go/v3/influxclient/model"
 )
 
-// OrganizationAPI holds methods related to organization, as found under
+// OrganizationsAPI holds methods related to organization, as found under
 // the /orgs endpoint.
-type OrganizationAPI struct {
+type OrganizationsAPI struct {
 	client *model.Client
 }
 
-// newOrganizationAPI returns new OrganizationAPI instance
-func newOrganizationAPI(client *model.Client) *OrganizationAPI {
-	return &OrganizationAPI{client: client}
+// newOrganizationAPI returns new OrganizationsAPI instance
+func newOrganizationAPI(client *model.Client) *OrganizationsAPI {
+	return &OrganizationsAPI{client: client}
 }
 
 // Find returns all organizations matching the given filter.
@@ -28,12 +28,12 @@ func newOrganizationAPI(client *model.Client) *OrganizationAPI {
 //   - OrgName
 //   - OrgID
 //   - UserID
-func (o *OrganizationAPI) Find(ctx context.Context, filter *Filter) ([]model.Organization, error) {
+func (o *OrganizationsAPI) Find(ctx context.Context, filter *Filter) ([]model.Organization, error) {
 	return o.getOrganizations(ctx, filter)
 }
 
 // getOrganizations create request for GET on /orgs  according to the filter and validates returned structure
-func (o *OrganizationAPI) getOrganizations(ctx context.Context, filter *Filter) ([]model.Organization, error) {
+func (o *OrganizationsAPI) getOrganizations(ctx context.Context, filter *Filter) ([]model.Organization, error) {
 	params := &model.GetOrgsParams{}
 	if filter != nil {
 		if filter.OrgName != "" {
@@ -66,7 +66,7 @@ func (o *OrganizationAPI) getOrganizations(ctx context.Context, filter *Filter) 
 //   - OrgName
 //   - OrgID
 //   - UserID
-func (o *OrganizationAPI) FindOne(ctx context.Context, filter *Filter) (*model.Organization, error) {
+func (o *OrganizationsAPI) FindOne(ctx context.Context, filter *Filter) (*model.Organization, error) {
 	organizations, err := o.getOrganizations(ctx, filter)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func (o *OrganizationAPI) FindOne(ctx context.Context, filter *Filter) (*model.O
 }
 
 // Create creates a new organization. The returned Organization holds the new ID.
-func (o *OrganizationAPI) Create(ctx context.Context, org *model.Organization) (*model.Organization, error) {
+func (o *OrganizationsAPI) Create(ctx context.Context, org *model.Organization) (*model.Organization, error) {
 	if org == nil {
 		return nil, fmt.Errorf("org cannot be nil")
 	}
@@ -96,7 +96,7 @@ func (o *OrganizationAPI) Create(ctx context.Context, org *model.Organization) (
 
 // Update updates information about the organization. The org.ID field must hold the ID
 // of the organization to be changed.
-func (o *OrganizationAPI) Update(ctx context.Context, org *model.Organization) (*model.Organization, error) {
+func (o *OrganizationsAPI) Update(ctx context.Context, org *model.Organization) (*model.Organization, error) {
 	if org == nil {
 		return nil, fmt.Errorf("org cannot be nil")
 	}
@@ -117,7 +117,7 @@ func (o *OrganizationAPI) Update(ctx context.Context, org *model.Organization) (
 }
 
 // Delete deletes the organization with the given ID.
-func (o *OrganizationAPI) Delete(ctx context.Context, orgID string) error {
+func (o *OrganizationsAPI) Delete(ctx context.Context, orgID string) error {
 	if orgID == "" {
 		return fmt.Errorf("orgID is required")
 	}
@@ -128,7 +128,7 @@ func (o *OrganizationAPI) Delete(ctx context.Context, orgID string) error {
 }
 
 // Members returns all members of the organization with the given ID.
-func (o *OrganizationAPI) Members(ctx context.Context, orgID string) ([]model.ResourceMember, error) {
+func (o *OrganizationsAPI) Members(ctx context.Context, orgID string) ([]model.ResourceMember, error) {
 	if orgID == "" {
 		return nil, fmt.Errorf("orgID is required")
 	}
@@ -143,7 +143,7 @@ func (o *OrganizationAPI) Members(ctx context.Context, orgID string) ([]model.Re
 }
 
 // AddMember adds the user with the given ID to the organization with the given ID.
-func (o *OrganizationAPI) AddMember(ctx context.Context, orgID, userID string) error {
+func (o *OrganizationsAPI) AddMember(ctx context.Context, orgID, userID string) error {
 	if orgID == "" {
 		return fmt.Errorf("orgID is required")
 	}
@@ -161,7 +161,7 @@ func (o *OrganizationAPI) AddMember(ctx context.Context, orgID, userID string) e
 }
 
 // RemoveMember removes the user with the given ID from the organization with the given ID.
-func (o *OrganizationAPI) RemoveMember(ctx context.Context, orgID, userID string) error {
+func (o *OrganizationsAPI) RemoveMember(ctx context.Context, orgID, userID string) error {
 	if orgID == "" {
 		return fmt.Errorf("orgID is required")
 	}
@@ -176,7 +176,7 @@ func (o *OrganizationAPI) RemoveMember(ctx context.Context, orgID, userID string
 }
 
 // Owners returns all the owners of the organization with the given id.
-func (o *OrganizationAPI) Owners(ctx context.Context, orgID string) ([]model.ResourceOwner, error) {
+func (o *OrganizationsAPI) Owners(ctx context.Context, orgID string) ([]model.ResourceOwner, error) {
 	if orgID == "" {
 		return nil, fmt.Errorf("orgID is required")
 	}
@@ -191,7 +191,7 @@ func (o *OrganizationAPI) Owners(ctx context.Context, orgID string) ([]model.Res
 }
 
 // AddOwner adds an owner with the given userID to the organization with the given id.
-func (o *OrganizationAPI) AddOwner(ctx context.Context, orgID, userID string) error {
+func (o *OrganizationsAPI) AddOwner(ctx context.Context, orgID, userID string) error {
 	if orgID == "" {
 		return fmt.Errorf("orgID is required")
 	}
@@ -209,7 +209,7 @@ func (o *OrganizationAPI) AddOwner(ctx context.Context, orgID, userID string) er
 }
 
 // RemoveOwner Remove removes the user with the given userID from the organization with the given id.
-func (o *OrganizationAPI) RemoveOwner(ctx context.Context, orgID, userID string) error {
+func (o *OrganizationsAPI) RemoveOwner(ctx context.Context, orgID, userID string) error {
 	if orgID == "" {
 		return fmt.Errorf("orgID is required")
 	}

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/influxdata/influxdb-client-go/annotatedcsv"
+	"github.com/influxdata/influxdb-client-go/v3/annotatedcsv"
 )
 
 // QueryError defines the information of Flux query error

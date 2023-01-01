@@ -6,6 +6,7 @@ package http_test
 
 import (
 	"crypto/tls"
+	"github.com/stretchr/testify/require"
 	nethttp "net/http"
 	"testing"
 	"time"
@@ -20,6 +21,9 @@ func TestDefaultOptions(t *testing.T) {
 	assert.Equal(t, uint(20), opts.HTTPRequestTimeout())
 	assert.NotNil(t, opts.HTTPClient())
 	assert.True(t, opts.OwnHTTPClient())
+	transport, ok := opts.HTTPClient().Transport.(*nethttp.Transport)
+	require.True(t, ok)
+	assert.NotNil(t, transport.Proxy)
 	assert.EqualValues(t, "", opts.ApplicationName())
 }
 

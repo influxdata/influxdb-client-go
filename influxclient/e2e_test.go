@@ -39,7 +39,7 @@ var notExistingID = "100000000000000"
 
 func init() {
 	authToken = getEnvValue(envPrefix+"_TOKEN", "my-token")
-	serverURL = getEnvValue(envPrefix+"_URL", "http://localhost:9999")
+	serverURL = getEnvValue(envPrefix+"_URL", "http://localhost:8086")
 	orgName = getEnvValue(envPrefix+"_ORG", "my-org")
 	bucketName = getEnvValue(envPrefix+"_BUCKET", "my-bucket")
 	userName = getEnvValue(envPrefix+"_USER", "my-user")

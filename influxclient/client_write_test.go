@@ -199,7 +199,7 @@ func TestEncode(t *testing.T) {
 
 			client, err := New(Params{ServerURL: "http://localhost:8086"})
 			require.NoError(t, err)
-			b, err := encode(ts.s, client.params.WriteParams.Precision)
+			b, err := encode(ts.s, client.params.WriteParams)
 			if ts.error == "" {
 				require.NoError(t, err)
 				assert.Equal(t, ts.line, string(b))
@@ -234,7 +234,7 @@ func genPoints(t *testing.T, count int) []*Point {
 func points2bytes(t *testing.T, points []*Point) []byte {
 	var bytes []byte
 	for _, p := range points {
-		bs, err := p.MarshalBinary(lineprotocol.Millisecond)
+		bs, err := p.MarshalBinary(lineprotocol.Millisecond, nil)
 		require.NoError(t, err)
 		bytes = append(bytes, bs...)
 	}
@@ -277,6 +277,11 @@ func TestWriteCorrectUrl(t *testing.T) {
 	require.NoError(t, err)
 	err = c.Write(context.Background(), "my-bucket", []byte("a f=1"))
 	assert.NoError(t, err)
+	correctPath = "/path/api/v2/write?bucket=my-bucket&consistency=quorum&org=my-org&precision=ms"
+	c.params.WriteParams.Consistency = ConsistencyQuorum
+	err = c.Write(context.Background(), "my-bucket", []byte("a f=1"))
+	assert.NoError(t, err)
+
 }
 func TestWritePointsAndBytes(t *testing.T) {
 	points := genPoints(t, 5000)

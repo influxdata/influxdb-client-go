@@ -32,6 +32,23 @@ var DefaultRetryParams = RetryParams{
 	MaxRetryTime:     180_000,
 }
 
+const (
+	// ConsistencyOne requires at least one data node acknowledged a write.
+	ConsistencyOne Consistency = "one"
+
+	// ConsistencyAll requires all data nodes to acknowledge a write.
+	ConsistencyAll Consistency = "all"
+
+	// ConsistencyQuorum requires a quorum of data nodes to acknowledge a write.
+	ConsistencyQuorum Consistency = "quorum"
+
+	// ConsistencyAny allows for hinted hand off, potentially no write happened yet.
+	ConsistencyAny Consistency = "any"
+)
+
+// Consistency defines enum for allows consistency values for InfluxDB Enterprise, as explained  https://docs.influxdata.com/enterprise_influxdb/v1.9/concepts/clustering/#write-consistency
+type Consistency string
+
 // WriteParams holds configuration properties for write
 type WriteParams struct {
 	RetryParams
@@ -60,6 +77,8 @@ type WriteParams struct {
 	// WriteRetrySkipped is informed about lines that were removed from the retry buffer
 	// to keep the size of the retry buffer under the configured limit (maxBufferLines).
 	WriteRetrySkipped OnRemoveCallback
+	// InfluxDB Enterprise write consistency as explained in https://docs.influxdata.com/enterprise_influxdb/v1.9/concepts/clustering/#write-consistency
+	Consistency Consistency
 }
 
 // DefaultWriteParams specifies default write param

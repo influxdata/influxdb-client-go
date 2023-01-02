@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/v3/influxclient/gzip"
-	"github.com/influxdata/line-protocol/v2/lineprotocol"
 )
 
 // WritePoints writes all the given points to the server into the given bucket.
@@ -21,7 +20,7 @@ import (
 func (c *Client) WritePoints(ctx context.Context, bucket string, points ...*Point) error {
 	var buff []byte
 	for _, p := range points {
-		bts, err := p.MarshalBinary(c.params.WriteParams.Precision)
+		bts, err := p.MarshalBinary(c.params.WriteParams.Precision, c.params.WriteParams.DefaultTags)
 		if err != nil {
 			return err
 		}
@@ -43,6 +42,9 @@ func (c *Client) Write(ctx context.Context, bucket string, buff []byte) error {
 	params.Set("org", c.params.Organization)
 	params.Set("bucket", bucket)
 	params.Set("precision", c.params.WriteParams.Precision.String())
+	if c.params.WriteParams.Consistency != "" {
+		params.Set("consistency", string(c.params.WriteParams.Consistency))
+	}
 	u.RawQuery = params.Encode()
 	body = bytes.NewReader(buff)
 	headers := http.Header{"Content-Type": {"application/json"}}
@@ -76,7 +78,7 @@ func (c *Client) Write(ctx context.Context, bucket string, buff []byte) error {
 //		  ID string `lp:"tag,device_id"`
 //		  Temp float64 `lp:"field,temperature"`
 //		  Hum int	`lp:"field,humidity"`
-//		  Time time.Time `lp:"timestamp,temperature"`
+//		  Time time.Time `lp:"timestamp"`
 //		  Description string `lp:"-"`
 //	 }
 //
@@ -86,7 +88,7 @@ func (c *Client) Write(ctx context.Context, bucket string, buff []byte) error {
 func (c *Client) WriteData(ctx context.Context, bucket string, points ...interface{}) error {
 	var buff []byte
 	for _, p := range points {
-		byts, err := encode(p, c.params.WriteParams.Precision)
+		byts, err := encode(p, c.params.WriteParams)
 		if err != nil {
 			return fmt.Errorf("error encoding point: %w", err)
 		}
@@ -96,7 +98,7 @@ func (c *Client) WriteData(ctx context.Context, bucket string, points ...interfa
 	return c.Write(ctx, bucket, buff)
 }
 
-func encode(x interface{}, precision lineprotocol.Precision) ([]byte, error) {
+func encode(x interface{}, params WriteParams) ([]byte, error) {
 	if err := checkContainerType(x, false, "point"); err != nil {
 		return nil, err
 	}
@@ -150,7 +152,7 @@ func encode(x interface{}, precision lineprotocol.Precision) ([]byte, error) {
 	if len(point.Fields) == 0 {
 		return nil, fmt.Errorf("no struct field with tag 'field'")
 	}
-	return point.MarshalBinary(precision)
+	return point.MarshalBinary(params.Precision, params.DefaultTags)
 }
 
 // PointsWriter returns a PointsWriter value that support fast asynchronous

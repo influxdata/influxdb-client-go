@@ -103,7 +103,16 @@ func TestPoint(t *testing.T) {
 	// Test duplicate tag and duplicate field
 	p.AddTag("ven=dor", "GCP").AddField("uint32", uint32(345780))
 
-	line, err := p.MarshalBinary(lineprotocol.Nanosecond)
+	line, err := p.MarshalBinary(lineprotocol.Nanosecond, nil)
 	require.NoError(t, err)
 	assert.EqualValues(t, `test,host"name=ho\st\ "a",id=10ad\=,ven\=dor=GCP,x\"\ x=a\ b "string"="six, \"seven\", eight",bo\ol=false,duration="4h24m3s",float32=80,float64=80.1234567,int=-1234567890i,int16=-3456i,int32=-34567i,int64=-1234567890i,int8=-34i,stri\=ng="six=seven\\, eight",time="2020-03-20T10:30:23.123456789Z",uint=12345677890u,uint\ 64=41234567890u,uint16=3456u,uint32=345780u,uint8=34u 60000000070`+"\n", string(line))
+
+	defaultTags := map[string]string{
+		"location": "fl-1", //add new
+		"ven=dor":  "GCP",  //test override by tag
+	}
+	line, err = p.MarshalBinary(lineprotocol.Nanosecond, defaultTags)
+	require.NoError(t, err)
+	assert.EqualValues(t, `test,host"name=ho\st\ "a",id=10ad\=,location=fl-1,ven\=dor=GCP,x\"\ x=a\ b "string"="six, \"seven\", eight",bo\ol=false,duration="4h24m3s",float32=80,float64=80.1234567,int=-1234567890i,int16=-3456i,int32=-34567i,int64=-1234567890i,int8=-34i,stri\=ng="six=seven\\, eight",time="2020-03-20T10:30:23.123456789Z",uint=12345677890u,uint\ 64=41234567890u,uint16=3456u,uint32=345780u,uint8=34u 60000000070`+"\n", string(line))
+
 }

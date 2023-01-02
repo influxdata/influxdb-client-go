@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -120,7 +121,7 @@ func (p *PointsWriter) Write(line []byte) {
 // Any error encountered during encoding points is reported by WriteParams.WriteFailed callback.
 func (p *PointsWriter) WritePoints(points ...*Point) {
 	for _, pt := range points {
-		bts, err := pt.MarshalBinary(p.params.Precision)
+		bts, err := pt.MarshalBinary(p.params.Precision, p.params.DefaultTags)
 		if err != nil {
 			mess := fmt.Sprintf("Point encoding failed: %v", err)
 			log.Printf("[W] PointsWriter: %s", mess)
@@ -147,12 +148,12 @@ func (p *PointsWriter) WritePoints(points ...*Point) {
 //		  ID string `lp:"tag,device_id"`
 //		  Temp float64 `lp:"field,temperature"`
 //		  Hum int	`lp:"field,humidity"`
-//		  Time time.Time `lp:"timestamp,temperature"`
+//		  Time time.Time `lp:"timestamp"`
 //		  Description string `lp:"-"`
 //	 }
 func (p *PointsWriter) WriteData(points ...interface{}) {
 	for _, d := range points {
-		byts, err := encode(d, p.params.Precision)
+		byts, err := encode(d, p.params)
 		if err != nil {
 			mess := fmt.Sprintf("Point encoding failed: %v", err)
 			log.Printf("[W] PointsWriter: %s", mess)
@@ -170,7 +171,6 @@ func (p *PointsWriter) scheduleFlush() {
 		p.flushT.Stop()
 	}
 	p.flushT = time.AfterFunc(time.Duration(p.params.FlushInterval)*time.Millisecond, func() {
-		//log.Println("[D] PointsWriter: timed flush")
 		p.flushCh <- struct{}{}
 	})
 }
@@ -213,31 +213,40 @@ func (p *PointsWriter) writeProc() {
 			}
 			continue
 		}
-
-		if err := p.writer(context.Background(), p.bucket, batch.lines); err != nil {
-			retry := true
-			if se, ok := err.(*ServerError); ok {
-				retry = se.StatusCode >= 429
-			}
-			if p.params.WriteFailed != nil {
-				retry = p.params.WriteFailed(err, batch.lines, failedAttempts, batch.expires)
-			}
-			if retry {
-				p.retryBuffer.AddLines(
-					batch.lines,
-					batch.remainingAttempts-1,
-					p.retryStrategy.NextDelay(err, failedAttempts-1),
-					batch.expires)
-				log.Printf("[W] PointsWriter: write to InfluxDB failed (attempt: %d): %v", failedAttempts, err)
-			} else {
-				log.Printf("[E] PointsWriter:  write to InfluxDB failed (attempt: %d): %v", failedAttempts, err)
-			}
-
-		} else {
+		if err := p.writeBatch(batch, failedAttempts); err == nil {
 			p.retryStrategy.Success()
 		}
 	}
 	p.stopCh <- struct{}{}
+}
+
+func (p *PointsWriter) writeBatch(batch *batch, failedAttempts int) error {
+	err := p.writer(context.Background(), p.bucket, batch.lines)
+	if err != nil {
+		retry := true
+		if se, ok := err.(*ServerError); ok {
+			if isIgnorableError(se) {
+				log.Printf("[W] PointsWriter: write to InfluxDB returns: %s", se.Message)
+				return nil
+			}
+			retry = se.StatusCode >= 429
+		}
+		if p.params.WriteFailed != nil {
+			retry = p.params.WriteFailed(err, batch.lines, failedAttempts, batch.expires) && retry
+		}
+		retry = p.params.RetryInterval > 0 && retry
+		if retry {
+			p.retryBuffer.AddLines(
+				batch.lines,
+				batch.remainingAttempts-1,
+				p.retryStrategy.NextDelay(err, failedAttempts-1),
+				batch.expires)
+			log.Printf("[W] PointsWriter: write to InfluxDB failed (attempt: %d): %v", failedAttempts, err)
+		} else {
+			log.Printf("[E] PointsWriter:  write to InfluxDB failed: %v", err)
+		}
+	}
+	return err
 }
 
 // Flush asynchronously flushes write buffer.
@@ -265,4 +274,38 @@ func (p *PointsWriter) Close() {
 	<-p.stopCh
 	<-p.stopCh
 	close(p.stopCh)
+}
+
+// Non-retryable errors
+const (
+	errStringHintedHandoffNotEmpty = "hinted handoff queue not empty"
+	errStringPartialWrite          = "partial write"
+	errStringPointsBeyondRP        = "points beyond retention policy"
+	errStringUnableToParse         = "unable to parse"
+)
+
+func isIgnorableError(error *ServerError) bool {
+	// This "error" is an informational message about the state of the
+	// InfluxDB cluster.
+	if strings.Contains(error.Message, errStringHintedHandoffNotEmpty) {
+		return true
+	}
+	// Points beyond retention policy is returned when points are immediately
+	// discarded for being older than the retention policy.  Usually this not
+	// a cause for concern, and we don't want to retry.
+	if strings.Contains(error.Message, errStringPointsBeyondRP) {
+		return true
+	}
+	// Other partial write errors, such as "field type conflict", are not
+	// correctable at this point and so the point is dropped instead of
+	// retrying.
+	if strings.Contains(error.Message, errStringPartialWrite) {
+		return true
+	}
+	// This error indicates an error in line protocol
+	// serialization, retries would not be successful.
+	if strings.Contains(error.Message, errStringUnableToParse) {
+		return true
+	}
+	return false
 }

@@ -107,10 +107,23 @@ func (m *Point) SetTimestamp(t time.Time) *Point {
 	return m
 }
 
-func (m *Point) MarshalBinary(precision lineprotocol.Precision) ([]byte, error) {
+func (m *Point) MarshalBinary(precision lineprotocol.Precision, defaultTags map[string]string) ([]byte, error) {
 	var enc lineprotocol.Encoder
 	enc.SetPrecision(precision)
 	enc.StartLine(m.Measurement)
+	existsTag := func(key string) bool {
+		for _, tag := range m.Tags {
+			if key == tag.Key {
+				return true
+			}
+		}
+		return false
+	}
+	for k, v := range defaultTags {
+		if !existsTag(k) {
+			m.Tags = append(m.Tags, Tag{Key: k, Value: v})
+		}
+	}
 	m.SortTags()
 	for _, t := range m.Tags {
 		enc.AddTag(t.Key, t.Value)

@@ -41,14 +41,7 @@ jobs:
           GO111MODULE: "on"
       - image: influxdb:latest
         environment:
-          INFLUXD_HTTP_BIND_ADDRESS: :9999
-      - image: influxdb:latest
-        name: influxdb_v2_onboarding
-        environment:
-          INFLUXD_HTTP_BIND_ADDRESS: :9999
-    environment:
-      INFLUXDB_2_ONBOARDING_IP: influxdb_v2_onboarding
-      INFLUXDB_2_ONBOARDING_PORT: 9999
+          INFLUXD_HTTP_BIND_ADDRESS: :8086
     steps:
       - checkout
       - influxdb-onboarding

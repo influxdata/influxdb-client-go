@@ -5,12 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var mu sync.Mutex
@@ -245,4 +248,46 @@ func TestWriteRetriesExpiration(t *testing.T) {
 		return failures == 2 //one per failed write, second for the expired time
 	})
 	assert.EqualValues(t, 0, success)
+}
+
+func TestIgnoreErrors(t *testing.T) {
+	i := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		i++
+		w.WriteHeader(http.StatusInternalServerError)
+		switch i {
+		case 1:
+			_, _ = w.Write([]byte(`{"error":" "write failed: hinted handoff queue not empty"`))
+		case 2:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"partial write: field type conflict"}`))
+		case 3:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"partial write: points beyond retention policy"}`))
+		case 4:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"unable to parse 'cpu value': invalid field format"}`))
+		case 5:
+			_, _ = w.Write([]byte(`{"code":"internal error", "message":"gateway error"}`))
+		}
+	}))
+	defer server.Close()
+
+	cl, err := New(Params{ServerURL: server.URL})
+	require.NoError(t, err)
+
+	writer := cl.PointsWriter("bucket")
+
+	b := &batch{
+		lines:             []byte("a"),
+		remainingAttempts: 0,
+		expires:           time.Time{},
+	}
+	err = writer.writeBatch(b, 0)
+	assert.NoError(t, err)
+	err = writer.writeBatch(b, 0)
+	assert.NoError(t, err)
+	err = writer.writeBatch(b, 1)
+	assert.NoError(t, err)
+	err = writer.writeBatch(b, 2)
+	assert.NoError(t, err)
+	err = writer.writeBatch(b, 3)
+	assert.Error(t, err)
 }

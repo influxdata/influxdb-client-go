@@ -169,12 +169,12 @@ func TestQueryParamsTypes(t *testing.T) {
 		{
 			"invalidParamsType",
 			0,
-			"cannot use int as query params",
+			"cannot use int as query param",
 		},
 	}
 	for _, test := range paramsTypeTests {
 		t.Run(test.testName, func(t *testing.T) {
-			err := checkParamsType(test.params)
+			err := checkContainerType(test.params, true, "query param")
 			if test.expectError != "" {
 				require.Error(t, err)
 				require.Equal(t, test.expectError, err.Error())

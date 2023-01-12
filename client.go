@@ -9,7 +9,9 @@ package influxdb2
 import (
 	"context"
 	"errors"
+	"fmt"
 	httpnet "net/http"
+	"net/url"
 	"strings"
 	"sync"
 	"time"
@@ -59,6 +61,8 @@ type Client interface {
 	// QueryAPI returns Query client.
 	// Ensures using a single QueryAPI instance each org.
 	QueryAPI(org string) api.QueryAPI
+	// QuerySQLAPI returns Query client for SQL support.
+	QuerySQLAPI() api.QuerySQLAPI
 	// AuthorizationsAPI returns Authorizations API client.
 	AuthorizationsAPI() api.AuthorizationsAPI
 	// OrganizationsAPI returns Organizations API client
@@ -79,20 +83,22 @@ type Client interface {
 
 // clientImpl implements Client interface
 type clientImpl struct {
-	serverURL     string
-	options       *Options
-	writeAPIs     map[string]api.WriteAPI
-	syncWriteAPIs map[string]api.WriteAPIBlocking
-	lock          sync.Mutex
-	httpService   http.Service
-	apiClient     *domain.Client
-	authAPI       api.AuthorizationsAPI
-	orgAPI        api.OrganizationsAPI
-	usersAPI      api.UsersAPI
-	deleteAPI     api.DeleteAPI
-	bucketsAPI    api.BucketsAPI
-	labelsAPI     api.LabelsAPI
-	tasksAPI      api.TasksAPI
+	serverURL       string
+	hostnameAndPort string
+	token           string
+	options         *Options
+	writeAPIs       map[string]api.WriteAPI
+	syncWriteAPIs   map[string]api.WriteAPIBlocking
+	lock            sync.Mutex
+	httpService     http.Service
+	apiClient       *domain.Client
+	authAPI         api.AuthorizationsAPI
+	orgAPI          api.OrganizationsAPI
+	usersAPI        api.UsersAPI
+	deleteAPI       api.DeleteAPI
+	bucketsAPI      api.BucketsAPI
+	labelsAPI       api.LabelsAPI
+	tasksAPI        api.TasksAPI
 }
 
 type clientDoer struct {
@@ -118,6 +124,9 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 		// For subsequent path parts concatenation, url has to end with '/'
 		normServerURL = serverURL + "/"
 	}
+	// used for SQL support
+	url, _ := url.Parse(normServerURL)
+
 	authorization := ""
 	if len(authToken) > 0 {
 		authorization = "Token " + authToken
@@ -128,12 +137,14 @@ func NewClientWithOptions(serverURL string, authToken string, options *Options) 
 	apiClient, _ := domain.NewClient(service.ServerURL(), doer)
 
 	client := &clientImpl{
-		serverURL:     serverURL,
-		options:       options,
-		writeAPIs:     make(map[string]api.WriteAPI, 5),
-		syncWriteAPIs: make(map[string]api.WriteAPIBlocking, 5),
-		httpService:   service,
-		apiClient:     apiClient,
+		serverURL:       serverURL,
+		hostnameAndPort: fmt.Sprintf("%s:443", url.Hostname()),
+		token:           authToken,
+		options:         options,
+		writeAPIs:       make(map[string]api.WriteAPI, 5),
+		syncWriteAPIs:   make(map[string]api.WriteAPIBlocking, 5),
+		httpService:     service,
+		apiClient:       apiClient,
 	}
 	if log.Log != nil {
 		log.Log.SetLogLevel(options.LogLevel())
@@ -258,6 +269,10 @@ func (c *clientImpl) Close() {
 
 func (c *clientImpl) QueryAPI(org string) api.QueryAPI {
 	return api.NewQueryAPI(org, c.httpService)
+}
+
+func (c *clientImpl) QuerySQLAPI() api.QuerySQLAPI {
+	return api.NewQuerySQLAPI(c.hostnameAndPort, c.token)
 }
 
 func (c *clientImpl) AuthorizationsAPI() api.AuthorizationsAPI {

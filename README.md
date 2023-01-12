@@ -31,6 +31,7 @@ This repository contains the reference Go client for InfluxDB 2.
     - Querying data
         - using the Flux language
         - into raw data, flux table representation
+        - sql support
         - [How to queries](#queries)
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/)
@@ -427,6 +428,39 @@ func main() {
     client.Close()
 }
 ```
+
+### SQL
+
+InfluxDB Cloud now supports the ability to query with SQL. With this support
+a user can pass in an SQL query to get a ArrowTable with results.
+
+> :warning: Parameterized Queries are supported only in InfluxDB Cloud. There is no support in InfluxDB OSS currently.
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+)
+
+func main() {
+	client := influxdb2.NewClient("http://us-east-1-1.aws.cloud2.influxdata.com:8086", "my-token")
+    defer client.Close()
+
+	querySQLAPI := client.QuerySQLAPI()
+	result, err := querySQLAPI.Query(context.Background(), "my-bucket", "select * from cpu limit 10")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(result)
+}
+```
+
+Users can use `MarshalJSON()` on the result or parse the result as needed.
+
 ### Parametrized Queries
 InfluxDB Cloud supports [Parameterized Queries](https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/)
 that let you dynamically change values in a query using the InfluxDB API. Parameterized queries make Flux queries more

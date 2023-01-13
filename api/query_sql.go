@@ -8,9 +8,8 @@ import (
 	"context"
 	"crypto/x509"
 	"fmt"
-	"io"
 
-	"github.com/apache/arrow/go/v10/arrow"
+	"github.com/apache/arrow/go/v10/arrow/flight"
 	"github.com/apache/arrow/go/v10/arrow/flight/flightsql"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -33,7 +32,7 @@ func (grpcCredentials) RequireTransportSecurity() bool {
 }
 
 type QuerySQLAPI interface {
-	Query(ctx context.Context, bucket string, query string) ([]arrow.Record, error)
+	Query(ctx context.Context, bucket string, query string) (*flight.Reader, error)
 }
 
 // NewQuerySQLAPI returns new query client for querying with SQL
@@ -51,7 +50,7 @@ type querySQLAPI struct {
 }
 
 // Query returns an slice of Arrow records from an SQL query to a bucket
-func (q *querySQLAPI) Query(ctx context.Context, bucket string, query string) ([]arrow.Record, error) {
+func (q *querySQLAPI) Query(ctx context.Context, bucket string, query string) (*flight.Reader, error) {
 	pool, err := x509.SystemCertPool()
 	if err != nil {
 		return nil, fmt.Errorf("error loading system certificates: %v", err)
@@ -66,7 +65,6 @@ func (q *querySQLAPI) Query(ctx context.Context, bucket string, query string) ([
 	if err != nil {
 		return nil, fmt.Errorf("error creating flightsql client: %v", err)
 	}
-	defer flightClient.Close()
 
 	flightInfo, err := flightClient.Execute(ctx, query)
 	if err != nil {
@@ -78,17 +76,5 @@ func (q *querySQLAPI) Query(ctx context.Context, bucket string, query string) ([
 		return nil, fmt.Errorf("error getting flight tickets: %v", err)
 	}
 
-	var records []arrow.Record
-	for {
-		if nextRecord, err := reader.Read(); err == io.EOF {
-			reader.Release()
-			break
-		} else if err != nil {
-			return nil, fmt.Errorf("unable to read record: %v", err)
-		} else {
-			records = append(records, nextRecord)
-		}
-	}
-
-	return records, nil
+	return reader, nil
 }

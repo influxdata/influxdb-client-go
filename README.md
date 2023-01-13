@@ -432,7 +432,8 @@ func main() {
 ### SQL
 
 InfluxDB Cloud now supports the ability to query with SQL. With this support
-a user can pass in an SQL query to get a ArrowTable with results.
+a user can pass in an SQL query to get a Arrow reader and iterate through the
+records.
 
 > :warning: Parameterized Queries are supported only in InfluxDB Cloud. There is no support in InfluxDB OSS currently.
 
@@ -455,11 +456,21 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(result)
+
+    for {
+		if nextRecord, err := reader.Read(); err == io.EOF {
+			reader.Release()
+			break
+		} else if err != nil {
+			panic(fmt.Errorf("unable to read record: %v", err))
+		} else {
+			fmt.Print(nextRecord)
+		}
+	}
 }
 ```
 
-Users can use `MarshalJSON()` on the result or parse the result as needed.
+Users can use `MarshalJSON()` on the records or parse as needed.
 
 ### Parametrized Queries
 InfluxDB Cloud supports [Parameterized Queries](https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/)

@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/deepmap/oapi-codegen v1.12.4
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839
-	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.1 // test dependency
 	golang.org/x/net v0.7.0
 )

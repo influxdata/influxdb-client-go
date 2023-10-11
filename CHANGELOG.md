@@ -1,5 +1,8 @@
 ## [unreleased]
 
+- [#386](https://github.com/influxdata/influxdb-client-go/pull/386)remove deprecated pkg/errors
+- [#387](https://github.com/influxdata/influxdb-client-go/pull/387)upgrade deepmap/oapi-codegen
+
 ## 2.12.3 [2023-03-29]
 ### Bug fixes
 - Update golang.org/x/net from 0.0.0-20210119194325-5f4716e94777 to 0.7.0

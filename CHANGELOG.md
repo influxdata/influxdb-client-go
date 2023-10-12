@@ -1,5 +1,7 @@
 ## [unreleased]
 
+### Bug fixes
+
 - [#386](https://github.com/influxdata/influxdb-client-go/pull/386) Remove deprecated pkg/errors
 - [#387](https://github.com/influxdata/influxdb-client-go/pull/387) Upgrade deepmap/oapi-codegen
 

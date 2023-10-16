@@ -6,7 +6,7 @@ require (
 	github.com/deepmap/oapi-codegen v1.12.4
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839
 	github.com/stretchr/testify v1.8.1 // test dependency
-	golang.org/x/net v0.7.0
+	golang.org/x/net v0.17.0
 )
 
 require (

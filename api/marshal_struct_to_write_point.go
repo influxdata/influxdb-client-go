@@ -1,5 +1,47 @@
 package api
 
+/*
+MarshalStructToWritePoint accepts a value that is a custom struct a user creates. It optionally takes in a timestamp that becomes the *write.Point timestamp.
+if the timestamp argument is nil
+
+Example:
+
+	package main
+
+	import (
+		"github.com/influxdata/influxdb-client-go/v2/api"
+		"log"
+	)
+
+	type influxTestType struct {
+		Measurement string `influxdb:"measurement"`
+		Name        string `influxdb:"name"`
+		Title       string `influxdb:"title,tag"`
+		Distance    int64  `influxdb:"distance"`
+		Description string `influxdb:"Description"`
+	}
+
+	func main() {
+		writer := api.NewWriteAPI("org", "bucket", nil, nil)
+
+		influxArg := influxTestType{
+			Measurement: "foo",
+			Name:        "bar",
+			Title:       "test of the struct write point marshaller",
+			Distance:    39,
+			Description: "This tests the MarshalStructToWritePoint",
+		}
+
+		point, err := api.MarshalStructToWritePoint(influxArg, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		writer.WritePoint(point)
+	}
+
+*/
+
 import (
 	"errors"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
@@ -20,9 +62,13 @@ const (
 	secondTagArgPassedButNotTagErrorMsg = "your influx tag has a second argument but it is not for a tag. If you're trying to set a struct field to be a measurement than the only argument that can be passed is 'measurement'"
 )
 
+// Tags is exported in case this is a type a user wants to use in their code
 type Tags map[string]string
+
+// Fields is exported in case this is a type a user wants to use in their code
 type Fields map[string]interface{}
 
+// MarshalStructToWritePoint accepts an argument that has a custom struct provided by the user & marshals it into a *write.Point
 func MarshalStructToWritePoint(arg interface{}, timestamp *time.Time) (*write.Point, error) {
 	var measurement string
 	var tags Tags = make(map[string]string)

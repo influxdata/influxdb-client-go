@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"io"
@@ -26,7 +27,6 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-chi/chi/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/pkg/errors"
 	{{- range .ExternalImports}}
 	{{ . }}
 	{{- end}}

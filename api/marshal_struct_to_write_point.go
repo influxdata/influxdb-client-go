@@ -39,7 +39,6 @@ Example:
 
 		writer.WritePoint(point)
 	}
-
 */
 
 import (

@@ -90,14 +90,14 @@ func MarshalStructToWritePoint(arg interface{}, timestamp *time.Time) (*write.Po
 func fieldTypeHandler(fieldVal interface{}) interface{} {
 	spaces := regexp.MustCompile(`\s+`)
 
-	switch fieldVal.(type) {
+	switch fieldValType := fieldVal.(type) {
 	case string:
-		lowerVal := strings.ToLower(fieldVal.(string))
+		lowerVal := strings.ToLower(fieldValType)
 		influxStringVal := spaces.ReplaceAllString(lowerVal, "_")
 		return influxStringVal
 
 	case time.Time:
-		return fieldVal.(time.Time).Unix()
+		return fieldValType.Unix()
 
 	default:
 		return fieldVal

@@ -1,6 +1,8 @@
-## 2.12.5 [unreleased]
+## 2.13.0 [unreleased]
 
-- [#392](https://github.com/influxdata/influxdb-client-go/pull/392) Upgrade `deepmap/oapi-codegen`
+### Depencies
+
+- [#392](https://github.com/influxdata/influxdb-client-go/pull/392) Upgrade `deepmap/oapi-codegen` to new major version
 
 ## 2.12.4 [2023-11-03]
 

@@ -10,7 +10,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"sync"
@@ -102,7 +101,6 @@ func (t *HTTPService) ReplyError() *http2.Error {
 
 // SetAuthorization sets authorization string
 func (t *HTTPService) SetAuthorization(_ string) {
-
 }
 
 // GetRequest does nothing for this service
@@ -157,7 +155,7 @@ func (t *HTTPService) DoPostRequest(_ context.Context, url string, body io.Reade
 
 // DecodeLines parses request body for lines
 func (t *HTTPService) DecodeLines(body io.Reader) error {
-	bytes, err := ioutil.ReadAll(body)
+	bytes, err := io.ReadAll(body)
 	if err != nil {
 		return err
 	}

@@ -7,7 +7,7 @@ package api
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -83,7 +83,7 @@ func TestQueryCVSResultSingleTable(t *testing.T) {
 	)
 
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -307,7 +307,7 @@ func TestQueryCVSResultMultiTables(t *testing.T) {
 	)
 
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	assert.Equal(t, -1, queryResult.TablePosition())
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
@@ -439,7 +439,7 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 	)
 
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -462,7 +462,8 @@ func TestQueryCVSResultSingleTableMultiColumnsNoValue(t *testing.T) {
 }
 
 func TestQueryRawResult(t *testing.T) {
-	csvRows := []string{`#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string`,
+	csvRows := []string{
+		`#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string,string`,
 		`#group,false,false,true,true,false,false,true,true,true,true`,
 		`#default,_result,,,,,,,,,`,
 		`,result,table,_start,_stop,_time,_value,_field,_measurement,a,b`,
@@ -482,12 +483,12 @@ func TestQueryRawResult(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-time.After(100 * time.Millisecond)
 		if r.Method == http.MethodPost {
-			rbody, _ := ioutil.ReadAll(r.Body)
+			rbody, _ := io.ReadAll(r.Body)
 			fmt.Printf("Req: %s\n", string(rbody))
 			body, err := gzip.CompressWithGzip(strings.NewReader(csvTable))
 			if err == nil {
 				var bytes []byte
-				bytes, err = ioutil.ReadAll(body)
+				bytes, err = io.ReadAll(body)
 				if err == nil {
 					w.Header().Set("Content-Type", "text/csv")
 					w.Header().Set("Content-Encoding", "gzip")
@@ -510,7 +511,6 @@ func TestQueryRawResult(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, result)
 	assert.Equal(t, csvTable, result)
-
 }
 
 func TestErrorInRow(t *testing.T) {
@@ -519,10 +519,11 @@ func TestErrorInRow(t *testing.T) {
 		`#group,true,true`,
 		`#default,,`,
 		`,error,reference`,
-		`,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897`}
+		`,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897`,
+	}
 	csvTable := makeCSVstring(csvRowsError)
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
@@ -533,10 +534,11 @@ func TestErrorInRow(t *testing.T) {
 		`#group,true,true`,
 		`#default,,`,
 		`,error,reference`,
-		`,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,`}
+		`,failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,`,
+	}
 	csvTable = makeCSVstring(csvRowsErrorNoReference)
 	reader = strings.NewReader(csvTable)
-	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult = NewQueryTableResult(io.NopCloser(reader))
 
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
@@ -547,10 +549,11 @@ func TestErrorInRow(t *testing.T) {
 		`#group,true,true`,
 		`#default,,`,
 		`,error,reference`,
-		`,,`}
+		`,,`,
+	}
 	csvTable = makeCSVstring(csvRowsErrorNoMessage)
 	reader = strings.NewReader(csvTable)
-	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult = NewQueryTableResult(io.NopCloser(reader))
 
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
@@ -567,7 +570,7 @@ func TestInvalidDataType(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "deviceId has unknown data type int", queryResult.Err().Error())
@@ -627,7 +630,7 @@ func TestReorderedAnnotations(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvTable1)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -654,7 +657,7 @@ func TestReorderedAnnotations(t *testing.T) {
 
 `
 	reader = strings.NewReader(csvTable2)
-	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult = NewQueryTableResult(io.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -725,7 +728,7 @@ func TestDatatypeOnlyAnnotation(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvTable1)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
 
@@ -754,7 +757,7 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable1)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
@@ -768,7 +771,7 @@ func TestMissingDatatypeAnnotation(t *testing.T) {
 `
 
 	reader = strings.NewReader(csvTable2)
-	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult = NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, datatype annotation not found", queryResult.Err().Error())
@@ -782,7 +785,7 @@ func TestMissingAnnotations(t *testing.T) {
 
 `
 	reader := strings.NewReader(csvTable3)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, annotations not found", queryResult.Err().Error())
@@ -797,7 +800,7 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, row has different number of columns than the table: 11 vs 10", queryResult.Err().Error())
@@ -810,7 +813,7 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 `
 
 	reader = strings.NewReader(csvTable2)
-	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult = NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, row has different number of columns than the table: 8 vs 10", queryResult.Err().Error())
@@ -823,7 +826,7 @@ func TestDifferentNumberOfColumns(t *testing.T) {
 `
 
 	reader = strings.NewReader(csvTable3)
-	queryResult = NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult = NewQueryTableResult(io.NopCloser(reader))
 	require.False(t, queryResult.Next())
 	require.NotNil(t, queryResult.Err())
 	assert.Equal(t, "parsing error, row has different number of columns than the table: 10 vs 8", queryResult.Err().Error())
@@ -840,7 +843,7 @@ func TestEmptyValue(t *testing.T) {
 `
 
 	reader := strings.NewReader(csvTable)
-	queryResult := NewQueryTableResult(ioutil.NopCloser(reader))
+	queryResult := NewQueryTableResult(io.NopCloser(reader))
 
 	require.True(t, queryResult.Next(), queryResult.Err())
 	require.Nil(t, queryResult.Err())
@@ -864,7 +867,7 @@ func TestFluxError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-time.After(100 * time.Millisecond)
 		if r.Method == http.MethodPost {
-			_, _ = ioutil.ReadAll(r.Body)
+			_, _ = io.ReadAll(r.Body)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
 			_, _ = w.Write([]byte(`{"code":"invalid","message":"compilation failed: loc 4:17-4:86: expected an operator between two expressions"}`))
@@ -882,12 +885,11 @@ func TestFluxError(t *testing.T) {
 	assert.Nil(t, tableRes)
 	require.NotNil(t, err)
 	assert.Equal(t, "invalid: compilation failed: loc 4:17-4:86: expected an operator between two expressions", err.Error())
-
 }
 
 func TestQueryParamsTypes(t *testing.T) {
 	var i int8 = 1
-	var paramsTypeTests = []struct {
+	paramsTypeTests := []struct {
 		testName    string
 		params      interface{}
 		expectError string
@@ -1020,7 +1022,7 @@ func TestQueryParamsSerialized(t *testing.T) {
 	expectedBody := `{"dialect":{"annotations":["datatype","group","default"],"delimiter":",","header":true},"query":"from(bucket: \"environment\") |\u003e range(start: time(v: params.start)) |\u003e filter(fn: (r) =\u003e r._measurement == \"air\") |\u003e filter(fn: (r) =\u003e r._field == params.field) |\u003e filter(fn: (r) =\u003e r._value \u003e params.value)","type":"flux","params":{"start":"2022-02-17T11:27:23+01:00","field":"field","value":24.4}}`
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
-			body, err := ioutil.ReadAll(r.Body)
+			body, err := io.ReadAll(r.Body)
 			if err != nil {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusBadRequest)
@@ -1058,7 +1060,6 @@ func TestQueryParamsSerialized(t *testing.T) {
 
 	_, err = queryAPI.QueryWithParams(context.Background(), query, condition)
 	require.NoError(t, err, err)
-
 }
 
 func makeCSVstring(rows []string) string {

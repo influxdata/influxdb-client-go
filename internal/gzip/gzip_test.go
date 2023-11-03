@@ -7,7 +7,7 @@ package gzip_test
 import (
 	"bytes"
 	egzip "compress/gzip"
-	"io/ioutil"
+	"io"
 	"testing"
 
 	"github.com/influxdata/influxdb-client-go/v2/internal/gzip"
@@ -24,7 +24,7 @@ func TestGzip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	res, err := ioutil.ReadAll(ur)
+	res, err := io.ReadAll(ur)
 	if err != nil {
 		t.Fatal(err)
 	}

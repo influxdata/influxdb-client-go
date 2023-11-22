@@ -1,7 +1,7 @@
 ## 2.13.0 [unreleased]
 
-### Depencies
-
+### Dependencies
+- [#393](https://github.com/influxdata/influxdb-client-go/pull/393) Replace deprecated `io/ioutil`
 - [#392](https://github.com/influxdata/influxdb-client-go/pull/392) Upgrade `deepmap/oapi-codegen` to new major version
 
 ## 2.12.4 [2023-11-03]

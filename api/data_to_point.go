@@ -37,7 +37,7 @@ func DataToPoint(x interface{}) (*write.Point, error) {
 	}
 	fields := reflect.VisibleFields(t)
 
-	var measurement string = ""
+	var measurement = ""
 	var lpTags = make(map[string]string)
 	var lpFields = make(map[string]interface{})
 	var lpTime time.Time
@@ -63,8 +63,14 @@ func DataToPoint(x interface{}) (*write.Point, error) {
 				}
 				measurement = v.FieldByIndex(f.Index).String()
 			case "tag":
+				if name == "" {
+					return nil, fmt.Errorf("cannot use field '%s': invalid lp tag name \"\"", f.Name)
+				}
 				lpTags[name] = v.FieldByIndex(f.Index).String()
 			case "field":
+				if name == "" {
+					return nil, fmt.Errorf("cannot use field '%s': invalid lp field name \"\"", f.Name)
+				}
 				lpFields[name] = v.FieldByIndex(f.Index).Interface()
 			case "timestamp":
 				if f.Type != timeType {

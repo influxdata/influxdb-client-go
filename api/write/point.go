@@ -84,12 +84,6 @@ func (m *Point) Name() string {
 	return m.measurement
 }
 
-// Name returns the name of measurement of a point.
-func (m *Point) SetName(name string) *Point {
-	m.measurement = name
-	return m
-}
-
 // NewPointWithMeasurement creates a empty Point
 // Use AddTag and AddField to fill point with data
 func NewPointWithMeasurement(measurement string) *Point {

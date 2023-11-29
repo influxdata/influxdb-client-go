@@ -26,14 +26,14 @@ import (
 //		  Description string `lp:"-"`
 //	 }
 func DataToPoint(x interface{}) (*write.Point, error) {
-	if err := checkContainerType(x, false, "point"); err != nil {
-		return nil, err
-	}
 	t := reflect.TypeOf(x)
 	v := reflect.ValueOf(x)
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 		v = v.Elem()
+	}
+	if t.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("cannot use %v as point", t)
 	}
 	fields := reflect.VisibleFields(t)
 
@@ -55,6 +55,10 @@ func DataToPoint(x interface{}) (*write.Point, error) {
 			typ := parts[0]
 			if len(parts) == 2 {
 				name = parts[1]
+			}
+			t := getFieldType(v.FieldByIndex(f.Index))
+			if !validFieldType(t) {
+				return nil, fmt.Errorf("cannot use field '%s' of type '%v' as to create a point", f.Name, t)
 			}
 			switch typ {
 			case "measurement":

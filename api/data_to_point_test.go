@@ -200,6 +200,28 @@ func TestDataToPoint(t *testing.T) {
 			},
 			error: `cannot use map[string]interface {} as point`,
 		},
+		{
+			name: "test unsupported field type",
+			s: &struct {
+				Measurement string    `lp:"measurement"`
+				Temp        complex64 `lp:"field,a"`
+			}{
+				"air",
+				complex(1, 1),
+			},
+			error: `cannot use field 'Temp' of type 'complex64' as to create a point`,
+		},
+		{
+			name: "test unsupported lp tag value",
+			s: &struct {
+				Measurement string  `lp:"measurement"`
+				Temp        float64 `lp:"data,a"`
+			}{
+				"air",
+				1.0,
+			},
+			error: `invalid tag data`,
+		},
 	}
 	for _, ts := range tests {
 		t.Run(ts.name, func(t *testing.T) {

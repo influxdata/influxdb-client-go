@@ -1,5 +1,9 @@
 ## 2.13.0 [unreleased]
 
+### Features
+
+- [#394](https://github.com/influxdata/influxdb-client-go/pull/394) Add `DataToPoint` utility to convert a struct to a `write.Point`
+
 ### Dependencies
 - [#393](https://github.com/influxdata/influxdb-client-go/pull/393) Replace deprecated `io/ioutil`
 - [#392](https://github.com/influxdata/influxdb-client-go/pull/392) Upgrade `deepmap/oapi-codegen` to new major version

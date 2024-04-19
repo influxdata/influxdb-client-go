@@ -6,7 +6,7 @@ require (
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839
 	github.com/oapi-codegen/runtime v1.0.0
 	github.com/stretchr/testify v1.8.4 // test dependency
-	golang.org/x/net v0.17.0
+	golang.org/x/net v0.23.0
 )
 
 require (

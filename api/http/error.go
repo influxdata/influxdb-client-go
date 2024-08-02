@@ -6,6 +6,7 @@ package http
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 )
 
@@ -16,6 +17,7 @@ type Error struct {
 	Message    string
 	Err        error
 	RetryAfter uint
+	Header     http.Header
 }
 
 // Error fulfils error interface
@@ -45,5 +47,6 @@ func NewError(err error) *Error {
 		Message:    "",
 		Err:        err,
 		RetryAfter: 0,
+		Header:     http.Header{},
 	}
 }

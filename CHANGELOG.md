@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixes
+- [#403](https://github.com/influxdata/influxdb-client-go/pull/403) Custom checks de/serialization to allow calling server Check API
+
 ## 2.13.0 [2023-12-05]
 
 ### Features

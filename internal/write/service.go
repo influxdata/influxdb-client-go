@@ -164,6 +164,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 		if batchToWrite != nil {
 			perror := w.WriteBatch(ctx, batchToWrite)
 			if perror != nil {
+				// fmt.Printf("DEBUG perror type %s\n", reflect.TypeOf(perror))
 				if isIgnorableError(perror) {
 					log.Warnf("Write error: %s", perror.Error())
 				} else {
@@ -196,9 +197,30 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 						w.retryAttempts++
 						log.Debugf("Write proc: next wait for write is %dms\n", w.retryDelay)
 					} else {
-						log.Errorf("Write error: %s\n", perror.Error())
+						logMessage := fmt.Sprintf("Write error: %s", perror.Error())
+						logHeaders := perror.HeaderToString([]string{
+							"date",
+							"trace-id",
+							"trace-sampled",
+							"X-Influxdb-Build",
+							"X-Influxdb-Request-ID",
+							"X-Influxdb-Version",
+						})
+						if len(logHeaders) > 0 {
+							logMessage += fmt.Sprintf("\nSelect Response Headers:\n%s", logHeaders)
+						}
+						log.Error(logMessage)
 					}
-					return fmt.Errorf("write failed (attempts %d): %w", batchToWrite.RetryAttempts, perror)
+					return &http2.Error{
+						StatusCode: int(perror.StatusCode),
+						Code:       perror.Code,
+						Message: fmt.Errorf(
+							"write failed (attempts %d): %w", batchToWrite.RetryAttempts, perror,
+						).Error(),
+						Err:        perror.Err,
+						RetryAfter: perror.RetryAfter,
+						Header:     perror.Header,
+					}
 				}
 			}
 

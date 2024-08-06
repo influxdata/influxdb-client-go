@@ -16,7 +16,6 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"mime"
 	"net/http"
@@ -114,25 +113,7 @@ func (s *service) DoHTTPRequest(req *http.Request, requestCallback RequestCallba
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		logHeaders := ""
-		httpErr := s.parseHTTPError(resp)
-		for _, candidate := range []string{
-			"date",
-			"trace-id",
-			"trace-sampled",
-			"X-Influxdb-Build",
-			"X-Influxdb-Request-ID",
-			"X-Influxdb-Version",
-		} {
-			if httpErr.Header.Get(candidate) != "" {
-				logHeaders += fmt.Sprintf("%s: %s\n", candidate, httpErr.Header.Get(candidate))
-			}
-		}
-		log.Errorf("http status code: %d, %s\nSelect Response Headers:\n%s",
-			resp.StatusCode,
-			httpErr.Error(),
-			logHeaders)
-		return httpErr
+		return s.parseHTTPError(resp)
 	}
 	if responseCallback != nil {
 		err := responseCallback(resp)

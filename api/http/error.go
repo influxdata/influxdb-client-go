@@ -27,6 +27,8 @@ func (e *Error) Error() string {
 		return e.Err.Error()
 	case e.Code != "" && e.Message != "":
 		return fmt.Sprintf("%s: %s", e.Code, e.Message)
+	case e.Message != "":
+		return e.Message
 	default:
 		return "Unexpected status code " + strconv.Itoa(e.StatusCode)
 	}
@@ -37,6 +39,23 @@ func (e *Error) Unwrap() error {
 		return e.Err
 	}
 	return nil
+}
+
+// HeaderToString generates a string value from the Header property.  Useful in logging.
+func (e *Error) HeaderToString(selected []string) string {
+	headerString := ""
+	if len(selected) == 0 {
+		for key := range e.Header {
+			headerString += fmt.Sprintf("%s: %s\r\n", key, e.Header[key])
+		}
+	} else {
+		for _, candidate := range selected {
+			if e.Header.Get(candidate) != "" {
+				headerString += fmt.Sprintf("%s: %s\n", candidate, e.Header.Get(candidate))
+			}
+		}
+	}
+	return headerString
 }
 
 // NewError returns newly created Error initialised with nested error and default values

@@ -8,7 +8,10 @@ import (
 	"fmt"
 	"io"
 	"math"
+	ihttp "net/http"
+	"net/http/httptest"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -264,4 +267,48 @@ func TestFlushWithRetries(t *testing.T) {
 	writeAPI.Close()
 	// two remained
 	assert.Equal(t, 2, len(service.Lines()))
+}
+
+func TestWriteApiErrorHeaders(t *testing.T) {
+	calls := 0
+	var mu sync.Mutex
+	server := httptest.NewServer(ihttp.HandlerFunc(func(w ihttp.ResponseWriter, r *ihttp.Request) {
+		mu.Lock()
+		defer mu.Unlock()
+		calls++
+		w.Header().Set("X-Test-Val1", "Not All Correct")
+		w.Header().Set("X-Test-Val2", "Atlas LV-3B")
+		w.Header().Set("X-Call-Count", strconv.Itoa(calls))
+		w.WriteHeader(ihttp.StatusBadRequest)
+		_, _ = w.Write([]byte(`{ "code": "bad request", "message": "test header" }`))
+	}))
+	defer server.Close()
+	svc := http.NewService(server.URL, "my-token", http.DefaultOptions())
+	writeAPI := NewWriteAPI("my-org", "my-bucket", svc, write.DefaultOptions().SetBatchSize(5))
+	defer writeAPI.Close()
+	errCh := writeAPI.Errors()
+	var wg sync.WaitGroup
+	var recErr error
+	wg.Add(1)
+	go func() {
+		for i := 0; i < 3; i++ {
+			recErr = <-errCh
+			assert.NotNil(t, recErr, "errCh should not run out of values")
+			assert.Len(t, recErr.(*http.Error).Header, 6)
+			assert.NotEqual(t, "", recErr.(*http.Error).Header.Get("Date"))
+			assert.NotEqual(t, "", recErr.(*http.Error).Header.Get("Content-Length"))
+			assert.NotEqual(t, "", recErr.(*http.Error).Header.Get("Content-Type"))
+			assert.Equal(t, strconv.Itoa(i+1), recErr.(*http.Error).Header.Get("X-Call-Count"))
+			assert.Equal(t, "Not All Correct", recErr.(*http.Error).Header.Get("X-Test-Val1"))
+			assert.Equal(t, "Atlas LV-3B", recErr.(*http.Error).Header.Get("X-Test-Val2"))
+		}
+		wg.Done()
+	}()
+	points := test.GenPoints(15)
+	for i := 0; i < 15; i++ {
+		writeAPI.WritePoint(points[i])
+	}
+	writeAPI.waitForFlushing()
+	wg.Wait()
+	assert.Equal(t, calls, 3)
 }

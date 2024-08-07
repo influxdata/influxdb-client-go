@@ -46,16 +46,14 @@ func (e *Error) HeaderToString(selected []string) string {
 	headerString := ""
 	if len(selected) == 0 {
 		for key := range e.Header {
-			headerString += fmt.Sprintf("%s: %s\r\n",
-				http.CanonicalHeaderKey(key),
-				e.Header.Get(key))
+			k := http.CanonicalHeaderKey(key)
+			headerString += fmt.Sprintf("%s: %s\r\n", k, e.Header.Get(k))
 		}
 	} else {
 		for _, candidate := range selected {
-			if e.Header.Get(candidate) != "" {
-				headerString += fmt.Sprintf("%s: %s\n",
-					http.CanonicalHeaderKey(candidate),
-					e.Header.Get(candidate))
+			c := http.CanonicalHeaderKey(candidate)
+			if e.Header.Get(c) != "" {
+				headerString += fmt.Sprintf("%s: %s\n", c, e.Header.Get(c))
 			}
 		}
 	}

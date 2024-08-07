@@ -1,3 +1,9 @@
+## 2.14 [unreleased]
+
+### Features
+
+- [#404](https://github.com/influxdata/influxdb-client-go/pull/404) Expose HTTP response headers in the Error type to aid analysis and debugging of error results.  Add selected response headers to the error log.
+
 ## 2.13.0 [2023-12-05]
 
 ### Features

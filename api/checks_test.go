@@ -118,8 +118,7 @@ func TestCreateGetDeleteDeadmanCheck(t *testing.T) {
 	require.Nil(t, err)
 	dc := validateDC(t, nc, *org.Id)
 
-	checkId := dc.Id
-	gp := domain.GetChecksIDAllParams{CheckID: *checkId}
+	gp := domain.GetChecksIDAllParams{CheckID: *dc.Id}
 
 	c, err := client.APIClient().GetChecksID(context.Background(), &gp)
 	require.Nil(t, err)
@@ -306,13 +305,13 @@ func TestGetChecks(t *testing.T) {
 	assert.Nil(t, checks.Checks)
 }
 
-func validateDC(t *testing.T, nc domain.Check, orgId string) *domain.DeadmanCheck {
+func validateDC(t *testing.T, nc domain.Check, orgID string) *domain.DeadmanCheck {
 	require.NotNil(t, nc)
 	require.Equal(t, "deadman", nc.Type())
 	dc := nc.(*domain.DeadmanCheck)
 	require.NotNil(t, dc)
 	assert.Equal(t, "DeadmanCheck test", dc.Name)
-	assert.Equal(t, orgId, dc.OrgID)
+	assert.Equal(t, orgID, dc.OrgID)
 	assert.Equal(t, msg, *dc.StatusMessageTemplate)
 	assert.Equal(t, flux, *dc.Query.Text)
 	assert.Equal(t, every, *dc.Every)
@@ -324,13 +323,13 @@ func validateDC(t *testing.T, nc domain.Check, orgId string) *domain.DeadmanChec
 	return dc
 }
 
-func validateTC(t *testing.T, check domain.Check, orgId string) *domain.ThresholdCheck {
+func validateTC(t *testing.T, check domain.Check, orgID string) *domain.ThresholdCheck {
 	require.NotNil(t, check)
 	require.Equal(t, "threshold", check.Type())
 	tc := check.(*domain.ThresholdCheck)
 	require.NotNil(t, tc)
 	assert.Equal(t, "ThresholdCheck test", tc.Name)
-	assert.Equal(t, orgId, tc.OrgID)
+	assert.Equal(t, orgID, tc.OrgID)
 	assert.Equal(t, msg, *tc.StatusMessageTemplate)
 	assert.Equal(t, flux, *tc.Query.Text)
 	assert.Equal(t, every, *tc.Every)

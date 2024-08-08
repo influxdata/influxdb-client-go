@@ -164,7 +164,6 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 		if batchToWrite != nil {
 			perror := w.WriteBatch(ctx, batchToWrite)
 			if perror != nil {
-				// fmt.Printf("DEBUG perror type %s\n", reflect.TypeOf(perror))
 				if isIgnorableError(perror) {
 					log.Warnf("Write error: %s", perror.Error())
 				} else {
@@ -207,7 +206,7 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 							"X-Influxdb-Version",
 						})
 						if len(logHeaders) > 0 {
-							logMessage += fmt.Sprintf("\nSelect Response Headers:\n%s", logHeaders)
+							logMessage += fmt.Sprintf("\nSelected Response Headers:\n%s", logHeaders)
 						}
 						log.Error(logMessage)
 					}

@@ -27,8 +27,6 @@ func (e *Error) Error() string {
 		return e.Err.Error()
 	case e.Code != "" && e.Message != "":
 		return fmt.Sprintf("%s: %s", e.Code, e.Message)
-	case e.Message != "":
-		return e.Message
 	default:
 		return "Unexpected status code " + strconv.Itoa(e.StatusCode)
 	}

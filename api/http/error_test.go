@@ -5,6 +5,7 @@
 package http
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	ihttp "net/http"
 
@@ -50,4 +51,31 @@ func TestWriteErrorHeaderToString(t *testing.T) {
 	)
 	assert.NotContains(t, filterString, "Content-Type: application/json")
 	assert.NotContains(t, filterString, "Retry-After: 2044")
+}
+
+func TestErrorIfaceError(t *testing.T) {
+	tests := []struct {
+		statusCode int
+		err        error
+		code       string
+		message    string
+		expected   string
+	}{
+		{statusCode: 418, err: fmt.Errorf("original test message"), code: "", message: "", expected: "original test message"},
+		{statusCode: 418, err: fmt.Errorf("original test message"), code: "bad request", message: "is this a teapot?", expected: "original test message"},
+		{statusCode: 418, err: nil, code: "bad request", message: "is this a teapot?", expected: "bad request: is this a teapot?"},
+		{statusCode: 418, err: nil, code: "I'm a teapot", message: "", expected: "Unexpected status code 418"},
+	}
+
+	for _, test := range tests {
+		err := Error{
+			StatusCode: test.statusCode,
+			Code:       test.code,
+			Message:    test.message,
+			Err:        test.err,
+			RetryAfter: 0,
+			Header:     ihttp.Header{},
+		}
+		assert.Equal(t, test.expected, err.Error())
+	}
 }

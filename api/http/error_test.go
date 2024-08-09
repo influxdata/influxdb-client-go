@@ -6,8 +6,9 @@ package http
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	ihttp "net/http"
+
+	"github.com/stretchr/testify/assert"
 
 	"testing"
 )
@@ -55,27 +56,50 @@ func TestWriteErrorHeaderToString(t *testing.T) {
 
 func TestErrorIfaceError(t *testing.T) {
 	tests := []struct {
+		name       string
 		statusCode int
 		err        error
 		code       string
 		message    string
 		expected   string
 	}{
-		{statusCode: 418, err: fmt.Errorf("original test message"), code: "", message: "", expected: "original test message"},
-		{statusCode: 418, err: fmt.Errorf("original test message"), code: "bad request", message: "is this a teapot?", expected: "original test message"},
-		{statusCode: 418, err: nil, code: "bad request", message: "is this a teapot?", expected: "bad request: is this a teapot?"},
-		{statusCode: 418, err: nil, code: "I'm a teapot", message: "", expected: "Unexpected status code 418"},
+		{name: "TestNestedErrorNotNilCode0Message0",
+			statusCode: 418,
+			err:        fmt.Errorf("original test message"),
+			code:       "",
+			message:    "",
+			expected:   "original test message"},
+		{name: "TestNestedErrorNotNilCodeXMessageX",
+			statusCode: 418,
+			err:        fmt.Errorf("original test message"),
+			code:       "bad request",
+			message:    "is this a teapot?",
+			expected:   "original test message"},
+		{name: "TestNestedErrorNilCodeXMessageX",
+			statusCode: 418,
+			err:        nil,
+			code:       "bad request",
+			message:    "is this a teapot?",
+			expected:   "bad request: is this a teapot?"},
+		{name: "TestNesterErrorNilCodeXMessage0",
+			statusCode: 418,
+			err:        nil,
+			code:       "I'm a teapot",
+			message:    "",
+			expected:   "Unexpected status code 418"},
 	}
 
 	for _, test := range tests {
-		err := Error{
-			StatusCode: test.statusCode,
-			Code:       test.code,
-			Message:    test.message,
-			Err:        test.err,
-			RetryAfter: 0,
-			Header:     ihttp.Header{},
-		}
-		assert.Equal(t, test.expected, err.Error())
+		t.Run(test.name, func(t *testing.T) {
+			err := Error{
+				StatusCode: test.statusCode,
+				Code:       test.code,
+				Message:    test.message,
+				Err:        test.err,
+				RetryAfter: 0,
+				Header:     ihttp.Header{},
+			}
+			assert.Equal(t, test.expected, err.Error())
+		})
 	}
 }

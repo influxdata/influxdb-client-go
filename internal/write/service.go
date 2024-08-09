@@ -210,7 +210,10 @@ func (w *Service) HandleWrite(ctx context.Context, batch *Batch) error {
 						}
 						log.Error(logMessage)
 					}
-					return write.NewError(perror, fmt.Sprintf("write failed (retry attempts %d)", batchToWrite.RetryAttempts))
+					log.Errorf("Write failed (retry attempts %d): Status Code %d",
+						batchToWrite.RetryAttempts,
+						perror.StatusCode)
+					return perror
 				}
 			}
 

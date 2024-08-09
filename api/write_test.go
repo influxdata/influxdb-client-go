@@ -294,15 +294,13 @@ func TestWriteApiErrorHeaders(t *testing.T) {
 		for i := 0; i < 3; i++ {
 			recErr = <-errCh
 			assert.NotNil(t, recErr, "errCh should not run out of values")
-			header, okh := recErr.(*write.Error).HTTPHeader()
-			assert.Nil(t, okh)
-			assert.Len(t, header, 6)
-			assert.NotEqual(t, "", recErr.(*write.Error).GetHeader("Date"))
-			assert.NotEqual(t, "", recErr.(*write.Error).GetHeader("Content-Length"))
-			assert.NotEqual(t, "", recErr.(*write.Error).GetHeader("Content-Type"))
-			assert.Equal(t, strconv.Itoa(i+1), recErr.(*write.Error).GetHeader("X-Call-Count"))
-			assert.Equal(t, "Not All Correct", recErr.(*write.Error).GetHeader("X-Test-Val1"))
-			assert.Equal(t, "Atlas LV-3B", recErr.(*write.Error).GetHeader("X-Test-Val2"))
+			assert.Len(t, recErr.(*http.Error).Header, 6)
+			assert.NotEqual(t, "", recErr.(*http.Error).Header.Get("Date"))
+			assert.NotEqual(t, "", recErr.(*http.Error).Header.Get("Content-Length"))
+			assert.NotEqual(t, "", recErr.(*http.Error).Header.Get("Content-Type"))
+			assert.Equal(t, strconv.Itoa(i+1), recErr.(*http.Error).Header.Get("X-Call-Count"))
+			assert.Equal(t, "Not All Correct", recErr.(*http.Error).Header.Get("X-Test-Val1"))
+			assert.Equal(t, "Atlas LV-3B", recErr.(*http.Error).Header.Get("X-Test-Val2"))
 		}
 		wg.Done()
 	}()

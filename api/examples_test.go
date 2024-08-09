@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/v2/api"
+	apiHttp "github.com/influxdata/influxdb-client-go/v2/api/http"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2/internal/examples"
@@ -123,7 +124,7 @@ func ExampleWriteAPI_errors() {
 	go func() {
 		for err := range errorsCh {
 			fmt.Printf("write error: %s\n", err.Error())
-			fmt.Printf("trace-id: %s\n", err.(*write.Error).GetHeader("Trace-ID"))
+			fmt.Printf("trace-id: %s\n", err.(*apiHttp.Error).Header.Get("Trace-ID"))
 		}
 	}()
 	// write some points

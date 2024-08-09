@@ -339,7 +339,7 @@ func TestMaxRetryTime(t *testing.T) {
 	err = srv.HandleWrite(ctx, b)
 	require.NotNil(t, err)
 	// 1st Batch expires and writing 2nd trows error
-	assert.Equal(t, "write failed (attempts 1): Unexpected status code 429", err.Error())
+	assert.Equal(t, "Unexpected status code 429", err.Error())
 	assert.Equal(t, 1, srv.retryQueue.list.Len())
 
 	//wait until remaining accumulated retryDelay has passed, because there hasn't been a successful write yet
@@ -701,4 +701,21 @@ func TestIgnoreErrors(t *testing.T) {
 	assert.NoError(t, err)
 	err = srv.HandleWrite(ctx, b)
 	assert.Error(t, err)
+}
+
+func TestHttpErrorHeaders(t *testing.T) {
+	server := httptest.NewServer(ihttp.HandlerFunc(func(w ihttp.ResponseWriter, r *ihttp.Request) {
+		w.Header().Set("X-Test-Val1", "Not All Correct")
+		w.Header().Set("X-Test-Val2", "Atlas LV-3B")
+		w.WriteHeader(ihttp.StatusBadRequest)
+		_, _ = w.Write([]byte(`{ "code": "bad request", "message": "test header" }`))
+	}))
+	defer server.Close()
+	svc := NewService("my-org", "my-bucket", http.NewService(server.URL, "", http.DefaultOptions()),
+		write.DefaultOptions())
+	err := svc.HandleWrite(context.Background(), NewBatch("1", 20))
+	assert.Error(t, err)
+	assert.Equal(t, "400 Bad Request: { \"code\": \"bad request\", \"message\": \"test header\" }", err.Error())
+	assert.Equal(t, "Not All Correct", err.(*http.Error).Header.Get("X-Test-Val1"))
+	assert.Equal(t, "Atlas LV-3B", err.(*http.Error).Header.Get("X-Test-Val2"))
 }

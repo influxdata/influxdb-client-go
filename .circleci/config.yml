@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     machine:
-      image: ubuntu-2204:current
+      image: cimg/go:1.25
     environment:
       ENV: CI
       GO111MODULE: "on"
@@ -19,9 +19,6 @@ jobs:
           command: |
             mkdir -p /tmp/artifacts
             mkdir -p /tmp/test-results
-      - run: sudo rm -rf /usr/local/go
-      - run: wget https://golang.org/dl/go1.22.2.linux-amd64.tar.gz -O /tmp/go.tgz
-      - run: sudo tar -C /usr/local -xzf /tmp/go.tgz
       - run: go version
       - run: go get -v -t -d ./...
       - run: make lint

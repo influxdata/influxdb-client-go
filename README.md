@@ -67,14 +67,14 @@ There are also other examples in the API docs:
 
 #### Go mod project
 1.  Add the latest version of the client package to your project dependencies (go.mod).
-    ```sh
-    go get github.com/influxdata/influxdb-client-go/v2
-    ```
+```sh
+go get github.com/influxdata/influxdb-client-go/v2
+```
 1. Add import `github.com/influxdata/influxdb-client-go/v2` to your source code.
 #### GOPATH project
-    ```sh
-    go get github.com/influxdata/influxdb-client-go
-    ```
+```sh
+go get github.com/influxdata/influxdb-client-go
+```
 Note: To have _go get_ in the GOPATH mode, the environment variable `GO111MODULE` must have the `off` value.
 
 ### Basic Example
@@ -83,64 +83,64 @@ The following example demonstrates how to write data to InfluxDB 2 and read them
 package main
 
 import (
-    "context"
-    "fmt"
-    "time"
+	"context"
+	"fmt"
+	"time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:8086", "my-token")
-    // Use blocking write client for writes to desired bucket
-    writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
-    // Create point using full params constructor
-    p := influxdb2.NewPoint("stat",
-        map[string]string{"unit": "temperature"},
-        map[string]interface{}{"avg": 24.5, "max": 45.0},
-        time.Now())
-    // write point immediately
-    writeAPI.WritePoint(context.Background(), p)
-    // Create point using fluent style
-    p = influxdb2.NewPointWithMeasurement("stat").
-        AddTag("unit", "temperature").
-        AddField("avg", 23.2).
-        AddField("max", 45.0).
-        SetTime(time.Now())
-    err := writeAPI.WritePoint(context.Background(), p)
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Use blocking write client for writes to desired bucket
+	writeAPI := client.WriteAPIBlocking("my-org", "my-bucket")
+	// Create point using full params constructor
+	p := influxdb2.NewPoint("stat",
+		map[string]string{"unit": "temperature"},
+		map[string]interface{}{"avg": 24.5, "max": 45.0},
+		time.Now())
+	// write point immediately
+	writeAPI.WritePoint(context.Background(), p)
+	// Create point using fluent style
+	p = influxdb2.NewPointWithMeasurement("stat").
+		AddTag("unit", "temperature").
+		AddField("avg", 23.2).
+		AddField("max", 45.0).
+		SetTime(time.Now())
+	err := writeAPI.WritePoint(context.Background(), p)
 	if err != nil {
 		panic(err)
 	}
-    // Or write directly line protocol
-    line := fmt.Sprintf("stat,unit=temperature avg=%f,max=%f", 23.5, 45.0)
-    err = writeAPI.WriteRecord(context.Background(), line)
+	// Or write directly line protocol
+	line := fmt.Sprintf("stat,unit=temperature avg=%f,max=%f", 23.5, 45.0)
+	err = writeAPI.WriteRecord(context.Background(), line)
 	if err != nil {
 		panic(err)
 	}
 
-    // Get query client
-    queryAPI := client.QueryAPI("my-org")
-    // Get parser flux query result
-    result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
-    if err == nil {
-        // Use Next() to iterate over query result lines
-        for result.Next() {
-            // Observe when there is new grouping key producing new table
-            if result.TableChanged() {
-                fmt.Printf("table: %s\n", result.TableMetadata().String())
-            }
-            // read result
-            fmt.Printf("row: %s\n", result.Record().String())
-        }
-        if result.Err() != nil {
-            fmt.Printf("Query error: %s\n", result.Err().Error())
-        }
-    } else {
+	// Get query client
+	queryAPI := client.QueryAPI("my-org")
+	// Get parser flux query result
+	result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+	if err == nil {
+		// Use Next() to iterate over query result lines
+		for result.Next() {
+			// Observe when there is new grouping key producing new table
+			if result.TableChanged() {
+				fmt.Printf("table: %s\n", result.TableMetadata().String())
+			}
+			// read result
+			fmt.Printf("row: %s\n", result.Record().String())
+		}
+		if result.Err() != nil {
+			fmt.Printf("Query error: %s\n", result.Err().Error())
+		}
+	} else {
 		panic(err)
-    }
-    // Ensures background processes finishes
-    client.Close()
+	}
+	// Ensures background processes finishes
+	client.Close()
 }
 ```
 ### Options
@@ -155,11 +155,11 @@ To set different configuration values, e.g. to set gzip compression and trust al
 and change what is needed:
 ```go
 client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token",
-    influxdb2.DefaultOptions().
-        SetUseGZip(true).
-        SetTLSConfig(&tls.Config{
-            InsecureSkipVerify: true,
-        }))
+	influxdb2.DefaultOptions().
+		SetUseGZip(true).
+		SetTLSConfig(&tls.Config{
+			InsecureSkipVerify: true,
+		}))
 ```
 ### Writes
 
@@ -180,45 +180,45 @@ Asynchronous write client is recommended for frequent periodic writes.
 package main
 
 import (
-    "fmt"
-    "math/rand"
-    "time"
+	"fmt"
+	"math/rand"
+	"time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    // Create a new client using an InfluxDB server base URL and an authentication token
-    // and set batch size to 20
-    client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token",
-        influxdb2.DefaultOptions().SetBatchSize(20))
-    // Get non-blocking write client
-    writeAPI := client.WriteAPI("my-org","my-bucket")
-    // write some points
-    for i := 0; i <100; i++ {
-        // create point
-        p := influxdb2.NewPoint(
-            "system",
-            map[string]string{
-                "id":       fmt.Sprintf("rack_%v", i%10),
-                "vendor":   "AWS",
-                "hostname": fmt.Sprintf("host_%v", i%100),
-            },
-            map[string]interface{}{
-                "temperature": rand.Float64() * 80.0,
-                "disk_free":   rand.Float64() * 1000.0,
-                "disk_total":  (i/10 + 1) * 1000000,
-                "mem_total":   (i/100 + 1) * 10000000,
-                "mem_free":    rand.Uint64(),
-            },
-            time.Now())
-        // write asynchronously
-        writeAPI.WritePoint(p)
-    }
-    // Force all unwritten data to be sent
-    writeAPI.Flush()
-    // Ensures background processes finishes
-    client.Close()
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	// and set batch size to 20
+	client := influxdb2.NewClientWithOptions("http://localhost:8086", "my-token",
+		influxdb2.DefaultOptions().SetBatchSize(20))
+	// Get non-blocking write client
+	writeAPI := client.WriteAPI("my-org","my-bucket")
+	// write some points
+	for i := 0; i <100; i++ {
+		// create point
+		p := influxdb2.NewPoint(
+			"system",
+			map[string]string{
+				"id":	   fmt.Sprintf("rack_%v", i%10),
+				"vendor":   "AWS",
+				"hostname": fmt.Sprintf("host_%v", i%100),
+			},
+			map[string]interface{}{
+				"temperature": rand.Float64() * 80.0,
+				"disk_free":   rand.Float64() * 1000.0,
+				"disk_total":  (i/10 + 1) * 1000000,
+				"mem_total":   (i/100 + 1) * 10000000,
+				"mem_free":	rand.Uint64(),
+			},
+			time.Now())
+		// write asynchronously
+		writeAPI.WritePoint(p)
+	}
+	// Force all unwritten data to be sent
+	writeAPI.Flush()
+	// Ensures background processes finishes
+	client.Close()
 }
 ```
 ### Handling of failed async writes
@@ -256,46 +256,46 @@ WriteAPI automatically logs write errors. Use [Errors()](https://pkg.go.dev/gith
 package main
 
 import (
-    "fmt"
-    "math/rand"
-    "time"
+	"fmt"
+	"math/rand"
+	"time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:8086", "my-token")
-    // Get non-blocking write client
-    writeAPI := client.WriteAPI("my-org", "my-bucket")
-    // Get errors channel
-    errorsCh := writeAPI.Errors()
-    // Create go proc for reading and logging errors
-    go func() {
-        for err := range errorsCh {
-            fmt.Printf("write error: %s\n", err.Error())
-        }
-    }()
-    // write some points
-    for i := 0; i < 100; i++ {
-        // create point
-        p := influxdb2.NewPointWithMeasurement("stat").
-            AddTag("id", fmt.Sprintf("rack_%v", i%10)).
-            AddTag("vendor", "AWS").
-            AddTag("hostname", fmt.Sprintf("host_%v", i%100)).
-            AddField("temperature", rand.Float64()*80.0).
-            AddField("disk_free", rand.Float64()*1000.0).
-            AddField("disk_total", (i/10+1)*1000000).
-            AddField("mem_total", (i/100+1)*10000000).
-            AddField("mem_free", rand.Uint64()).
-            SetTime(time.Now())
-        // write asynchronously
-        writeAPI.WritePoint(p)
-    }
-    // Force all unwritten data to be sent
-    writeAPI.Flush()
-    // Ensures background processes finishes
-    client.Close()
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Get non-blocking write client
+	writeAPI := client.WriteAPI("my-org", "my-bucket")
+	// Get errors channel
+	errorsCh := writeAPI.Errors()
+	// Create go proc for reading and logging errors
+	go func() {
+		for err := range errorsCh {
+			fmt.Printf("write error: %s\n", err.Error())
+		}
+	}()
+	// write some points
+	for i := 0; i < 100; i++ {
+		// create point
+		p := influxdb2.NewPointWithMeasurement("stat").
+			AddTag("id", fmt.Sprintf("rack_%v", i%10)).
+			AddTag("vendor", "AWS").
+			AddTag("hostname", fmt.Sprintf("host_%v", i%100)).
+			AddField("temperature", rand.Float64()*80.0).
+			AddField("disk_free", rand.Float64()*1000.0).
+			AddField("disk_total", (i/10+1)*1000000).
+			AddField("mem_total", (i/100+1)*10000000).
+			AddField("mem_free", rand.Uint64()).
+			SetTime(time.Now())
+		// write asynchronously
+		writeAPI.WritePoint(p)
+	}
+	// Force all unwritten data to be sent
+	writeAPI.Flush()
+	// Ensures background processes finishes
+	client.Close()
 }
 ```
 
@@ -307,45 +307,45 @@ Implicit batching can be enabled with `WriteAPIBlocking.EnableBatching()`.
 package main
 
 import (
-    "context"
-    "fmt"
-    "math/rand"
-    "time"
+	"context"
+	"fmt"
+	"math/rand"
+	"time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:8086", "my-token")
-    // Get blocking write client
-    writeAPI := client.WriteAPIBlocking("my-org","my-bucket")
-    // write some points
-    for i := 0; i <100; i++ {
-        // create data point
-        p := influxdb2.NewPoint(
-            "system",
-            map[string]string{
-                "id":       fmt.Sprintf("rack_%v", i%10),
-                "vendor":   "AWS",
-                "hostname": fmt.Sprintf("host_%v", i%100),
-            },
-            map[string]interface{}{
-                "temperature": rand.Float64() * 80.0,
-                "disk_free":   rand.Float64() * 1000.0,
-                "disk_total":  (i/10 + 1) * 1000000,
-                "mem_total":   (i/100 + 1) * 10000000,
-                "mem_free":    rand.Uint64(),
-            },
-            time.Now())
-        // write synchronously
-        err := writeAPI.WritePoint(context.Background(), p)
-        if err != nil {
-            panic(err)
-        }
-    }
-    // Ensures background processes finishes
-    client.Close()
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Get blocking write client
+	writeAPI := client.WriteAPIBlocking("my-org","my-bucket")
+	// write some points
+	for i := 0; i <100; i++ {
+		// create data point
+		p := influxdb2.NewPoint(
+			"system",
+			map[string]string{
+				"id":	   fmt.Sprintf("rack_%v", i%10),
+				"vendor":   "AWS",
+				"hostname": fmt.Sprintf("host_%v", i%100),
+			},
+			map[string]interface{}{
+				"temperature": rand.Float64() * 80.0,
+				"disk_free":   rand.Float64() * 1000.0,
+				"disk_total":  (i/10 + 1) * 1000000,
+				"mem_total":   (i/100 + 1) * 10000000,
+				"mem_free":	rand.Uint64(),
+			},
+			time.Now())
+		// write synchronously
+		err := writeAPI.WritePoint(context.Background(), p)
+		if err != nil {
+			panic(err)
+		}
+	}
+	// Ensures background processes finishes
+	client.Close()
 }
 ```
 
@@ -360,38 +360,38 @@ for easy reading the result.
 package main
 
 import (
-    "context"
-    "fmt"
+	"context"
+	"fmt"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:8086", "my-token")
-    // Get query client
-    queryAPI := client.QueryAPI("my-org")
-    // get QueryTableResult
-    result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
-    if err == nil {
-        // Iterate over query response
-        for result.Next() {
-            // Notice when group key has changed
-            if result.TableChanged() {
-                fmt.Printf("table: %s\n", result.TableMetadata().String())
-            }
-            // Access data
-            fmt.Printf("value: %v\n", result.Record().Value())
-        }
-        // check for an error
-        if result.Err() != nil {
-            fmt.Printf("query parsing error: %s\n", result.Err().Error())
-        }
-    } else {
-        panic(err)
-    }
-    // Ensures background processes finishes
-    client.Close()
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Get query client
+	queryAPI := client.QueryAPI("my-org")
+	// get QueryTableResult
+	result, err := queryAPI.Query(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+	if err == nil {
+		// Iterate over query response
+		for result.Next() {
+			// Notice when group key has changed
+			if result.TableChanged() {
+				fmt.Printf("table: %s\n", result.TableMetadata().String())
+			}
+			// Access data
+			fmt.Printf("value: %v\n", result.Record().Value())
+		}
+		// check for an error
+		if result.Err() != nil {
+			fmt.Printf("query parsing error: %s\n", result.Err().Error())
+		}
+	} else {
+		panic(err)
+	}
+	// Ensures background processes finishes
+	client.Close()
 }
 ```
 
@@ -403,28 +403,28 @@ can be controlled by the third parameter, query dialect.
 package main
 
 import (
-    "context"
-    "fmt"
+	"context"
+	"fmt"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    // Create a new client using an InfluxDB server base URL and an authentication token
-    client := influxdb2.NewClient("http://localhost:8086", "my-token")
-    // Get query client
-    queryAPI := client.QueryAPI("my-org")
-    // Query and get complete result as a string
-    // Use default dialect
-    result, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, influxdb2.DefaultDialect())
-    if err == nil {
-        fmt.Println("QueryResult:")
-        fmt.Println(result)
-    } else {
-        panic(err)
-    }
-    // Ensures background processes finishes
-    client.Close()
+	// Create a new client using an InfluxDB server base URL and an authentication token
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Get query client
+	queryAPI := client.QueryAPI("my-org")
+	// Query and get complete result as a string
+	// Use default dialect
+	result, err := queryAPI.QueryRaw(context.Background(), `from(bucket:"my-bucket")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`, influxdb2.DefaultDialect())
+	if err == nil {
+		fmt.Println("QueryResult:")
+		fmt.Println(result)
+	} else {
+		panic(err)
+	}
+	// Ensures background processes finishes
+	client.Close()
 }
 ```
 ### Parametrized Queries
@@ -506,26 +506,26 @@ most importantly reusing HTTP connections.
 
 For efficient reuse of HTTP resources among multiple clients, create an HTTP client and use `Options.SetHTTPClient()` for setting it to all clients:
 ```go
-    // Create HTTP client
-    httpClient := &http.Client{
-        Timeout: time.Second * time.Duration(60),
-        Transport: &http.Transport{
-            DialContext: (&net.Dialer{
-                Timeout: 5 * time.Second,
-            }).DialContext,
-            TLSHandshakeTimeout: 5 * time.Second,
-            TLSClientConfig: &tls.Config{
-                InsecureSkipVerify: true,
-            },
-            MaxIdleConns:        100,
-            MaxIdleConnsPerHost: 100,
-            IdleConnTimeout:     90 * time.Second,
-        },
-    }
-    // Client for server 1
-    client1 := influxdb2.NewClientWithOptions("https://server:8086", "my-token", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
-    // Client for server 2
-    client2 := influxdb2.NewClientWithOptions("https://server:9999", "my-token2", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+	// Create HTTP client
+	httpClient := &http.Client{
+		Timeout: time.Second * time.Duration(60),
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout: 5 * time.Second,
+			}).DialContext,
+			TLSHandshakeTimeout: 5 * time.Second,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+			MaxIdleConns:		100,
+			MaxIdleConnsPerHost: 100,
+			IdleConnTimeout:	 90 * time.Second,
+		},
+	}
+	// Client for server 1
+	client1 := influxdb2.NewClientWithOptions("https://server:8086", "my-token", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+	// Client for server 2
+	client2 := influxdb2.NewClientWithOptions("https://server:9999", "my-token2", influxdb2.DefaultOptions().SetHTTPClient(httpClient))
 ```
 
 Client ensures that there is a single instance of each server API sub-client for the specific area. E.g. a single `WriteAPI` instance for each org/bucket pair,
@@ -545,63 +545,63 @@ import (
 )
 
 func main() {
-    // Create client
-    client := influxdb2.NewClient("http://localhost:8086", "my-token")
-    // Ensure closing the client
-    defer client.Close()
+	// Create client
+	client := influxdb2.NewClient("http://localhost:8086", "my-token")
+	// Ensure closing the client
+	defer client.Close()
 
-    // Get write client
-    writeApi := client.WriteAPI("my-org", "my-bucket")
+	// Get write client
+	writeApi := client.WriteAPI("my-org", "my-bucket")
 
-    // Create channel for points feeding
-    pointsCh := make(chan *write.Point, 200)
+	// Create channel for points feeding
+	pointsCh := make(chan *write.Point, 200)
 
-    threads := 5
+	threads := 5
 
-    var wg sync.WaitGroup
-    go func(points int) {
-        for i := 0; i < points; i++ {
-            p := influxdb2.NewPoint("meas",
-                map[string]string{"tag": "tagvalue"},
-                map[string]interface{}{"val1": rand.Int63n(1000), "val2": rand.Float64()*100.0 - 50.0},
-                time.Now())
-            pointsCh <- p
-        }
-        close(pointsCh)
-    }(1000000)
+	var wg sync.WaitGroup
+	go func(points int) {
+		for i := 0; i < points; i++ {
+			p := influxdb2.NewPoint("meas",
+				map[string]string{"tag": "tagvalue"},
+				map[string]interface{}{"val1": rand.Int63n(1000), "val2": rand.Float64()*100.0 - 50.0},
+				time.Now())
+			pointsCh <- p
+		}
+		close(pointsCh)
+	}(1000000)
 
-    // Launch write routines
-    for t := 0; t < threads; t++ {
-        wg.Add(1)
-        go func() {
-            for p := range pointsCh {
-                writeApi.WritePoint(p)
-            }
-            wg.Done()
-        }()
-    }
-    // Wait for writes complete
-    wg.Wait()
+	// Launch write routines
+	for t := 0; t < threads; t++ {
+		wg.Add(1)
+		go func() {
+			for p := range pointsCh {
+				writeApi.WritePoint(p)
+			}
+			wg.Done()
+		}()
+	}
+	// Wait for writes complete
+	wg.Wait()
 }
 ```
 
 ### Proxy and redirects
 You can configure InfluxDB Go client behind a proxy in two ways:
- 1. Using environment variable
-     Set environment variable `HTTP_PROXY` (or `HTTPS_PROXY` based on the scheme of your server url).
-     e.g. (linux) `export HTTP_PROXY=http://my-proxy:8080` or in Go code `os.Setenv("HTTP_PROXY","http://my-proxy:8080")`
+1. Using environment variable
+    Set environment variable `HTTP_PROXY` (or `HTTPS_PROXY` based on the scheme of your server url).
+    e.g. (linux) `export HTTP_PROXY=http://my-proxy:8080` or in Go code `os.Setenv("HTTP_PROXY","http://my-proxy:8080")`
 
- 1. Configure `http.Client` to use proxy<br>
-     Create a custom `http.Client` with a proxy configuration:
-    ```go
-    proxyUrl, err := url.Parse("http://my-proxy:8080")
-    httpClient := &http.Client{
-        Transport: &http.Transport{
-            Proxy: http.ProxyURL(proxyUrl)
-        }
-    }
-    client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxdb2.DefaultOptions().SetHTTPClient(httpClient))
-    ```
+1. Configure `http.Client` to use proxy<br>
+    Create a custom `http.Client` with a proxy configuration:
+```go
+proxyUrl, err := url.Parse("http://my-proxy:8080")
+httpClient := &http.Client{
+   Transport: &http.Transport{
+       Proxy: http.ProxyURL(proxyUrl)
+   }
+}
+client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxdb2.DefaultOptions().SetHTTPClient(httpClient))
+```
 
  Client automatically follows HTTP redirects. The default redirect policy is to follow up to 10 consecutive requests.
  Due to a security reason _Authorization_ header is not forwarded when redirect leads to a different domain.
@@ -610,10 +610,10 @@ You can configure InfluxDB Go client behind a proxy in two ways:
 token := "my-token"
 
 httpClient := &http.Client{
-    CheckRedirect: func(req *http.Request, via []*http.Request) error {
-        req.Header.Add("Authorization","Token " + token)
-        return nil
-    },
+	CheckRedirect: func(req *http.Request, via []*http.Request) error {
+		req.Header.Add("Authorization","Token " + token)
+		return nil
+	},
 }
 client := influxdb2.NewClientWithOptions("http://localhost:8086", token, influxdb2.DefaultOptions().SetHTTPClient(httpClient))
 ```
@@ -652,53 +652,53 @@ Only the [Ping()](https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2
 package main
 
 import (
-    "context"
-    "fmt"
-    "time"
+	"context"
+	"fmt"
+	"time"
 
-    "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2"
 )
 
 func main() {
-    userName := "my-user"
-    password := "my-password"
-     // Create a new client using an InfluxDB server base URL and an authentication token
-    // For authentication token supply a string in the form: "username:password" as a token. Set empty value for an unauthenticated server
-    client := influxdb2.NewClient("http://localhost:8086", fmt.Sprintf("%s:%s",userName, password))
-    // Get the blocking write client
-    // Supply a string in the form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
-    // Org name is not used
-    writeAPI := client.WriteAPIBlocking("", "test/autogen")
-    // create point using full params constructor
-    p := influxdb2.NewPoint("stat",
-        map[string]string{"unit": "temperature"},
-        map[string]interface{}{"avg": 24.5, "max": 45},
-        time.Now())
-    // Write data
-    err := writeAPI.WritePoint(context.Background(), p)
-    if err != nil {
-        fmt.Printf("Write error: %s\n", err.Error())
-    }
+	userName := "my-user"
+	password := "my-password"
+	 // Create a new client using an InfluxDB server base URL and an authentication token
+	// For authentication token supply a string in the form: "username:password" as a token. Set empty value for an unauthenticated server
+	client := influxdb2.NewClient("http://localhost:8086", fmt.Sprintf("%s:%s",userName, password))
+	// Get the blocking write client
+	// Supply a string in the form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
+	// Org name is not used
+	writeAPI := client.WriteAPIBlocking("", "test/autogen")
+	// create point using full params constructor
+	p := influxdb2.NewPoint("stat",
+		map[string]string{"unit": "temperature"},
+		map[string]interface{}{"avg": 24.5, "max": 45},
+		time.Now())
+	// Write data
+	err := writeAPI.WritePoint(context.Background(), p)
+	if err != nil {
+		fmt.Printf("Write error: %s\n", err.Error())
+	}
 
-    // Get query client. Org name is not used
-    queryAPI := client.QueryAPI("")
-    // Supply string in a form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
-    result, err := queryAPI.Query(context.Background(), `from(bucket:"test")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
-    if err == nil {
-        for result.Next() {
-            if result.TableChanged() {
-                fmt.Printf("table: %s\n", result.TableMetadata().String())
-            }
-            fmt.Printf("row: %s\n", result.Record().String())
-        }
-        if result.Err() != nil {
-            fmt.Printf("Query error: %s\n", result.Err().Error())
-        }
-    } else {
-        fmt.Printf("Query error: %s\n", err.Error())
-    }
-    // Close client
-    client.Close()
+	// Get query client. Org name is not used
+	queryAPI := client.QueryAPI("")
+	// Supply string in a form database/retention-policy as a bucket. Skip retention policy for the default one, use just a database name (without the slash character)
+	result, err := queryAPI.Query(context.Background(), `from(bucket:"test")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "stat")`)
+	if err == nil {
+		for result.Next() {
+			if result.TableChanged() {
+				fmt.Printf("table: %s\n", result.TableMetadata().String())
+			}
+			fmt.Printf("row: %s\n", result.Record().String())
+		}
+		if result.Err() != nil {
+			fmt.Printf("Query error: %s\n", result.Err().Error())
+		}
+	} else {
+		fmt.Printf("Query error: %s\n", err.Error())
+	}
+	// Close client
+	client.Close()
 }
 ```
 

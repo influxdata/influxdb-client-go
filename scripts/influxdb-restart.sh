@@ -33,6 +33,8 @@ INFLUXDB_V2_IMAGE=influxdb:${INFLUXDB_V2_VERSION}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
+docker --version
+
 docker kill influxdb || true
 docker rm influxdb || true
 docker kill influxdb_v2 || true

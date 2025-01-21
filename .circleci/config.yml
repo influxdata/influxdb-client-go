@@ -43,9 +43,9 @@ jobs:
       - run: go version
       - run: go get -v -t -d ./...
       - run: make lint
-      - run:
-          name: "Start InfluxDB service"
-          command: make server
+#      - run:
+#          name: "Start InfluxDB service"
+#          command: make server
       - run:
           command: make coverage
       - run:

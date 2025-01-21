@@ -11,7 +11,7 @@ import (
 // GenPoints generates num points
 func GenPoints(num int) []*write.Point {
 	points := make([]*write.Point, num)
-	rand.Seed(321)
+	rand.New(rand.NewSource(321))
 
 	t := time.Now()
 	for i := 0; i < len(points); i++ {
@@ -40,7 +40,7 @@ func GenPoints(num int) []*write.Point {
 // GenRecords generates num points
 func GenRecords(num int) []string {
 	lines := make([]string, num)
-	rand.Seed(321)
+	rand.New(rand.NewSource(321))
 
 	t := time.Now()
 	for i := 0; i < len(lines); i++ {

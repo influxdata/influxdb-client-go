@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     machine:
-      image: ubuntu-2204:current
+      image: cimg/go:1.20
     environment:
       ENV: CI
       GO111MODULE: "on"

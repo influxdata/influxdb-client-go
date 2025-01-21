@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      image: "cimg/go:1.22.11"
+      - image: "cimg/go:1.22.11"
     environment:
       ENV: CI
       GO111MODULE: "on"
@@ -14,22 +14,22 @@ jobs:
       INFLUXDB2_ONBOARDING_URL: "http://localhost:8089"
     steps:
       - checkout
-#      - run:
-#          name: check tidy
-#          command: |
-#            go mod tidy
-#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
-#              echo modules are not tidy, please run 'go mod tidy'
-#              exit 1
-#            fi
-#      - run:
-#          name: check go fmt
-#          command: |
-#            go fmt
-#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
-#              echo modules are not tidy, please run 'go fmt ./...'
-#              exit 1
-#            fi
+      #      - run:
+      #          name: check tidy
+      #          command: |
+      #            go mod tidy
+      #            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
+      #              echo modules are not tidy, please run 'go mod tidy'
+      #              exit 1
+      #            fi
+      #      - run:
+      #          name: check go fmt
+      #          command: |
+      #            go fmt
+      #            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
+      #              echo modules are not tidy, please run 'go fmt ./...'
+      #              exit 1
+      #            fi
       - run:
           name: "Create a temp directory for artifacts"
           command: |

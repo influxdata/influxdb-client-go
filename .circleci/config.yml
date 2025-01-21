@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     machine:
-      image: cimg/go:1.22
+      image: cimg/go:1.22.11
     environment:
       ENV: CI
       GO111MODULE: "on"
@@ -36,7 +36,7 @@ jobs:
             mkdir -p /tmp/artifacts
             mkdir -p /tmp/test-results
       - run: sudo rm -rf /usr/local/go
-      - run: wget https://golang.org/dl/go1.22.1.linux-amd64.tar.gz -O /tmp/go.tgz
+      - run: wget https://golang.org/dl/go1.22.11.linux-amd64.tar.gz -O /tmp/go.tgz
       - run: sudo tar -C /usr/local -xzf /tmp/go.tgz
       - run: go version
       - run: go get -v -t -d ./...

@@ -9,12 +9,12 @@ jobs:
       - image: influxdb:1.8.3-alpine
         environment:
           INFLUXD_HTTP_BIND_ADDRESS: :8087
-      - image: influxdb:latest
-        environment:
-          INFLUXD_HTTP_BIND_ADDRESS: :8086
-      - image: influxdb:latest
-        environment:
-          INFLUXD_HTTP_BIND_ADDRESS: :8089
+    #      - image: influxdb:latest
+    #        environment:
+    #          INFLUXD_HTTP_BIND_ADDRESS: :8086
+    #      - image: influxdb:latest
+    #        environment:
+    #          INFLUXD_HTTP_BIND_ADDRESS: :8089
     environment:
       ENV: CI
       GO111MODULE: "on"
@@ -49,9 +49,9 @@ jobs:
       #      - run: sudo tar -C /usr/local -xzf /tmp/go.tgz
       #      - run: go version
       #      - run: go get -v -t -d ./...
-#      - run:
-#          name: sonnh
-#          command: docker ps -a
+      #      - run:
+      #          name: sonnh
+      #          command: docker ps -a
       - run: make lint
       #      - run:
       #          name: "Start InfluxDB service"

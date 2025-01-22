@@ -53,14 +53,13 @@ echo
 
 docker pull ${INFLUXDB_IMAGE} || true
 docker run \
-       --detach \
        --name influxdb \
        --network influx_network \
        --publish 8087:8086 \
        ${INFLUXDB_IMAGE}
 
 echo "Wait to start InfluxDB"
-wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8087/ping
+wget -S --spider --tries=5 --retry-connrefused --waitretry=5 http://localhost:8087/ping
 echo
 echo "Post with create dabase"
 echo

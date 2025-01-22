@@ -33,13 +33,13 @@ INFLUXDB_V2_IMAGE=influxdb:${INFLUXDB_V2_VERSION}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-docker kill influxdb || true
-docker rm influxdb || true
-docker kill influxdb_v2 || true
-docker rm influxdb_v2 || true
-docker kill influxdb_v2_onboarding || true
-docker rm influxdb_v2_onboarding || true
-docker network rm influx_network || true
+#docker kill influxdb || true
+#docker rm influxdb || true
+#docker kill influxdb_v2 || true
+#docker rm influxdb_v2 || true
+#docker kill influxdb_v2_onboarding || true
+#docker rm influxdb_v2_onboarding || true
+#docker network rm influx_network || true
 docker network create -d bridge influx_network --subnet 192.168.0.0/24 --gateway 192.168.0.1
 
 

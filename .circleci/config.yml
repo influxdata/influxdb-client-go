@@ -6,12 +6,12 @@ jobs:
   build:
     docker:
       - image: cimg/go:1.22
-      - image: influxdb:1.8.3-alpine
+          #      - image: influxdb:1.8.3-alpine
+        #        environment:
+        #          INFLUXD_HTTP_BIND_ADDRESS: :8087
+      - image: influxdb:latest
         environment:
-          INFLUXD_HTTP_BIND_ADDRESS: :8087
-    #      - image: influxdb:latest
-    #        environment:
-    #          INFLUXD_HTTP_BIND_ADDRESS: :8086
+          INFLUXD_HTTP_BIND_ADDRESS: :8089
     #      - image: influxdb:latest
     #        environment:
     #          INFLUXD_HTTP_BIND_ADDRESS: :8089

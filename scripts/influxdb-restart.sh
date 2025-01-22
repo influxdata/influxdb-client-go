@@ -53,58 +53,62 @@ echo
 
 docker pull ${INFLUXDB_IMAGE} || true
 docker run \
+       --detach \
        --name influxdb \
        --network influx_network \
        --publish 8087:8086 \
        ${INFLUXDB_IMAGE}
 
+docker ps -a
+curl -X GET http://localhost:8087/ping
+
 echo "Wait to start InfluxDB"
-wget -S --spider --tries=5 --retry-connrefused --waitretry=5 http://localhost:8087/ping
-echo
-echo "Post with create dabase"
-echo
-curl -X POST localhost:8087/query --data-urlencode "q=create database mydb"
+#wget -S --spider --tries=5 --retry-connrefused --waitretry=5 http://localhost:8087/ping
+#echo
+#echo "Post with create dabase"
+#echo
+#curl -X POST localhost:8087/query --data-urlencode "q=create database mydb"
 #
 # InfluxDB 2.0
 #
-echo
-echo "Restarting InfluxDB 2.0 [${INFLUXDB_V2_IMAGE}] ... "
-echo
+#echo
+#echo "Restarting InfluxDB 2.0 [${INFLUXDB_V2_IMAGE}] ... "
+#echo
+#
+#docker pull ${INFLUXDB_V2_IMAGE} || true
+#docker run \
+#       --detach \
+#       --name influxdb_v2 \
+#       --network influx_network \
+#       --publish 8086:8086 \
+#       ${INFLUXDB_V2_IMAGE}
 
-docker pull ${INFLUXDB_V2_IMAGE} || true
-docker run \
-       --detach \
-       --name influxdb_v2 \
-       --network influx_network \
-       --publish 8086:8086 \
-       ${INFLUXDB_V2_IMAGE}
-
-echo "Wait to start InfluxDB 2.0"
-wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/metrics
-
-echo
-echo "Post onBoarding request, to setup initial user (my-user@my-password), org (my-org) and bucketSetup (my-bucket)"
-echo
-curl -i -X POST http://localhost:8086/api/v2/setup -H 'accept: application/json' \
-    -d '{
-            "username": "my-user",
-            "password": "my-password",
-            "org": "my-org",
-            "bucket": "my-bucket",
-            "token": "my-token"
-        }'
+#echo "Wait to start InfluxDB 2.0"
+#wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/metrics
+#
+#echo
+#echo "Post onBoarding request, to setup initial user (my-user@my-password), org (my-org) and bucketSetup (my-bucket)"
+#echo
+#curl -i -X POST http://localhost:8086/api/v2/setup -H 'accept: application/json' \
+#    -d '{
+#            "username": "my-user",
+#            "password": "my-password",
+#            "org": "my-org",
+#            "bucket": "my-bucket",
+#            "token": "my-token"
+#        }'
 
 #
 # InfluxDB 2.0
 #
-echo
-echo "Restarting InfluxDB 2.0 for onboarding test... "
-echo
-
-docker run \
-       --detach \
-       --name influxdb_v2_onboarding \
-       --network influx_network \
-       --publish 8089:8086 \
-       ${INFLUXDB_V2_IMAGE}
+#echo
+#echo "Restarting InfluxDB 2.0 for onboarding test... "
+#echo
+#
+#docker run \
+#       --detach \
+#       --name influxdb_v2_onboarding \
+#       --network influx_network \
+#       --publish 8089:8086 \
+#       ${INFLUXDB_V2_IMAGE}
 

@@ -9,7 +9,7 @@ jobs:
       - image: influxdb:1.8.3-alpine
       - image: influxdb:latest
         environment:
-          INFLUXD_HTTP_BIND_ADDRESS: 8087
+          INFLUXD_HTTP_BIND_ADDRESS: :8087
     environment:
       ENV: CI
       GO111MODULE: "on"

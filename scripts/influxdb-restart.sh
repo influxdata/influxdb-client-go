@@ -57,7 +57,7 @@ docker run \
        --name influxdb \
        --network influx_network \
        --publish 8087:8086 \
-       --volume ${SCRIPT_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf \
+#       --volume ${SCRIPT_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf \
        ${INFLUXDB_IMAGE}
 
 echo "Wait to start InfluxDB"

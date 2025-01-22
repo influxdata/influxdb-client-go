@@ -51,7 +51,7 @@ jobs:
         #      - run: go get -v -t -d ./...
       - run:
           name: sonnh
-          command: curl -X GET localhost:8087/pingabhjb
+          command: curl localhost:8087/ping
       - run: make lint
       #      - run:
       #          name: "Start InfluxDB service"

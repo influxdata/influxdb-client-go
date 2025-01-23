@@ -36,7 +36,7 @@ jobs:
             mkdir -p /tmp/artifacts
             mkdir -p /tmp/test-results
       - run: sudo rm -rf /usr/local/go
-      - run: wget https://go.dev/dl/go1.22.11.darwin-amd64.tar.gz -O /tmp/go.tgz
+      - run: wget https://go.dev/dl/go1.22.11.linux-amd64.tar.gz -O /tmp/go.tgz
       - run: sudo tar -C /usr/local -xzf /tmp/go.tgz
       - run: go version
       - run: go get -v -t -d ./...

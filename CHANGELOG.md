@@ -1,7 +1,7 @@
 ## 2.15.0 [unreleased]
 
 ### Features
-- [#416](https://github.com/influxdata/influxdb-client-go/pull/416) update circleci machine image to ubuntu-2204:current  
+- [#416](https://github.com/influxdata/influxdb-client-go/pull/416) Update CircleCi machine image to `ubuntu-2204:current`  
 
 ## 2.14.0 [2024-08-12]
 

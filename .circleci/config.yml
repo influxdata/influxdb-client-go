@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     machine:
-      image: ubuntu-2004:202201-02
+      image: ubuntu-2204:current
     environment:
       ENV: CI
       GO111MODULE: "on"
@@ -14,29 +14,13 @@ jobs:
       INFLUXDB2_ONBOARDING_URL: "http://localhost:8089"
     steps:
       - checkout
-#      - run:
-#          name: check tidy
-#          command: |
-#            go mod tidy
-#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
-#              echo modules are not tidy, please run 'go mod tidy'
-#              exit 1
-#            fi
-#      - run:
-#          name: check go fmt
-#          command: |
-#            go fmt
-#            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
-#              echo modules are not tidy, please run 'go fmt ./...'
-#              exit 1
-#            fi
       - run:
           name: "Create a temp directory for artifacts"
           command: |
             mkdir -p /tmp/artifacts
             mkdir -p /tmp/test-results
       - run: sudo rm -rf /usr/local/go
-      - run: wget https://golang.org/dl/go1.20.1.linux-amd64.tar.gz -O /tmp/go.tgz
+      - run: wget https://golang.org/dl/go1.22.2.linux-amd64.tar.gz -O /tmp/go.tgz
       - run: sudo tar -C /usr/local -xzf /tmp/go.tgz
       - run: go version
       - run: go get -v -t -d ./...

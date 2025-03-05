@@ -72,9 +72,9 @@ There are also other examples in the API docs:
     ```
 1. Add import `github.com/influxdata/influxdb-client-go/v2` to your source code.
 #### GOPATH project
-    ```sh
-    go get github.com/influxdata/influxdb-client-go
-    ```
+```sh
+go get github.com/influxdata/influxdb-client-go
+```
 Note: To have _go get_ in the GOPATH mode, the environment variable `GO111MODULE` must have the `off` value.
 
 ### Basic Example

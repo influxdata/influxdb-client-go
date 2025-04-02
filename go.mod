@@ -1,6 +1,8 @@
 module github.com/influxdata/influxdb-client-go/v2
 
-go 1.17
+go 1.23.0
+
+toolchain go1.23.8
 
 require (
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839

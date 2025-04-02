@@ -23,7 +23,6 @@ var points []*Point
 
 func init() {
 	points = make([]*Point, 5000)
-	rand.Seed(321)
 
 	t := time.Now()
 	for i := 0; i < len(points); i++ {

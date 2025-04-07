@@ -1,0 +1,192 @@
+{{/* Generate client methods */}}
+{{range .}}
+{{if (hasValidRequestAndResponse .) -}}{{/* skip non-JSON bodies*/}}
+{{$hasParams := .RequiresParamObject -}}
+{{$pathParams := .PathParams -}}
+{{$opid := .OperationId -}}
+{{$hasResponse := hasSingle2xxJSONResponse . -}}
+{{$lenServers :=  0 -}}
+{{if .Spec.Servers}}
+{{$lenServers =  len .Spec.Servers -}}
+{{end}}
+{{$response2xx := get2xxResponseTypeDefinition . -}}
+{{$hasBodyOrPathParams := or .HasBody  (gt (len .PathParams) 0) -}}
+{{$pathStr := genParamFmtString .Path -}}
+
+// {{$opid}} calls the {{.Method}} on {{.Path}}
+// {{.Summary}}
+func (c *Client) {{$opid}}(ctx context.Context, {{if $hasBodyOrPathParams}}params *{{$opid}}AllParams{{else}}{{if $hasParams}} params *{{$opid}}Params{{end}}{{end}}) ({{if $hasResponse}}*{{$response2xx.Schema.TypeDecl}},{{end}} error) {
+    var err error
+{{if .HasBody -}}
+    var bodyReader io.Reader
+    buf, err := json.Marshal(params.Body)
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    bodyReader = bytes.NewReader(buf)
+{{end}}
+{{range $paramIdx, $param := .PathParams}}
+    var pathParam{{$paramIdx}} string
+    {{if .IsPassThrough}}
+    pathParam{{$paramIdx}} = params.{{.GoVariableName|ucFirst}}
+    {{end}}
+    {{if .IsJson}}
+    var pathParamBuf{{$paramIdx}} []byte
+    pathParamBuf{{$paramIdx}}, err = json.Marshal(params.{{.GoVariableName|ucFirst}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    pathParam{{$paramIdx}} = string(pathParamBuf{{$paramIdx}})
+    {{end}}
+    {{if .IsStyled}}
+    pathParam{{$paramIdx}}, err = runtime.StyleParamWithLocation("{{.Style}}", {{.Explode}}, "{{.ParamName}}", runtime.ParamLocationPath, params.{{.GoVariableName|ucFirst}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    {{end}}
+{{end}}
+    serverURL, err := url.Parse(c.{{if eq $lenServers 0}}APIEndpoint{{else}}Server{{end}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+
+    operationPath := fmt.Sprintf("{{if eq (index $pathStr 0) '/'}}.{{end}}{{$pathStr}}"{{range $paramIdx, $param := .PathParams}}, pathParam{{$paramIdx}}{{end}})
+
+    queryURL, err := serverURL.Parse(operationPath)
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+
+{{if .QueryParams}}
+    queryValues := queryURL.Query()
+{{range $paramIdx, $param := .QueryParams}}
+    {{if not .Required}} if params.{{.GoName}} != nil { {{end}}
+    {{if .IsPassThrough}}
+    queryValues.Add("{{.ParamName}}", {{if not .Required}}*{{end}}params.{{.GoName}})
+    {{end}}
+    {{if .IsJson}}
+    if queryParamBuf, err := json.Marshal({{if not .Required}}*{{end}}params.{{.GoName}}); err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    } else {
+        queryValues.Add("{{.ParamName}}", string(queryParamBuf))
+    }
+
+    {{end}}
+    {{if .IsStyled}}
+    if queryFrag, err := runtime.StyleParamWithLocation("{{.Style}}", {{.Explode}}, "{{.ParamName}}", runtime.ParamLocationQuery, {{if not .Required}}*{{end}}params.{{.GoName}}); err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    } else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+       return {{if $hasResponse}}nil, {{end}}err
+    } else {
+       for k, v := range parsed {
+           for _, v2 := range v {
+               queryValues.Add(k, v2)
+           }
+       }
+    }
+    {{end}}
+    {{if not .Required}}}{{end}}
+{{end}}
+    queryURL.RawQuery = queryValues.Encode()
+{{end}}{{/* if .QueryParams */}}
+    req, err := http.NewRequest("{{.Method}}", queryURL.String(), {{if .HasBody}}bodyReader{{else}}nil{{end}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+
+    {{if .HasBody}}req.Header.Add("Content-Type", "{{(index .Bodies 0).ContentType}}"){{end}}
+{{range $paramIdx, $param := .HeaderParams}}
+    {{if not .Required}} if params.{{.GoName}} != nil { {{end}}
+    var headerParam{{$paramIdx}} string
+    {{if .IsPassThrough}}
+    headerParam{{$paramIdx}} = {{if not .Required}}*{{end}}params.{{.GoName}}
+    {{end}}
+    {{if .IsJson}}
+    var headerParamBuf{{$paramIdx}} []byte
+    headerParamBuf{{$paramIdx}}, err = json.Marshal({{if not .Required}}*{{end}}params.{{.GoName}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    headerParam{{$paramIdx}} = string(headerParamBuf{{$paramIdx}})
+    {{end}}
+    {{if .IsStyled}}
+    headerParam{{$paramIdx}}, err = runtime.StyleParamWithLocation("{{.Style}}", {{.Explode}}, "{{.ParamName}}", runtime.ParamLocationHeader, {{if not .Required}}*{{end}}params.{{.GoName}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    {{end}}
+    req.Header.Set("{{.ParamName}}", headerParam{{$paramIdx}})
+    {{if not .Required}}}{{end}}
+{{end}}
+
+{{range $paramIdx, $param := .CookieParams}}
+    {{if not .Required}} if params.{{.GoName}} != nil { {{end}}
+    var cookieParam{{$paramIdx}} string
+    {{if .IsPassThrough}}
+    cookieParam{{$paramIdx}} = {{if not .Required}}*{{end}}params.{{.GoName}}
+    {{end}}
+    {{if .IsJson}}
+    var cookieParamBuf{{$paramIdx}} []byte
+    cookieParamBuf{{$paramIdx}}, err = json.Marshal({{if not .Required}}*{{end}}params.{{.GoName}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    cookieParam{{$paramIdx}} = url.QueryEscape(string(cookieParamBuf{{$paramIdx}}))
+    {{end}}
+    {{if .IsStyled}}
+    cookieParam{{$paramIdx}}, err = runtime.StyleParamWithLocation("simple", {{.Explode}}, "{{.ParamName}}", runtime.ParamLocationCookie, {{if not .Required}}*{{end}}params.{{.GoName}})
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+    {{end}}
+    cookie{{$paramIdx}} := &http.Cookie{
+        Name:"{{.ParamName}}",
+        Value:cookieParam{{$paramIdx}},
+    }
+    req.AddCookie(cookie{{$paramIdx}})
+    {{if not .Required}}}{{end}}
+{{end}}
+
+    req = req.WithContext(ctx)
+    rsp, err := c.Client.Do(req)
+    if err != nil {
+        return {{if $hasResponse}}nil, {{end}}err
+    }
+{{if $hasResponse -}}
+    bodyBytes, err := io.ReadAll(rsp.Body)
+{{end}}
+    defer func() { _ = rsp.Body.Close() }()
+{{if $hasResponse -}}
+    if err != nil {
+        return nil, err
+    }
+
+    response := &{{$response2xx.Schema.TypeDecl}}{}
+
+    switch(rsp.StatusCode) {
+        case {{$response2xx.ResponseName}}:
+            if err := unmarshalJSONResponse(bodyBytes, &response); err != nil {
+                return nil, err
+            }
+         default:
+            return nil, decodeError(bodyBytes, rsp)
+    }
+    return response, nil
+{{else}}
+    if rsp.StatusCode > 299 {
+        bodyBytes, err := io.ReadAll(rsp.Body)
+         if err != nil {
+            return err
+        }
+        return decodeError(bodyBytes, rsp)
+    }
+    return nil
+{{end}}
+}
+
+{{end}}{{/* if */}}
+{{end}}{{/* Range */}}
+
+/*
+
+*/

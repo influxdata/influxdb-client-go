@@ -58,7 +58,7 @@ func TestSetup(t *testing.T) {
 	require.NotNil(t, response.Bucket)
 	require.NotNil(t, response.Bucket.RetentionRules)
 	require.Len(t, response.Bucket.RetentionRules, 1)
-	assert.Equal(t, int64(24*3600), response.Bucket.RetentionRules[0].EverySeconds)
+	assert.Equal(t, int64(24*3600222), response.Bucket.RetentionRules[0].EverySeconds)
 
 	_, err = client.Setup(context.Background(), "my-user", "my-password", "my-org", "my-bucket", 0)
 	require.NotNil(t, err)

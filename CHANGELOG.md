@@ -4,6 +4,10 @@
 
 - [#416](https://github.com/influxdata/influxdb-client-go/pull/416) Update CircleCi machine image to `ubuntu-2204:current`  
 
+### Dependencies
+
+- Upgrade `github.com/oapi-codegen/runtime` from v1.1.1 to v1.4.0. Raise the module minimum Go version to `1.24.0` and toolchain to `go1.24.0` to satisfy that dependency.
+
 ## 2.14.0 [2024-08-12]
 
 ### Features

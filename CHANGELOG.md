@@ -3,6 +3,7 @@
 ### CI
 
 - [#416](https://github.com/influxdata/influxdb-client-go/pull/416) Update CircleCi machine image to `ubuntu-2204:current`  
+- [#433](https://github.com/influxdata/influxdb-client-go/pull/433) Add dependabot auto-merge workflows.  
 
 ### Dependencies
 

@@ -6,7 +6,7 @@ on:
 
 jobs:
   automerge:
-    if: contains(fromJSON('["dependabot[bot]","dependabot-preview[bot]"]'), github.actor) || contains(fromJSON('["dependabot[bot]","dependabot-preview[bot]"]'), github.event.pull_request.user.login)
+    if: contains(fromJSON('["dependabot[bot]","dependabot-preview[bot]"]'), github.event.pull_request.user.login)
     runs-on: ubuntu-latest
     permissions:
       contents: write

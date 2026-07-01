@@ -1,12 +1,12 @@
 module github.com/influxdata/influxdb-client-go/v2
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839
 	github.com/oapi-codegen/runtime v1.4.2
 	github.com/stretchr/testify v1.11.1 // test dependency
-	golang.org/x/net v0.48.0
+	golang.org/x/net v0.56.0
 )
 
 require (

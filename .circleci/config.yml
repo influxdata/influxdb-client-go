@@ -1,11 +1,14 @@
 # Golang CircleCI 2.0 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-go/ for more details
+# Check https://circleci.com/docs/guides/getting-started/language-go/ for more details
 version: 2.1
+orbs:
+  go: circleci/go@4.0.0
 jobs:
   build:
-    machine:
-      image: cimg/go:1.25
+    executor:
+      name: go/default
+      tag: "1.22"
     environment:
       ENV: CI
       GO111MODULE: "on"
@@ -20,7 +23,9 @@ jobs:
             mkdir -p /tmp/artifacts
             mkdir -p /tmp/test-results
       - run: go version
-      - run: go get -v -t -d ./...
+      - go/with-cache:
+          steps:
+            - go/mod-download
       - run: make lint
       - run:
           name: "Start InfluxDB service"
@@ -45,3 +50,7 @@ jobs:
           destination: raw-test-output
       - store_test_results:
           path: /tmp/test-results
+workflows:
+  main:
+    jobs:
+      - build

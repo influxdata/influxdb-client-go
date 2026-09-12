@@ -280,6 +280,16 @@ func TestEqualSignEscaping(t *testing.T) {
 	assert.Equal(t, "h=2o,l\\=ocation=e\\=urope l\\=evel=2i\n", line)
 }
 
+func TestAddFieldUpdateConvertsValue(t *testing.T) {
+	p := NewPointWithMeasurement("m")
+	p.AddField("x", int32(1))
+	// re-setting an existing field must run convertField too, otherwise
+	// the second value sits in field.Value as its raw type (int32 here)
+	// instead of the line-protocol canonical int64.
+	p.AddField("x", int32(2))
+	assert.Equal(t, int64(2), p.FieldList()[0].Value)
+}
+
 var s string
 
 func BenchmarkPointEncoderSingle(b *testing.B) {

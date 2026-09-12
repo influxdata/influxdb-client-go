@@ -34,6 +34,27 @@ func TestPrecisionToString(t *testing.T) {
 	assert.Equal(t, "ns", precisionToString(time.Microsecond*20))
 }
 
+func TestNewService_MalformedServerURLDoesNotPanic(t *testing.T) {
+	// A server URL without a scheme (e.g. a bare host:port) makes
+	// url.Parse return a nil URL. NewService used to dereference it
+	// and panic; it should now build the write URL via string
+	// concatenation and surface the bad address later as an HTTP
+	// error instead. See #422.
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("NewService panicked: %v", r)
+		}
+	}()
+	hs := test.NewTestService(t, "192.168.1.104:8086/")
+	srv := NewService("org", "buc", hs, write.DefaultOptions())
+	if srv == nil {
+		t.Fatal("expected non-nil service")
+	}
+	if got := srv.WriteURL(); got == "" {
+		t.Fatal("expected a non-empty write URL")
+	}
+}
+
 func TestAddDefaultTags(t *testing.T) {
 	hs := test.NewTestService(t, "http://localhost:8888")
 	opts := write.DefaultOptions()

@@ -230,6 +230,9 @@ func (q *queryAPI) QueryWithParams(ctx context.Context, query string, params int
 }
 
 func (q *queryAPI) queryURL() (string, error) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+
 	if q.url == "" {
 		u, err := url.Parse(q.httpService.ServerAPIURL())
 		if err != nil {
@@ -240,9 +243,7 @@ func (q *queryAPI) queryURL() (string, error) {
 		params := u.Query()
 		params.Set("org", q.org)
 		u.RawQuery = params.Encode()
-		q.lock.Lock()
 		q.url = u.String()
-		q.lock.Unlock()
 	}
 	return q.url, nil
 }

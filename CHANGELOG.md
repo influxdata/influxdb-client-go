@@ -1,5 +1,9 @@
 ## 2.15.0 [unreleased]
 
+### Fixes
+
+- Fix concurrent query URL cache access when sharing a QueryAPI between goroutines.
+
 ### CI
 
 - [#416](https://github.com/influxdata/influxdb-client-go/pull/416) Update CircleCi machine image to `ubuntu-2204:current`  

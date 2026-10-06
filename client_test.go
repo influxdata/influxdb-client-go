@@ -269,14 +269,20 @@ func TestHealthFail(t *testing.T) {
 const (
 	influxdbServerCertFile = "internal/test/certificates/influxdb.crt"
 	influxdbKeyFile        = "internal/test/certificates/influxdb.key"
-	otherServerCertFile    = "internal/test/certificates/other-server.crt"
-	otherKeyFile           = "internal/test/certificates/other-server.key"
-	clientCertFile         = "internal/test/certificates/client.crt"
-	clientKeyFile          = "internal/test/certificates/client.key"
+
+	otherServerCertFile = "internal/test/certificates/other-server.crt"
+	otherKeyFile        = "internal/test/certificates/other-server.key"
+	otherCertP12        = "internal/test/certificates/other-server.p12"
+
+	clientCertFile = "internal/test/certificates/client.crt"
+	clientKeyFile  = "internal/test/certificates/client.key"
+	clientCertP12  = "internal/test/certificates/client.p12"
+
+	password = "changeit"
 )
 
 func TestTls(t *testing.T) {
-	cert, err := tls.LoadX509KeyPair(influxdbServerCertFile, influxdbKeyFile)
+	certificate, err := loadCertificate(influxdbServerCertFile, influxdbKeyFile, "")
 	if err != nil {
 		t.Fatalf("failed to load key pair: %v", err)
 	}
@@ -286,7 +292,7 @@ func TestTls(t *testing.T) {
 	}))
 	defer ts.Close()
 	ts.TLS = &tls.Config{
-		Certificates: []tls.Certificate{cert},
+		Certificates: []tls.Certificate{certificate},
 	}
 	ts.StartTLS()
 
@@ -311,23 +317,19 @@ func TestTls(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			certPool := x509.NewCertPool()
-			caCert, err := os.ReadFile(tc.certPath)
+			certPool, err := loadX509CertPool(tc.certPath)
 			if err != nil {
-				t.Fatalf("failed to read root CA: %v", err)
+				assert.NoError(t, err)
 			}
-			certPool.AppendCertsFromPEM(caCert)
 
 			tlsConfig := &tls.Config{
 				RootCAs: certPool,
 			}
-			opts := DefaultOptions().SetTLSConfig(tlsConfig)
-			client := NewClientWithOptions(ts.URL, "token", opts)
-
+			client := getClient(ts.URL, tlsConfig)
 			_, err = client.Health(context.Background())
 			if tc.expectError {
 				assert.Error(t, err)
-				if tc.expectedErrMsg != "" && err != nil {
+				if err != nil {
 					assert.Contains(t, err.Error(), tc.expectedErrMsg)
 				}
 			} else {
@@ -338,23 +340,12 @@ func TestTls(t *testing.T) {
 }
 
 func TestMutualTls(t *testing.T) {
-	ts := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, _ = io.WriteString(w, "{}")
-	}))
-	defer ts.Close()
-
-	ts.TLS = &tls.Config{
-		Certificates: []tls.Certificate{loadKeyPair(t, influxdbServerCertFile, influxdbKeyFile)},
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		ClientCAs:    createCertPool(t, clientCertFile),
-	}
-	ts.StartTLS()
-
 	testCases := []struct {
 		name           string
 		certPath       string
 		keyPath        string
 		expectError    bool
+		password       string
 		expectedErrMsg string
 	}{
 		{
@@ -370,23 +361,62 @@ func TestMutualTls(t *testing.T) {
 			expectError:    true,
 			expectedErrMsg: "tls: certificate required",
 		},
+		{
+			name:        "valid client p12 certificate send to the server",
+			certPath:    clientCertP12,
+			password:    password,
+			expectError: false,
+		},
+		{
+			name:           "invalid client p12 certificate send to the server",
+			certPath:       otherCertP12,
+			password:       password,
+			expectError:    true,
+			expectedErrMsg: "tls: certificate required",
+		},
 	}
 
+	ts := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = io.WriteString(w, "{}")
+	}))
+	defer ts.Close()
+
+	cert, err := loadCertificate(influxdbServerCertFile, influxdbKeyFile, "")
+	if err != nil {
+		assert.NoError(t, err)
+	}
+	certPool, err := loadX509CertPool(clientCertFile)
+	if err != nil {
+		assert.NoError(t, err)
+	}
+	ts.TLS = &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		ClientAuth:   tls.RequireAndVerifyClientCert,
+		ClientCAs:    certPool,
+	}
+	ts.StartTLS()
+
 	for _, tc := range testCases {
+		cert, err := loadCertificate(tc.certPath, tc.keyPath, password)
+		if err != nil {
+			assert.NoError(t, err)
+		}
+
 		t.Run(tc.name, func(t *testing.T) {
+			certPool, err := loadX509CertPool(influxdbServerCertFile)
+			if err != nil {
+				assert.NoError(t, err)
+			}
 			tlsConfig := &tls.Config{
-				RootCAs:      createCertPool(t, influxdbServerCertFile),
-				Certificates: []tls.Certificate{loadKeyPair(t, tc.certPath, tc.keyPath)},
+				RootCAs:      certPool,
+				Certificates: []tls.Certificate{cert},
 			}
 
-			opts := DefaultOptions().SetTLSConfig(tlsConfig)
-			client := NewClientWithOptions(ts.URL, "token", opts)
-			defer client.Close()
-
-			_, err := client.Health(context.Background())
+			client := getClient(ts.URL, tlsConfig)
+			_, err = client.Health(context.Background())
 			if tc.expectError {
 				assert.Error(t, err)
-				if tc.expectedErrMsg != "" && err != nil {
+				if err != nil {
 					assert.Contains(t, err.Error(), tc.expectedErrMsg)
 				}
 			} else {
@@ -396,47 +426,39 @@ func TestMutualTls(t *testing.T) {
 	}
 }
 
-func TestMTlsP12(t *testing.T) {
-	serverCert := loadKeyPair(t, influxdbServerCertFile, influxdbKeyFile)
-	clientCertPool := createCertPool(t, clientCertFile)
-
-	ts := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, _ = io.WriteString(w, "{}")
-	}))
-	defer ts.Close()
-
-	ts.TLS = &tls.Config{
-		Certificates: []tls.Certificate{serverCert},
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		ClientCAs:    clientCertPool,
-	}
-	ts.StartTLS()
-
-	serverCertPool := createCertPool(t, influxdbServerCertFile)
-	clientCert := loadKeyPair(t, clientCertFile, clientKeyFile)
-
-	tlsConfig := &tls.Config{
-		RootCAs:      serverCertPool,
-		Certificates: []tls.Certificate{clientCert},
-	}
-
+func getClient(url string, tlsConfig *tls.Config) Client {
 	opts := DefaultOptions().SetTLSConfig(tlsConfig)
-	client := NewClientWithOptions(ts.URL, "token", opts)
+	client := NewClientWithOptions(url, "token", opts)
 	defer client.Close()
 
-	_, err := client.Health(context.Background())
-	require.NoError(t, err, "client should successfully connect to server using mutual TLS")
+	return client
 }
 
-// createCertPool reads a PEM certificate file and loads it into a new CertPool.
-func createCertPool(t *testing.T, certFile string) *x509.CertPool {
-	t.Helper()
+func loadX509CertPool(certFile string) (*x509.CertPool, error) {
 	caCert, err := os.ReadFile(certFile)
-	require.NoError(t, err, "failed to read CA certificate from %s", certFile)
+	if err != nil {
+		return nil, err
+	}
 
 	pool := x509.NewCertPool()
 	pool.AppendCertsFromPEM(caCert)
-	return pool
+	return pool, nil
+}
+
+func loadCertificate(certFile string, keyFile string, password string) (tls.Certificate, error) {
+	if strings.HasSuffix(certFile, ".p12") {
+		cert, err := processPKCS12(certFile, password)
+		if err != nil {
+			return tls.Certificate{}, err
+		}
+		return cert, nil
+	}
+
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		return tls.Certificate{}, err
+	}
+	return cert, nil
 }
 
 func processPKCS12(path string, password string) (tls.Certificate, error) {
@@ -459,12 +481,4 @@ func processPKCS12(path string, password string) (tls.Certificate, error) {
 		PrivateKey:  privateKey,
 		Leaf:        cert,
 	}, nil
-}
-
-// loadKeyPair loads a certificate/key pair and asserts no errors occurred.
-func loadKeyPair(t *testing.T, certFile, keyFile string) tls.Certificate {
-	t.Helper()
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-	require.NoError(t, err, "failed to load key pair: %s, %s", certFile, keyFile)
-	return cert
 }

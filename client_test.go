@@ -464,11 +464,11 @@ func loadCertificate(certFile string, keyFile string, password string) (tls.Cert
 func processPKCS12(path string, password string) (tls.Certificate, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return tls.Certificate{}, fmt.Errorf("failed to read PKCS#12 file: %w", err)
+		return tls.Certificate{}, err
 	}
 	privateKey, cert, caCerts, err := pkcs12.DecodeChain(data, password)
 	if err != nil {
-		return tls.Certificate{}, fmt.Errorf("failed to decode PKCS#12 keystore: %w", err)
+		return tls.Certificate{}, err
 	}
 
 	certBytes := [][]byte{cert.Raw}

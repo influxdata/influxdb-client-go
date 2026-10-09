@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -1065,4 +1066,49 @@ func TestQueryParamsSerialized(t *testing.T) {
 func makeCSVstring(rows []string) string {
 	csvTable := strings.Join(rows, "\r\n")
 	return fmt.Sprintf("%s\r\n", csvTable)
+}
+
+func TestQueryAPIConcurrentRequests(t *testing.T) {
+	const response = "#datatype,string,long,string\n#group,false,false,false\n#default,_result,,\n,result,table,_value\n,,0,ok\n\n"
+	const org = "org with & symbols"
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "/prefix/api/v2/query", r.URL.Path)
+		assert.Equal(t, org, r.URL.Query().Get("org"))
+		assert.Equal(t, http.MethodPost, r.Method)
+		w.Header().Set("Content-Type", "text/csv")
+		_, _ = io.WriteString(w, response)
+	}))
+	defer server.Close()
+
+	client := NewQueryAPI(org, http2.NewService(server.URL+"/prefix/", "", http2.DefaultOptions()))
+	// Exercise both first-use initialization and reads of the populated cache.
+	for round := 0; round < 2; round++ {
+		var wg sync.WaitGroup
+		start := make(chan struct{})
+		for i := 0; i < 32; i++ {
+			wg.Add(1)
+			go func(raw bool) {
+				defer wg.Done()
+				<-start
+				if raw {
+					result, err := client.QueryRaw(context.Background(), "test query", nil)
+					assert.NoError(t, err)
+					assert.Equal(t, response, result)
+					return
+				}
+				result, err := client.Query(context.Background(), "test query")
+				if !assert.NoError(t, err) {
+					return
+				}
+				defer result.Close()
+				if assert.True(t, result.Next()) {
+					assert.Equal(t, "ok", result.Record().Value())
+				}
+				assert.False(t, result.Next())
+				assert.NoError(t, result.Err())
+			}(i%2 == 0)
+		}
+		close(start)
+		wg.Wait()
+	}
 }

@@ -385,14 +385,14 @@ func TestMutualTls(t *testing.T) {
 	if err != nil {
 		assert.NoError(t, err)
 	}
-	certPool, err := loadX509CertPool(clientCertFile)
+	clientCertPool, err := loadX509CertPool(clientCertFile)
 	if err != nil {
 		assert.NoError(t, err)
 	}
 	ts.TLS = &tls.Config{
 		Certificates: []tls.Certificate{cert},
 		ClientAuth:   tls.RequireAndVerifyClientCert,
-		ClientCAs:    certPool,
+		ClientCAs:    clientCertPool,
 	}
 	ts.StartTLS()
 
@@ -403,12 +403,12 @@ func TestMutualTls(t *testing.T) {
 		}
 
 		t.Run(tc.name, func(t *testing.T) {
-			certPool, err := loadX509CertPool(influxdbServerCertFile)
+			serverCertPool, err := loadX509CertPool(influxdbServerCertFile)
 			if err != nil {
 				assert.NoError(t, err)
 			}
 			tlsConfig := &tls.Config{
-				RootCAs:      certPool,
+				RootCAs:      serverCertPool,
 				Certificates: []tls.Certificate{cert},
 			}
 

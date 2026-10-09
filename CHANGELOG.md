@@ -1,5 +1,9 @@
 ## 2.15.0 [unreleased]
 
+### Documentation
+
+- [#446](https://github.com/influxdata/influxdb-client-go/pull/446) Add examples for configure TLS/mTLS for the Influxdb client.
+
 ### Fixes
 
 - [#444](https://github.com/influxdata/influxdb-client-go/pull/444) Fix concurrent query URL cache access when sharing a QueryAPI between goroutines.

@@ -11,20 +11,18 @@ import (
 )
 
 func main() {
-	// Config TLS with server a Certificate
-	// Certification files can be one of this format .crt, .cert
-	configTLS()
+	// Configure TLS with a custom server CA certificate (.crt, .cert).
+	configureTLSWithServerCert()
 
-	// Config mTLS with client certificate send to the server for validating.
-	// Using .crt and .key file format.
-	configMutualTLSP12()
+	// Configure mutual TLS (mTLS) for client authentication using a PKCS#12 (.p12) bundle.
+	configureMutualTLSWithPKCS12()
 
-	// Config mTLS with both client certificate and server certificate.
-	// Using .crt and .key file format.
-	configMutualTLS()
+	// Configure mutual TLS (mTLS) using PEM certificate and private key files (.crt, .key).
+	// This example also includes a server certificate so the client can validate the server identity. This is optional.
+	configureMutualTLSWithPEM()
 }
 
-func configTLS() {
+func configureTLSWithServerCert() {
 	certFile := "path/to/server-certificate.crt"
 	caCert, err := os.ReadFile(certFile)
 	if err != nil {
@@ -39,13 +37,14 @@ func configTLS() {
 	}
 	opts := influxdb2.DefaultOptions().SetTLSConfig(tlsConfig)
 	client := influxdb2.NewClientWithOptions("https://localhost:8086", "token", opts)
+	defer client.Close()
 	_, err = client.Health(context.Background())
 	if err != nil {
 		print(err)
 	}
 }
 
-func configMutualTLSP12() {
+func configureMutualTLSWithPKCS12() {
 	path := "path/to/client-certificate.p12"
 	password := "password"
 
@@ -57,6 +56,7 @@ func configMutualTLSP12() {
 	privateKey, cert, caCerts, err := pkcs12.DecodeChain(data, password)
 	if err != nil {
 		print(err)
+		return
 	}
 
 	certBytes := [][]byte{cert.Raw}
@@ -75,13 +75,14 @@ func configMutualTLSP12() {
 	}
 	opts := influxdb2.DefaultOptions().SetTLSConfig(tlsConfig)
 	client := influxdb2.NewClientWithOptions("https://localhost:8086", "token", opts)
+	defer client.Close()
 	_, err = client.Health(context.Background())
 	if err != nil {
 		print(err)
 	}
 }
 
-func configMutualTLS() {
+func configureMutualTLSWithPEM() {
 	serverCertPath := "path/to/server-certificate.crt"
 	clientCertPath := "path/to/client-certificate.crt"
 	clientKeyPath := "path/to/client-certificate.key"
@@ -105,6 +106,7 @@ func configMutualTLS() {
 
 	opts := influxdb2.DefaultOptions().SetTLSConfig(tlsConfig)
 	client := influxdb2.NewClientWithOptions("https://localhost:8086", "token", opts)
+	defer client.Close()
 	_, err = client.Health(context.Background())
 	if err != nil {
 		print(err)

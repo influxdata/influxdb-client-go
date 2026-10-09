@@ -6,11 +6,14 @@ package influxdb2
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
-	ilog "github.com/influxdata/influxdb-client-go/v2/log"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"runtime"
 	"strings"
 	"testing"
@@ -20,8 +23,10 @@ import (
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	http2 "github.com/influxdata/influxdb-client-go/v2/internal/http"
 	iwrite "github.com/influxdata/influxdb-client-go/v2/internal/write"
+	ilog "github.com/influxdata/influxdb-client-go/v2/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"software.sslmate.com/src/go-pkcs12"
 )
 
 func TestUrls(t *testing.T) {
@@ -259,4 +264,223 @@ func TestHealthFail(t *testing.T) {
 	h, err := c.Health(context.Background())
 	assert.Error(t, err)
 	assert.Nil(t, h)
+}
+
+const (
+	influxdbServerCertFile = "internal/test/certificates/influxdb.crt"
+	influxdbKeyFile        = "internal/test/certificates/influxdb.key"
+
+	otherServerCertFile = "internal/test/certificates/other-server.crt"
+	otherKeyFile        = "internal/test/certificates/other-server.key"
+	otherCertP12        = "internal/test/certificates/other-server.p12"
+
+	clientCertFile = "internal/test/certificates/client.crt"
+	clientKeyFile  = "internal/test/certificates/client.key"
+	clientCertP12  = "internal/test/certificates/client.p12"
+
+	password = "changeit"
+)
+
+func TestTls(t *testing.T) {
+	certificate, err := loadCertificate(influxdbServerCertFile, influxdbKeyFile, "")
+	if err != nil {
+		t.Fatalf("failed to load key pair: %v", err)
+	}
+
+	ts := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "{}")
+	}))
+	defer ts.Close()
+	ts.TLS = &tls.Config{
+		Certificates: []tls.Certificate{certificate},
+	}
+	ts.StartTLS()
+
+	testCases := []struct {
+		name           string
+		certPath       string
+		expectError    bool
+		expectedErrMsg string
+	}{
+		{
+			name:        "valid server certificate",
+			certPath:    influxdbServerCertFile,
+			expectError: false,
+		},
+		{
+			name:           "untrusted server certificate",
+			certPath:       otherServerCertFile,
+			expectError:    true,
+			expectedErrMsg: "failed to verify certificate",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			certPool, err := loadX509CertPool(tc.certPath)
+			if err != nil {
+				assert.NoError(t, err)
+			}
+
+			tlsConfig := &tls.Config{
+				RootCAs: certPool,
+			}
+			client := getClient(t, ts.URL, tlsConfig)
+			_, err = client.Health(context.Background())
+			if tc.expectError {
+				assert.Error(t, err)
+				if err != nil {
+					assert.Contains(t, err.Error(), tc.expectedErrMsg)
+				}
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestMutualTls(t *testing.T) {
+	testCases := []struct {
+		name           string
+		certPath       string
+		keyPath        string
+		expectError    bool
+		password       string
+		expectedErrMsg string
+	}{
+		{
+			name:        "valid client certificate",
+			certPath:    clientCertFile,
+			keyPath:     clientKeyFile,
+			expectError: false,
+		},
+		{
+			name:           "invalid client certificate send to the server",
+			certPath:       otherServerCertFile,
+			keyPath:        otherKeyFile,
+			expectError:    true,
+			expectedErrMsg: "tls: certificate required",
+		},
+		{
+			name:        "valid client p12 certificate send to the server",
+			certPath:    clientCertP12,
+			password:    password,
+			expectError: false,
+		},
+		{
+			name:           "invalid client p12 certificate send to the server",
+			certPath:       otherCertP12,
+			password:       password,
+			expectError:    true,
+			expectedErrMsg: "tls: certificate required",
+		},
+	}
+
+	ts := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = io.WriteString(w, "{}")
+	}))
+	defer ts.Close()
+
+	cert, err := loadCertificate(influxdbServerCertFile, influxdbKeyFile, "")
+	if err != nil {
+		assert.NoError(t, err)
+	}
+	certPool, err := loadX509CertPool(clientCertFile)
+	if err != nil {
+		assert.NoError(t, err)
+	}
+	ts.TLS = &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		ClientAuth:   tls.RequireAndVerifyClientCert,
+		ClientCAs:    certPool,
+	}
+	ts.StartTLS()
+
+	for _, tc := range testCases {
+		cert, err := loadCertificate(tc.certPath, tc.keyPath, password)
+		if err != nil {
+			assert.NoError(t, err)
+		}
+
+		t.Run(tc.name, func(t *testing.T) {
+			certPool, err := loadX509CertPool(influxdbServerCertFile)
+			if err != nil {
+				assert.NoError(t, err)
+			}
+			tlsConfig := &tls.Config{
+				RootCAs:      certPool,
+				Certificates: []tls.Certificate{cert},
+			}
+
+			client := getClient(t, ts.URL, tlsConfig)
+			_, err = client.Health(context.Background())
+			if tc.expectError {
+				assert.Error(t, err)
+				if err != nil {
+					assert.Contains(t, err.Error(), tc.expectedErrMsg)
+				}
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func getClient(t *testing.T, url string, tlsConfig *tls.Config) Client {
+	opts := DefaultOptions().SetTLSConfig(tlsConfig)
+	client := NewClientWithOptions(url, "token", opts)
+	t.Cleanup(func() {
+		client.Close()
+	})
+
+	return client
+}
+
+func loadX509CertPool(certFile string) (*x509.CertPool, error) {
+	caCert, err := os.ReadFile(certFile)
+	if err != nil {
+		return nil, err
+	}
+
+	pool := x509.NewCertPool()
+	pool.AppendCertsFromPEM(caCert)
+	return pool, nil
+}
+
+func loadCertificate(certFile string, keyFile string, password string) (tls.Certificate, error) {
+	if strings.HasSuffix(certFile, ".p12") {
+		cert, err := processPKCS12(certFile, password)
+		if err != nil {
+			return tls.Certificate{}, err
+		}
+		return cert, nil
+	}
+
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		return tls.Certificate{}, err
+	}
+	return cert, nil
+}
+
+func processPKCS12(path string, password string) (tls.Certificate, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return tls.Certificate{}, err
+	}
+	privateKey, cert, caCerts, err := pkcs12.DecodeChain(data, password)
+	if err != nil {
+		return tls.Certificate{}, err
+	}
+
+	certBytes := [][]byte{cert.Raw}
+	for _, ca := range caCerts {
+		certBytes = append(certBytes, ca.Raw)
+	}
+
+	return tls.Certificate{
+		Certificate: certBytes,
+		PrivateKey:  privateKey,
+		Leaf:        cert,
+	}, nil
 }

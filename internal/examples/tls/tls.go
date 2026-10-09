@@ -27,6 +27,7 @@ func configureTLSWithServerCert() {
 	caCert, err := os.ReadFile(certFile)
 	if err != nil {
 		print(err)
+		return
 	}
 
 	certPool := x509.NewCertPool()
@@ -50,8 +51,8 @@ func configureMutualTLSWithPKCS12() {
 
 	data, err := os.ReadFile(path)
 	if err != nil {
-
 		print(err)
+		return
 	}
 	privateKey, cert, caCerts, err := pkcs12.DecodeChain(data, password)
 	if err != nil {
@@ -89,6 +90,7 @@ func configureMutualTLSWithPEM() {
 	caCert, err := os.ReadFile(serverCertPath)
 	if err != nil {
 		print(err)
+		return
 	}
 
 	certPool := x509.NewCertPool()
@@ -97,6 +99,7 @@ func configureMutualTLSWithPEM() {
 	cert, err := tls.LoadX509KeyPair(clientCertPath, clientKeyPath)
 	if err != nil {
 		print(err)
+		return
 	}
 
 	tlsConfig := &tls.Config{

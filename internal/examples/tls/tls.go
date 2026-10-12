@@ -31,7 +31,10 @@ func configureTLSWithServerCert() {
 	}
 
 	certPool := x509.NewCertPool()
-	certPool.AppendCertsFromPEM(caCert)
+	if ok := certPool.AppendCertsFromPEM(caCert); !ok {
+		print("failed to parse server certificate")
+		return
+	}
 
 	tlsConfig := &tls.Config{
 		RootCAs: certPool,
@@ -94,7 +97,10 @@ func configureMutualTLSWithPEM() {
 	}
 
 	certPool := x509.NewCertPool()
-	certPool.AppendCertsFromPEM(caCert)
+	if ok := certPool.AppendCertsFromPEM(caCert); !ok {
+		print("failed to parse server certificate")
+		return
+	}
 
 	cert, err := tls.LoadX509KeyPair(clientCertPath, clientKeyPath)
 	if err != nil {

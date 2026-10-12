@@ -443,7 +443,9 @@ func loadX509CertPool(certFile string) (*x509.CertPool, error) {
 	}
 
 	pool := x509.NewCertPool()
-	pool.AppendCertsFromPEM(caCert)
+	if ok := pool.AppendCertsFromPEM(caCert); !ok {
+		return nil, fmt.Errorf("failed to parse certificate %q", certFile)
+	}
 	return pool, nil
 }
 

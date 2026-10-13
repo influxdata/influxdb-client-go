@@ -73,17 +73,34 @@ func NewService(org string, bucket string, httpService http2.Service, options *w
 	if retryBufferLimit == 0 {
 		retryBufferLimit = 1
 	}
-	u, _ := url.Parse(httpService.ServerAPIURL())
-	u, _ = u.Parse("write")
-	params := u.Query()
-	params.Set("org", org)
-	params.Set("bucket", bucket)
-	params.Set("precision", precisionToString(options.Precision()))
-	if options.Consistency() != "" {
-		params.Set("consistency", string(options.Consistency()))
+	// If ServerAPIURL is malformed (e.g. the user passed an IP without a
+	// scheme to NewClient) url.Parse returns a nil URL. Treat that as
+	// "best effort" and build the URL by string concatenation so a later
+	// HTTP call surfaces the bad address as an error instead of panicking
+	// here. See issue #422.
+	var writeURL string
+	if u, err := url.Parse(httpService.ServerAPIURL()); err == nil && u != nil {
+		u, _ = u.Parse("write")
+		params := u.Query()
+		params.Set("org", org)
+		params.Set("bucket", bucket)
+		params.Set("precision", precisionToString(options.Precision()))
+		if options.Consistency() != "" {
+			params.Set("consistency", string(options.Consistency()))
+		}
+		u.RawQuery = params.Encode()
+		writeURL = u.String()
+	} else {
+		params := url.Values{}
+		params.Set("org", org)
+		params.Set("bucket", bucket)
+		params.Set("precision", precisionToString(options.Precision()))
+		if options.Consistency() != "" {
+			params.Set("consistency", string(options.Consistency()))
+		}
+		base := strings.TrimRight(httpService.ServerAPIURL(), "/")
+		writeURL = base + "/write?" + params.Encode()
 	}
-	u.RawQuery = params.Encode()
-	writeURL := u.String()
 	return &Service{
 		org:                  org,
 		bucket:               bucket,

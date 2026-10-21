@@ -9,7 +9,7 @@ require (
 	golang.org/x/net v0.58.0
 )
 
-require software.sslmate.com/src/go-pkcs12 v0.7.3
+require software.sslmate.com/src/go-pkcs12 v0.7.4
 
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect

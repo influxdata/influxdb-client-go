@@ -159,7 +159,7 @@ x:
 			w.flushBuffer()
 			break x
 		case buffInfo := <-w.bufferInfoCh:
-			buffInfo.writeBuffLen = len(w.bufferInfoCh)
+			buffInfo.writeBuffLen = len(w.writeBuffer)
 			w.bufferInfoCh <- buffInfo
 		}
 	}

@@ -69,13 +69,14 @@ func (m *Point) AddTag(k, v string) *Point {
 
 // AddField adds a field to a point.
 func (m *Point) AddField(k string, v interface{}) *Point {
+	cv := convertField(v)
 	for i, field := range m.fields {
 		if k == field.Key {
-			m.fields[i].Value = v
+			m.fields[i].Value = cv
 			return m
 		}
 	}
-	m.fields = append(m.fields, &lp.Field{Key: k, Value: convertField(v)})
+	m.fields = append(m.fields, &lp.Field{Key: k, Value: cv})
 	return m
 }
 

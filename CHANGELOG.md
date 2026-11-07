@@ -7,6 +7,7 @@
 ### Fixes
 
 - [#444](https://github.com/influxdata/influxdb-client-go/pull/444) Fix concurrent query URL cache access when sharing a QueryAPI between goroutines.
+- [#452](https://github.com/influxdata/influxdb-client-go/pull/452) Escape quotes, backslashes and `${` in the task name and cron expression when creating a task with `CreateTask`, `CreateTaskWithEvery` and `CreateTaskWithCron`, so they no longer produce invalid Flux.
 
 ### CI
 

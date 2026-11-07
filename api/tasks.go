@@ -7,6 +7,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/v2/domain"
@@ -202,14 +203,17 @@ func (t *tasksAPI) createTask(ctx context.Context, taskReq *domain.TaskCreateReq
 	return t.apiClient.PostTasks(ctx, params)
 }
 
+// fluxStringEscaper escapes the characters that are special inside a Flux string literal.
+var fluxStringEscaper = strings.NewReplacer(`\`, `\\`, `"`, `\"`, "${", `\${`)
+
 func createTaskReqDetailed(name, flux string, every, cron *string, orgID string) *domain.TaskCreateRequest {
 	repetition := ""
 	if every != nil {
 		repetition = fmt.Sprintf("every: %s", *every)
 	} else if cron != nil {
-		repetition = fmt.Sprintf(`cron: "%s"`, *cron)
+		repetition = fmt.Sprintf(`cron: "%s"`, fluxStringEscaper.Replace(*cron))
 	}
-	fullFlux := fmt.Sprintf(`option task = { name: "%s", %s } %s`, name, repetition, flux)
+	fullFlux := fmt.Sprintf(`option task = { name: "%s", %s } %s`, fluxStringEscaper.Replace(name), repetition, flux)
 	return createTaskReq(fullFlux, orgID)
 }
 func createTaskReq(flux string, orgID string) *domain.TaskCreateRequest {
